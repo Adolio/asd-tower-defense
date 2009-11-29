@@ -1,49 +1,49 @@
+import java.awt.Rectangle;
+
+import javax.swing.UIManager;
+import models.jeu.Jeu;
+import vues.Fenetre_Jeu;
+
 /**
- * Fichier : Main.java
- * <p>
- * Encodage : UTF-8
- * 
- * <p>
- * Cette classe...
- * <p>
- * Remarques :
+ * Classe principale du Tower Defense
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
- * @version 20 nov. 2009
+ * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public class Main {
-
+public class Main 
+{
    /**
     * Programme principal.
     * 
-    * @param args
-    *           Les arguments fournis au programme principal.
+    * @param args Les arguments fournis au programme principal.
     */
-   public static void main(String[] args) {
-      // ----------------------------------------------------------------------------
-      // Partie déclarative (constantes, variables).
-      // ----------------------------------------------------------------------------
-
-      // ----------------------------------------------------------------------------
-      // Présentation et entrée des données par l'utilisateur.
-      // ----------------------------------------------------------------------------
-      System.out.print("\n<----------------------------------------------------\n"
-            + " Main.java : ......... \n"
-            + "-----------------------------------------------------\n\n");
-
-      // ----------------------------------------------------------------------------
-      // Calcul et affichage du résultat.
-      // ----------------------------------------------------------------------------
-
-      // ----------------------------------------------------------------------------
-      // Fin du programme.
-      // ----------------------------------------------------------------------------
-      System.out.print("\n-----------------------------------------------------\n"
-            + "Fin du programme principal.\n"
-            + "----------------------------------------------------->\n\n");
+   public static void main(String[] args) 
+   {
+      // modification du style de l'interface
+	  try 
+	  { 
+		  UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"); 
+	  } 
+	  catch (Exception e) 
+	  { 
+		  /* 
+		   * On fait rien, c'est pas grave. 
+		   * C'est juste le look and feel qui n'est pas installe.
+		   */ 
+	  }
+	   
+	  // création du jeu
+	  Jeu jeu = new Jeu();
+	  
+	  // initialisation du jeu
+	  // TODO meilleur implementation
+	  jeu.ajouterMur(new Rectangle(0,0,50,500));
+	  jeu.ajouterMur(new Rectangle(200,100,400,300));
+	  
+	  // création de la fenetre du jeu
+	  new Fenetre_Jeu(jeu);
    }
-
 }
