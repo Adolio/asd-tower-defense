@@ -44,7 +44,7 @@ public class TestMaillage
         // Calcul et affichage du résultat.
         //----------------------------------------------------------------------------
         temps = System.currentTimeMillis();
-        maillage = new Maillage(500, 400);
+        maillage = new Maillage(800, 600);
         temps = System.currentTimeMillis() - temps;
         System.out.println(maillage + "\n");
         System.out.println("Temps de génération du maillage : " +
