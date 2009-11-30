@@ -93,8 +93,6 @@ public class Jeu
 		if(laTourPeutEtrePosee(tour))
 		{
 			// TODO adaptation du maillage
-			// maillage.desactiverNoeuds(x,y,largeur,hauteur);
-			// ou
 			// maillage.desactiverNoeuds(tour); // recoit un Rectangle
 			
 			// debit des pieces d'or
@@ -114,8 +112,6 @@ public class Jeu
 		murs.add(mur);
 		
 		// TODO adaptation du maillage
-		// maillage.desactiverNoeuds(x,y,largeur,hauteur);
-		// ou
 		// maillage.desactiverNoeuds(mur); // recoit un Rectangle
 	}
 	
@@ -130,8 +126,6 @@ public class Jeu
 		nbPiecesOr += tour.getPrixDeVente();
 		
 		// TODO adaptation du maillage
-		// maillage.activerNoeuds(x,y,largeur,hauteur);
-		// ou
 		// maillage.activerNoeuds(tour); // recoit un Rectangle
 		
 		// supprime la tour

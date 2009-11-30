@@ -1,10 +1,6 @@
 package models.maillage;
-
-import java.net.URL;
 import java.util.Vector;
 import java.awt.*;
-import models.tours.Tour;
-import org.jgrapht.*;
 import org.jgrapht.graph.*;
 
 /**
@@ -30,18 +26,23 @@ public class Maillage
    private DefaultDirectedWeightedGraph<Noeud, DefaultEdge> graphe;
    
    /**
+    * LA CONSTRUCTION SE FAIT SIMPLEMENT AVEC UNE LARGEUR ET UNE HAUTEUR
+    * 
+    * DANS CE RECTANGLE TU MAILLE COMME TU VEUX...
+    * 
     * @param largeurPixels
     * @param hauteurPixels
     * @param tours
     * @param murs
     * @throws IllegalArgumentException
     */
-   public Maillage (int largeurPixels, int hauteurPixels, Vector<Rectangle> tours,
-         Vector<Rectangle> murs) throws IllegalArgumentException
+   public Maillage (int largeurPixels, int hauteurPixels, 
+		   			Vector<Rectangle> zonesDesactivees) 
+   					throws IllegalArgumentException
    {
       this.largeurPixels = largeurPixels;
       this.hauteurPixels = hauteurPixels;
-      graphe = construireGraphe(tours, murs);
+      graphe = construireGraphe(zonesDesactivees);
    }
    
    /**
@@ -87,12 +88,25 @@ public class Maillage
    }
    
    /**
-    * @param tour
+    * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
+    * 
+    * @param rectangle la zone a desactiver
     * @throws IllegalArgumentException
     */
-   public void activerNoeud (Rectangle tour) throws IllegalArgumentException
+   public void activerNoeuds (Rectangle rectangle) throws IllegalArgumentException
    {
-      // TODO : activer le noeud correspondant à la tour donnée.
+      // TODO : activer les noeuds dans la zone donnee.
+   }
+   
+   /**
+    * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
+    * 
+    * @param rectangle la zone a desactiver
+    * @throws IllegalArgumentException
+    */
+   public void desactiverNoeuds (Rectangle rectangle) throws IllegalArgumentException
+   {
+      // TODO : desactiver les noeuds dans la zone donnee.
    }
    
    /**
@@ -100,9 +114,9 @@ public class Maillage
     * @param murs
     * @return
     */
-   private static DefaultDirectedWeightedGraph<Noeud, DefaultEdge> construireGraphe (
-         Vector<Rectangle> tours, Vector<Rectangle> murs)
-         throws IllegalArgumentException
+   private static DefaultDirectedWeightedGraph<Noeud, DefaultEdge> 
+   	construireGraphe (Vector<Rectangle> zoneDesactivee)
+   	throws IllegalArgumentException
    {
       DefaultDirectedWeightedGraph<Noeud, DefaultEdge> graphe =
           new DefaultDirectedWeightedGraph<Noeud, DefaultEdge>(DefaultEdge.class);
