@@ -25,7 +25,7 @@ public class Maillage
 {
     
     private final int DESACTIVE = Integer.MAX_VALUE;
-    private final int LARGEUR_NOEUD = 1;
+    private final int LARGEUR_NOEUD = 2;
     private int largeurPixels;
     private int hauteurPixels;
     private ArrayList<Noeud> noeuds;
@@ -146,7 +146,8 @@ public class Maillage
          */
         for (int x=0; x<largeurPixels; x+=LARGEUR_NOEUD) {
             for (int y=0; y<hauteurPixels; y+=LARGEUR_NOEUD) {
-                noeuds.add(new Noeud(x, y));
+                noeuds.add(new Noeud((x + LARGEUR_NOEUD) / 2,
+                                     (y + LARGEUR_NOEUD) / 2));
                 graphe.addVertex(noeuds.get(noeuds.size() - 1));
             }
         }
