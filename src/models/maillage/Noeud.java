@@ -18,14 +18,11 @@ package models.maillage;
  */
 public class Noeud
 {
+    
     // La coordonnée x par rapport au repère de la fenêtre graphique
     private int x;
     // La coordonnée y par rapport au repère de la fenêtre graphique
     private int y;
-    // Ce point (noeud) est-il franchissable depuis les airs?
-    private boolean franchissableAirs;
-    // Ce noeud est-il actif?
-    private boolean actif;
 
     /**
      * @param x
@@ -34,14 +31,11 @@ public class Noeud
      * @param actif
      * @throws IllegalArgumentException
      */
-    public Noeud(int x, int y, boolean franchissableAirs, boolean actif)
-            throws IllegalArgumentException
+    public Noeud(int x, int y) throws IllegalArgumentException
     {
         verifierCoordonnees(x, y);
         this.x = x;
         this.y = y;
-        this.franchissableAirs = franchissableAirs;
-        this.actif = actif;
     }
 
     /**
@@ -65,26 +59,6 @@ public class Noeud
     }
 
     /**
-     * Getter pour le champ <tt>franchissableAirs</tt>
-     * 
-     * @return La valeur du champ <tt>franchissableAirs</tt>
-     */
-    public boolean isFranchissableAirs()
-    {
-        return franchissableAirs;
-    }
-
-    /**
-     * Getter pour le champ <tt>actif</tt>
-     * 
-     * @return La valeur du champ <tt>actif</tt>
-     */
-    public boolean isActif()
-    {
-        return actif;
-    }
-
-    /**
      * Setter pour le champ <tt>x</tt>
      * 
      * @param x
@@ -105,28 +79,9 @@ public class Noeud
     {
         this.y = y;
     }
-
-    /**
-     * Setter pour le champ <tt>franchissableAirs</tt>
-     * 
-     * @param franchissableAirs
-     *            La valeur qu'on veut attribuer au champ
-     *            <tt>franchissableAirs</tt>
-     */
-    public void setFranchissableAirs(boolean franchissableAirs)
-    {
-        this.franchissableAirs = franchissableAirs;
-    }
-
-    /**
-     * Setter pour le champ <tt>actif</tt>
-     * 
-     * @param actif
-     *            La valeur qu'on veut attribuer au champ <tt>actif</tt>
-     */
-    public void setActif(boolean actif)
-    {
-        this.actif = actif;
+    
+    public String toString() {
+        return "[" + x + ", " + y + "]";
     }
 
     /**
