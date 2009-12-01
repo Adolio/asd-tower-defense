@@ -62,6 +62,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		
 		//--------------------
 		//-- menu principal --
 		//--------------------
@@ -101,6 +102,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		//---------------------------------------
 		pack(); // adapte la taille de la fenetre a son contenu
 		setVisible(true); // tu es toute belle, affiche toi !
+		setLocationRelativeTo(null); // centrage de la fenetre
 	}
 
 	/**

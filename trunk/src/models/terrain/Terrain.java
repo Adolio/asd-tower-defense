@@ -14,6 +14,13 @@ public class Terrain
 	
 	private final  Image IMAGE_DE_FOND;
 	
+	/**
+	 * Les murs sont utilises pour empecher le joueur de construire des tours dans 
+	 * certaines zones. Les ennemis ne peuvent egalement pas si rendre.
+	 * En fait, les murs reflettent les zones de la carte non accessible.
+	 * Les murs ne sont pas affiches. Ils sont simplement utilises pour les
+	 * controle d'acces de la carte.
+	 */
 	protected Vector<Rectangle> murs = new Vector<Rectangle>();
 	
 	private Jeu jeu;
@@ -24,7 +31,7 @@ public class Terrain
 		HAUTEUR 		= hauteur;
 	
 		if (imageDeFond != null)
-			IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage(getClass().getResource(imageDeFond));
+			IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage(imageDeFond);
 		else
 			IMAGE_DE_FOND = null;
 	}
@@ -54,7 +61,11 @@ public class Terrain
 		murs.add(mur);
 		
 		// TODO adaptation du maillage
-		// maillage.desactiverNoeuds(mur); // recoit un Rectangle
+		// jeu.getMaillage().desactiverNoeuds(mur); // recoit un Rectangle
 	}
-	
+
+	public Vector<Rectangle> getMurs()
+	{
+		return murs;
+	}
 }
