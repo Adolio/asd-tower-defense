@@ -2,6 +2,8 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+
 import javax.swing.*;
 import models.jeu.Jeu;
 import models.terrain.Terrain;
@@ -133,9 +135,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		
 		Terrain terrain = jeu.getTerrain();
 		
+		// comment faire une rotation ?
+        //AffineTransform tx = new AffineTransform();
+        //double radians = -Math.PI/4;
+        //tx.rotate(radians);
+		//g2.drawImage(terrain.getImageDeFond(), tx, this);
+		
 		if(terrain.getImageDeFond() != null)
-			g2.drawImage(terrain.getImageDeFond(), 0, 0, 500, 500, null);
-
+			g2.drawImage(terrain.getImageDeFond(), 0, 0, null);
 		
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
@@ -166,12 +173,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					(int) tourSelectionnee.getWidth(), 
 					(int) tourSelectionnee.getHeight());
 			
-			g2.setColor(tourSelectionnee.getCouleurDeFond());
-			g2.drawOval((int)(tourSelectionnee.getXi() - tourSelectionnee.getRayonPortee() / 2 + tourSelectionnee.getWidth()/2), 
-						(int)(tourSelectionnee.getYi() - tourSelectionnee.getRayonPortee() / 2 + tourSelectionnee.getHeight() / 2), 
-					(int)tourSelectionnee.getRayonPortee(), 
-					(int)tourSelectionnee.getRayonPortee());
-
+			dessinerPortee(tourSelectionnee,g2);
 		}
 		
 		//------------------------------------
@@ -217,15 +219,32 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						(int) (tourAAjouter.getWidth()),
 						(int) (tourAAjouter.getHeight()));
 			}
-	
-			// affichage du rayon de portee
-			g2.setColor(tourAAjouter.getCouleurDeFond());
-			g2.drawOval((int)(sourisCaseX - tourAAjouter.getRayonPortee()/2 + tourAAjouter.getWidth()/2), 
-						(int)(sourisCaseY - tourAAjouter.getRayonPortee()/2 + tourAAjouter.getHeight()/2), 
-					(int)tourAAjouter.getRayonPortee(), 
-					(int)tourAAjouter.getRayonPortee());
+			else
+				// affichage du rayon de portee
+				dessinerPortee(tourAAjouter,g2);
 		}
-		
+	}
+	
+	private void dessinerPortee(Tour tour,Graphics2D g2)
+	{
+		// Set alpha.  0.0f is 100% transparent and 1.0f is 100% opaque.
+        float alpha = .3f;
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        
+		g2.setColor(tour.getCouleurDeFond());
+		g2.drawOval((int)(tour.getXi() - tour.getRayonPortee()/2 + tour.getWidth()/2), 
+					(int)(tour.getYi() - tour.getRayonPortee()/2 + tour.getHeight()/2), 
+					(int)tour.getRayonPortee(), 
+					(int)tour.getRayonPortee());
+
+        g2.setColor(Color.WHITE);
+        g2.fillOval((int)(tour.getXi() - tour.getRayonPortee()/2 + tour.getWidth()/2), 
+        			(int)(tour.getYi() - tour.getRayonPortee()/2 + tour.getHeight()/2), 
+        			(int)tour.getRayonPortee(), 
+        			(int)tour.getRayonPortee());
+        
+        // remet la valeur initial
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	}
 	
 	/**
@@ -262,34 +281,42 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	public void mousePressed(MouseEvent me)
 	{
-		// la selection se fait lors du clique
 		
-		for(Tour tour : jeu.getTours()) // pour chaque tour... 
-			if(tour.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
-			{	
-				if(tourSelectionnee == tour)
-					tourSelectionnee = null; // deselection
-				else
-				{
-					tourSelectionnee = tour; // la tour est selectionnee
-					// si une tour est selectionnee, il n'y pas d'ajout
-					tourAAjouter = null;  
+		if (me.getButton() == MouseEvent.BUTTON1)
+		{
+			// la selection se fait lors du clique
+			for(Tour tour : jeu.getTours()) // pour chaque tour... 
+				if (tour.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
+				{	
+					if (tourSelectionnee == tour)
+						tourSelectionnee = null; // deselection
+					else
+					{
+						tourSelectionnee = tour; // la tour est selectionnee
+						// si une tour est selectionnee, il n'y pas d'ajout
+						tourAAjouter = null;  
+					}
+					
+					// appel de l'ecouteur de selection
+					if(edsd != null)
+						edsd.tourSelectionnee(tourSelectionnee,0);
+					
+					return;
 				}
-				
-				// appel de l'ecouteur de selection
-				if(edsd != null)
-					edsd.tourSelectionnee(tourSelectionnee);
-				
-				return;
-			}
-	
-		// aucun tour trouvee => clique dans le vide.
-		tourSelectionnee = null;
+		
+			// aucun tour trouvee => clique dans le vide.
+			tourSelectionnee = null;
+		}
+		else
+		{
+			// deselection total
+			tourSelectionnee 	= null;
+			tourAAjouter 		= null;
+		}
 		
 		// appel de l'ecouteur de selection
 		if(edsd != null)
-			edsd.tourSelectionnee(tourSelectionnee);
-
+			edsd.tourSelectionnee(tourSelectionnee,0);
 	}
 	
 	/**
