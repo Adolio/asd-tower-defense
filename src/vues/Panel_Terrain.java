@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import models.jeu.Jeu;
+import models.terrain.Terrain;
 import models.tours.Tour;
 
 /**
@@ -124,15 +125,22 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		Graphics2D g2 = (Graphics2D) g;
 		
+		
+		Terrain terrain = jeu.getTerrain();
+		g2.drawImage(terrain.getImageDeFond(), 0, 0, 500, 500, null);
+		
 		//--------------------------
 		//-- affichage du terrain --
 		//--------------------------
+		
+		/*
 		g2.setColor(COULEUR_FOND);
 		g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0, 0, 50, HAUTEUR);
 		g2.fillRect(200, 100, 400, 300);
+		*/
 		
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
