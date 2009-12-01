@@ -34,15 +34,6 @@ public class Jeu
 	private Vector<Tour> tours;
 	
 	/**
-	 * Les murs sont utilises pour empecher le joueur de construire des tours dans 
-	 * certaines zones. Les ennemis ne peuvent egalement pas si rendre.
-	 * En fait, les murs reflettent les zones de la carte non accessible.
-	 * Les murs ne sont pas affiches. Ils sont simplement utilises pour les
-	 * controle d'acces de la carte.
-	 */
-	private Vector<Rectangle> murs;
-	
-	/**
 	 * Score courant du joueur
 	 */
 	private int score;
@@ -74,7 +65,6 @@ public class Jeu
 	public Jeu(Terrain terrain)
 	{
 		tours 		 = new Vector<Tour>();
-		murs 		 = new Vector<Rectangle>();
 		this.terrain = terrain;
 		terrain.setJeu(this);
 	}
@@ -113,14 +103,6 @@ public class Jeu
 		return false;
 	}
 
-	public void ajouterMur(Rectangle mur)
-	{
-		murs.add(mur);
-		
-		// TODO adaptation du maillage
-		// maillage.desactiverNoeuds(mur); // recoit un Rectangle
-	}
-	
 	/**
 	 * Permet de vendre une tour
 	 * 
@@ -168,7 +150,7 @@ public class Jeu
 				return false;
 		
 		// il n'y a pas un mur
-		for(Rectangle mur : murs)
+		for(Rectangle mur : terrain.getMurs())
 			if(tour.intersects(mur))
 				return false;
 		

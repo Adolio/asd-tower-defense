@@ -37,5 +37,6 @@ public class Fenetre_APropos extends JFrame
 		getContentPane().add(lAuteurs,BorderLayout.NORTH);
 		
 		setVisible(true);
+		setLocationRelativeTo(null); // centrage de la fenetre
 	}
 }

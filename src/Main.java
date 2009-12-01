@@ -40,11 +40,6 @@ public class Main
 	  // création du jeu
 	  Jeu jeu = new Jeu(terrain);
 	  
-	  // initialisation du jeu
-	  // TODO meilleur implementation
-	  jeu.ajouterMur(new Rectangle(0,0,50,500));
-	  jeu.ajouterMur(new Rectangle(200,100,400,300));
-	  
 	  // création de la fenetre du jeu
 	  new Fenetre_Jeu(jeu);
    }
