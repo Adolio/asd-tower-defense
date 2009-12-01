@@ -144,10 +144,10 @@ public class Maillage
         /*
          * Ajouter les noeuds au graphe.
          */
-        for (int x=0; x<largeurPixels; x+=LARGEUR_NOEUD) {
-            for (int y=0; y<hauteurPixels; y+=LARGEUR_NOEUD) {
-                noeuds.add(new Noeud((x + LARGEUR_NOEUD) / 2,
-                                     (y + LARGEUR_NOEUD) / 2));
+        for (int y=0; y<hauteurPixels; y+=LARGEUR_NOEUD) {
+            for (int x=0; x<largeurPixels; x+=LARGEUR_NOEUD) {
+                noeuds.add(new Noeud(x + (LARGEUR_NOEUD / 2),
+                                     y + (LARGEUR_NOEUD / 2)));
                 graphe.addVertex(noeuds.get(noeuds.size() - 1));
             }
         }
@@ -155,14 +155,14 @@ public class Maillage
         /*
          * Ajouter les arcs horizontaux.
          */
-        for (int x=0; x<largeurPixels / LARGEUR_NOEUD - 1; x+=1) {
-            for (int y=0; y<hauteurPixels / LARGEUR_NOEUD; y+=1) {
+        for (int y=0; y<hauteurPixels / LARGEUR_NOEUD; y+=1) {
+            for (int x=0; x<largeurPixels / LARGEUR_NOEUD - 1; x+=1) {
                 graphe.setEdgeWeight(
                     graphe.addEdge(
                         noeuds.get(x + y * largeurPixels / LARGEUR_NOEUD),
                         noeuds.get(x + y * (largeurPixels / LARGEUR_NOEUD) + 1)
                     ),
-                    WeightedGraph.DEFAULT_EDGE_WEIGHT
+                    (double)LARGEUR_NOEUD
                 );
             }
         }
@@ -170,14 +170,44 @@ public class Maillage
         /*
          * Ajouter les arcs verticaux.
          */
-        for (int x=0; x<largeurPixels / LARGEUR_NOEUD; x+=1) {
-            for (int y=0; y<hauteurPixels / LARGEUR_NOEUD - 1; y+=1) {
+        for (int y=0; y<hauteurPixels / LARGEUR_NOEUD - 1; y+=1) {
+            for (int x=0; x<largeurPixels / LARGEUR_NOEUD; x+=1) {
                 graphe.setEdgeWeight(
                     graphe.addEdge(
                         noeuds.get(x + y * largeurPixels / LARGEUR_NOEUD),
                         noeuds.get(x + (y + 1) * (largeurPixels / LARGEUR_NOEUD))
                     ),
-                    WeightedGraph.DEFAULT_EDGE_WEIGHT
+                    (double)LARGEUR_NOEUD
+                );
+            }
+        }
+        
+        /*
+         * Ajouter les arcs diagonaux descendants.
+         */
+        for (int x=0; x<largeurPixels / LARGEUR_NOEUD - 1; x+=1) {
+            for (int y=0; y<hauteurPixels / LARGEUR_NOEUD - 1; y+=1) {
+                graphe.setEdgeWeight(
+                        graphe.addEdge(
+                            noeuds.get(x + y * largeurPixels / LARGEUR_NOEUD),
+                            noeuds.get(x + (y+1)*(largeurPixels / LARGEUR_NOEUD) + 1)
+                        ),
+                        Math.sqrt(2.0 * Math.pow((double)LARGEUR_NOEUD, 2.0))
+                );
+            }
+        }
+        
+        /*
+         * Ajouter les arcs diagonaux ascendants.
+         */
+        for (int x=0; x<largeurPixels / LARGEUR_NOEUD - 1; x+=1) {
+            for (int y=1; y<hauteurPixels / LARGEUR_NOEUD; y+=1) {
+                graphe.setEdgeWeight(
+                        graphe.addEdge(
+                            noeuds.get(x + y * largeurPixels / LARGEUR_NOEUD),
+                            noeuds.get(x + (y-1)*(largeurPixels / LARGEUR_NOEUD) + 1)
+                        ),
+                        Math.sqrt(2.0 * Math.pow((double)LARGEUR_NOEUD, 2.0))
                 );
             }
         }
