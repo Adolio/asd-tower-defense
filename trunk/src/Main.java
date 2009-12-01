@@ -1,7 +1,7 @@
 import java.awt.Rectangle;
-
 import javax.swing.UIManager;
 import models.jeu.Jeu;
+import models.terrain.*;
 import vues.Fenetre_Jeu;
 
 /**
@@ -13,7 +13,7 @@ import vues.Fenetre_Jeu;
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public class Main 
+public class Main
 {
    /**
     * Programme principal.
@@ -35,8 +35,10 @@ public class Main
 		   */ 
 	  }
 	   
+	  TerrainDesert terrain = new TerrainDesert();
+	  
 	  // création du jeu
-	  Jeu jeu = new Jeu();
+	  Jeu jeu = new Jeu(terrain);
 	  
 	  // initialisation du jeu
 	  // TODO meilleur implementation

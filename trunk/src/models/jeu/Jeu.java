@@ -2,6 +2,8 @@ package models.jeu;
 
 import java.awt.Rectangle;
 import java.util.Vector;
+
+import models.terrain.Terrain;
 import models.tours.Tour;
 import vues.EcouteurOperationSurTour;
 
@@ -63,14 +65,18 @@ public class Jeu
 	
 	// TODO commenter et controler
 	private EcouteurOperationSurTour eops;
+
+	private Terrain terrain;
 	
 	/**
 	 * Constructeur de la partie
 	 */
-	public Jeu()
+	public Jeu(Terrain terrain)
 	{
-		tours = new Vector<Tour>();
-		murs = new Vector<Rectangle>();
+		tours 		 = new Vector<Tour>();
+		murs 		 = new Vector<Rectangle>();
+		this.terrain = terrain;
+		terrain.setJeu(this);
 	}
 	
 	/**
@@ -181,5 +187,10 @@ public class Jeu
 	public void ajouterEcouteurOperationSurTour(EcouteurOperationSurTour eops)
 	{
 		this.eops = eops;
+	}
+
+	public Terrain getTerrain()
+	{
+		return terrain;
 	}
 }
