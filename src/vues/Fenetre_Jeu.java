@@ -2,6 +2,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import models.tours.Tour;
 import models.jeu.Jeu;
 
@@ -24,6 +25,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 {
 	private static final long serialVersionUID = 1L;
 	
+	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
+	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	public final static String FENETRE_TITRE = "ASD - Tower Defense";
 	
 	//---------------------------
@@ -33,8 +36,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemAPropos	    = new JMenuItem("A propos");
-	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter");
+	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
+	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
 
 	//----------------------------
 	//-- declaration des panels --
@@ -121,8 +124,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
 	}
 
-	public void tourSelectionnee(Tour tour)
+	public void tourSelectionnee(Tour tour,int mode)
 	{
-		panelMenuInteraction.setTourSelectionnee(tour);
+		panelMenuInteraction.setTourSelectionnee(tour,mode);
 	}
 }

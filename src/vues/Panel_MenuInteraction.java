@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,11 +41,11 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 	private static final long serialVersionUID = 1L;
 	private JButton bTourFeu 		= new JButton("Feu");
 	private JButton bTourGlace 		= new JButton("Glace");
-	
+	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
 	private JLabel lScore 			= new JLabel();
 	private JLabel lTitreScore 		= new JLabel("Score :");
 	private JLabel lNbPiecesOr 		= new JLabel();
-	private JLabel lTitrePiecesOr 	= new JLabel("Pieces d'or :");
+	private JLabel lTitrePiecesOr 	= new JLabel(I_PIECES);
 	
 	
 	
@@ -72,26 +74,25 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 		bTourGlace.addActionListener(this);
 		pTours.add(bTourGlace);
 		
-		JPanel pPied = new JPanel(new FlowLayout());
+		//pTours.add(lTitreScore);
+		//pTours.add(lScore);
 		
-		add(lTitreScore);
-		pPied.add(lScore);
 		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
-		pPied.add(lTitrePiecesOr);
-		pPied.add(lNbPiecesOr);
+		pTours.add(lTitrePiecesOr);
+		pTours.add(lNbPiecesOr);
+	
 		
 		pInfoTour = new Panel_InfoTour();
 		pInfoTour.modifierEcouteurOperationSurTour(this);
 		add(pTours,BorderLayout.NORTH);
 		add(pInfoTour,BorderLayout.CENTER);
 		add(bLancerVague,BorderLayout.SOUTH);
-		add(pPied,BorderLayout.EAST);
 		
 	}
 	
-	public void setTourSelectionnee(Tour tour)
+	public void setTourSelectionnee(Tour tour, int mode)
 	{
-		pInfoTour.setTour(tour);
+		pInfoTour.setTour(tour, mode);
 	}
 
 	/**
@@ -108,13 +109,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 		{
 			TourDeFeu tourDeFeu = new TourDeFeu();
 			panelTerrain.setTourAAjouter(tourDeFeu);
-			pInfoTour.setTour(tourDeFeu);
+			pInfoTour.setTour(tourDeFeu,1);
 		}
 		else if(source == bTourGlace)
 		{
 			TourDeGlace tourDeGlace = new TourDeGlace();
 			panelTerrain.setTourAAjouter(tourDeGlace);
-			pInfoTour.setTour(tourDeGlace);
+			pInfoTour.setTour(tourDeGlace,1);
 		}
 	}
 
@@ -132,6 +133,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 	{
 		jeu.vendreTour(tour);
 		panelTerrain.setTourSelectionnee(null);
+		pInfoTour.effacerTour();
 	}
 
 	public void ajouterTour(Tour tour)

@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,11 +35,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private Tour tour;
 	private JLabel lNom;
 	private JTextArea lDescrition;
+	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/hammer.png");
+	private static final ImageIcon I_VENDRE = new ImageIcon("img/icones/coins_add.png");
 	private static final String TXT_AMELIORER = "Ameliorer";
-	private JButton bAmeliorer = new JButton(TXT_AMELIORER);
+	private JButton bAmeliorer = new JButton(TXT_AMELIORER,I_AMELIORER);
 	private static final String TXT_VENDRE = "Vendre";
-	private JButton bVendre = new JButton(TXT_VENDRE);
+	private JButton bVendre = new JButton(TXT_VENDRE,I_VENDRE);
 	private EcouteurOperationSurTour eost;
+	
 	
 	/**
 	 * Constructeur du panel
@@ -69,7 +73,12 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		add(pBoutons,BorderLayout.SOUTH);
 	
 		// initialisation a vide
-		setTour(null);
+		effacerTour();
+	}
+	
+	public void effacerTour()
+	{
+		setTour(null, 0);
 	}
 	
 	/**
@@ -79,18 +88,33 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	 * 
 	 * @param tour La tour a gerer
 	 */
-	public void setTour(Tour tour)
+	public void setTour(Tour tour, int mode)
 	{
-		// mode avec une tour selectionnee
+		// tour ou pas ?
 		if(tour != null)
 		{
-			// adaptation des champs
-			lNom.setText(tour.getNom()+" ["+tour.getPrixAchat()+"]");
-			lDescrition.setText(tour.getDescription());
-			bAmeliorer.setVisible(true);
-			bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
-			bVendre.setVisible(true);
-			bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
+		
+		
+			// tour selectionnee pour information
+			if(mode == 0)
+			{
+				// adaptation des champs
+				lNom.setText(tour.getNom()+" [ valeur : "+tour.getPrixAchat()+"]");
+				lDescrition.setText(tour.getDescription());
+				bAmeliorer.setVisible(true);
+				bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
+				bVendre.setVisible(true);
+				bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
+			}
+			// tour selectionnee pour achat
+			else if(mode == 1)
+			{
+				// adaptation des champs
+				lNom.setText(tour.getNom()+" [ prix d'achat : "+tour.getPrixAchat()+"]");
+				lDescrition.setText(tour.getDescription());
+				bAmeliorer.setVisible(false);
+				bVendre.setVisible(false);
+			}
 			
 			// sauvegarde de la tour pour les operations
 			this.tour = tour;
