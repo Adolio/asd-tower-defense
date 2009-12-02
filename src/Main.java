@@ -1,7 +1,6 @@
-import java.awt.Rectangle;
 import javax.swing.UIManager;
 import models.jeu.Jeu;
-import models.terrain.*;
+import models.terrains.*;
 import vues.Fenetre_Jeu;
 
 /**

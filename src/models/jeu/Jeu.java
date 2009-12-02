@@ -1,9 +1,10 @@
 package models.jeu;
-
+import java.awt.Image;
 import java.awt.Rectangle;
-import java.util.Vector;
+import java.util.ArrayList;
 
-import models.terrain.Terrain;
+import models.creatures.Creature;
+import models.terrains.Terrain;
 import models.tours.Tour;
 import vues.EcouteurOperationSurTour;
 
@@ -28,12 +29,6 @@ import vues.EcouteurOperationSurTour;
 public class Jeu
 {
 	/**
-	 * Les tours sont les elements principals du jeu.
-	 * @see Tour
-	 */
-	private Vector<Tour> tours;
-	
-	/**
 	 * Score courant du joueur
 	 */
 	private int score;
@@ -54,6 +49,7 @@ public class Jeu
 	 */
 	private int nbPiecesOr 		= 100;
 	
+	
 	// TODO commenter et controler
 	private EcouteurOperationSurTour eops;
 
@@ -64,18 +60,11 @@ public class Jeu
 	 */
 	public Jeu(Terrain terrain)
 	{
-		tours 		 = new Vector<Tour>();
 		this.terrain = terrain;
 		terrain.setJeu(this);
-	}
-	
-	/**
-	 * Permet de recuperer la liste des tours
-	 * @return la liste des tours
-	 */
-	public Vector<Tour> getTours()
-	{
-		return tours;
+		
+		// TODO effacer ca !!!
+		lancerVague();
 	}
 	
 	/**
@@ -95,12 +84,28 @@ public class Jeu
 			nbPiecesOr -= tour.getPrixAchat();
 
 			// ajout de la tour dans le terrain de jeu
-			tours.add(tour);
+			terrain.ajouterTour(tour);
 			
 			return true;
 		}
 		
 		return false;
+	}
+
+	/**
+	 * Permet de savoir si la tour peut etre posee.
+	 * 
+	 * @param tour la tour a posee
+	 * @return true si c'est possible et false sinon
+	 */
+	public boolean laTourPeutEtrePosee(Tour tour)
+	{
+		// elle peut etre posee sur le terrain
+		if(!terrain.laTourPeutEtrePosee(tour))
+			return false;
+		
+		// et le joueur a assez d'argent
+		return nbPiecesOr - tour.getPrixAchat() >= 0;
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class Jeu
 		// maillage.activerNoeuds(tour); // recoit un Rectangle
 		
 		// supprime la tour
-		tours.remove(tour);
+		terrain.supprimerTour(tour);
 	}
 	
 	/**
@@ -141,25 +146,7 @@ public class Jeu
 		
 		return false;
 	}
-	
-	public boolean laTourPeutEtrePosee(Tour tour)
-	{
-		// il n'y a pas déjà une tour
-		for(Tour tourCourante : tours)
-			if(tour.intersects(tourCourante))
-				return false;
-		
-		// il n'y a pas un mur
-		for(Rectangle mur : terrain.getMurs())
-			if(tour.intersects(mur))
-				return false;
-		
-		// TODO il n'y a pas déjà un ennemi
-		
-		
-		// le joueur a assez d'argent
-		return nbPiecesOr - tour.getPrixAchat() >= 0;
-	}
+
 	
 	public  int getNbPiecesOr()
 	{
@@ -171,8 +158,39 @@ public class Jeu
 		this.eops = eops;
 	}
 
-	public Terrain getTerrain()
+	public int getNbViesRestantes()
 	{
-		return terrain;
+		return viesRestantes;
 	}
+
+	public Image getImageDeFondTerrain()
+	{
+		return terrain.getImageDeFond();
+	}
+
+	public ArrayList<Tour> getTours()
+	{
+		return terrain.getTours();
+	}
+	
+	public ArrayList<Creature> getCreatures()
+	{
+		return terrain.getCreature();
+	}
+	
+	public void lancerVague()
+	{
+		for(int i=0;i<20;i++)
+		{
+			Rectangle depart = terrain.getZoneDepart();
+			
+			int x = (int)(Math.random() * (depart.getWidth() + 1));
+			int y = (int)(Math.random() * (depart.getHeight() + 1));
+			
+			terrain.ajouterCreature(new Creature(
+					(int)depart.getX()+x,
+					(int)depart.getY()+y));
+		}
+	}
+	
 }

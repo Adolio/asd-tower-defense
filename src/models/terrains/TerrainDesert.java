@@ -1,4 +1,4 @@
-package models.terrain;
+package models.terrains;
 
 import java.awt.Rectangle;
 
@@ -6,7 +6,9 @@ public class TerrainDesert extends Terrain
 {
 	public TerrainDesert()
 	{
-		super(500, 500, "img/cartes/desert.png");
+		super(500, 500, "img/cartes/desert.png", 
+			  new Rectangle(480,20,40,80),
+			  new Rectangle(20,460,40,80));
 		
 		// tour du terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche

@@ -2,11 +2,11 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-
 import javax.swing.*;
+
+import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.terrain.Terrain;
+import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -133,16 +133,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		g2.setColor(COULEUR_FOND);
 		g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		
-		Terrain terrain = jeu.getTerrain();
-		
 		// comment faire une rotation ?
         //AffineTransform tx = new AffineTransform();
         //double radians = -Math.PI/4;
         //tx.rotate(radians);
 		//g2.drawImage(terrain.getImageDeFond(), tx, this);
 		
-		if(terrain.getImageDeFond() != null)
-			g2.drawImage(terrain.getImageDeFond(), 0, 0, null);
+		if(jeu.getImageDeFondTerrain() != null)
+			g2.drawImage(jeu.getImageDeFondTerrain(), 0, 0, null);
 		
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
@@ -150,6 +148,17 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(afficherGraphe)
 		{
 			//...
+		}
+		
+		//-----------------------------
+		//-- affichage des creatures --
+		//-----------------------------
+		for(Creature creature : jeu.getCreatures())
+		{
+			g2.setColor(Color.YELLOW);
+			g2.fillOval(creature.getX(), creature.getY(), 
+					15, 
+					15);
 		}
 		
 		//-------------------------
@@ -162,6 +171,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					(int)tour.getWidth(), 
 					(int)tour.getHeight());
 		}
+		
+		
 		
 		//---------------------------------
 		//-- entour la tour selectionnee --
@@ -281,7 +292,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	public void mousePressed(MouseEvent me)
 	{
-		
 		if (me.getButton() == MouseEvent.BUTTON1)
 		{
 			// la selection se fait lors du clique

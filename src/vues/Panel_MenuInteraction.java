@@ -2,17 +2,13 @@ package vues;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import models.jeu.Jeu;
-
 import models.tours.Tour;
 import models.tours.TourDeFeu;
 import models.tours.TourDeGlace;
@@ -42,8 +38,11 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 	private JButton bTourFeu 		= new JButton("Feu");
 	private JButton bTourGlace 		= new JButton("Glace");
 	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
+	private static final ImageIcon I_VIES = new ImageIcon("img/icones/heart.png");
 	private JLabel lScore 			= new JLabel();
 	private JLabel lTitreScore 		= new JLabel("Score :");
+	private JLabel lVies 			= new JLabel();
+	private JLabel lTitreVies 		= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 		= new JLabel();
 	private JLabel lTitrePiecesOr 	= new JLabel(I_PIECES);
 	
@@ -76,11 +75,15 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 		
 		//pTours.add(lTitreScore);
 		//pTours.add(lScore);
-		
-		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
-		pTours.add(lTitrePiecesOr);
-		pTours.add(lNbPiecesOr);
 	
+		pTours.add(lTitrePiecesOr);
+		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
+		pTours.add(lNbPiecesOr);
+		
+		
+		pTours.add(lTitreVies);
+		lVies.setText(jeu.getNbViesRestantes()+"");
+		pTours.add(lVies);
 		
 		pInfoTour = new Panel_InfoTour();
 		pInfoTour.modifierEcouteurOperationSurTour(this);
