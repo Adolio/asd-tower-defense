@@ -26,7 +26,7 @@ public class Maillage
 {
     
     private final int DESACTIVE = Integer.MAX_VALUE;
-    private final int LARGEUR_NOEUD = 2;
+    private final int LARGEUR_NOEUD = 10;
     private int largeurPixels;
     private int hauteurPixels;
     private ArrayList<Noeud> noeuds;
@@ -123,18 +123,22 @@ public class Maillage
      * @param xArrivee
      * @param yArrivee
      * @return
+     * @throws Exception 
      */
     public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
-                                            int xArrivee, int yArrivee) {
+                                            int xArrivee, int yArrivee) throws Exception {
         ArrayList<Point> chemin = new ArrayList<Point>();
         DijkstraShortestPath<Noeud, DefaultWeightedEdge> dijkstra =
             new DijkstraShortestPath<Noeud, DefaultWeightedEdge>
                 (graphe,
                  noeudAExact(pointA(xDepart, yDepart)),
                  noeudAExact(pointA(xArrivee, yArrivee)));
+        GraphPath<Noeud, DefaultWeightedEdge> dijkstraChemin = dijkstra.getPath();
         
+        if(dijkstraChemin == null)
+            throw new Exception("Le chemin n'existe pas!");
         
-        for (Noeud noeud : Graphs.getPathVertexList(dijkstra.getPath())) {
+        for (Noeud noeud : Graphs.getPathVertexList(dijkstraChemin)) {
             chemin.add(new Point(noeud.getX(), noeud.getY()));
         }
         
