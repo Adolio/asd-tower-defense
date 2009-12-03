@@ -182,9 +182,23 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		for(Creature creature : jeu.getCreatures())
 		{
 			g2.setColor(Color.YELLOW);
-			g2.fillOval(creature.getX(), creature.getY(), 
-					15, 
-					15);
+			g2.fillOval((int)creature.getX(), (int)creature.getY(), 
+					(int) creature.getWidth(), (int) creature.getHeight());
+			
+			ArrayList<Point> chemin = creature.getChemin();
+			if(chemin != null)
+			{
+				Point PointPrecedent = chemin.get(0);
+				for(Point point : chemin)
+				{
+					g2.setColor(Color.GREEN);
+					g2.fillOval(point.x,point.y,4,4);
+					
+					g2.setColor(Color.BLUE);
+					g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
+					PointPrecedent = point;
+				}
+			}
 		}
 		
 		//-------------------------

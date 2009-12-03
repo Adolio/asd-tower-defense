@@ -1,11 +1,10 @@
 package models.creatures;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
-public abstract class Creature
+public abstract class Creature extends Rectangle
 {
-	protected int x;
-	protected int y;
 	private ArrayList<Point> chemin;
 	private int type;
 	private int sante;
@@ -13,20 +12,9 @@ public abstract class Creature
 	private int gainPieceDOr;
 	private double angle;
 	
-	public Creature(int x, int y)
+	public Creature(int x, int y, int largeur, int hauteur)
 	{
-		this.x = x;
-		this.y = y;
-	}
-
-	public int getX()
-	{
-		return x;
-	}
-
-	public int getY()
-	{
-		return y;
+		super(x,y,largeur,hauteur);
 	}
 
 	public ArrayList<Point> getChemin()
@@ -64,5 +52,10 @@ public abstract class Creature
 	public void setY(int y)
 	{
 		this.y = y;
+	}
+
+	public void setChemin(ArrayList<Point> chemin)
+	{
+		this.chemin = chemin;
 	}
 }

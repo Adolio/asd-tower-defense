@@ -182,13 +182,22 @@ public class Jeu
 			for(int i=0;i<vague.getNbDeCreatures();i++)
 			{
 				Rectangle depart = terrain.getZoneDepart();
+				Rectangle arrivee = terrain.getZoneArrivee();
 				
 				int x = (int)(Math.random() * (depart.getWidth() + 1));
 				int y = (int)(Math.random() * (depart.getHeight() + 1));
 				
 				Creature creature = vague.getNouvelleCreature();
-				creature.setX((int) (x+depart.getX()));
-				creature.setY((int) (y+depart.getY()));
+				int xDepart = (int) (x+depart.getX());
+				int yDepart = (int) (y+depart.getY());
+				
+				creature.setX(xDepart);
+				creature.setY(yDepart);
+				
+				int xArrivee = (int) (arrivee.getX()+arrivee.getWidth()/2);
+				int yArrivee = (int) (arrivee.getY()+arrivee.getHeight()/2);
+				System.out.println(xArrivee+" "+yArrivee);
+				creature.setChemin(terrain.getChemin(xDepart, yDepart, xArrivee, yArrivee));
 				terrain.ajouterCreature(creature);
 			}
 			
