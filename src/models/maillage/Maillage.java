@@ -136,7 +136,18 @@ public class Maillage
      */
     public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
                                             int xArrivee, int yArrivee) throws Exception {
-        ArrayList<Point> chemin = new ArrayList<Point>();
+
+		/*
+		 * Test des arguments
+		 */
+		if (xDepart >= largeurPixels || xArrivee >= largeurPixels
+				|| xDepart < 0 || xArrivee < 0)
+			throw new IllegalArgumentException("Valeur invalide en x");
+		if (yDepart >= hauteurPixels || yArrivee >= hauteurPixels || yDepart < 0
+				|| yArrivee < 0)
+			throw new IllegalArgumentException("Valeur invalide en y");
+    	
+    	ArrayList<Point> chemin = new ArrayList<Point>();
         DijkstraShortestPath<Noeud, DefaultWeightedEdge> dijkstra =
             new DijkstraShortestPath<Noeud, DefaultWeightedEdge>
                 (graphe,
@@ -263,6 +274,7 @@ public class Maillage
         Noeud noeud = noeuds.get((p.y - 1) /
                 LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD) +
                 (p.x - 1) / LARGEUR_NOEUD); 
+        System.out.println(noeud);
         return noeud;
     }
     
@@ -273,15 +285,10 @@ public class Maillage
      * @return
      */
 	private Point pointA(int x, int y)
-	{		
-		if (x == largeurPixels)
-			return pointA(x - 1, y);
-		if (y == hauteurPixels)
-			return pointA(x, y - 1);
-
-		return new Point(x
-				+ Math.abs((x - (LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD), y
-				+ Math.abs((y - (LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
+	{
+		return new Point(
+				x - (x % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2), 
+				y - (y % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2));
 	}
 
     /**
