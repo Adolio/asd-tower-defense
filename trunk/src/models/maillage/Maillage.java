@@ -261,12 +261,19 @@ public class Maillage
                          y + Math.abs((y-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
     }
     
+    /**
+     * @return
+     */
     public ArrayList<Point> getNoeuds()
     {
-        // TODO
-        // retourner tous les noeuds du maillage
-        return null;
+        ArrayList<Point> points = new ArrayList<Point>();
+        
+        for (Noeud noeud : noeuds) {
+            points.add(new Point(noeud.getX(), noeud.getX()));
+        }
+        return points;
     }
+    
     
     public ArrayList<Line2D> getArcs()
     {
