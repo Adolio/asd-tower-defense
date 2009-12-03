@@ -1,4 +1,6 @@
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import models.maillage.*;
@@ -44,7 +46,7 @@ public class TestMaillage
         // Calcul et affichage du résultat.
         //----------------------------------------------------------------------------
         temps = System.currentTimeMillis();
-        maillage = new Maillage(1000, 760);
+        maillage = new Maillage(10, 6);
         temps = System.currentTimeMillis() - temps;
         System.out.println(maillage + "\n");
         System.out.println("Temps de génération du maillage : " +
@@ -52,6 +54,13 @@ public class TestMaillage
         System.out.println("Mémoire utilisée                : " +
                            Math.round(memoireUtilisee() / (1024.0 * 1024.0) * 100)
                                                                  / 100.0 + " [Mb]");
+        
+        temps = System.currentTimeMillis();
+        for(Point point : maillage.plusCourtChemin(0, 0, 4, 3)){
+           System.out.println(point); 
+        }
+        temps = System.currentTimeMillis() - temps;
+        System.out.println("Temps algorithme ACPC : " + temps / 1000.0 + " [sec.]");
         
         //----------------------------------------------------------------------------
         // Fin du programme.
