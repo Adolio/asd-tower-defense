@@ -72,7 +72,11 @@ public class Terrain
 		try
 		{
 			return maillage.plusCourtChemin(xDepart, yDepart, xArrivee, yArrivee);
-		} 
+		}
+		catch (IllegalArgumentException e)
+		{
+			return null;
+		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
@@ -133,7 +137,7 @@ public class Terrain
 		murs.add(mur);
 		
 		// TODO adaptation du maillage
-		// maillage.desactiverNoeuds(mur); // recoit un Rectangle
+		// maillage.desactiverZone(mur); // recoit un Rectangle
 	}
 	
 	/**
@@ -177,6 +181,10 @@ public class Terrain
 				return false;
 		
 		// TODO il n'y a pas déjà un ennemi
+		for(Rectangle creature : creatures)
+			if(tour.intersects(creature))
+				return false;
+		
 		return true;
 	}
 	
