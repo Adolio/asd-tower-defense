@@ -115,15 +115,21 @@ public class Maillage
         // TODO : désactiver les noeuds dans la zone donnée.
         // Pour cela, une idée serait de mettre simplement le poids des noeuds
         // concernées à une valeur pseudo infinie.
-    	
-    	// 1. Trouver les noeuds contenus dans le rectangle.
-    	Point coinSuperieurGauche = pointA(rectangle.x, rectangle.y);
-    	Point coinSuperieurDroit = pointA(rectangle.x+rectangle.width, rectangle.y);
-    	Point coinInferieurGauche = pointA(rectangle.x, rectangle.y+rectangle.height);
-    	Point coinInterieurDroit = pointA(rectangle.x+rectangle.width, rectangle.y+rectangle.height);
-    	
-    	
-    	
+
+		for (int i = indexOfNoeudAExact(pointA(rectangle.x, rectangle.y)); i <= rectangle.width
+				/ LARGEUR_NOEUD; i += LARGEUR_NOEUD)
+			for (int j = i; j <= rectangle.height / LARGEUR_NOEUD; j += (largeurPixels / LARGEUR_NOEUD))
+				desactiver(noeuds.get(j));
+    }
+    
+    /**
+     * Désactive l'ensemble des arcs du noeud.
+     * @param noeud Le noeud dont on désactive les arcs.
+     */
+    private void desactiver(Noeud noeud){
+    	for(DefaultWeightedEdge edge :  graphe.edgesOf(noeud)){
+    		graphe.setEdgeWeight(edge, DESACTIVE);
+    	}
     }
     
     /**
@@ -271,11 +277,14 @@ public class Maillage
      * @return
      */
     private Noeud noeudAExact(Point p) {
-        Noeud noeud = noeuds.get((p.y - 1) /
-                LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD) +
-                (p.x - 1) / LARGEUR_NOEUD);
-        return noeud;
+        return noeuds.get(indexOfNoeudAExact(p));
     }
+    
+	private int indexOfNoeudAExact(Point p)
+	{
+		return (p.y - 1) / LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD)
+				+ (p.x - 1) / LARGEUR_NOEUD;
+	}
     
     /**
      * 
