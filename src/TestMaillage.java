@@ -46,7 +46,7 @@ public class TestMaillage
         // Calcul et affichage du résultat.
         //----------------------------------------------------------------------------
         temps = System.currentTimeMillis();
-        maillage = new Maillage(10, 6);
+        maillage = new Maillage(800, 600);
         temps = System.currentTimeMillis() - temps;
         System.out.println(maillage + "\n");
         System.out.println("Temps de génération du maillage : " +
@@ -56,9 +56,7 @@ public class TestMaillage
                                                                  / 100.0 + " [Mb]");
         
         temps = System.currentTimeMillis();
-        for(Point point : maillage.plusCourtChemin(0, 0, 4, 3)){
-           System.out.println(point); 
-        }
+        ArrayList<Point> points = maillage.plusCourtChemin(0, 0, 0, 0);
         temps = System.currentTimeMillis() - temps;
         System.out.println("Temps algorithme ACPC : " + temps / 1000.0 + " [sec.]");
         
