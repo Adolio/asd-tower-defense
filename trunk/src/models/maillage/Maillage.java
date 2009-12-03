@@ -110,11 +110,17 @@ public class Maillage
      *            la zone a désactiver
      * @throws IllegalArgumentException
      */
-    public void desactiverNoeuds(Rectangle rectangle) throws IllegalArgumentException
+    public void desactiverZone(Rectangle rectangle) throws IllegalArgumentException
     {
         // TODO : désactiver les noeuds dans la zone donnée.
         // Pour cela, une idée serait de mettre simplement le poids des noeuds
         // concernées à une valeur pseudo infinie.
+    	
+    	// 1. Trouver les noeuds contenus dans le rectangle.
+    	Point coinSuperieurGauche = pointA(rectangle.x, rectangle.y);
+    	Point coinSuperieurDroit = pointA(rectangle.x+rectangle.width, rectangle.y);
+    	Point coinInferieurGauche = pointA(rectangle.x, rectangle.y+rectangle.height);
+    	Point coinInterieurDroit = pointA(rectangle.x+rectangle.width, rectangle.y+rectangle.height);
     	
     	
     	
@@ -266,12 +272,18 @@ public class Maillage
      * @param y
      * @return
      */
-    private Point pointA (int x, int y) {
-        Point p = new Point(x + Math.abs((x-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD),
-                y + Math.abs((y-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
-        return p;
-    }
-    
+	private Point pointA(int x, int y)
+	{		
+		if (x == largeurPixels)
+			return pointA(x - 1, y);
+		if (y == hauteurPixels)
+			return pointA(x, y - 1);
+
+		return new Point(x
+				+ Math.abs((x - (LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD), y
+				+ Math.abs((y - (LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
+	}
+
     /**
      * @return
      */
