@@ -30,7 +30,7 @@ public class Maillage
     private int largeurPixels;
     private int hauteurPixels;
     private ArrayList<Noeud> noeuds;
-    private WeightedPseudograph<Noeud, DefaultWeightedEdge> graphe;
+    private SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe;
     
     /**
      * @param largeurPixels
@@ -115,6 +115,9 @@ public class Maillage
         // TODO : désactiver les noeuds dans la zone donnée.
         // Pour cela, une idée serait de mettre simplement le poids des noeuds
         // concernées à une valeur pseudo infinie.
+    	
+    	
+    	
     }
     
     /**
@@ -164,10 +167,10 @@ public class Maillage
      * @param murs
      * @return
      */
-    private WeightedPseudograph<Noeud,DefaultWeightedEdge> construireGraphe()
+    private SimpleWeightedGraph<Noeud,DefaultWeightedEdge> construireGraphe()
     {
-        WeightedPseudograph<Noeud, DefaultWeightedEdge> graphe =
-            new WeightedPseudograph<Noeud, DefaultWeightedEdge>
+    	SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe =
+            new SimpleWeightedGraph<Noeud, DefaultWeightedEdge>
                                                         (DefaultWeightedEdge.class);
         noeuds = new ArrayList<Noeud>();
         
