@@ -273,8 +273,7 @@ public class Maillage
     private Noeud noeudAExact(Point p) {
         Noeud noeud = noeuds.get((p.y - 1) /
                 LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD) +
-                (p.x - 1) / LARGEUR_NOEUD); 
-        System.out.println(noeud);
+                (p.x - 1) / LARGEUR_NOEUD);
         return noeud;
     }
     
