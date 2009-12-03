@@ -56,7 +56,12 @@ public class TestMaillage
                                                                  / 100.0 + " [Mb]");
         
         temps = System.currentTimeMillis();
-        ArrayList<Point> points = maillage.plusCourtChemin(3, 3, 1, 2);
+        try {
+            ArrayList<Point> points = maillage.plusCourtChemin(3, 3, 1, 2);
+        }
+        catch (Exception e) {
+            System.out.println("Merde!");
+        }
         temps = System.currentTimeMillis() - temps;
         System.out.println("Temps algorithme ACPC : " + temps / 1000.0 + " [sec.]");
         
