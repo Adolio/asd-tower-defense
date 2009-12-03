@@ -30,7 +30,7 @@ public class Maillage
     private int largeurPixels;
     private int hauteurPixels;
     private ArrayList<Noeud> noeuds;
-    private DefaultDirectedWeightedGraph<Noeud, DefaultWeightedEdge> graphe;
+    private WeightedPseudograph<Noeud, DefaultWeightedEdge> graphe;
     
     /**
      * @param largeurPixels
@@ -133,6 +133,7 @@ public class Maillage
                  noeudAExact(pointA(xDepart, yDepart)),
                  noeudAExact(pointA(xArrivee, yArrivee)));
         
+        
         for (Noeud noeud : Graphs.getPathVertexList(dijkstra.getPath())) {
             chemin.add(new Point(noeud.getX(), noeud.getY()));
         }
@@ -159,10 +160,10 @@ public class Maillage
      * @param murs
      * @return
      */
-    private DefaultDirectedWeightedGraph<Noeud,DefaultWeightedEdge> construireGraphe()
+    private WeightedPseudograph<Noeud,DefaultWeightedEdge> construireGraphe()
     {
-        DefaultDirectedWeightedGraph<Noeud, DefaultWeightedEdge> graphe =
-            new DefaultDirectedWeightedGraph<Noeud, DefaultWeightedEdge>
+        WeightedPseudograph<Noeud, DefaultWeightedEdge> graphe =
+            new WeightedPseudograph<Noeud, DefaultWeightedEdge>
                                                         (DefaultWeightedEdge.class);
         noeuds = new ArrayList<Noeud>();
         
@@ -246,8 +247,10 @@ public class Maillage
      * @return
      */
     private Noeud noeudAExact(Point p) {
-        return noeuds.get((p.y - 1) / LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD)
-                          + (p.x - 1) / LARGEUR_NOEUD);
+        Noeud noeud = noeuds.get((p.y - 1) /
+                LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD) +
+                (p.x - 1) / LARGEUR_NOEUD); 
+        return noeud;
     }
     
     /**
@@ -257,8 +260,9 @@ public class Maillage
      * @return
      */
     private Point pointA (int x, int y) {
-        return new Point(x + Math.abs((x-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD),
-                         y + Math.abs((y-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
+        Point p = new Point(x + Math.abs((x-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD),
+                y + Math.abs((y-(LARGEUR_NOEUD / 2)) % LARGEUR_NOEUD));
+        return p;
     }
     
     /**

@@ -37,6 +37,14 @@ public class Noeud
         this.x = x;
         this.y = y;
     }
+    
+    /**
+     * @param source
+     */
+    public Noeud (Noeud source) {
+        x = source.x;
+        y = source.y;
+    }
 
     /**
      * Getter pour le champ <tt>x</tt>
