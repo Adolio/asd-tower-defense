@@ -127,7 +127,7 @@ public class Maillage
      * @param noeud Le noeud dont on désactive les arcs.
      */
     private void desactiver(Noeud noeud){
-    	for(DefaultWeightedEdge edge :  graphe.edgesOf(noeud)){
+    	for(DefaultWeightedEdge edge : graphe.edgesOf(noeud)){
     		graphe.setEdgeWeight(edge, DESACTIVE);
     	}
     }
@@ -312,6 +312,24 @@ public class Maillage
         return points;
     }
     
+    public ArrayList<Line2D> getArcsActifs(){
+    	ArrayList<Line2D> retour = new ArrayList<Line2D>();
+    	
+    	for(DefaultWeightedEdge edge : graphe.edgeSet()){
+    		if(graphe.getEdgeWeight(edge) != DESACTIVE) 
+    			{
+    			int x_depart = graphe.getEdgeSource(edge).getX();
+    			int y_depart = graphe.getEdgeSource(edge).getY();
+    			int x_arrivee = graphe.getEdgeTarget(edge).getX();
+    			int y_arrivee = graphe.getEdgeTarget(edge).getY();
+    			
+    			retour.add(new Line2D(){});
+    			
+    			}
+    	}
+    	
+    	return retour;
+    }
     
     public ArrayList<Line2D> getArcs()
     {
