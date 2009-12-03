@@ -60,7 +60,7 @@ public abstract class Tour extends Rectangle
 	/**
 	 * rayon de portee de la tour
 	 */
-	private double rayonPortee = 100;
+	protected double rayonPortee = 100;
 	
 	/**
 	 * Constructeur de la tour
@@ -134,9 +134,15 @@ public abstract class Tour extends Rectangle
 	{
 		return (int) (prixTotal * coeffPrixVente);
 	}
-	
+
+	/*
 	public String toString()
 	{
-		return x+" "+y+" "+prixTotal;
+		return x+" "+y+" "+width;
+	}*/
+
+	public int getPrixTotal()
+	{
+		return prixTotal;
 	}
 }

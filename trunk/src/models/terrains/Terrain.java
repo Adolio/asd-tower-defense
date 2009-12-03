@@ -4,8 +4,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
-
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.maillage.Maillage;
@@ -64,6 +64,20 @@ public class Terrain
 	public void setJeu(Jeu jeu)
 	{
 		this.jeu = jeu;
+	}
+	
+	public ArrayList<Point> getChemin(int xDepart, int yDepart, 
+			  						  int xArrivee, int yArrivee)
+	{
+		try
+		{
+			return maillage.plusCourtChemin(xDepart, yDepart, xArrivee, yArrivee);
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public int getLargeur()
@@ -184,5 +198,16 @@ public class Terrain
 	public Rectangle getZoneArrivee()
 	{
 		return ZONE_ARRIVEE;
+	}
+
+	public void desactiverZone(Rectangle zone)
+	{
+		maillage.desactiverZone(zone);
+	}
+
+	public ArrayList<Line2D> getArcActifs()
+	{
+		//return maillage.getArcActifs();
+		return null;
 	}
 }

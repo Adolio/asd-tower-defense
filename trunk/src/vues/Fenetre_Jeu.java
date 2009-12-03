@@ -2,7 +2,6 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import models.tours.Tour;
 import models.jeu.Jeu;
 
@@ -20,8 +19,7 @@ import models.jeu.Jeu;
  * @see JFrame
  * @see ActionListener
  */
-public class Fenetre_Jeu extends JFrame implements ActionListener, 
-													EcouteurDeSelectionDeTour
+public class Fenetre_Jeu extends JFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -45,11 +43,17 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	/**
 	 * panel contenant le terrain de jeu
 	 */
-	Panel_Terrain panelTerrain;
+	private Panel_Terrain panelTerrain;
 	/**
 	 * panel contenant le menu d'interaction
 	 */
-	Panel_MenuInteraction panelMenuInteraction;
+	private Panel_MenuInteraction panelMenuInteraction;
+	
+	
+	private Panel_InfoTour panelInfoTour;
+	
+	private Jeu jeu;
+	
 	
 	/**
 	 * Constructeur de la fenêtre. Creer et affiche la fenetre.
@@ -64,7 +68,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		super(FENETRE_TITRE);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		this.jeu = jeu;
 		
 		//--------------------
 		//-- menu principal --
@@ -91,10 +95,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		//-- panel du jeu et menu d'interaction --
 		//----------------------------------------
 		// creation des panels
-		panelTerrain = new Panel_Terrain(jeu);
-		// pour savoir quand un tour est selectionnee
-		panelTerrain.modifierEcouteurDeSelectionDeTour(this); 
-		panelMenuInteraction = new Panel_MenuInteraction(panelTerrain,jeu);
+		panelTerrain = new Panel_Terrain(jeu, this);
+		panelMenuInteraction = new Panel_MenuInteraction(jeu,this);
 		
 		// ajout des panels
 		add(panelTerrain,BorderLayout.WEST);
@@ -124,8 +126,56 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
 	}
 
+	public void acheterTour(Tour tour)
+	{
+		if(jeu.poserTour(tour))
+		{
+			panelTerrain.deselectionner();
+			panelMenuInteraction.miseAJourNbPiecesOr(jeu.getNbPiecesOr());
+			panelInfoTour.effacerTour();
+		}
+	}
+	
+	public void ameliorerTour(Tour tour)
+	{
+		if(jeu.ameliorerTour(tour))
+		{
+			panelMenuInteraction.miseAJourNbPiecesOr(jeu.getNbPiecesOr());
+			panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
+		}
+	}
+	
 	public void tourSelectionnee(Tour tour,int mode)
 	{
 		panelMenuInteraction.setTourSelectionnee(tour,mode);
+	}
+
+	public void setTourAAcheter(Tour tour)
+	{
+		panelTerrain.setTourAAjouter(tour);
+		panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
+	}
+
+	public void objetSelectionnee(Object object)
+	{
+		panelTerrain.setTourSelectionnee((Tour)object);
+	}
+	
+	public void setPanelInfoTour(Panel_InfoTour panelInfoTour)
+	{
+		this.panelInfoTour = panelInfoTour;
+	}
+
+	public void vendreTour(Tour tour)
+	{
+		jeu.vendreTour(tour);
+		panelInfoTour.effacerTour();
+		panelMenuInteraction.setNbPiecesOr(jeu.getNbPiecesOr());
+		panelTerrain.setTourSelectionnee(null);
+	}
+	
+	public void lancerVagueSuivante()
+	{
+		jeu.lancerVagueSuivante();
 	}
 }

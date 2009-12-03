@@ -31,6 +31,10 @@ import models.tours.Tour;
  */
 public class Panel_InfoTour extends JPanel implements ActionListener
 {
+	
+	public static final int MODE_SELECTION = 0;
+	public static final int MODE_ACHAT = 1;
+	
 	private static final long serialVersionUID = 1L;
 	private Tour tour;
 	private JLabel lNom;
@@ -41,19 +45,18 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JButton bAmeliorer = new JButton(TXT_AMELIORER,I_AMELIORER);
 	private static final String TXT_VENDRE = "Vendre";
 	private JButton bVendre = new JButton(TXT_VENDRE,I_VENDRE);
-	private EcouteurOperationSurTour eost;
-	
+	private Fenetre_Jeu fenJeu;
 	
 	/**
 	 * Constructeur du panel
 	 */
-	public Panel_InfoTour()
+	public Panel_InfoTour(Fenetre_Jeu fenJeu)
 	{
 		// construction du panel
 		super(new BorderLayout());
-		
 		setPreferredSize(new Dimension(250, 400));
-		
+
+		this.fenJeu = fenJeu;
 		
 		// TODO faire un system de formulaire (tableau)
 		lNom = new JLabel();
@@ -93,14 +96,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// tour ou pas ?
 		if(tour != null)
 		{
-		
-		
 			// tour selectionnee pour information
 			if(mode == 0)
 			{
 				// adaptation des champs
-				lNom.setText(tour.getNom()+" [ valeur : "+tour.getPrixAchat()+"]");
+				lNom.setText(tour.getNom()+" [ valeur total : "+tour.getPrixTotal()+"]");
 				lDescrition.setText(tour.getDescription());
+				
+				// adaptation des boutons
 				bAmeliorer.setVisible(true);
 				bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
 				bVendre.setVisible(true);
@@ -112,6 +115,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 				// adaptation des champs
 				lNom.setText(tour.getNom()+" [ prix d'achat : "+tour.getPrixAchat()+"]");
 				lDescrition.setText(tour.getDescription());
+				
+				// adaptation des boutons
 				bAmeliorer.setVisible(false);
 				bVendre.setVisible(false);
 			}
@@ -138,16 +143,11 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		if(source == bAmeliorer)
 		{
-			if(eost != null)
-				eost.ameliorerTour(tour);
+			fenJeu.ameliorerTour(tour);
 		}
 		else if(source == bVendre)
-			if(eost != null)
-				eost.vendreTour(tour);
-	}
-	
-	public void modifierEcouteurOperationSurTour(EcouteurOperationSurTour eost)
-	{
-		this.eost = eost;
+		{
+			fenJeu.vendreTour(tour);
+		}
 	}
 }
