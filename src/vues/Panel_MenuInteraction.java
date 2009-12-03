@@ -31,36 +31,31 @@ import models.tours.TourDeGlace;
  * @see JPanel
  * @see ActionListener
  */
-public class Panel_MenuInteraction extends JPanel implements ActionListener,
-															 EcouteurOperationSurTour
+public class Panel_MenuInteraction extends JPanel implements ActionListener															 
 {
 	private static final long serialVersionUID = 1L;
 	private JButton bTourFeu 		= new JButton("Feu");
 	private JButton bTourGlace 		= new JButton("Glace");
 	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES = new ImageIcon("img/icones/heart.png");
-	private JLabel lScore 			= new JLabel();
-	private JLabel lTitreScore 		= new JLabel("Score :");
+	//private JLabel lScore 			= new JLabel();
+	//private JLabel lTitreScore 		= new JLabel("Score :");
 	private JLabel lVies 			= new JLabel();
 	private JLabel lTitreVies 		= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 		= new JLabel();
 	private JLabel lTitrePiecesOr 	= new JLabel(I_PIECES);
+	private JButton bLancerVagueSuivante = new JButton("Vague suivante");
 	
-	
-	
-	private JButton bLancerVague = new JButton("Vague suivante");
-	
-	private Panel_Terrain panelTerrain;
+	private Fenetre_Jeu fenJeu;
 	private Jeu jeu;
-	private Panel_InfoTour pInfoTour;
+	private Panel_InfoTour panelInfoTour;
 
-	public Panel_MenuInteraction(Panel_Terrain panelTerrain, Jeu jeu)
+	public Panel_MenuInteraction(Jeu jeu, Fenetre_Jeu fenJeu)
 	{
 		super(new BorderLayout());
 		
-		this.panelTerrain = panelTerrain;
+		this.fenJeu = fenJeu;
 		this.jeu = jeu;
-		jeu.ajouterEcouteurOperationSurTour(this);
 		setBackground(Color.BLACK);
 		
 		JPanel pTours = new JPanel();
@@ -85,17 +80,18 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 		lVies.setText(jeu.getNbViesRestantes()+"");
 		pTours.add(lVies);
 		
-		pInfoTour = new Panel_InfoTour();
-		pInfoTour.modifierEcouteurOperationSurTour(this);
-		add(pTours,BorderLayout.NORTH);
-		add(pInfoTour,BorderLayout.CENTER);
-		add(bLancerVague,BorderLayout.SOUTH);
+		panelInfoTour = new Panel_InfoTour(fenJeu);
+		fenJeu.setPanelInfoTour(panelInfoTour);
 		
+		add(pTours,BorderLayout.NORTH);
+		add(panelInfoTour,BorderLayout.CENTER);
+		add(bLancerVagueSuivante,BorderLayout.SOUTH);
+		bLancerVagueSuivante.addActionListener(this);
 	}
 	
 	public void setTourSelectionnee(Tour tour, int mode)
 	{
-		pInfoTour.setTour(tour, mode);
+		panelInfoTour.setTour(tour, mode);
 	}
 
 	/**
@@ -111,14 +107,16 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 		if(source == bTourFeu)
 		{
 			TourDeFeu tourDeFeu = new TourDeFeu();
-			panelTerrain.setTourAAjouter(tourDeFeu);
-			pInfoTour.setTour(tourDeFeu,1);
+			fenJeu.setTourAAcheter(tourDeFeu);
 		}
 		else if(source == bTourGlace)
 		{
 			TourDeGlace tourDeGlace = new TourDeGlace();
-			panelTerrain.setTourAAjouter(tourDeGlace);
-			pInfoTour.setTour(tourDeGlace,1);
+			fenJeu.setTourAAcheter(tourDeGlace);
+		}
+		else if(source == bLancerVagueSuivante)
+		{
+			fenJeu.lancerVagueSuivante();
 		}
 	}
 
@@ -135,16 +133,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener,
 	public void vendreTour(Tour tour)
 	{
 		jeu.vendreTour(tour);
-		panelTerrain.setTourSelectionnee(null);
-		pInfoTour.effacerTour();
+		fenJeu.objetSelectionnee(null);
+		panelInfoTour.effacerTour();
 	}
 
-	public void ajouterTour(Tour tour)
+	public void miseAJourNbPiecesOr(int nbPiecesOr)
 	{
-		
-	}
-
-	public void tourAjoutee(Tour tour)
-	{
+		lNbPiecesOr.setText(nbPiecesOr+"");
 	}
 }

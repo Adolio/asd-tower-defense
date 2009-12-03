@@ -1,12 +1,15 @@
 package models.jeu;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 import models.creatures.Creature;
+import models.creatures.Creature1;
+import models.creatures.VagueDeCreatures;
 import models.terrains.Terrain;
 import models.tours.Tour;
-import vues.EcouteurOperationSurTour;
 
 /**
  * Classe de gestion du jeu.
@@ -49,9 +52,10 @@ public class Jeu
 	 */
 	private int nbPiecesOr 		= 100;
 	
-	
-	// TODO commenter et controler
-	private EcouteurOperationSurTour eops;
+	private int vagueCourante;
+	private VagueDeCreatures[] vagues = {
+										new VagueDeCreatures(3, new Creature1())
+										};
 
 	private Terrain terrain;
 	
@@ -62,9 +66,6 @@ public class Jeu
 	{
 		this.terrain = terrain;
 		terrain.setJeu(this);
-		
-		// TODO effacer ca !!!
-		lancerVague();
 	}
 	
 	/**
@@ -77,8 +78,7 @@ public class Jeu
 	{
 		if(laTourPeutEtrePosee(tour))
 		{
-			// TODO adaptation du maillage
-			// maillage.desactiverNoeuds(tour); // recoit un Rectangle
+			terrain.desactiverZone(tour);
 			
 			// debit des pieces d'or
 			nbPiecesOr -= tour.getPrixAchat();
@@ -133,7 +133,7 @@ public class Jeu
 	 */
 	public boolean ameliorerTour(Tour tour)
 	{
-		if(laTourPeutEtrePosee(tour))
+		if(nbPiecesOr >= tour.getPrixAchat())
 		{
 			// debit des pieces d'or
 			nbPiecesOr -= tour.getPrixAchat();
@@ -151,11 +151,6 @@ public class Jeu
 	public  int getNbPiecesOr()
 	{
 		return nbPiecesOr;
-	}
-
-	public void ajouterEcouteurOperationSurTour(EcouteurOperationSurTour eops)
-	{
-		this.eops = eops;
 	}
 
 	public int getNbViesRestantes()
@@ -178,19 +173,37 @@ public class Jeu
 		return terrain.getCreature();
 	}
 	
-	public void lancerVague()
+	public void lancerVagueSuivante()
 	{
-		for(int i=0;i<20;i++)
+		if(vagueCourante < vagues.length)
 		{
-			Rectangle depart = terrain.getZoneDepart();
+			VagueDeCreatures vague = vagues[vagueCourante];
 			
-			int x = (int)(Math.random() * (depart.getWidth() + 1));
-			int y = (int)(Math.random() * (depart.getHeight() + 1));
+			for(int i=0;i<vague.getNbDeCreatures();i++)
+			{
+				Rectangle depart = terrain.getZoneDepart();
+				
+				int x = (int)(Math.random() * (depart.getWidth() + 1));
+				int y = (int)(Math.random() * (depart.getHeight() + 1));
+				
+				Creature creature = vague.getNouvelleCreature();
+				creature.setX((int) (x+depart.getX()));
+				creature.setY((int) (y+depart.getY()));
+				terrain.ajouterCreature(creature);
+			}
 			
-			terrain.ajouterCreature(new Creature(
-					(int)depart.getX()+x,
-					(int)depart.getY()+y));
+			vagueCourante++;
 		}
 	}
-	
+
+	public ArrayList<Point> getChemin(int xDepart, int yDepart, 
+									  int xArrivee, int yArrivee)
+	{
+		return terrain.getChemin(xDepart,yDepart,xArrivee,yArrivee);
+	}
+
+	public ArrayList<Line2D> getArcActifs()
+	{
+		return terrain.getArcActifs();
+	}
 }

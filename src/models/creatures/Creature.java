@@ -2,10 +2,12 @@ package models.creatures;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class Creature
+public abstract class Creature
 {
-	private int x, y;
+	protected int x;
+	protected int y;
 	private ArrayList<Point> chemin;
+	private int type;
 	private int sante;
 	private int santeMax;
 	private int gainPieceDOr;
@@ -50,5 +52,17 @@ public class Creature
 	public double getAngle()
 	{
 		return angle;
+	}
+	
+	abstract public Creature copier();
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+	
+	public void setY(int y)
+	{
+		this.y = y;
 	}
 }

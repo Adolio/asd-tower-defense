@@ -19,7 +19,11 @@ public class TourDeGlace extends Tour
 		// le prix total est ajouté du prix d'achat de la tour
 		prixTotal += prixAchat;
 		
-		switch(niveau)
+		prixAchat 	+= 10;
+		degats    	*= 2;
+		rayonPortee += 50;
+		
+		/*switch(niveau)
 		{
 			case 1 :
 				prixAchat 	= 20;
@@ -29,7 +33,7 @@ public class TourDeGlace extends Tour
 				prixAchat 	= 40;
 				degats 		= 40;
 				break;
-		}
+		}*/
 		
 		niveau++;
 	}

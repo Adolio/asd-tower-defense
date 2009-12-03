@@ -7,7 +7,7 @@ public class TerrainDesert extends Terrain
 	public TerrainDesert()
 	{
 		super(500, 500, "img/cartes/desert.png", 
-			  new Rectangle(480,20,40,80),
+			  new Rectangle(470,20,60,80),
 			  new Rectangle(20,460,40,80));
 		
 		// tour du terrain

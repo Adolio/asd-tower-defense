@@ -2,11 +2,12 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
+import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -72,19 +73,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	// le jeu a gerer
 	private Jeu jeu;
 	
-	private boolean afficherGraphe; // affichage du graphe ?
+	private boolean afficherGraphe = true; // affichage du graphe ?
 
-	private EcouteurDeSelectionDeTour edsd;
+	private Fenetre_Jeu fenJeu;
 	
 	/**
 	 * Constructeur du panel du terrain
 	 * 
 	 * @param jeu Le jeu a gerer
 	 */
-	public Panel_Terrain(Jeu jeu)
+	public Panel_Terrain(Jeu jeu,Fenetre_Jeu fenJeu)
 	{
-		// sauvegarde su jeu
-		this.jeu = jeu;
+		// sauvegarde du jeu
+		this.jeu 	= jeu;
+		this.fenJeu = fenJeu;
 		
 		// propriete du panel
 		setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
@@ -132,7 +134,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//--------------------------
 		g2.setColor(COULEUR_FOND);
 		g2.fillRect(0, 0, LARGEUR, HAUTEUR);
-		
+
 		// comment faire une rotation ?
         //AffineTransform tx = new AffineTransform();
         //double radians = -Math.PI/4;
@@ -147,7 +149,31 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------
 		if(afficherGraphe)
 		{
-			//...
+			//int x = (int)(Math.random() * (498 + 1));
+			//int y = (int)(Math.random() * (498 + 1));
+			//ArrayList<Point> chemin = jeu.getChemin(0,304, 400, 0);
+			/*
+			Point PointPrecedent = chemin.get(0);
+			
+			for(Point point : chemin)
+			{
+				g2.setColor(Color.GREEN);
+				g2.fillOval(point.x,point.y,4,4);
+				
+				g2.setColor(Color.BLUE);
+				g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
+				PointPrecedent = point;
+			}*/
+			
+			ArrayList<Line2D> noeudsActifs = jeu.getArcActifs();
+			
+			if(noeudsActifs != null)
+				for(Line2D arc : noeudsActifs)
+				{
+					g2.setColor(Color.GREEN);
+					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
+							(int)arc.getX1(),(int)arc.getY2());
+				}
 		}
 		
 		//-----------------------------
@@ -307,15 +333,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						tourAAjouter = null;  
 					}
 					
-					// appel de l'ecouteur de selection
-					if(edsd != null)
-						edsd.tourSelectionnee(tourSelectionnee,0);
-					
+					fenJeu.tourSelectionnee(tourSelectionnee,
+											Panel_InfoTour.MODE_SELECTION);
 					return;
 				}
 		
 			// aucun tour trouvee => clique dans le vide.
 			tourSelectionnee = null;
+			
+			fenJeu.tourSelectionnee(tourSelectionnee,
+					Panel_InfoTour.MODE_SELECTION);
 		}
 		else
 		{
@@ -323,10 +350,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			tourSelectionnee 	= null;
 			tourAAjouter 		= null;
 		}
-		
-		// appel de l'ecouteur de selection
-		if(edsd != null)
-			edsd.tourSelectionnee(tourSelectionnee,0);
 	}
 	
 	/**
@@ -338,15 +361,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		// l'ajout se fait lors de la relache du clique
 		if(tourAAjouter != null)
-		{
-			// si l'ajout de la tour c'est deroule correctement
-			if(jeu.poserTour(tourAAjouter))
-			{
-				tourAAjouter = null;
-				
-				// TODO mise a jour du panel interaction (pieces d'or)
-			}
-		}
+			fenJeu.acheterTour(tourAAjouter);
 	}
 	
 	/**
@@ -395,11 +410,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		sourisSurTerrain = false;
 	}
 	
-	public void modifierEcouteurDeSelectionDeTour(EcouteurDeSelectionDeTour edsd)
-	{
-		this.edsd = edsd;
-	}
-	
 	// methodes non redéfinies (voir MouseListener)
 	public void mouseClicked(MouseEvent me){}
 	public void mouseDragged(MouseEvent me){}
@@ -418,17 +428,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		{
 			// raccourci de vente
 			if(ke.getKeyChar() == 'v' || ke.getKeyChar() == 'V')
-			{
-				jeu.vendreTour(tourSelectionnee);
-				tourSelectionnee = null;
-			}
+				fenJeu.vendreTour(tourSelectionnee);
 			// raccourci d'amelioration
 			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
-			{
-				jeu.ameliorerTour(tourSelectionnee);
-			}
+				fenJeu.ameliorerTour(tourSelectionnee);
 		}
 	}
 	public void keyPressed(KeyEvent ke){}
 	public void keyTyped(KeyEvent ke){}
+
+	public void deselectionner()
+	{
+		tourAAjouter 		= null;
+		tourSelectionnee 	= null;
+	}
 }
