@@ -54,7 +54,9 @@ public class Jeu
 	
 	private int vagueCourante;
 	private VagueDeCreatures[] vagues = {
-										new VagueDeCreatures(3, new Creature1())
+										new VagueDeCreatures(50, new Creature1()),
+										new VagueDeCreatures(1, new Creature1()),
+										new VagueDeCreatures(10, new Creature1())
 										};
 
 	private Terrain terrain;
@@ -196,9 +198,13 @@ public class Jeu
 				
 				int xArrivee = (int) (arrivee.getX()+arrivee.getWidth()/2);
 				int yArrivee = (int) (arrivee.getY()+arrivee.getHeight()/2);
-				System.out.println(xArrivee+" "+yArrivee);
+				
+				
+				
+				
 				creature.setChemin(terrain.getChemin(xDepart, yDepart, xArrivee, yArrivee));
 				terrain.ajouterCreature(creature);
+				creature.demarrer();
 			}
 			
 			vagueCourante++;

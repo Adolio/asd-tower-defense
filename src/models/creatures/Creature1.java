@@ -16,5 +16,4 @@ public class Creature1 extends Creature
 	{
 		return new Creature1(x,y);
 	}
-
 }
