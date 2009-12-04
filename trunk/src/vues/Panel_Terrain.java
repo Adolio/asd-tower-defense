@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.*;
 import models.creatures.Creature;
@@ -186,18 +187,28 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					(int) creature.getWidth(), (int) creature.getHeight());
 			
 			ArrayList<Point> chemin = creature.getChemin();
-			if(chemin != null)
+			if(chemin != null && chemin.size() > 0)
 			{
 				Point PointPrecedent = chemin.get(0);
-				for(Point point : chemin)
+				
+				synchronized(chemin)
 				{
-					g2.setColor(Color.GREEN);
-					g2.fillOval(point.x,point.y,4,4);
-					
-					g2.setColor(Color.BLUE);
-					g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
-					PointPrecedent = point;
+					Iterator it = chemin.iterator();
+					Point point;
+					while(it.hasNext())
+					{
+						point = (Point) it.next();
+							
+						g2.setColor(Color.GREEN);
+						g2.fillOval(point.x,point.y,4,4);
+						
+						g2.setColor(Color.BLUE);
+						g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
+						PointPrecedent = point;
+					}
 				}
+				
+				
 			}
 		}
 		
