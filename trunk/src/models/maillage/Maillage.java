@@ -317,14 +317,13 @@ public class Maillage
     	
     	for(DefaultWeightedEdge edge : graphe.edgeSet()){
     		if(graphe.getEdgeWeight(edge) != DESACTIVE) 
-    			{
-    			int x_depart = graphe.getEdgeSource(edge).getX();
-    			int y_depart = graphe.getEdgeSource(edge).getY();
-    			int x_arrivee = graphe.getEdgeTarget(edge).getX();
-    			int y_arrivee = graphe.getEdgeTarget(edge).getY();
-    			
-    			retour.add(new Line2D(){});
-    			
+    			{	
+    			retour.add(new Line(
+    					graphe.getEdgeSource(edge).getX(),
+    					graphe.getEdgeSource(edge).getY(),
+    					graphe.getEdgeTarget(edge).getX(),
+    					graphe.getEdgeTarget(edge).getY()
+    			));
     			}
     	}
     	
