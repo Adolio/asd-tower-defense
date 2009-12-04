@@ -21,12 +21,10 @@ public class Arc extends Line2D
 	private int x1,x2,y1,y2;
 	
 	public Arc(int xDepart,int yDepart,int xArrivee,int yArrivee) {
-		super();
 		x1 = xDepart;
 		x2 = xArrivee;
 		y1 = yDepart;
-		y2 = yArrivee;
-		
+		y2 = yArrivee;		
 	}
 
 	/* (non-Javadoc)
