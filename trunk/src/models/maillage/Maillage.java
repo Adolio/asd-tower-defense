@@ -29,8 +29,9 @@ public class Maillage
 	private final int LARGEUR_NOEUD = 10;
 	private int largeurPixels;
 	private int hauteurPixels;
-	private ArrayList<Noeud> noeuds;
 	private SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe;
+	
+	private ArrayList<Noeud> noeuds;
 
 	/**
 	 * @param largeurPixels
