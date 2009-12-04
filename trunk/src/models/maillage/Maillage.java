@@ -27,25 +27,30 @@ public class Maillage
 
 	private final int DESACTIVE = Integer.MAX_VALUE;
 	private final int LARGEUR_NOEUD = 10;
-	private int largeurPixels;
-	private int hauteurPixels;
+	private final int LARGEUR_EN_PIXELS;
+	private final int HAUTEUR_EN_PIXELS;
+	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
 	private SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe;
-	
-	private ArrayList<Noeud> noeuds;
 
-	/**
-	 * @param largeurPixels
-	 * @param hauteurPixels
-	 * @param tours
-	 * @param murs
-	 * @throws IllegalArgumentException
-	 */
+	// Le tableau des noeuds : Noeud[x][y]
+	private Noeud[][] noeuds;
+
 	public Maillage(int largeurPixels, int hauteurPixels)
 			throws IllegalArgumentException
 	{
-		this.largeurPixels = largeurPixels;
-		this.hauteurPixels = hauteurPixels;
+		this.LARGEUR_EN_PIXELS = largeurPixels;
+		this.HAUTEUR_EN_PIXELS = hauteurPixels;
+
+		NOMBRE_NOEUDS_X = (largeurPixels / LARGEUR_NOEUD);
+		NOMBRE_NOEUDS_Y = (hauteurPixels / LARGEUR_NOEUD);
+
+		// Initialisation du champs de noeuds
+		System.out.println("Champs de noeuds de " + NOMBRE_NOEUDS_X + " x "
+				+ NOMBRE_NOEUDS_Y);
+		noeuds = new Noeud[NOMBRE_NOEUDS_X][NOMBRE_NOEUDS_Y];
+
 		graphe = construireGraphe();
+
 	}
 
 	/**
@@ -55,7 +60,7 @@ public class Maillage
 	 */
 	public int getLargeurPixels()
 	{
-		return largeurPixels;
+		return LARGEUR_EN_PIXELS;
 	}
 
 	/**
@@ -65,29 +70,8 @@ public class Maillage
 	 */
 	public int getHauteurPixels()
 	{
-		return hauteurPixels;
-	}
 
-	/**
-	 * Setter pour le champ <tt>largeurPixels</tt>
-	 * 
-	 * @param largeurPixels
-	 *            La valeur qu'on veut attribuer au champ <tt>largeurPixels</tt>
-	 */
-	public void setLargeurPixels(int largeurPixels)
-	{
-		this.largeurPixels = largeurPixels;
-	}
-
-	/**
-	 * Setter pour le champ <tt>hauteurPixels</tt>
-	 * 
-	 * @param hauteurPixels
-	 *            La valeur qu'on veut attribuer au champ <tt>hauteurPixels</tt>
-	 */
-	public void setHauteurPixels(int hauteurPixels)
-	{
-		this.hauteurPixels = hauteurPixels;
+		return HAUTEUR_EN_PIXELS;
 	}
 
 	/**
@@ -118,10 +102,6 @@ public class Maillage
 		// Pour cela, une idée serait de mettre simplement le poids des noeuds
 		// concernées à une valeur pseudo infinie.
 
-		for (int i = indexOfNoeudAExact(pointA(rectangle.x, rectangle.y)); i <= rectangle.width
-				/ LARGEUR_NOEUD; i += LARGEUR_NOEUD)
-			for (int j = i; j <= rectangle.height / LARGEUR_NOEUD; j += (largeurPixels / LARGEUR_NOEUD))
-				desactiver(noeuds.get(j));
 	}
 
 	/**
@@ -149,20 +129,19 @@ public class Maillage
 	public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
 			int xArrivee, int yArrivee) throws Exception
 	{
-
 		/*
 		 * Test des arguments
 		 */
-		if (xDepart >= largeurPixels || xArrivee >= largeurPixels
+		if (xDepart >= LARGEUR_EN_PIXELS || xArrivee >= LARGEUR_EN_PIXELS
 				|| xDepart < 0 || xArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en x");
-		if (yDepart >= hauteurPixels || yArrivee >= hauteurPixels
+		if (yDepart >= HAUTEUR_EN_PIXELS || yArrivee >= HAUTEUR_EN_PIXELS
 				|| yDepart < 0 || yArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en y");
 
 		ArrayList<Point> chemin = new ArrayList<Point>();
 		DijkstraShortestPath<Noeud, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<Noeud, DefaultWeightedEdge>(
-				graphe, noeudAExact(pointA(xDepart, yDepart)),
+			graphe, noeudAExact(pointA(xDepart, yDepart)),
 				noeudAExact(pointA(xArrivee, yArrivee)));
 		GraphPath<Noeud, DefaultWeightedEdge> dijkstraChemin = dijkstra
 				.getPath();
@@ -184,8 +163,8 @@ public class Maillage
 	@Override
 	public String toString()
 	{
-		return "Largeur du maillage : " + largeurPixels + " pixels\n"
-				+ "Hauteur du maillage : " + hauteurPixels + " pixels\n"
+		return "Largeur du maillage : " + LARGEUR_EN_PIXELS + " pixels\n"
+				+ "Hauteur du maillage : " + HAUTEUR_EN_PIXELS + " pixels\n"
 				+ "Représentation      : 1 noeud = " + LARGEUR_NOEUD + "x"
 				+ LARGEUR_NOEUD + " pixels\n"
 				+
@@ -203,102 +182,109 @@ public class Maillage
 	{
 		SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe = new SimpleWeightedGraph<Noeud, DefaultWeightedEdge>(
 				DefaultWeightedEdge.class);
-		noeuds = new ArrayList<Noeud>();
-
 		/*
 		 * Ajouter les noeuds au graphe.
 		 */
-		for (int y = 0; y < hauteurPixels; y += LARGEUR_NOEUD)
+		for (int x = 0; x < NOMBRE_NOEUDS_Y; x++)
 		{
-			for (int x = 0; x < largeurPixels; x += LARGEUR_NOEUD)
+			for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
 			{
-				noeuds.add(new Noeud(x + (LARGEUR_NOEUD / 2), y
+				noeuds[x][y] = (new Noeud(x * LARGEUR_NOEUD
+						+ (LARGEUR_NOEUD / 2), y * LARGEUR_NOEUD
 						+ (LARGEUR_NOEUD / 2)));
-				graphe.addVertex(noeuds.get(noeuds.size() - 1));
+
+				// TODO : C'est quoi ce machin ?
+				 graphe.addVertex(noeuds[x][y]);
 			}
+
 		}
 
 		/*
 		 * Ajouter les arcs horizontaux.
 		 */
-		for (int y = 0; y < hauteurPixels / LARGEUR_NOEUD; y++)
+		for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
 		{
-			for (int x = 0; x < largeurPixels / LARGEUR_NOEUD - 1; x++)
+			for (int x = 0; x < NOMBRE_NOEUDS_Y - 1; x++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-						* largeurPixels / LARGEUR_NOEUD), noeuds.get(x + y
-						* (largeurPixels / LARGEUR_NOEUD) + 1)),
-						(double) LARGEUR_NOEUD);
+				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
+						noeuds[x + 1][y]), // Arrivée
+						LARGEUR_NOEUD); // Poids, en fait la distance
+				/*
+				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
+				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + y
+				 * (largeurPixels / LARGEUR_NOEUD) + 1)), (double)
+				 * LARGEUR_NOEUD);
+				 */
 			}
 		}
 
 		/*
 		 * Ajouter les arcs verticaux.
 		 */
-		for (int y = 0; y < hauteurPixels / LARGEUR_NOEUD - 1; y++)
+		for (int y = 0; y < NOMBRE_NOEUDS_X - 1; y++)
 		{
-			for (int x = 0; x < largeurPixels / LARGEUR_NOEUD; x++)
+			for (int x = 0; x < NOMBRE_NOEUDS_Y; x++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-						* largeurPixels / LARGEUR_NOEUD), noeuds.get(x
-						+ (y + 1) * (largeurPixels / LARGEUR_NOEUD))),
-						(double) LARGEUR_NOEUD);
+				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
+						noeuds[x][y + 1]), // Arrivée
+						LARGEUR_NOEUD); // Poids
+				/*
+				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
+				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + (y + 1) *
+				 * (largeurPixels / LARGEUR_NOEUD))), (double) LARGEUR_NOEUD);
+				 */
 			}
 		}
 
 		/*
 		 * Ajouter les arcs diagonaux descendants.
 		 */
-		for (int x = 0; x < largeurPixels / LARGEUR_NOEUD - 1; x++)
+		for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
 		{
-			for (int y = 0; y < hauteurPixels / LARGEUR_NOEUD - 1; y++)
+			for (int y = 0; y < NOMBRE_NOEUDS_Y - 1; y++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-						* largeurPixels / LARGEUR_NOEUD), noeuds.get(x
-						+ (y + 1) * (largeurPixels / LARGEUR_NOEUD) + 1)), Math
-						.sqrt(2.0 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
+				// TODO
+				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
+						noeuds[x + 1][y + 1]), // Arrivée
+						LARGEUR_NOEUD); // Poids
+				/*
+				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
+				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + (y + 1) *
+				 * (largeurPixels / LARGEUR_NOEUD) + 1)), Math .sqrt(2.0 *
+				 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
+				 */
 			}
 		}
 
 		/*
 		 * Ajouter les arcs diagonaux ascendants.
 		 */
-		for (int x = 0; x < largeurPixels / LARGEUR_NOEUD - 1; x++)
+		for (int x = 1; x < NOMBRE_NOEUDS_X; x++)
 		{
-			for (int y = 1; y < hauteurPixels / LARGEUR_NOEUD; y++)
+			for (int y = 1; y < NOMBRE_NOEUDS_Y; y++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-						* largeurPixels / LARGEUR_NOEUD), noeuds.get(x
-						+ (y - 1) * (largeurPixels / LARGEUR_NOEUD) + 1)), Math
-						.sqrt(2.0 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
+				// TODO
+				/*
+				graphe.setEdgeWeight(graphe.addEdge(
+						noeuds[x-1][y-1], // Source
+						noeuds[x][y]), // Arrivée
+						LARGEUR_NOEUD); // Poids
+				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
+				 * LARGEUR_EN_PIXELS / LARGEUR_NOEUD), noeuds.get(x + (y - 1) *
+				 * (LARGEUR_EN_PIXELS / LARGEUR_NOEUD) + 1)), Math .sqrt(2.0 *
+				 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
+				 */
 			}
 		}
 
 		return graphe;
 	}
 
-	/**
-	 * 
-	 * @param p
-	 * @return
-	 */
 	private Noeud noeudAExact(Point p)
 	{
-		return noeuds.get(indexOfNoeudAExact(p));
+		return noeuds[(p.x-5)/LARGEUR_NOEUD][(p.y-5)/LARGEUR_NOEUD];
 	}
-
-	private int indexOfNoeudAExact(Point p)
-	{
-		return (p.y - 1) / LARGEUR_NOEUD * (largeurPixels / LARGEUR_NOEUD)
-				+ (p.x - 1) / LARGEUR_NOEUD;
-	}
-
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
+	
 	private Point pointA(int x, int y)
 	{
 		return new Point(x - (x % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2), y
@@ -309,9 +295,10 @@ public class Maillage
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
 
-		for (Noeud noeud : noeuds)
-			points.add(new Point(noeud.getX(), noeud.getX()));
-		
+		for (Noeud[] ligne : noeuds)
+			for (Noeud noeud : ligne)
+				points.add(new Point(noeud.getX(), noeud.getX()));
+
 		return points;
 	}
 
