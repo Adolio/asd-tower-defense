@@ -320,7 +320,7 @@ public class Maillage
 
 		for (DefaultWeightedEdge edge : graphe.edgeSet())
 			if (graphe.getEdgeWeight(edge) != DESACTIVE)
-				retour.add(new Line(graphe.getEdgeSource(edge).getX(), graphe
+				retour.add(new Arc(graphe.getEdgeSource(edge).getX(), graphe
 						.getEdgeSource(edge).getY(), graphe.getEdgeTarget(edge)
 						.getX(), graphe.getEdgeTarget(edge).getY()));
 
@@ -332,7 +332,7 @@ public class Maillage
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
 
 		for (DefaultWeightedEdge edge : graphe.edgeSet())
-			retour.add(new Line(graphe.getEdgeSource(edge).getX(), graphe
+			retour.add(new Arc(graphe.getEdgeSource(edge).getX(), graphe
 					.getEdgeSource(edge).getY(), graphe.getEdgeTarget(edge)
 					.getX(), graphe.getEdgeTarget(edge).getY()));
 

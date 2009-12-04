@@ -16,11 +16,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public class Line extends Line2D
+public class Arc extends Line2D
 {
 	private int x1,x2,y1,y2;
 	
-	public Line(int xDepart,int yDepart,int xArrivee,int yArrivee) {
+	public Arc(int xDepart,int yDepart,int xArrivee,int yArrivee) {
 		super();
 		x1 = xDepart;
 		x2 = xArrivee;
