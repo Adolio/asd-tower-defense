@@ -41,7 +41,7 @@ public class Terrain
 	 */
 	protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
 	
-	private Jeu jeu;
+	//private Jeu jeu;
 	private final Maillage maillage;
 	
 	public Terrain(int largeur, int hauteur, String imageDeFond, 
@@ -64,7 +64,7 @@ public class Terrain
 	
 	public void setJeu(Jeu jeu)
 	{
-		this.jeu = jeu;
+		//this.jeu = jeu;
 	}
 	
 	public ArrayList<Point> getChemin(int xDepart, int yDepart, 
@@ -125,6 +125,7 @@ public class Terrain
 	 */
 	public void supprimerTour(Tour tour)
 	{
+		tour.arreter();
 		tours.remove(tour);
 	}
 	
@@ -137,8 +138,8 @@ public class Terrain
 	{
 		murs.add(mur);
 		
-		// TODO adaptation du maillage
-		maillage.desactiverZone(mur); // recoit un Rectangle
+		// adaptation du maillage
+		maillage.desactiverZone(mur);
 	}
 	
 	/**
@@ -181,7 +182,7 @@ public class Terrain
 			if(tour.intersects(mur))
 				return false;
 		
-		// TODO il n'y a pas déjà un ennemi
+		// il n'y a pas déjà un ennemi
 		for(Rectangle creature : creatures)
 			if(tour.intersects(creature))
 				return false;
@@ -189,16 +190,6 @@ public class Terrain
 		return true;
 	}
 	
-	public ArrayList<Point> getCheminLePlusCourt(int xDepart, int yDepart, 
-											  int xArriver, int yArriver)
-	{
-		// TODO appeler la bonne methode du maillage
-		//return maillage.cheminPlusCourt(xDepart,yDepart,
-		//								xArriver,yArriver);
-		
-		return new ArrayList<Point>();
-	}
-
 	public Rectangle getZoneDepart()
 	{
 		return ZONE_DEPART;
@@ -209,14 +200,18 @@ public class Terrain
 		return ZONE_ARRIVEE;
 	}
 
+	public void activerZone(Tour tour)
+	{
+		maillage.activerZone(tour);
+	}
+	
 	public void desactiverZone(Rectangle zone)
 	{
 		maillage.desactiverZone(zone);
 	}
 
-	public ArrayList<Line2D> getArcActifs()
+	public ArrayList<Line2D> getArcsActifs()
 	{
-		//return maillage.getArcActifs();
-		return null;
+		return maillage.getArcsActifs();
 	}
 }

@@ -2,14 +2,25 @@ package models.tours;
 
 import java.awt.Color;
 
+import models.jeu.Jeu;
+
 public class TourDeFeu extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR = Color.RED;
-	public TourDeFeu()
+	public TourDeFeu(Jeu jeu)
 	{
-		super(0, 0, 20, 20, COULEUR,"Tour de feu",10);
+		super(0, 				// x
+			  0, 				// y
+			  20, 				// largeur
+			  20, 				// hauteur
+			  COULEUR,			// couleur de fond
+			  "Tour de feu",	// nom
+			  10,				// prix achat
+			  5,				// degats
+			  50);				// rayon de portee
 		
+		this.jeu = jeu;
 		description = "La tour de feu est une tour \nqui fait beaucoup degats";
 	}
 	

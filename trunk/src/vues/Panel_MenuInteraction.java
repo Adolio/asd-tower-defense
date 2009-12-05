@@ -106,12 +106,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		if(source == bTourFeu)
 		{
-			TourDeFeu tourDeFeu = new TourDeFeu();
+			TourDeFeu tourDeFeu = new TourDeFeu(jeu);
 			fenJeu.setTourAAcheter(tourDeFeu);
 		}
 		else if(source == bTourGlace)
 		{
-			TourDeGlace tourDeGlace = new TourDeGlace();
+			TourDeGlace tourDeGlace = new TourDeGlace(jeu);
 			fenJeu.setTourAAcheter(tourDeGlace);
 		}
 		else if(source == bLancerVagueSuivante)

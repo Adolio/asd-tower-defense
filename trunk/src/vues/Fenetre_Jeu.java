@@ -35,6 +35,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
+	private final JMenuItem itemAfficherMaillage	    
+		= new JMenuItem("activer / desactiver affichage du maillage");
 	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
 
 	//----------------------------
@@ -78,6 +80,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 		menuPrincipal.add(menuFichier);
 		
 		// menu Edition
+		menuEdition.add(itemAfficherMaillage);
 		menuPrincipal.add(menuEdition);
 		
 		// menu A propos
@@ -86,7 +89,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 		
 		// ajout des ecouteurs
 		itemQuitter.addActionListener(this);
+		itemAfficherMaillage.addActionListener(this);
 		itemAPropos.addActionListener(this);
+		
 		
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
@@ -124,6 +129,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 			System.exit(0); // Fermeture correcte du logiciel
 		else if(source == itemAPropos)
 			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
+		else if(source == itemAfficherMaillage)
+			panelTerrain.toggleAfficherMaillage();
 	}
 
 	public void acheterTour(Tour tour)

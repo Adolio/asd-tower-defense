@@ -74,7 +74,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	// le jeu a gerer
 	private Jeu jeu;
 	
-	private boolean afficherGraphe = true; // affichage du graphe ?
+	private boolean afficherMaillage = true; // affichage du graphe ?
 
 	private Fenetre_Jeu fenJeu;
 	
@@ -148,32 +148,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
 		//-------------------------------------
-		if(afficherGraphe)
-		{
-			//int x = (int)(Math.random() * (498 + 1));
-			//int y = (int)(Math.random() * (498 + 1));
-			//ArrayList<Point> chemin = jeu.getChemin(0,304, 400, 0);
-			/*
-			Point PointPrecedent = chemin.get(0);
+		if(afficherMaillage)
+		{	
+			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
 			
-			for(Point point : chemin)
-			{
-				g2.setColor(Color.GREEN);
-				g2.fillOval(point.x,point.y,4,4);
-				
-				g2.setColor(Color.BLUE);
-				g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
-				PointPrecedent = point;
-			}*/
-			
-			ArrayList<Line2D> noeudsActifs = jeu.getArcActifs();
-			
-			if(noeudsActifs != null)
-				for(Line2D arc : noeudsActifs)
+			// TODO supprimer echelleMaillage
+			int echelleMaillage = 10;
+			if(arcsActifs != null)
+				for(Line2D arc : arcsActifs)
 				{
 					g2.setColor(Color.GREEN);
-					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
-							(int)arc.getX1(),(int)arc.getY2());
+					g2.drawLine((int)arc.getX1()+echelleMaillage,(int)arc.getY1()+echelleMaillage,
+							(int)arc.getX2()+echelleMaillage,(int)arc.getY2()+echelleMaillage);
 				}
 		}
 		
@@ -182,9 +168,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-----------------------------
 		for(Creature creature : jeu.getCreatures())
 		{
+			// TODO supprimer echelleMaillage
+			int echelleMaillage = 10;
+			
 			g2.setColor(Color.YELLOW);
-			g2.fillOval((int)creature.getX(), (int)creature.getY(), 
-					(int) creature.getWidth(), (int) creature.getHeight());
+			g2.fillOval((int) creature.getCenterX(), 
+						(int) creature.getCenterY(), 
+						(int) creature.getWidth(), 
+						(int) creature.getHeight());
 			
 			ArrayList<Point> chemin = creature.getChemin();
 			if(chemin != null && chemin.size() > 0)
@@ -199,11 +190,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					{
 						point = (Point) it.next();
 							
-						g2.setColor(Color.GREEN);
-						g2.fillOval(point.x,point.y,4,4);
+						//g2.setColor(Color.GREEN);
+						//g2.fillOval(point.x,point.y,4,4);
 						
 						g2.setColor(Color.BLUE);
-						g2.drawLine(PointPrecedent.x, PointPrecedent.y, point.x, point.y);
+						g2.drawLine(PointPrecedent.x+echelleMaillage, PointPrecedent.y+echelleMaillage, 
+									point.x+echelleMaillage, point.y+echelleMaillage);
 						PointPrecedent = point;
 					}
 				}
@@ -294,20 +286,26 @@ public class Panel_Terrain extends JPanel implements Runnable,
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         
 		g2.setColor(tour.getCouleurDeFond());
-		g2.drawOval((int)(tour.getXi() - tour.getRayonPortee()/2 + tour.getWidth()/2), 
-					(int)(tour.getYi() - tour.getRayonPortee()/2 + tour.getHeight()/2), 
-					(int)tour.getRayonPortee(), 
-					(int)tour.getRayonPortee());
+		g2.drawOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
+					(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
+					(int)tour.getRayonPortee()*2, 
+					(int)tour.getRayonPortee()*2);
 
         g2.setColor(Color.WHITE);
-        g2.fillOval((int)(tour.getXi() - tour.getRayonPortee()/2 + tour.getWidth()/2), 
-        			(int)(tour.getYi() - tour.getRayonPortee()/2 + tour.getHeight()/2), 
-        			(int)tour.getRayonPortee(), 
-        			(int)tour.getRayonPortee());
+        g2.fillOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
+        			(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
+        			(int)tour.getRayonPortee()*2, 
+        			(int)tour.getRayonPortee()*2);
         
         // remet la valeur initial
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	}
+	
+	public void toggleAfficherMaillage()
+	{
+		afficherMaillage = !afficherMaillage;
+	}
+	
 	
 	/**
 	 * Méthode de refraichissement du panel
