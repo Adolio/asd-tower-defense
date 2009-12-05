@@ -1,6 +1,10 @@
 package models.terrains;
 
+import java.awt.Color;
 import java.awt.Rectangle;
+
+import models.tours.Tour;
+import models.tours.TourDeFeu;
 
 public class TerrainDesert extends Terrain
 {
@@ -32,6 +36,7 @@ public class TerrainDesert extends Terrain
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
 		ajouterMur(new Rectangle(320,360,60,20));
+		
 	}
 	
 }

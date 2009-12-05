@@ -3,6 +3,7 @@ package models.maillage;
 import java.util.*;
 import java.awt.*;
 import java.awt.geom.*;
+
 import org.jgrapht.*;
 import org.jgrapht.alg.*;
 import org.jgrapht.graph.*;
@@ -12,7 +13,10 @@ import org.jgrapht.graph.*;
  * <p>
  * Encodage : UTF-8
  * <p>
- * Cette classe...
+ * Cette classe permet de représenter différentes opérations sur le maillage
+ * (graphe), utilisé dans notre jeu. Elle implémente différentes opérations,
+ * notamment la désactivation de zone et surtout le calcule du chemin le plus
+ * cours d'une maille à une autre.
  * <p>
  * Remarques :
  * 
@@ -24,98 +28,56 @@ import org.jgrapht.graph.*;
  */
 public class Maillage
 {
-
-	private final int DESACTIVE = Integer.MAX_VALUE;
-	private final int LARGEUR_NOEUD = 10;
+	// Pour représenter un poids d'un arc non praticable
+	private final int DESACTIVE;
+	// La largeur en pixel de chaque maille, ou noeud
+	private final int LARGEUR_NOEUD;
+	// La largeur en pixel totale du maillage (axe des x)
 	private final int LARGEUR_EN_PIXELS;
+	// La hauteur en pixel totale du maillage (axe des y)
 	private final int HAUTEUR_EN_PIXELS;
+	// Les dimensions en maille (ou noeuds) du maillage
 	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
-	private SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe;
-
+	// Le graphe
+	private SimpleWeightedGraph<Noeud, Arc> graphe;
 	// Le tableau des noeuds : Noeud[x][y]
 	private Noeud[][] noeuds;
 
-	public Maillage(int largeurPixels, int hauteurPixels)
-			throws IllegalArgumentException
+	/**
+	 * Un maillage dynamique représentant une aire de jeu.
+	 * 
+	 * @param largeurPixels
+	 *            Largeur en pixel de la zone.
+	 * @param hauteurPixels
+	 *            Hauteur en pixel de la zone.
+	 * @param largeurDuNoeud
+	 *            La largeur en pixel de chaque maille.
+	 * @throws IllegalArgumentException
+	 *             Levé si les dimensions ne correspondent pas.
+	 */
+	public Maillage(final int largeurPixels, final int hauteurPixels,
+			final int largeurDuNoeud) throws IllegalArgumentException
 	{
-		this.LARGEUR_EN_PIXELS = largeurPixels;
-		this.HAUTEUR_EN_PIXELS = hauteurPixels;
+		// Assignation de la largeur du noeud (ou de la maille).
+		LARGEUR_NOEUD = largeurDuNoeud;
 
+		// Assignation de la dimension en pixel unitaire du maillage
+		LARGEUR_EN_PIXELS = largeurPixels;
+		HAUTEUR_EN_PIXELS = hauteurPixels;
+
+		// Conversion en dimension en maille.
 		NOMBRE_NOEUDS_X = (largeurPixels / LARGEUR_NOEUD);
 		NOMBRE_NOEUDS_Y = (hauteurPixels / LARGEUR_NOEUD);
 
+		// Calcul du poids maximum pouvant avoir le graphe
+		DESACTIVE = 8 * NOMBRE_NOEUDS_X * NOMBRE_NOEUDS_Y * LARGEUR_NOEUD + 1;
+
 		// Initialisation du champs de noeuds
-		System.out.println("Champs de noeuds de " + NOMBRE_NOEUDS_X + " x "
-				+ NOMBRE_NOEUDS_Y);
 		noeuds = new Noeud[NOMBRE_NOEUDS_X][NOMBRE_NOEUDS_Y];
 
+		// Construction du graphe
 		graphe = construireGraphe();
 
-	}
-
-	/**
-	 * Getter pour le champ <tt>largeurPixels</tt>
-	 * 
-	 * @return La valeur du champ <tt>largeurPixels</tt>
-	 */
-	public int getLargeurPixels()
-	{
-		return LARGEUR_EN_PIXELS;
-	}
-
-	/**
-	 * Getter pour le champ <tt>hauteurPixels</tt>
-	 * 
-	 * @return La valeur du champ <tt>hauteurPixels</tt>
-	 */
-	public int getHauteurPixels()
-	{
-
-		return HAUTEUR_EN_PIXELS;
-	}
-
-	/**
-	 * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
-	 * 
-	 * @param rectangle
-	 *            la zone a activer
-	 * @throws IllegalArgumentException
-	 */
-	public void activerNoeuds(Rectangle rectangle)
-			throws IllegalArgumentException
-	{
-		// TODO : activer les noeuds dans la zone donnee.
-		// Cela revient à mettre un poids sensé à chaque noeud concerné.
-	}
-
-	/**
-	 * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
-	 * 
-	 * @param rectangle
-	 *            la zone a désactiver
-	 * @throws IllegalArgumentException
-	 */
-	public void desactiverZone(Rectangle rectangle)
-			throws IllegalArgumentException
-	{
-		// TODO : désactiver les noeuds dans la zone donnée.
-		// Pour cela, une idée serait de mettre simplement le poids des noeuds
-		// concernées à une valeur pseudo infinie.
-
-	}
-
-	/**
-	 * Désactive l'ensemble des arcs du noeud.
-	 * 
-	 * @param noeud
-	 *            Le noeud dont on désactive les arcs.
-	 */
-	private void desactiver(Noeud noeud)
-	{
-		for (DefaultWeightedEdge edge : graphe.edgesOf(noeud))
-		{
-			graphe.setEdgeWeight(edge, DESACTIVE);
-		}
 	}
 
 	/**
@@ -124,10 +86,10 @@ public class Maillage
 	 * @param xArrivee
 	 * @param yArrivee
 	 * @return
-	 * @throws Exception
+	 * @throws PathNotFoundException
 	 */
 	public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
-			int xArrivee, int yArrivee) throws Exception
+			int xArrivee, int yArrivee) throws PathNotFoundException
 	{
 		/*
 		 * Test des arguments
@@ -138,23 +100,58 @@ public class Maillage
 		if (yDepart >= HAUTEUR_EN_PIXELS || yArrivee >= HAUTEUR_EN_PIXELS
 				|| yDepart < 0 || yArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en y");
-
+	
+		// Chemin pour le retour
 		ArrayList<Point> chemin = new ArrayList<Point>();
-		DijkstraShortestPath<Noeud, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<Noeud, DefaultWeightedEdge>(
-			graphe, noeudAExact(pointA(xDepart, yDepart)),
+		
+		/*
+		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
+		 */
+		DijkstraShortestPath<Noeud, Arc> dijkstra = new DijkstraShortestPath<Noeud, Arc>(
+				graphe, noeudAExact(pointA(xDepart, yDepart)),
 				noeudAExact(pointA(xArrivee, yArrivee)));
-		GraphPath<Noeud, DefaultWeightedEdge> dijkstraChemin = dijkstra
-				.getPath();
-
+		GraphPath<Noeud, Arc> dijkstraChemin = dijkstra.getPath();
+	
+		/*
+		 * S'il n'y a pas de chemin
+		 */
 		if (dijkstraChemin == null)
-			throw new Exception("Le chemin n'existe pas!");
-
+			throw new PathNotFoundException("Le chemin n'existe pas!");
+		if (dijkstraChemin.getWeight() >= DESACTIVE)
+			throw new PathNotFoundException("Il n'existe aucun chemin valide.");
+	
 		for (Noeud noeud : Graphs.getPathVertexList(dijkstraChemin))
-		{
-			chemin.add(new Point(noeud.getX(), noeud.getY()));
-		}
-
+			chemin.add(noeud);
+		
+	
 		return chemin;
+	}
+
+	/**
+	 * Active UNE ZONE --> IDEPENDANT DES TOURS !!!
+	 * 
+	 * @param rectangle
+	 *            la zone a activer
+	 * @throws IllegalArgumentException
+	 */
+	public void activerZone(Rectangle rectangle)
+			throws IllegalArgumentException
+	{
+		zoneActive(rectangle, true);
+	}
+
+	/**
+	 * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
+	 * 
+	 * @param rectangle
+	 *            la zone a désactiver, coordonnées en pixels unitaire
+	 * @throws IllegalArgumentException
+	 *             Levé si le rectangle est hors champs.
+	 */
+	public void desactiverZone(Rectangle rectangle)
+			throws IllegalArgumentException
+	{
+		zoneActive(rectangle, false);
 	}
 
 	/**
@@ -174,14 +171,114 @@ public class Maillage
 	}
 
 	/**
-	 * @param tours
-	 * @param murs
-	 * @return
+	 * Getter pour le champ <tt>largeurPixels</tt>
+	 * 
+	 * @return La valeur du champ <tt>largeurPixels</tt>
 	 */
-	private SimpleWeightedGraph<Noeud, DefaultWeightedEdge> construireGraphe()
+	public int getLargeurPixels()
 	{
-		SimpleWeightedGraph<Noeud, DefaultWeightedEdge> graphe = new SimpleWeightedGraph<Noeud, DefaultWeightedEdge>(
-				DefaultWeightedEdge.class);
+		return LARGEUR_EN_PIXELS;
+	}
+
+	/**
+	 * Getter pour le champ <tt>hauteurPixels</tt>
+	 * 
+	 * @return La valeur du champ <tt>hauteurPixels</tt>
+	 */
+	public int getHauteurPixels()
+	{
+		return HAUTEUR_EN_PIXELS;
+	}
+
+	public ArrayList<Point> getNoeuds()
+	{
+		ArrayList<Point> points = new ArrayList<Point>();
+	
+		for (Noeud[] ligne : noeuds)
+			for (Noeud noeud : ligne)
+				points.add(noeud);
+	
+		return points;
+	}
+
+	public ArrayList<Line2D> getArcsActifs()
+	{
+		ArrayList<Line2D> retour = new ArrayList<Line2D>();
+	
+		for (Arc edge : graphe.edgeSet())
+			if (graphe.getEdgeWeight(edge) != DESACTIVE)
+				retour.add(edge.toLine2D());
+		
+		return retour;
+	}
+
+	public ArrayList<Line2D> getArcs()
+	{
+		ArrayList<Line2D> retour = new ArrayList<Line2D>();
+	
+		for (Arc edge : graphe.edgeSet())
+			retour.add(edge.toLine2D());
+	
+		return retour;
+	}
+
+	/**
+	 * @param rectangle
+	 * @param active
+	 * @throws IllegalArgumentException
+	 */
+	private void zoneActive(final Rectangle rectangle, final boolean active)
+			throws IllegalArgumentException
+	{
+		/*
+		 * Vérification de la validité du rectangle
+		 */
+		rectangleEstDansLeTerrain(rectangle);
+	
+		// Désactiver les noeuds dans la zone donnée.
+		// Pour cela, une idée serait de mettre simplement le poids des noeuds
+		// concernées à une valeur pseudo infinie.
+	
+		for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
+				+ rectangle.width); ++i)
+			for (int j = pixelToNoeud(rectangle.y); j < pixelToNoeud(rectangle.y
+					+ rectangle.height); ++j)
+				if (active)
+					activer(noeuds[i][j]);
+				else
+					desactiver(noeuds[i][j]);
+	}
+
+	/**
+	 * Active l'ensemble des arcs d'un noeud.
+	 * 
+	 * @param noeud
+	 *            Le noeud ton on active les arcs.
+	 */
+	private void activer(Noeud noeud)
+	{
+		for (Arc edge : graphe.edgesOf(noeud))
+			graphe.setEdgeWeight(edge, LARGEUR_NOEUD);
+	}
+
+	/**
+	 * Désactive l'ensemble des arcs du noeud.
+	 * 
+	 * @param noeud
+	 *            Le noeud dont on désactive les arcs.
+	 */
+	private void desactiver(Noeud noeud)
+	{
+		for (Arc edge : graphe.edgesOf(noeud))
+			graphe.setEdgeWeight(edge, DESACTIVE);
+	}
+
+	private SimpleWeightedGraph<Noeud, Arc> construireGraphe()
+	{
+		GenerateurDArcs genDArc = new GenerateurDArcs();
+
+		SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
+				genDArc);
 		/*
 		 * Ajouter les noeuds au graphe.
 		 */
@@ -193,8 +290,7 @@ public class Maillage
 						+ (LARGEUR_NOEUD / 2), y * LARGEUR_NOEUD
 						+ (LARGEUR_NOEUD / 2)));
 
-				// TODO : C'est quoi ce machin ?
-				 graphe.addVertex(noeuds[x][y]);
+				graphe.addVertex(noeuds[x][y]);
 			}
 
 		}
@@ -209,12 +305,7 @@ public class Maillage
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y]), // Arrivée
 						LARGEUR_NOEUD); // Poids, en fait la distance
-				/*
-				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + y
-				 * (largeurPixels / LARGEUR_NOEUD) + 1)), (double)
-				 * LARGEUR_NOEUD);
-				 */
+
 			}
 		}
 
@@ -228,11 +319,6 @@ public class Maillage
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x][y + 1]), // Arrivée
 						LARGEUR_NOEUD); // Poids
-				/*
-				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + (y + 1) *
-				 * (largeurPixels / LARGEUR_NOEUD))), (double) LARGEUR_NOEUD);
-				 */
 			}
 		}
 
@@ -243,37 +329,22 @@ public class Maillage
 		{
 			for (int y = 0; y < NOMBRE_NOEUDS_Y - 1; y++)
 			{
-				// TODO
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y + 1]), // Arrivée
 						LARGEUR_NOEUD); // Poids
-				/*
-				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-				 * largeurPixels / LARGEUR_NOEUD), noeuds.get(x + (y + 1) *
-				 * (largeurPixels / LARGEUR_NOEUD) + 1)), Math .sqrt(2.0 *
-				 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
-				 */
 			}
 		}
 
 		/*
 		 * Ajouter les arcs diagonaux ascendants.
 		 */
-		for (int x = 1; x < NOMBRE_NOEUDS_X; x++)
+		for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
 		{
 			for (int y = 1; y < NOMBRE_NOEUDS_Y; y++)
 			{
-				// TODO
-				/*
-				graphe.setEdgeWeight(graphe.addEdge(
-						noeuds[x-1][y-1], // Source
-						noeuds[x][y]), // Arrivée
+				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
+						noeuds[x + 1][y - 1]), // Arrivée
 						LARGEUR_NOEUD); // Poids
-				 * graphe.setEdgeWeight(graphe.addEdge(noeuds.get(x + y
-				 * LARGEUR_EN_PIXELS / LARGEUR_NOEUD), noeuds.get(x + (y - 1) *
-				 * (LARGEUR_EN_PIXELS / LARGEUR_NOEUD) + 1)), Math .sqrt(2.0 *
-				 * Math.pow((double) LARGEUR_NOEUD, 2.0)));
-				 */
 			}
 		}
 
@@ -282,49 +353,32 @@ public class Maillage
 
 	private Noeud noeudAExact(Point p)
 	{
-		return noeuds[(p.x-5)/LARGEUR_NOEUD][(p.y-5)/LARGEUR_NOEUD];
+		return noeuds[pixelToNoeud(p.x)][pixelToNoeud(p.y)];
 	}
-	
+
 	private Point pointA(int x, int y)
 	{
-		return new Point(x - (x % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2), y
-				- (y % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2));
+		return new Point( // Calcul du point
+				x - (x % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2), // Coord x
+				y - (y % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2)); // Coord y
 	}
 
-	public ArrayList<Point> getNoeuds()
+	private int pixelToNoeud(int n)
 	{
-		ArrayList<Point> points = new ArrayList<Point>();
-
-		for (Noeud[] ligne : noeuds)
-			for (Noeud noeud : ligne)
-				points.add(new Point(noeud.getX(), noeud.getX()));
-
-		return points;
+		return (n - LARGEUR_NOEUD / 2) / LARGEUR_NOEUD;
 	}
 
-	public ArrayList<Line2D> getArcsActifs()
+	private void rectangleEstDansLeTerrain(Rectangle rectangle)
+			throws IllegalArgumentException
 	{
-		ArrayList<Line2D> retour = new ArrayList<Line2D>();
+		if (rectangle.getX() < 0 || rectangle.getY() < 0)
+			throw new IllegalArgumentException("Origine trop petite");
 
-		for (DefaultWeightedEdge edge : graphe.edgeSet())
-			if (graphe.getEdgeWeight(edge) != DESACTIVE)
-				retour.add(new Arc(graphe.getEdgeSource(edge).getX(), graphe
-						.getEdgeSource(edge).getY(), graphe.getEdgeTarget(edge)
-						.getX(), graphe.getEdgeTarget(edge).getY()));
+		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
+			throw new IllegalArgumentException("Largeur hors cadre");
 
-		return retour;
-	}
-
-	public ArrayList<Line2D> getArcs()
-	{
-		ArrayList<Line2D> retour = new ArrayList<Line2D>();
-
-		for (DefaultWeightedEdge edge : graphe.edgeSet())
-			retour.add(new Arc(graphe.getEdgeSource(edge).getX(), graphe
-					.getEdgeSource(edge).getY(), graphe.getEdgeTarget(edge)
-					.getX(), graphe.getEdgeTarget(edge).getY()));
-
-		return retour;
+		if (rectangle.getY() + rectangle.getHeight() > HAUTEUR_EN_PIXELS)
+			throw new IllegalArgumentException("Hauteur hors cadre");
 	}
 
 }

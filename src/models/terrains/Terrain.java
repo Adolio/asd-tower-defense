@@ -22,9 +22,10 @@ public class Terrain
 	
 	private ArrayList<Creature> creatures;
 	
-	
 	private final int LARGEUR, // en pixels
 				      HAUTEUR; // en pixels
+	
+	private final int LARGEUR_MAILLE = 10; // en pixels
 	
 	private final  Image IMAGE_DE_FOND;
 	
@@ -48,7 +49,7 @@ public class Terrain
 	{
 		LARGEUR 		= largeur;
 		HAUTEUR 		= hauteur;
-		maillage 		= new Maillage(largeur, hauteur);
+		maillage 		= new Maillage(largeur, hauteur,LARGEUR_MAILLE);
 		tours 			= new ArrayList<Tour>();
 		creatures		= new ArrayList<Creature>();
 		ZONE_DEPART 	= zoneDepart;
@@ -137,7 +138,7 @@ public class Terrain
 		murs.add(mur);
 		
 		// TODO adaptation du maillage
-		// maillage.desactiverZone(mur); // recoit un Rectangle
+		maillage.desactiverZone(mur); // recoit un Rectangle
 	}
 	
 	/**
