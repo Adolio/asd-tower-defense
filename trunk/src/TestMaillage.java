@@ -46,7 +46,7 @@ public class TestMaillage
         // Calcul et affichage du résultat.
         //----------------------------------------------------------------------------
         temps = System.currentTimeMillis();
-        maillage = new Maillage(400, 400);
+        maillage = new Maillage(400, 400,10);
         temps = System.currentTimeMillis() - temps;
         System.out.println(maillage + "\n");
         System.out.println("Temps de génération du maillage : " +
@@ -57,7 +57,7 @@ public class TestMaillage
         
         temps = System.currentTimeMillis();
         try {
-            ArrayList<Point> points = maillage.plusCourtChemin(17,323,135,250);
+            maillage.plusCourtChemin(17,323,135,250);
         }
         catch (Exception e) {
             System.err.println(e.getMessage());

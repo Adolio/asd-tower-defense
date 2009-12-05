@@ -1,5 +1,7 @@
 package models.maillage;
 
+import java.awt.Point;
+
 /**
  * Fichier : Noeud.java
  * <p>
@@ -16,14 +18,8 @@ package models.maillage;
  * @version 30 nov. 2009
  * @since jdk1.6.0_16
  */
-public class Noeud
+public class Noeud extends Point
 {
-    
-    // La coordonnée x par rapport au repère de la fenêtre graphique
-    private int x;
-    // La coordonnée y par rapport au repère de la fenêtre graphique
-    private int y;
-
     /**
      * @param x
      * @param y
@@ -51,7 +47,7 @@ public class Noeud
      * 
      * @return La valeur du champ <tt>x</tt>
      */
-    public int getX()
+    public double getX()
     {
         return x;
     }
@@ -61,7 +57,7 @@ public class Noeud
      * 
      * @return La valeur du champ <tt>y</tt>
      */
-    public int getY()
+    public double getY()
     {
         return y;
     }
@@ -101,14 +97,12 @@ public class Noeud
     private static void verifierCoordonnees(int x, int y)
             throws IllegalArgumentException
     {
-        if (x < 0)
-        {
+        if (x < 0)     
             throw new IllegalArgumentException("La coordonnée x est négative!");
-        }
+        
         if (y < 0)
-        {
             throw new IllegalArgumentException("La coordonnée y est négative!");
-        }
+        
     }
 
 }

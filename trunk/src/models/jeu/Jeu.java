@@ -54,7 +54,7 @@ public class Jeu
 	
 	private int vagueCourante;
 	private VagueDeCreatures[] vagues = {
-										new VagueDeCreatures(50, new Creature1()),
+										new VagueDeCreatures(10, new Creature1()),
 										new VagueDeCreatures(1, new Creature1()),
 										new VagueDeCreatures(10, new Creature1())
 										};
@@ -80,6 +80,7 @@ public class Jeu
 	{
 		if(laTourPeutEtrePosee(tour))
 		{
+			// Désactive la zone sur le terrain qui correspont à la tour
 			terrain.desactiverZone(tour);
 			
 			// debit des pieces d'or
