@@ -2,15 +2,27 @@ package models.tours;
 
 import java.awt.Color;
 
+import models.jeu.Jeu;
+import models.terrains.Terrain;
+
 public class TourDeGlace extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR = Color.BLUE;
 	
-	public TourDeGlace()
+	public TourDeGlace(Jeu jeu)
 	{
-		super(0, 0, 20, 20, COULEUR,"Tour de glace",20);
+		super(0, 				// x
+			  0, 				// y
+			  20, 				// largeur
+		      20, 				// hauteur
+			  COULEUR,			// couleur de fond
+			  "Tour de glace",	// nom
+			  20,				// prix achat
+			  40,				// degats
+			  40);				// rayon de portee
 		
+		this.jeu = jeu;
 		description = "La tour de glace est une \ntour rapide qui ralenti les ennemis";
 	}
 	

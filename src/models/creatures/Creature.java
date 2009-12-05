@@ -6,19 +6,33 @@ import java.util.ArrayList;
 public abstract class Creature extends Rectangle implements Runnable
 {
 	private static final long serialVersionUID = 1L;
+	public static final int TYPE_TERRIENNE 	= 0;
+	public static final int TYPE_VOLANTE 	= 1;
+	
+	
 	private ArrayList<Point> chemin;
-	private int type;
+	private int indiceCourantChemin;
+	
+	private int type = TYPE_TERRIENNE;
 	private int sante;
 	private int santeMax;
-	private int gainPieceDOr;
+	private int gainPiecesDOr;
 	private double angle;
 	private Thread thread;
 	protected boolean enJeu;
 	private double vitesse = 10;
+	private boolean mort = false;
+	private ArrayList<EcouteurDeCreature> ecouteursDeCreature;
 	
-	public Creature(int x, int y, int largeur, int hauteur)
+	
+	public Creature(int x, int y, int largeur, int hauteur, 
+					int santeMax, int gainPiecesDOr)
 	{
 		super(x,y,largeur,hauteur);
+		
+		this.gainPiecesDOr = gainPiecesDOr;
+		sante = santeMax;
+		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 	}
 
 	public synchronized ArrayList<Point> getChemin()
@@ -26,6 +40,11 @@ public abstract class Creature extends Rectangle implements Runnable
 		return chemin;
 	}
 
+	public int getType()
+	{
+		return type;
+	}
+	
 	public int getSante()
 	{
 		return sante;
@@ -46,6 +65,11 @@ public abstract class Creature extends Rectangle implements Runnable
 		return angle;
 	}
 	
+	public int getGainPiecesDOr()
+	{
+		return gainPiecesDOr;
+	}
+	
 	abstract public Creature copier();
 
 	public void setX(int x)
@@ -61,6 +85,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	public void setChemin(ArrayList<Point> chemin)
 	{
 		this.chemin = chemin;
+		indiceCourantChemin = 0;
 	}
 	
 	public void demarrer()
@@ -74,9 +99,9 @@ public abstract class Creature extends Rectangle implements Runnable
 	{
 		ArrayList<Point> chemin = getChemin();
 		
-		if(chemin.size() > 0)
+		if(chemin != null && indiceCourantChemin < chemin.size())
 		{
-			Point p = chemin.get(0);
+			Point p = chemin.get(indiceCourantChemin);
 			
 			if(x > p.getX()) 	  x--;
 			else if(x < p.getX()) x++;
@@ -85,13 +110,13 @@ public abstract class Creature extends Rectangle implements Runnable
 			else if(y < p.getY()) y++;
 			
 			if(x == p.getX() && y == p.getY())
-				chemin.remove(0);
+				indiceCourantChemin++;
 		}
 	}
 	
 	public void run()
 	{
-		while(enJeu)
+		while(enJeu && !mort)
 		{
 			avancerSurChemin();
 			
@@ -102,5 +127,27 @@ public abstract class Creature extends Rectangle implements Runnable
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void blesser(int degats)
+	{
+		sante -= degats;
+		
+		if(sante <= 0)
+			mourrir();
+	}
+	
+	private void mourrir()
+	{
+		mort = true;
+		
+		// supprimer de la collection de creature
+		for( EcouteurDeCreature edc : ecouteursDeCreature)
+			edc.creatureTuee(this);
+	}
+
+	public void ajouterEcouteurDeCreature(EcouteurDeCreature edc)
+	{
+		ecouteursDeCreature.add(edc);
 	}
 }

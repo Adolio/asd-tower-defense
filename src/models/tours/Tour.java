@@ -1,6 +1,8 @@
 package models.tours;
 
 import java.awt.*;
+import models.creatures.Creature;
+import models.jeu.Jeu;
 
 /**
  * Classe de gestion d'une tour
@@ -13,7 +15,7 @@ import java.awt.*;
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public abstract class Tour extends Rectangle
+public abstract class Tour extends Rectangle implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -62,6 +64,10 @@ public abstract class Tour extends Rectangle
 	 */
 	protected double rayonPortee = 100;
 	
+	protected Jeu jeu;
+	private Thread thread;
+	private boolean enJeu;
+	
 	/**
 	 * Constructeur de la tour
 	 * 
@@ -73,8 +79,14 @@ public abstract class Tour extends Rectangle
 	 * @param nom
 	 * @param prixAchat
 	 */
-	public Tour(int x,int y, int largeur, int hauteur, 
-				Color couleurDeFond, String nom, int prixAchat)
+	public Tour(int x,int y, 
+				int largeur, 
+				int hauteur, 
+				Color couleurDeFond, 
+				String nom, 
+				int prixAchat,
+				int degats,
+				double rayonPortee)
 	{
 		this.x = x;
 		this.y = y;
@@ -86,6 +98,8 @@ public abstract class Tour extends Rectangle
 		this.couleurDeFond 	= couleurDeFond;
 		this.prixAchat 		= prixAchat;
 		prixTotal 			= prixAchat;
+		this.degats			= degats;
+		this.rayonPortee	= rayonPortee;
 	}
 	
 	public abstract void ameliorer();
@@ -144,5 +158,79 @@ public abstract class Tour extends Rectangle
 	public int getPrixTotal()
 	{
 		return prixTotal;
+	}
+	
+	public void demarrer()
+	{
+		thread = new Thread(this);
+		
+		thread.start();
+	}
+	
+	public void run()
+	{
+		enJeu = true;
+		
+		while(enJeu)
+		{
+			Creature creature = getCreatureLaPlusProcheEtAPortee();
+			
+			if(creature != null)
+			{
+				try{
+					Thread.sleep(200);
+				} 
+				catch (InterruptedException e){
+					e.printStackTrace();
+				}
+				creature.blesser(degats);
+			}
+			else
+			{
+				try{
+					Thread.sleep(50);
+				} 
+				catch (InterruptedException e){
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private Creature getCreatureLaPlusProcheEtAPortee()
+	{
+		Creature creatureLaPlusProche 	= null;
+		double distancePlusProche 		= 0;
+		double distance 				= 0;
+		
+		for(Creature creature : jeu.getCreatures())
+		{
+			distance = getDistance(creature);
+			
+			// est a portee ?
+			if(distance <= rayonPortee)
+			{
+				// la creature a plus proche que la creature 
+				// actuelle plus proche
+				if(creatureLaPlusProche == null ||
+				distance < distancePlusProche)
+				{	
+					creatureLaPlusProche = creature;
+					distancePlusProche 	 = distance;
+				}
+			}
+		}
+		
+		return creatureLaPlusProche;
+	}
+	
+	private double getDistance(Creature creature)
+	{
+		return Point.distance(x, y, creature.x, creature.y);
+	}
+
+	public void arreter()
+	{
+		enJeu = false;
 	}
 }

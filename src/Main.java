@@ -44,10 +44,11 @@ public class Main
 	  // création de la fenetre du jeu
 	  new Fenetre_Jeu(jeu);
 	  
+	  /*
 	  // Ajout des tours de base, pour test
 		for(int i = 0;i<5;++i){
-			Tour tour1 = new TourDeFeu();
-			Tour tour2 = new TourDeFeu();
+			Tour tour1 = new TourDeFeu(jeu);
+			Tour tour2 = new TourDeFeu(jeu);
 			
 			tour1.x=380+i*20;
 			tour1.y=120;
@@ -57,6 +58,6 @@ public class Main
 			tour2.y=20+i*20;
 			if(i!=0)jeu.poserTour(tour2);
 			
-		}
+		}*/
    }
 }

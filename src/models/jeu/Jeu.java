@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import models.creatures.Creature;
 import models.creatures.Creature1;
+import models.creatures.EcouteurDeCreature;
 import models.creatures.VagueDeCreatures;
 import models.terrains.Terrain;
 import models.tours.Tour;
@@ -29,7 +30,7 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class Jeu
+public class Jeu implements EcouteurDeCreature
 {
 	/**
 	 * Score courant du joueur
@@ -50,7 +51,7 @@ public class Jeu
 	 * Cette variable fluctue en fonction des ennemis tue et de 
 	 * l'achat et vente des tours.
 	 */
-	private int nbPiecesOr 		= 100;
+	private int nbPiecesOr 		= 1000;
 	
 	private int vagueCourante;
 	private VagueDeCreatures[] vagues = {
@@ -89,10 +90,25 @@ public class Jeu
 			// ajout de la tour dans le terrain de jeu
 			terrain.ajouterTour(tour);
 			
+			// la tour est mise en jeu
+			tour.demarrer();
+			
+			miseAJourDesChemins();			
+			
 			return true;
 		}
 		
 		return false;
+	}
+
+	private void miseAJourDesChemins()
+	{
+		// mise a jour de tous les chemins
+		for(Creature creature : terrain.getCreature())
+			creature.setChemin(terrain.getChemin(creature.x, creature.y,
+						       (int)terrain.getZoneArrivee().getCenterX(), 
+						       (int)terrain.getZoneArrivee().getCenterY()));
+		
 	}
 
 	/**
@@ -118,14 +134,17 @@ public class Jeu
 	 */
 	public void vendreTour(Tour tour)
 	{
-		// TODO redonne des pieces d'or
-		nbPiecesOr += tour.getPrixDeVente();
-		
-		// TODO adaptation du maillage
-		// maillage.activerNoeuds(tour); // recoit un Rectangle
-		
 		// supprime la tour
 		terrain.supprimerTour(tour);
+		
+		
+		
+		// redonne les pieces d'or
+		nbPiecesOr += tour.getPrixDeVente();
+		
+		// adaptation du maillage
+		terrain.activerZone(tour);
+		miseAJourDesChemins();
 	}
 	
 	/**
@@ -202,7 +221,7 @@ public class Jeu
 				
 				
 				
-				
+				creature.ajouterEcouteurDeCreature(this);
 				creature.setChemin(terrain.getChemin(xDepart, yDepart, xArrivee, yArrivee));
 				terrain.ajouterCreature(creature);
 				creature.demarrer();
@@ -218,8 +237,24 @@ public class Jeu
 		return terrain.getChemin(xDepart,yDepart,xArrivee,yArrivee);
 	}
 
-	public ArrayList<Line2D> getArcActifs()
+	public ArrayList<Line2D> getArcsActifs()
 	{
-		return terrain.getArcActifs();
+		return terrain.getArcsActifs();
+	}
+
+
+	public void creatureBlessee(Creature creature)
+	{
+	
+	}
+
+	public void creatureTuee(Creature creature)
+	{
+		terrain.supprimerCreature(creature);
+		nbPiecesOr 	+= creature.getGainPiecesDOr();
+		score 		+= creature.getGainPiecesDOr(); 
+		
+		// TODO mise a jour des vues
+		
 	}
 }
