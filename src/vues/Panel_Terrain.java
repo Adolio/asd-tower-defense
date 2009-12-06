@@ -177,30 +177,48 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						(int) creature.getWidth(), 
 						(int) creature.getHeight());
 			
-			ArrayList<Point> chemin = creature.getChemin();
-			if(chemin != null && chemin.size() > 0)
+			
+			int largeurBarre = (int) (creature.getWidth() * 2);
+			int hauteurBarre = 5;
+			
+			// affichage des barres de vie
+			g2.setColor(Color.BLACK);
+			g2.fillRect((int)creature.getCenterX(), 
+					(int)(creature.getY()+creature.getHeight()+4), 
+					largeurBarre, hauteurBarre);
+			
+			g2.setColor(Color.GREEN);
+			g2.fillRect((int)creature.getCenterX(), 
+					(int)(creature.getY()+creature.getHeight()+5), 
+					(int)(creature.getSante()*largeurBarre/creature.getSanteMax()),
+					hauteurBarre-2);
+			
+			// affichage du chemin des creatures
+			if(afficherMaillage)
 			{
-				Point PointPrecedent = chemin.get(0);
-				
-				synchronized(chemin)
+				ArrayList<Point> chemin = creature.getChemin();
+				if(chemin != null && chemin.size() > 0)
 				{
-					Iterator it = chemin.iterator();
-					Point point;
-					while(it.hasNext())
+					Point PointPrecedent = chemin.get(0);
+					
+					synchronized(chemin)
 					{
-						point = (Point) it.next();
+						Iterator<Point> it = chemin.iterator();
+						Point point;
+						while(it.hasNext())
+						{
+							point = it.next();
+								
+							//g2.setColor(Color.GREEN);
+							//g2.fillOval(point.x,point.y,4,4);
 							
-						//g2.setColor(Color.GREEN);
-						//g2.fillOval(point.x,point.y,4,4);
-						
-						g2.setColor(Color.BLUE);
-						g2.drawLine(PointPrecedent.x+echelleMaillage, PointPrecedent.y+echelleMaillage, 
-									point.x+echelleMaillage, point.y+echelleMaillage);
-						PointPrecedent = point;
+							g2.setColor(Color.BLUE);
+							g2.drawLine(PointPrecedent.x+echelleMaillage, PointPrecedent.y+echelleMaillage, 
+										point.x+echelleMaillage, point.y+echelleMaillage);
+							PointPrecedent = point;
+						}
 					}
 				}
-				
-				
 			}
 		}
 		
