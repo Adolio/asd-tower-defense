@@ -1,10 +1,9 @@
 package models.jeu;
+
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-
 import models.creatures.Creature;
 import models.creatures.Creature1;
 import models.creatures.EcouteurDeCreature;
@@ -17,9 +16,7 @@ import models.tours.Tour;
  * 
  * Cette classe contient les objets important de la partie comme :
  * <br>
- * - La liste des tours sur le terrain
- * <br>
- * - La liste des ennemis sur le terrain
+ * - Le terrain qui contient les tours et les creatures
  * <br>
  * - Les informations du jeu (score, pieces d'or, etc.)
  * 
@@ -40,7 +37,7 @@ public class Jeu implements EcouteurDeCreature
 	/**
 	 * Vies restantes du joueur. 
 	 * <br>
-	 * Lorsque un ennemi atteint la zone d'arrive, le nombre de vies est alors
+	 * Note : Lorsque un ennemi atteint la zone d'arrive, le nombre de vies est
 	 * decremente.
 	 */
 	private int viesRestantes 	= 20;
@@ -48,87 +45,105 @@ public class Jeu implements EcouteurDeCreature
 	/**
 	 * Nombre de pieces d'or du joueur.
 	 * <br>
-	 * Cette variable fluctue en fonction des ennemis tue et de 
+	 * Cette variable fluctue en fonction des creatures tuees et de 
 	 * l'achat et vente des tours.
 	 */
 	private int nbPiecesOr 		= 1000;
 	
-	private int vagueCourante;
+	/**
+	 * Gestion des vagues de creatures.
+	 * C'est le joueur que decident le moment ou il veut lancer une vague de
+	 * creatures. Une fois que toutes les vagues de creatures ont ete detruites,
+	 * le jeu est considere comme termine.
+	 */
+	private int indiceVagueCourante;
 	private VagueDeCreatures[] vagues = {
-										new VagueDeCreatures(10, new Creature1()),
-										new VagueDeCreatures(1, new Creature1()),
-										new VagueDeCreatures(10, new Creature1())
+										new VagueDeCreatures(5, new Creature1(50,2)),
+										new VagueDeCreatures(10, new Creature1(50,2)),
+										new VagueDeCreatures(5, new Creature1(200,4)),
+										new VagueDeCreatures(20, new Creature1(100,4)),
+										new VagueDeCreatures(10, new Creature1(300,30)),
+										new VagueDeCreatures(1, new Creature1(2000,100))
 										};
-
+	/**
+	 * Le terrain de jeu que contient tous les elements principaux :
+	 * - Les tours
+	 * - Les creatures
+	 * - Le maillage
+	 */
 	private Terrain terrain;
 	
 	/**
-	 * Constructeur de la partie
+	 * Constructeur du jeu.
+	 * 
+	 * @param terrain le terrain dans lequel on va jouer
 	 */
 	public Jeu(Terrain terrain)
 	{
 		this.terrain = terrain;
-		terrain.setJeu(this);
 	}
 	
 	/**
-	 * Permet de tanter de poser une tour sur le terrain de jeu.
+	 * Permet de tenter de poser une tour sur le terrain de jeu.
 	 * 
 	 * @param tour la tour a poser
-	 * @return vrai si operation realisee avec succes, sinon faux 
+	 * @return true si operation realisee avec succes, false sinon 
 	 */
 	public boolean poserTour(Tour tour)
 	{
-		if(laTourPeutEtrePosee(tour))
+		// suffisemment d'argent ?
+		if(laTourPeutEtreAchetee(tour))
 		{
-			// Désactive la zone sur le terrain qui correspont à la tour
-			terrain.desactiverZone(tour);
-			
-			// debit des pieces d'or
-			nbPiecesOr -= tour.getPrixAchat();
-
 			// ajout de la tour dans le terrain de jeu
-			terrain.ajouterTour(tour);
-			
-			// la tour est mise en jeu
-			tour.demarrer();
-			
-			miseAJourDesChemins();			
-			
-			return true;
+			if(terrain.ajouterTour(tour))
+			{
+				// la tour est mise en jeu
+				tour.demarrer();
+				
+				// debit des pieces d'or
+				nbPiecesOr -= tour.getPrixAchat();
+				
+				return true;
+			}
 		}
 		
 		return false;
 	}
 
-	private void miseAJourDesChemins()
+	/**
+	 * permet de savoir si une tour peut etre achetee.
+	 * @param tour la tour a achetee
+	 * @return true si le joueur a assez de pieces d'or, false sinon
+	 */
+	public boolean laTourPeutEtreAchetee(Tour tour)
 	{
-		// mise a jour de tous les chemins
-		for(Creature creature : terrain.getCreature())
-			creature.setChemin(terrain.getChemin(creature.x, creature.y,
-						       (int)terrain.getZoneArrivee().getCenterX(), 
-						       (int)terrain.getZoneArrivee().getCenterY()));
+		if(tour != null)
+			return nbPiecesOr - tour.getPrixAchat() >= 0;
 		
+		return false;
 	}
 
 	/**
 	 * Permet de savoir si la tour peut etre posee.
-	 * 
 	 * @param tour la tour a posee
 	 * @return true si c'est possible et false sinon
 	 */
 	public boolean laTourPeutEtrePosee(Tour tour)
 	{
+		// la tour est valide ?
+		if(tour == null)
+			return false;
+		
 		// elle peut etre posee sur le terrain
 		if(!terrain.laTourPeutEtrePosee(tour))
 			return false;
 		
 		// et le joueur a assez d'argent
-		return nbPiecesOr - tour.getPrixAchat() >= 0;
+		return laTourPeutEtreAchetee(tour);
 	}
 
 	/**
-	 * Permet de vendre une tour
+	 * Permet de vendre une tour.
 	 * 
 	 * @param tour la tour a vendre
 	 */
@@ -137,18 +152,12 @@ public class Jeu implements EcouteurDeCreature
 		// supprime la tour
 		terrain.supprimerTour(tour);
 		
-		
-		
-		// redonne les pieces d'or
+		// credit des pieces d'or
 		nbPiecesOr += tour.getPrixDeVente();
-		
-		// adaptation du maillage
-		terrain.activerZone(tour);
-		miseAJourDesChemins();
 	}
 	
 	/**
-	 * Permet d'ameliorer une tour
+	 * Permet d'ameliorer une tour.
 	 * 
 	 * @param tour la tour a ameliorer
 	 * @return vrai si operation realisee avec succes, sinon faux 
@@ -169,90 +178,128 @@ public class Jeu implements EcouteurDeCreature
 		return false;
 	}
 
-	
+	/**
+	 * Permet de recuperer le nombre de piece d'or du joueur.
+	 * @return le nombre de piece d'or du joueur
+	 */
 	public  int getNbPiecesOr()
 	{
 		return nbPiecesOr;
 	}
 
+	/**
+	 * Permet de recuperer le nombre de vies restantes du joueur.
+	 * @return le nombre de vies restantes du joueur
+	 */
 	public int getNbViesRestantes()
 	{
 		return viesRestantes;
 	}
 
+	/**
+	 * Permet de recuperer l'image de fond du terrain.
+	 * @return l'image de fond du terrain
+	 */
 	public Image getImageDeFondTerrain()
 	{
 		return terrain.getImageDeFond();
 	}
 
+	/**
+	 * Permet de recuperer les tours sur le terrain.
+	 * @return les tours du terrain.
+	 */
 	public ArrayList<Tour> getTours()
 	{
 		return terrain.getTours();
 	}
 	
+	/**
+	 * Permet de recuperer les creatures sur le terrain.
+	 * @return les creatures du terrain.
+	 */
 	public ArrayList<Creature> getCreatures()
 	{
-		return terrain.getCreature();
+		return terrain.getCreatures();
 	}
 	
+	/**
+	 * Permet de lancer une nouvelle vague de creatures.
+	 */
 	public void lancerVagueSuivante()
 	{
-		if(vagueCourante < vagues.length)
+		// il reste encore des vagues de creatures
+		if(indiceVagueCourante < vagues.length)
 		{
-			VagueDeCreatures vague = vagues[vagueCourante];
+			// recuperation de la vague
+			VagueDeCreatures vague = vagues[indiceVagueCourante];
 			
-			for(int i=0;i<vague.getNbDeCreatures();i++)
+			// creation des creatures de la vague
+			for(int i=0;i<vague.getNbCreatures();i++)
 			{
-				Rectangle depart = terrain.getZoneDepart();
+				// recuperation des zones
+				Rectangle depart  = terrain.getZoneDepart();
 				Rectangle arrivee = terrain.getZoneArrivee();
 				
-				int x = (int)(Math.random() * (depart.getWidth() + 1));
-				int y = (int)(Math.random() * (depart.getHeight() + 1));
+				// calcul de la position aleatoire de la creature
+				// dans la zone de depart
+				int xDepart = (int)(Math.random() * (depart.getWidth() 
+								 + 1) + depart.getX());
+				int yDepart = (int)(Math.random() * (depart.getHeight() 
+								 + 1) + depart.getY());
 				
+				// creation d'une nouvelle instance de la creature
+				// et affectation de diverses proprietes
 				Creature creature = vague.getNouvelleCreature();
-				int xDepart = (int) (x+depart.getX());
-				int yDepart = (int) (y+depart.getY());
-				
 				creature.setX(xDepart);
 				creature.setY(yDepart);
-				
-				int xArrivee = (int) (arrivee.getX()+arrivee.getWidth()/2);
-				int yArrivee = (int) (arrivee.getY()+arrivee.getHeight()/2);
-				
-				
-				
 				creature.ajouterEcouteurDeCreature(this);
-				creature.setChemin(terrain.getChemin(xDepart, yDepart, xArrivee, yArrivee));
+				creature.setChemin(terrain.getCheminLePlusCourt(
+										xDepart, 
+										yDepart, 
+										(int) arrivee.getCenterX(), 
+										(int) arrivee.getCenterY()));
+				
 				terrain.ajouterCreature(creature);
 				creature.demarrer();
 			}
 			
-			vagueCourante++;
+			indiceVagueCourante++;
 		}
 	}
 
-	public ArrayList<Point> getChemin(int xDepart, int yDepart, 
-									  int xArrivee, int yArrivee)
-	{
-		return terrain.getChemin(xDepart,yDepart,xArrivee,yArrivee);
-	}
-
+	/**
+	 * Permet de recuperer la liste des arcs actifs du maillage.
+	 * @return une collection de java.awt.geom.Line2D representant les
+	 * 		   arcs actifs du maillage
+	 */
 	public ArrayList<Line2D> getArcsActifs()
 	{
 		return terrain.getArcsActifs();
 	}
 
-
+	/**
+	 * methode regissant de l'interface EcouteurDeCreature
+	 * 
+	 * Permet d'etre informe lorsqu'une creature subie des degats.
+	 */
 	public void creatureBlessee(Creature creature)
 	{
 	
 	}
 
+	/**
+	 * methode regissant de l'interface EcouteurDeCreature
+	 * 
+	 * Permet d'etre informe lorsqu'une creature a ete tuee.
+	 */
 	public void creatureTuee(Creature creature)
 	{
 		terrain.supprimerCreature(creature);
-		nbPiecesOr 	+= creature.getGainPiecesDOr();
-		score 		+= creature.getGainPiecesDOr(); 
+		
+		// gain de pieces d'or
+		nbPiecesOr 	+= creature.getNbPiecesDOr();
+		score 		+= creature.getNbPiecesDOr(); 
 		
 		// TODO mise a jour des vues
 		

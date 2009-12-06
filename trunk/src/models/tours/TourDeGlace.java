@@ -1,16 +1,25 @@
 package models.tours;
 
 import java.awt.Color;
+import models.creatures.Creature;
 
-import models.jeu.Jeu;
-import models.terrains.Terrain;
-
+/**
+ * Classe de gestion d'une tour de glace.
+ * Cette classe derive de Tour.
+ * 
+ * @author Pierre-Dominique Putallaz
+ * @author Aurélien Da Campo
+ * @author Lazhar Farjallah
+ * @version 1.0 | 27 novemenbre 2009
+ * @since jdk1.6.0_16
+ * @see Tour
+ */
 public class TourDeGlace extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR = Color.BLUE;
 	
-	public TourDeGlace(Jeu jeu)
+	public TourDeGlace()
 	{
 		super(0, 				// x
 			  0, 				// y
@@ -22,18 +31,17 @@ public class TourDeGlace extends Tour
 			  40,				// degats
 			  40);				// rayon de portee
 		
-		this.jeu = jeu;
 		description = "La tour de glace est une \ntour rapide qui ralenti les ennemis";
 	}
 	
 	public void ameliorer()
 	{
 		// le prix total est ajouté du prix d'achat de la tour
-		prixTotal += prixAchat;
+		prixTotal 	+= prixAchat;
 		
 		prixAchat 	+= 10;
 		degats    	*= 2;
-		rayonPortee += 50;
+		rayonPortee += rayonPortee * 0.5;
 		
 		/*switch(niveau)
 		{
@@ -48,5 +56,11 @@ public class TourDeGlace extends Tour
 		}*/
 		
 		niveau++;
+	}
+	
+	public void tirer(Creature creature)
+	{
+		// terrain.ajouteTire(new bouleDeGlace(this,creature));
+		creature.blesser(degats);
 	}
 }

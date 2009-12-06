@@ -1,12 +1,14 @@
 import javax.swing.UIManager;
 import models.jeu.Jeu;
 import models.terrains.*;
-import models.tours.Tour;
-import models.tours.TourDeFeu;
 import vues.Fenetre_Jeu;
 
 /**
- * Classe principale du Tower Defense
+ * Classe principale du jeu Tower Defense.
+ * 
+ * Cette classe contient la methode main du programme.
+ * Elle s'occupe de configurer le style de l'interface graphique
+ * et d'ouvrir la premiere fenetre du programme.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -18,6 +20,8 @@ public class Main
 {
    /**
     * Programme principal.
+    * 
+    * Configure le style de l'interface et ouvre la premiere fenetre.
     * 
     * @param args Les arguments fournis au programme principal.
     */
@@ -36,14 +40,14 @@ public class Main
 		   */ 
 	  }
 	   
-	  TerrainDesert terrain = new TerrainDesert();
-	  
 	  // création du jeu
-	  Jeu jeu = new Jeu(terrain);
+	  Jeu jeu = new Jeu(new TerrainDesert());
 	  
 	  // création de la fenetre du jeu
 	  new Fenetre_Jeu(jeu);
 	  
+	  
+	  // TODO effacer ce code de debugage...
 	  /*
 	  // Ajout des tours de base, pour test
 		for(int i = 0;i<5;++i){
