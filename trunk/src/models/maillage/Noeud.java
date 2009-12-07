@@ -20,6 +20,10 @@ import java.awt.Point;
  */
 public class Noeud extends Point
 {
+	
+	// Fanion pour savoir si le noeud est actif ou pas.
+	private boolean actif = true;
+	
     /**
      * @param x
      * @param y
@@ -38,8 +42,7 @@ public class Noeud extends Point
      * @param source
      */
     public Noeud (Noeud source) {
-        x = source.x;
-        y = source.y;
+       this(source.x, source.y);
     }
 
     /**
@@ -84,8 +87,11 @@ public class Noeud extends Point
         this.y = y;
     }
     
+    /**
+     * 
+     */
     public String toString() {
-        return "[" + x + ", " + y + "]";
+        return "[" + x + ", " + y + "] Actif : "+actif;
     }
 
     /**
