@@ -32,6 +32,7 @@ public class Maillage
 	private final int DESACTIVE;
 	// La largeur en pixel de chaque maille, ou noeud
 	private final int LARGEUR_NOEUD;
+	private final int DEMI_NOEUD;
 	// La largeur en pixel totale du maillage (axe des x)
 	private final int LARGEUR_EN_PIXELS;
 	// La hauteur en pixel totale du maillage (axe des y)
@@ -61,6 +62,9 @@ public class Maillage
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
 
+		// Largeur du demi noeud
+		DEMI_NOEUD = LARGEUR_NOEUD / 2;
+
 		// Assignation de la dimension en pixel unitaire du maillage
 		LARGEUR_EN_PIXELS = largeurPixels;
 		HAUTEUR_EN_PIXELS = hauteurPixels;
@@ -77,7 +81,6 @@ public class Maillage
 
 		// Construction du graphe
 		graphe = construireGraphe();
-
 	}
 
 	/**
@@ -97,21 +100,22 @@ public class Maillage
 		if (xDepart >= LARGEUR_EN_PIXELS || xArrivee >= LARGEUR_EN_PIXELS
 				|| xDepart < 0 || xArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en x");
+
 		if (yDepart >= HAUTEUR_EN_PIXELS || yArrivee >= HAUTEUR_EN_PIXELS
 				|| yDepart < 0 || yArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en y");
-	
+
 		// Chemin pour le retour
 		ArrayList<Point> chemin = new ArrayList<Point>();
-		
+
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-		DijkstraShortestPath<Noeud, Arc> dijkstra = new DijkstraShortestPath<Noeud, Arc>(
+		
+		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
 				graphe, noeudAExact(pointA(xDepart, yDepart)),
-				noeudAExact(pointA(xArrivee, yArrivee)));
-		GraphPath<Noeud, Arc> dijkstraChemin = dijkstra.getPath();
-	
+				noeudAExact(pointA(xArrivee, yArrivee)))).getPath();
+
 		/*
 		 * S'il n'y a pas de chemin
 		 */
@@ -119,11 +123,11 @@ public class Maillage
 			throw new PathNotFoundException("Le chemin n'existe pas!");
 		if (dijkstraChemin.getWeight() >= DESACTIVE)
 			throw new PathNotFoundException("Il n'existe aucun chemin valide.");
-	
+
+		// Calcul du retour
 		for (Noeud noeud : Graphs.getPathVertexList(dijkstraChemin))
 			chemin.add(noeud);
-		
-	
+
 		return chemin;
 	}
 
@@ -166,8 +170,8 @@ public class Maillage
 				+ LARGEUR_NOEUD + " pixels\n"
 				+
 				// graphe.toString() + "\n" +
-				"nombre de noeuds    : " + graphe.vertexSet().size() + "\n"
-				+ "nombre d'arcs       : " + graphe.edgeSet().size();
+				"Nombre de noeuds    : " + graphe.vertexSet().size() + "\n"
+				+ "Nombre d'arcs       : " + graphe.edgeSet().size();
 	}
 
 	/**
@@ -193,32 +197,32 @@ public class Maillage
 	public ArrayList<Point> getNoeuds()
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
-	
+
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
 				points.add(noeud);
-	
+
 		return points;
 	}
 
 	public ArrayList<Line2D> getArcsActifs()
 	{
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
-	
+
 		for (Arc edge : graphe.edgeSet())
 			if (graphe.getEdgeWeight(edge) != DESACTIVE)
 				retour.add(edge.toLine2D());
-		
+
 		return retour;
 	}
 
 	public ArrayList<Line2D> getArcs()
 	{
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
-	
+
 		for (Arc edge : graphe.edgeSet())
 			retour.add(edge.toLine2D());
-	
+
 		return retour;
 	}
 
@@ -234,11 +238,11 @@ public class Maillage
 		 * Vérification de la validité du rectangle
 		 */
 		rectangleEstDansLeTerrain(rectangle);
-	
+
 		// Désactiver les noeuds dans la zone donnée.
 		// Pour cela, une idée serait de mettre simplement le poids des noeuds
 		// concernées à une valeur pseudo infinie.
-	
+
 		for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
 				+ rectangle.width); ++i)
 			for (int j = pixelToNoeud(rectangle.y); j < pixelToNoeud(rectangle.y
@@ -275,10 +279,8 @@ public class Maillage
 
 	private SimpleWeightedGraph<Noeud, Arc> construireGraphe()
 	{
-		GenerateurDArcs genDArc = new GenerateurDArcs();
-
 		SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
-				genDArc);
+				new GenerateurDArcs());
 		/*
 		 * Ajouter les noeuds au graphe.
 		 */
@@ -286,9 +288,8 @@ public class Maillage
 		{
 			for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
 			{
-				noeuds[x][y] = (new Noeud(x * LARGEUR_NOEUD
-						+ (LARGEUR_NOEUD / 2), y * LARGEUR_NOEUD
-						+ (LARGEUR_NOEUD / 2)));
+				noeuds[x][y] = (new Noeud(x * LARGEUR_NOEUD + DEMI_NOEUD, y
+						* LARGEUR_NOEUD + DEMI_NOEUD));
 
 				graphe.addVertex(noeuds[x][y]);
 			}
@@ -359,13 +360,13 @@ public class Maillage
 	private Point pointA(int x, int y)
 	{
 		return new Point( // Calcul du point
-				x - (x % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2), // Coord x
-				y - (y % LARGEUR_NOEUD) + (LARGEUR_NOEUD / 2)); // Coord y
+				x - (x % LARGEUR_NOEUD) + DEMI_NOEUD, // Coord x
+				y - (y % LARGEUR_NOEUD) + DEMI_NOEUD); // Coord y
 	}
 
 	private int pixelToNoeud(int n)
 	{
-		return (n - LARGEUR_NOEUD / 2) / LARGEUR_NOEUD;
+		return (n - DEMI_NOEUD) / LARGEUR_NOEUD;
 	}
 
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
