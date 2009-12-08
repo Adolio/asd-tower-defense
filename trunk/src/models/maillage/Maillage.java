@@ -105,13 +105,9 @@ public class Maillage
 				|| yDepart < 0 || yArrivee < 0)
 			throw new IllegalArgumentException("Valeur invalide en y");
 
-		// Chemin pour le retour
-		ArrayList<Point> chemin = new ArrayList<Point>();
-
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-
 		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
 				graphe, noeudAExact(pointA(xDepart, yDepart)),
 				noeudAExact(pointA(xArrivee, yArrivee)))).getPath();
@@ -124,11 +120,7 @@ public class Maillage
 		if (dijkstraChemin.getWeight() >= DESACTIVE)
 			throw new PathNotFoundException("Il n'existe aucun chemin valide.");
 
-		// Calcul du retour
-		for (Noeud noeud : Graphs.getPathVertexList(dijkstraChemin))
-			chemin.add(noeud);
-
-		return chemin;
+		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
 	}
 
 	/**
