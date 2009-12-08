@@ -111,7 +111,7 @@ public class Maillage
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-		
+
 		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
 				graphe, noeudAExact(pointA(xDepart, yDepart)),
 				noeudAExact(pointA(xArrivee, yArrivee)))).getPath();
@@ -261,8 +261,10 @@ public class Maillage
 	 */
 	private void activer(Noeud noeud)
 	{
+		noeud.setActif(true);
 		for (Arc edge : graphe.edgesOf(noeud))
-			graphe.setEdgeWeight(edge, LARGEUR_NOEUD);
+			if (edge.getArrivee().isActif() && edge.getDepart().isActif())
+				graphe.setEdgeWeight(edge, LARGEUR_NOEUD);
 	}
 
 	/**
@@ -273,6 +275,7 @@ public class Maillage
 	 */
 	private void desactiver(Noeud noeud)
 	{
+		noeud.setActif(false);
 		for (Arc edge : graphe.edgesOf(noeud))
 			graphe.setEdgeWeight(edge, DESACTIVE);
 	}

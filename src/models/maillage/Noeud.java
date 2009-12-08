@@ -22,13 +22,12 @@ public class Noeud extends Point
 {
 	
 	// Fanion pour savoir si le noeud est actif ou pas.
+	// Actif par defaut, obligatoirement.
 	private boolean actif = true;
 	
     /**
      * @param x
      * @param y
-     * @param franchissableAirs
-     * @param actif
      * @throws IllegalArgumentException
      */
     public Noeud(int x, int y) throws IllegalArgumentException
@@ -39,6 +38,7 @@ public class Noeud extends Point
     }
     
     /**
+     * Constructeur 
      * @param source
      */
     public Noeud (Noeud source) {
@@ -66,32 +66,18 @@ public class Noeud extends Point
     }
 
     /**
-     * Setter pour le champ <tt>x</tt>
-     * 
-     * @param x
-     *            La valeur qu'on veut attribuer au champ <tt>x</tt>
-     */
-    public void setX(int x)
-    {
-        this.x = x;
-    }
-
-    /**
-     * Setter pour le champ <tt>y</tt>
-     * 
-     * @param y
-     *            La valeur qu'on veut attribuer au champ <tt>y</tt>
-     */
-    public void setY(int y)
-    {
-        this.y = y;
-    }
-    
-    /**
      * 
      */
     public String toString() {
         return "[" + x + ", " + y + "] Actif : "+actif;
+    }
+    
+    public void setActif(boolean actif){
+    	this.actif = actif;
+    }
+    
+    public boolean isActif(){
+    	return actif;
     }
 
     /**
