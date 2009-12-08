@@ -10,17 +10,17 @@
  */
 package models.maillage;
 
-import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-public class Arc extends DefaultWeightedEdge
+public class Arc extends DefaultWeightedEdge 
 {
-	Point depart, arrivee;
-	public Arc(Point depart, Point arrivee)
+	Noeud depart, arrivee;
+	
+	public Arc(Noeud depart, Noeud arrivee)
 	{
 		this.depart = depart;
 		this.arrivee = arrivee;
@@ -119,5 +119,21 @@ public class Arc extends DefaultWeightedEdge
 				return null;
 			}
 		};
+	}
+
+	/**
+	 * @return the depart
+	 */
+	public Noeud getDepart()
+	{
+		return depart;
+	}
+
+	/**
+	 * @return the arrivee
+	 */
+	public Noeud getArrivee()
+	{
+		return arrivee;
 	}
 }
