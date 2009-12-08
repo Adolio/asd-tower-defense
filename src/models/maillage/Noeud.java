@@ -44,27 +44,7 @@ public class Noeud extends Point
     public Noeud (Noeud source) {
        this(source.x, source.y);
     }
-
-    /**
-     * Getter pour le champ <tt>x</tt>
-     * 
-     * @return La valeur du champ <tt>x</tt>
-     */
-    public double getX()
-    {
-        return x;
-    }
-
-    /**
-     * Getter pour le champ <tt>y</tt>
-     * 
-     * @return La valeur du champ <tt>y</tt>
-     */
-    public double getY()
-    {
-        return y;
-    }
-
+    
     /**
      * 
      */
