@@ -290,8 +290,8 @@ public class Maillage
 			{
 				// Nouveau noeud avec sa position x,y en pixel
 				noeuds[x][y] = new Noeud( // Calcul des points
-						(x+1) * LARGEUR_NOEUD + DEMI_NOEUD,  // Pixels en x
-						(y+1) * LARGEUR_NOEUD + DEMI_NOEUD); // Pixels en y
+						(x) * LARGEUR_NOEUD + DEMI_NOEUD,  // Pixels en x
+						(y) * LARGEUR_NOEUD + DEMI_NOEUD); // Pixels en y
 
 				graphe.addVertex(noeuds[x][y]);
 			}

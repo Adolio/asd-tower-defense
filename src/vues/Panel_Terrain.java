@@ -9,6 +9,7 @@ import java.util.Iterator;
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
+import models.maillage.Noeud;
 import models.tours.Tour;
 
 /**
@@ -175,17 +176,31 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------
 		if(afficherMaillage)
 		{	
+			/*
 			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
 			
-			// TODO supprimer echelleMaillage
-			int echelleMaillage = 10;
 			if(arcsActifs != null)
 				for(Line2D arc : arcsActifs)
 				{
 					g2.setColor(Color.GREEN);
-					g2.drawLine((int)arc.getX1()+echelleMaillage,(int)arc.getY1()+echelleMaillage,
-							(int)arc.getX2()+echelleMaillage,(int)arc.getY2()+echelleMaillage);
+					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
+							(int)arc.getX2(),(int)arc.getY2());
 				}
+			*/
+			
+			ArrayList<Noeud> noeuds = jeu.getNoeuds();
+			
+			for(Noeud n : noeuds)
+			{
+				
+				if(n.isActif())
+					g2.setColor(Color.GREEN);
+				else
+					g2.setColor(Color.RED);
+				
+				g2.drawRect((int)n.getX(),(int)n.getY(),1,1);
+			}
+			
 		}
 		
 		//-----------------------------
@@ -193,9 +208,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-----------------------------
 		for(Creature creature : jeu.getCreatures())
 		{
-			// TODO supprimer echelleMaillage
-			int echelleMaillage = 10;
-			
 			g2.setColor(Color.YELLOW);
 			
 			if(creature.getImage() != null)
@@ -244,8 +256,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 							//g2.fillOval(point.x,point.y,4,4);
 							
 							g2.setColor(Color.BLUE);
-							g2.drawLine(PointPrecedent.x+echelleMaillage, PointPrecedent.y+echelleMaillage, 
-										point.x+echelleMaillage, point.y+echelleMaillage);
+							g2.drawLine(PointPrecedent.x, PointPrecedent.y, 
+										point.x, point.y);
 							PointPrecedent = point;
 						}
 					}
