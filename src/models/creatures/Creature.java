@@ -1,5 +1,6 @@
 package models.creatures;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	private int nbPiecesDOr;
 	
+	// TODO comment
+	private Image image;
+	
 	/**
 	 * La creature gere sont propre thread pour ce deplacer sur le terrain
 	 */
@@ -85,7 +89,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * @param nbPiecesDOr le nombre de pieces de la creature
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
-					int santeMax, int nbPiecesDOr)
+					int santeMax, int nbPiecesDOr, Image image)
 	{
 		super(x,y,largeur,hauteur);
 		
@@ -93,6 +97,7 @@ public abstract class Creature extends Rectangle implements Runnable
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
+		this.image 			= image;
 	}
 
 	/**
@@ -152,6 +157,13 @@ public abstract class Creature extends Rectangle implements Runnable
 		return nbPiecesDOr;
 	}
 
+	// TODO comment
+	public Image getImage()
+	{
+		return image;
+	}
+	
+	
 	/**
 	 * Permet de recuperer la position sur l'axe X de la creature
 	 * @param x la position sur l'axe X de la creature

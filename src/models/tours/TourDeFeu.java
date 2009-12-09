@@ -1,6 +1,9 @@
 package models.tours;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import models.creatures.Creature;
 
 /**
@@ -17,7 +20,15 @@ import models.creatures.Creature;
 public class TourDeFeu extends Tour
 {
 	private static final long serialVersionUID = 1L;
-	public static final Color COULEUR = Color.RED;
+	public static final Color COULEUR;
+	public static final Image IMAGE;
+	
+	static
+	{
+		COULEUR = Color.RED;
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
+	}
+	
 	public TourDeFeu()
 	{
 		super(0, 				// x
@@ -28,7 +39,8 @@ public class TourDeFeu extends Tour
 			  "Tour de feu",	// nom
 			  10,				// prix achat
 			  5,				// degats
-			  50);				// rayon de portee
+			  50,				// rayon de portee
+			  IMAGE);				
 	
 		description = "La tour de feu est une tour \nqui fait beaucoup degats," +
 					  " mais elle est très lente. " +
@@ -44,22 +56,6 @@ public class TourDeFeu extends Tour
 		degats    	*= 2;
 		rayonPortee += 50;
 		
-		/*
-		switch(niveau)
-		{
-			case 1 :
-				prixAchat 	= 20;
-				degats 		= 20;
-				rayonPortee = 200;
-				break;
-			case 2 :
-				prixAchat 	= 40;
-				degats 		= 40;
-				rayonPortee = 300;
-				break;
-		}
-		*/
-		
 		niveau++;
 	}
 
@@ -67,5 +63,10 @@ public class TourDeFeu extends Tour
 	{
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 		creature.blesser(degats);
+	}
+
+	public Tour getCopieOriginale()
+	{
+		return new TourDeFeu();
 	}
 }

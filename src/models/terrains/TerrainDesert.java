@@ -22,8 +22,8 @@ public class TerrainDesert extends Terrain
 	public TerrainDesert()
 	{
 		super(500, 500, "img/cartes/desert.png", 
-			  new Rectangle(480,20,20,80),
-			  new Rectangle(0,400,20,80));
+			  new Rectangle(480,40,20,60),
+			  new Rectangle(0,400,20,60));
 		
 		// murs entourant le terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
@@ -46,6 +46,6 @@ public class TerrainDesert extends Terrain
 		
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
-		ajouterMur(new Rectangle(320,360,60,20));	
+		ajouterMur(new Rectangle(320,360,60,20));
 	}
 }

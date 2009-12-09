@@ -1,5 +1,8 @@
 package models.creatures;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  * Classe de gestion d'une creature.
  * 
@@ -13,6 +16,14 @@ package models.creatures;
 public class Creature1 extends Creature
 {
 	private static final long serialVersionUID = 1L;
+	
+	private static final Image IMAGE;
+	
+	
+	static
+	{
+		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/creature1.png");
+	}
 	
 	/**
 	 * Constructeur de base.
@@ -34,7 +45,7 @@ public class Creature1 extends Creature
 	 */
 	public Creature1(int x, int y, int santeMax, int nbPiecesDOr)
 	{
-		super(x, y, 10, 10, santeMax,nbPiecesDOr);
+		super(x, y, 16, 16, santeMax,nbPiecesDOr,IMAGE);
 	}
 
 	/**

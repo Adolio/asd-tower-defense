@@ -42,6 +42,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final int LARGEUR = 500;
 	private static final int HAUTEUR = 500;
 	
+	private static final float [] DASHES = {2.0F, 2.0F}; // trait tillé
+	private static final BasicStroke TRAIT_TILLE = new BasicStroke(
+			1.0f,BasicStroke.CAP_ROUND, 
+            BasicStroke.JOIN_MITER, 
+            10.0F, DASHES, 0.F);
+	
 	//------------
 	//-- thread --
 	//------------
@@ -112,8 +118,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	public void setTourAAjouter(Tour tour)
 	{
-		tourAAjouter = tour;
+		tour.setLocation(sourisCaseX, sourisCaseY);
 		
+		tourAAjouter = tour;
+
 		if(tourAAjouter != null)
 			tourSelectionnee = null;
 	}
@@ -145,6 +153,23 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(jeu.getImageDeFondTerrain() != null)
 			g2.drawImage(jeu.getImageDeFondTerrain(), 0, 0, null);
 		
+		
+		//-------------------------------------------------
+		//-- Affichage de la zone de depart et d'arrivee --
+		//-------------------------------------------------
+		
+		g2.setColor(Color.GRAY);
+		Rectangle zoneDepart = jeu.getZoneDepart();
+		g2.fillRect((int) zoneDepart.getX(), (int) zoneDepart.getY(), 
+					(int)zoneDepart.getWidth(), 
+					(int)zoneDepart.getHeight());
+		
+		g2.setColor(Color.GRAY);
+		Rectangle zoneArrivee = jeu.getZoneArrivee();
+		g2.fillRect((int) zoneArrivee.getX(), (int) zoneArrivee.getY(), 
+					(int)zoneArrivee.getWidth(), 
+					(int)zoneArrivee.getHeight());
+		
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
 		//-------------------------------------
@@ -172,7 +197,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			int echelleMaillage = 10;
 			
 			g2.setColor(Color.YELLOW);
-			g2.fillOval((int) creature.getCenterX(), 
+			
+			if(creature.getImage() != null)
+				g2.drawImage(creature.getImage(),
+						(int) creature.getX(), (int) creature.getY(), 
+						(int) creature.getWidth(), (int) creature.getHeight(), null);
+			else
+				g2.fillOval((int) creature.getCenterX(), 
 						(int) creature.getCenterY(), 
 						(int) creature.getWidth(), 
 						(int) creature.getHeight());
@@ -226,13 +257,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des tours --
 		//-------------------------
 		for(Tour tour : jeu.getTours())
-		{
-			g2.setColor(tour.getCouleurDeFond());
-			g2.fillRect(tour.getXi(), tour.getYi(), 
-					(int)tour.getWidth(), 
-					(int)tour.getHeight());
-		}
-		
+			dessinerTour(tour,g2,false);
 		
 		
 		//---------------------------------
@@ -240,12 +265,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//---------------------------------
 		if(tourSelectionnee != null)
 		{
-			g2.setColor(Color.WHITE);
-			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
-					(int) tourSelectionnee.getWidth(), 
-					(int) tourSelectionnee.getHeight());
+			dessinerTour(tourSelectionnee,g2,true);
 			
-			dessinerPortee(tourSelectionnee,g2);
+			g2.setColor(Color.WHITE);
+			g2.setStroke(TRAIT_TILLE);
+			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
+					(int) (tourSelectionnee.getWidth()),
+					(int) (tourSelectionnee.getHeight()));
 		}
 		
 		//------------------------------------
@@ -270,10 +296,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(tourAAjouter != null && sourisSurTerrain)
 		{
 			// dessin de la tour
-			g2.setColor(tourAAjouter.getCouleurDeFond());
-			g2.fillRect(sourisCaseX, sourisCaseY, 
-					(int)tourAAjouter.getWidth(), 
-					(int)tourAAjouter.getHeight());
+			dessinerTour(tourAAjouter,g2,false);
 			
 			// positionnnable ou non
 			if(!jeu.laTourPeutEtrePosee(tourAAjouter))
@@ -296,6 +319,27 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				dessinerPortee(tourAAjouter,g2);
 		}
 	}
+	
+	private void dessinerTour(final Tour tour,
+							  final Graphics2D g2,
+							  final boolean avecPortee)
+	{
+		if(tour.getImage() != null)
+			g2.drawImage(tour.getImage(), tour.getXi(), tour.getYi(), 
+					(int)tour.getWidth(), 
+					(int)tour.getHeight(),null);
+		else
+		{
+			g2.setColor(tour.getCouleurDeFond());
+			g2.fillRect(tour.getXi(), tour.getYi(), 
+				(int)tour.getWidth(), 
+				(int)tour.getHeight());
+		}
+		
+		if(avecPortee)
+			dessinerPortee(tour,g2);
+	}
+	
 	
 	private void dessinerPortee(Tour tour,Graphics2D g2)
 	{
