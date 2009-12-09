@@ -193,9 +193,9 @@ public class Maillage
 		return HAUTEUR_EN_PIXELS;
 	}
 
-	public ArrayList<Point> getNoeuds()
+	public ArrayList<Noeud> getNoeuds()
 	{
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<Noeud> points = new ArrayList<Noeud>();
 
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
