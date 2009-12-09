@@ -139,7 +139,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 		{
 			panelTerrain.deselectionner();
 			panelMenuInteraction.miseAJourNbPiecesOr(jeu.getNbPiecesOr());
-			panelInfoTour.effacerTour();
+			
+			setTourAAcheter(tour.getCopieOriginale());
+			panelInfoTour.setTour(tour, panelInfoTour.MODE_ACHAT);
 		}
 	}
 	

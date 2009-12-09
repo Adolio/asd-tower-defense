@@ -32,6 +32,10 @@ public class Maillage
 	private final int DESACTIVE;
 	// La largeur en pixel de chaque maille, ou noeud
 	private final int LARGEUR_NOEUD;
+	
+	// TODO comment
+	private final int POIDS_DIAGO;
+	
 	private final int DEMI_NOEUD;
 	// La largeur en pixel totale du maillage (axe des x)
 	private final int LARGEUR_EN_PIXELS;
@@ -62,6 +66,9 @@ public class Maillage
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
 
+		// TODO comment
+		POIDS_DIAGO = (int) Math.sqrt(2*LARGEUR_NOEUD*LARGEUR_NOEUD);
+		
 		// Largeur du demi noeud
 		DEMI_NOEUD = LARGEUR_NOEUD / 2;
 
@@ -327,7 +334,7 @@ public class Maillage
 			{
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y + 1]), // Arrivée
-						LARGEUR_NOEUD); // Poids
+						POIDS_DIAGO); // Poids
 			}
 		}
 
@@ -340,7 +347,7 @@ public class Maillage
 			{
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y - 1]), // Arrivée
-						LARGEUR_NOEUD); // Poids
+						POIDS_DIAGO); // Poids
 			}
 		}
 

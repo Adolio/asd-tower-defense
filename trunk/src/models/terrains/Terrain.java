@@ -8,7 +8,6 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import models.creatures.Creature;
 import models.maillage.Maillage;
-import models.maillage.Noeud;
 import models.maillage.PathNotFoundException;
 import models.tours.Tour;
 

@@ -304,4 +304,14 @@ public class Jeu implements EcouteurDeCreature
 		// TODO mise a jour des vues
 		
 	}
+
+	public Rectangle getZoneDepart()
+	{
+		return terrain.getZoneDepart();
+	}
+	
+	public Rectangle getZoneArrivee()
+	{
+		return terrain.getZoneArrivee();
+	}
 }

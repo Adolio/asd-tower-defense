@@ -1,6 +1,7 @@
 package models.tours;
 
 import java.awt.*;
+
 import models.creatures.Creature;
 import models.terrains.Terrain;
 
@@ -67,6 +68,11 @@ public abstract class Tour extends Rectangle implements Runnable
 	protected double rayonPortee = 100;
 	
 	/**
+	 * image
+	 */
+	protected Image image;
+	
+	/**
 	 * le terrain pour recuperer des informations sur les creatures
 	 */
 	protected Terrain terrain;
@@ -97,10 +103,11 @@ public abstract class Tour extends Rectangle implements Runnable
 				int largeur, 
 				int hauteur, 
 				Color couleurDeFond, 
-				String nom, 
+				String nom,
 				int prixAchat,
 				int degats,
-				double rayonPortee)
+				double rayonPortee,
+				Image image)
 	{
 		this.x = x;
 		this.y = y;
@@ -114,6 +121,8 @@ public abstract class Tour extends Rectangle implements Runnable
 		prixTotal 			= prixAchat;
 		this.degats			= degats;
 		this.rayonPortee	= rayonPortee;
+		
+		this.image 			= image;
 	}
 	
 	/**
@@ -216,6 +225,16 @@ public abstract class Tour extends Rectangle implements Runnable
 	public int getPrixTotal()
 	{
 		return prixTotal;
+	}
+	
+	
+	/**
+	 * Permet de recuperer l'image de la tour
+	 * @return l'image de la tour
+	 */
+	public Image getImage()
+	{
+		return image;
 	}
 	
 	/**
@@ -329,4 +348,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return Point.distance(x, y, creature.x, creature.y);
 	}
+	
+	
+	abstract public Tour getCopieOriginale();
 }

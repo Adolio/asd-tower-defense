@@ -1,6 +1,9 @@
 package models.tours;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import models.creatures.Creature;
 
 /**
@@ -17,7 +20,14 @@ import models.creatures.Creature;
 public class TourDeGlace extends Tour
 {
 	private static final long serialVersionUID = 1L;
-	public static final Color COULEUR = Color.BLUE;
+	public static final Color COULEUR;
+	public static final Image IMAGE;
+	
+	static
+	{
+		COULEUR = Color.BLUE;
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
+	}
 	
 	public TourDeGlace()
 	{
@@ -29,11 +39,12 @@ public class TourDeGlace extends Tour
 			  "Tour de glace",	// nom
 			  20,				// prix achat
 			  40,				// degats
-			  40);				// rayon de portee
+			  40,				// rayon de portee
+			  IMAGE);				
 		
 		description = "La tour de glace est une \ntour rapide qui ralenti les ennemis";
 	}
-	
+
 	public void ameliorer()
 	{
 		// le prix total est ajouté du prix d'achat de la tour
@@ -62,5 +73,11 @@ public class TourDeGlace extends Tour
 	{
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
 		creature.blesser(degats);
+	}
+
+
+	public Tour getCopieOriginale()
+	{
+		return new TourDeGlace();
 	}
 }

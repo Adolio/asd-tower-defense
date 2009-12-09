@@ -32,8 +32,8 @@ import models.tours.Tour;
 public class Panel_InfoTour extends JPanel implements ActionListener
 {
 	
-	public static final int MODE_SELECTION = 0;
-	public static final int MODE_ACHAT = 1;
+	public static final int MODE_SELECTION 	= 0;
+	public static final int MODE_ACHAT 		= 1;
 	
 	private static final long serialVersionUID = 1L;
 	private Tour tour;
