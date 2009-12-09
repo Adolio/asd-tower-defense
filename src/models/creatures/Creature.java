@@ -177,7 +177,10 @@ public abstract class Creature extends Rectangle implements Runnable
 	public void setChemin(ArrayList<Point> chemin)
 	{
 		this.chemin = chemin;
-		indiceCourantChemin = 0;
+		
+		// on est deja au point 0, on ne vas donc pas y aller...
+		// corrige un petit bug de retour en arriere.
+		indiceCourantChemin = 1; 
 	}
 	
 	/**
