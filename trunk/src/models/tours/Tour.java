@@ -1,6 +1,7 @@
 package models.tours;
 
 import java.awt.*;
+import java.util.Iterator;
 
 import models.creatures.Creature;
 import models.terrains.Terrain;
@@ -304,7 +305,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * @return la creature la plus proche et a portee de la tour 
 	 * 		   ou <b>null s'il n'y a pas de creature a portee</b>
 	 */
-	private Creature getCreatureLaPlusProcheEtAPortee()
+	synchronized private Creature getCreatureLaPlusProcheEtAPortee()
 	{
 		// le terrain a bien ete setter ?
 		if(terrain == null)
@@ -315,9 +316,14 @@ public abstract class Tour extends Rectangle implements Runnable
 		double distanceLaPlusProche 	= 0;
 		double distance 				= 0;
 		
+		Iterator<Creature> iCreatures = terrain.getCreatures().iterator();
+		Creature creature;
+		
 		// pour chaque creature sur le terrain
-		for(Creature creature : terrain.getCreatures())
+		while(iCreatures.hasNext())
 		{
+			creature = iCreatures.next();
+		
 			// calcul de la distance entre la tour et la creature
 			distance = getDistance(creature);
 			
@@ -331,7 +337,7 @@ public abstract class Tour extends Rectangle implements Runnable
 				{	
 					// nouvelle creature plus proche trouvee!
 					creatureLaPlusProche = creature;
-					distanceLaPlusProche 	 = distance;
+					distanceLaPlusProche = distance;
 				}
 			}
 		}

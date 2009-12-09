@@ -303,7 +303,6 @@ public class Jeu implements EcouteurDeCreature
 		score 		+= creature.getNbPiecesDOr(); 
 		
 		// TODO mise a jour des vues
-		
 	}
 
 	public Rectangle getZoneDepart()

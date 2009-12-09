@@ -6,6 +6,8 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import models.creatures.Creature;
 import models.maillage.Maillage;
 import models.maillage.Noeud;
@@ -190,7 +192,7 @@ public abstract class Terrain
 	 * @param mur
 	 *            le mur ajouter
 	 */
-	public void ajouterMur(Rectangle mur)
+	synchronized public void ajouterMur(Rectangle mur)
 	{
 		// c'est bien un mur valide ?
 		if (mur != null)
@@ -223,7 +225,7 @@ public abstract class Terrain
 	 * @param creature
 	 *            la creature a ajouter
 	 */
-	public void ajouterCreature(Creature creature)
+	synchronized public void ajouterCreature(Creature creature)
 	{
 		if (creature != null)
 			creatures.add(creature);
@@ -235,7 +237,7 @@ public abstract class Terrain
 	 * @param creature
 	 *            la creature a supprimer
 	 */
-	public void supprimerCreature(Creature creature)
+	synchronized public void supprimerCreature(Creature creature)
 	{
 		if (creature != null)
 			creatures.remove(creature);
@@ -261,7 +263,7 @@ public abstract class Terrain
 	 * @param tour
 	 *            la tour a ajouter
 	 */
-	public boolean ajouterTour(Tour tour)
+	synchronized public boolean ajouterTour(Tour tour)
 	{
 		// c'est bien une tour valide ?
 		if (tour != null)
@@ -287,7 +289,7 @@ public abstract class Terrain
 	 * @param tour
 	 *            la tour a supprimer
 	 */
-	public void supprimerTour(Tour tour)
+	synchronized public void supprimerTour(Tour tour)
 	{
 		// c'est bien un tour valide ?
 		if (tour != null)
@@ -331,6 +333,10 @@ public abstract class Terrain
 				if (tour.intersects(creature))
 					return false;
 
+			if(tour.intersects(ZONE_DEPART)
+			|| tour.intersects(ZONE_ARRIVEE))
+				return false;
+			
 			// rien empeche la tour d'etre posee
 			return true;
 		}
@@ -372,15 +378,18 @@ public abstract class Terrain
 	 * Permet de mettre a jour les chemins des creatures lors de la modification
 	 * du maillage.
 	 */
-	private void miseAJourDesCheminsDesCreatures()
+	synchronized private void miseAJourDesCheminsDesCreatures()
 	{
-		synchronized (this)
+		// mise a jour de tous les chemins
+		Iterator<Creature> iCreatures = creatures.iterator();
+		Creature creature;
+		while(iCreatures.hasNext())
 		{
-			// mise a jour de tous les chemins
-			for (Creature creature : creatures)
-				creature.setChemin(getCheminLePlusCourt(creature.x, creature.y,
-						(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
-								.getCenterY()));
+			creature = iCreatures.next();
+			
+			creature.setChemin(getCheminLePlusCourt(creature.x, creature.y,
+					(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
+							.getCenterY()));
 		}
 	}
 
