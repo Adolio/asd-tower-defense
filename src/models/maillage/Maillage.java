@@ -32,10 +32,10 @@ public class Maillage
 	private final int DESACTIVE;
 	// La largeur en pixel de chaque maille, ou noeud
 	private final int LARGEUR_NOEUD;
-	
+
 	// TODO comment
 	private final int POIDS_DIAGO;
-	
+
 	private final int DEMI_NOEUD;
 	// La largeur en pixel totale du maillage (axe des x)
 	private final int LARGEUR_EN_PIXELS;
@@ -67,8 +67,8 @@ public class Maillage
 		LARGEUR_NOEUD = largeurDuNoeud;
 
 		// TODO comment
-		POIDS_DIAGO = (int) Math.sqrt(2*LARGEUR_NOEUD*LARGEUR_NOEUD);
-		
+		POIDS_DIAGO = (int) Math.sqrt(2 * LARGEUR_NOEUD * LARGEUR_NOEUD);
+
 		// Largeur du demi noeud
 		DEMI_NOEUD = LARGEUR_NOEUD / 2;
 
@@ -238,16 +238,25 @@ public class Maillage
 		 */
 		rectangleEstDansLeTerrain(rectangle);
 
-		for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
-				+ rectangle.width); ++i)
-			for (int j = pixelToNoeud(rectangle.y); j < pixelToNoeud(rectangle.y
-					+ rectangle.height); ++j)
-				if (active)
-					activer(noeuds[i][j]);
-				else
-					desactiver(noeuds[i][j]);
+		/*
+		 * for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
+		 * + rectangle.width); ++i) for (int j = pixelToNoeud(rectangle.y); j <
+		 * pixelToNoeud(rectangle.y + rectangle.height); ++j) if (active)
+		 * activer(noeuds[i][j]); else desactiver(noeuds[i][j]);
+		 */
 		// Correction des arcs diagonaux
 		// TODO
+		for (Noeud[] ligne : noeuds)
+			for (Noeud noeud : ligne)
+			{
+				Rectangle rec = new Rectangle(noeud.x - DEMI_NOEUD, noeud.y
+						- DEMI_NOEUD, LARGEUR_NOEUD, LARGEUR_NOEUD);
+				if (rectangle.intersects(rec))
+					if (active)
+						activer(noeud);
+					else
+						desactiver(noeud);
+			}
 	}
 
 	/**
@@ -290,7 +299,7 @@ public class Maillage
 			{
 				// Nouveau noeud avec sa position x,y en pixel
 				noeuds[x][y] = new Noeud( // Calcul des points
-						(x) * LARGEUR_NOEUD + DEMI_NOEUD,  // Pixels en x
+						(x) * LARGEUR_NOEUD + DEMI_NOEUD, // Pixels en x
 						(y) * LARGEUR_NOEUD + DEMI_NOEUD); // Pixels en y
 
 				graphe.addVertex(noeuds[x][y]);
