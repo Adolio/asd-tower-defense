@@ -18,7 +18,7 @@ import org.jgrapht.graph.*;
  * notamment la désactivation de zone et surtout le calcule du chemin le plus
  * cours d'une maille à une autre.
  * <p>
- * Remarques :
+ * Remarques : -
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -238,10 +238,6 @@ public class Maillage
 		 */
 		rectangleEstDansLeTerrain(rectangle);
 
-		// Désactiver les noeuds dans la zone donnée.
-		// Pour cela, une idée serait de mettre simplement le poids des noeuds
-		// concernées à une valeur pseudo infinie.
-
 		for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
 				+ rectangle.width); ++i)
 			for (int j = pixelToNoeud(rectangle.y); j < pixelToNoeud(rectangle.y
@@ -251,7 +247,7 @@ public class Maillage
 				else
 					desactiver(noeuds[i][j]);
 		// Correction des arcs diagonaux
-		
+		// TODO
 	}
 
 	/**
@@ -293,12 +289,12 @@ public class Maillage
 			for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
 			{
 				// Nouveau noeud avec sa position x,y en pixel
-				noeuds[x][y] = new Noeud(x * LARGEUR_NOEUD + DEMI_NOEUD, y
-						* LARGEUR_NOEUD + DEMI_NOEUD);
+				noeuds[x][y] = new Noeud( // Calcul des points
+						(x+1) * LARGEUR_NOEUD + DEMI_NOEUD,  // Pixels en x
+						(y+1) * LARGEUR_NOEUD + DEMI_NOEUD); // Pixels en y
 
 				graphe.addVertex(noeuds[x][y]);
 			}
-
 		}
 
 		/*
@@ -386,5 +382,4 @@ public class Maillage
 		if (rectangle.getY() + rectangle.getHeight() > HAUTEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Hauteur hors cadre");
 	}
-
 }
