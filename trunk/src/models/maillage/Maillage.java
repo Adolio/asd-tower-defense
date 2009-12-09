@@ -290,7 +290,7 @@ public class Maillage
 		{
 			for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
 			{
-				noeuds[x][y] = (new Noeud(x * LARGEUR_NOEUD + DEMI_NOEUD, y
+				noeuds[x][y] = (new Noeud((x+1) * LARGEUR_NOEUD + DEMI_NOEUD, (y+1)
 						* LARGEUR_NOEUD + DEMI_NOEUD));
 
 				graphe.addVertex(noeuds[x][y]);
