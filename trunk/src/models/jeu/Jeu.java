@@ -8,6 +8,7 @@ import models.creatures.Creature;
 import models.creatures.Creature1;
 import models.creatures.EcouteurDeCreature;
 import models.creatures.VagueDeCreatures;
+import models.maillage.Noeud;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
@@ -313,5 +314,10 @@ public class Jeu implements EcouteurDeCreature
 	public Rectangle getZoneArrivee()
 	{
 		return terrain.getZoneArrivee();
+	}
+
+	public ArrayList<Noeud> getNoeuds()
+	{
+		return terrain.getNoeuds();
 	}
 }

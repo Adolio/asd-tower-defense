@@ -8,6 +8,7 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import models.creatures.Creature;
 import models.maillage.Maillage;
+import models.maillage.Noeud;
 import models.maillage.PathNotFoundException;
 import models.tours.Tour;
 
@@ -430,5 +431,10 @@ public abstract class Terrain
 	public ArrayList<Line2D> getArcsActifs()
 	{
 		return maillage.getArcsActifs();
+	}
+
+	public ArrayList<Noeud> getNoeuds()
+	{
+		return maillage.getNoeuds();
 	}
 }
