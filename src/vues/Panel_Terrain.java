@@ -5,11 +5,9 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.maillage.Noeud;
 import models.tours.Tour;
 
 /**
@@ -176,7 +174,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------
 		if(afficherMaillage)
 		{	
-			/*
+			
 			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
 			
 			if(arcsActifs != null)
@@ -186,8 +184,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
 							(int)arc.getX2(),(int)arc.getY2());
 				}
-			*/
-			
+			/*
 			ArrayList<Noeud> noeuds = jeu.getNoeuds();
 			
 			for(Noeud n : noeuds)
@@ -200,14 +197,19 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				
 				g2.drawRect((int)n.getX(),(int)n.getY(),1,1);
 			}
-			
+			*/
 		}
 		
 		//-----------------------------
 		//-- affichage des creatures --
 		//-----------------------------
-		for(Creature creature : jeu.getCreatures())
+		
+		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
+		Creature creature;
+		while(iCreatures.hasNext())
 		{
+			creature = iCreatures.next();
+		
 			g2.setColor(Color.YELLOW);
 			
 			if(creature.getImage() != null)

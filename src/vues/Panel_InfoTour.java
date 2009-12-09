@@ -54,7 +54,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	{
 		// construction du panel
 		super(new BorderLayout());
-		setPreferredSize(new Dimension(250, 400));
+		setPreferredSize(new Dimension(280, 400));
 
 		this.fenJeu = fenJeu;
 		

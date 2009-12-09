@@ -45,7 +45,7 @@ public class Creature1 extends Creature
 	 */
 	public Creature1(int x, int y, int santeMax, int nbPiecesDOr)
 	{
-		super(x, y, 16, 16, santeMax,nbPiecesDOr,IMAGE);
+		super(x, y, 14, 14, santeMax,nbPiecesDOr,IMAGE);
 	}
 
 	/**
