@@ -115,7 +115,7 @@ public abstract class Terrain
 	{
 		LARGEUR = largeur;
 		HAUTEUR = hauteur;
-		maillage = new Maillage(largeur, hauteur, PRECISION_MAILLAGE);
+		maillage = new Maillage(largeur+50, hauteur+50, PRECISION_MAILLAGE);
 		tours = new ArrayList<Tour>();
 		creatures = new ArrayList<Creature>();
 		ZONE_DEPART = zoneDepart;

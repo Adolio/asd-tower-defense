@@ -22,7 +22,7 @@ public class TerrainDesert extends Terrain
 	public TerrainDesert()
 	{
 		super(500, 500, "img/cartes/desert.png", 
-			  new Rectangle(480,40,20,60),
+			  new Rectangle(520,40,20,60),
 			  new Rectangle(0,400,20,60));
 		
 		// murs entourant le terrain

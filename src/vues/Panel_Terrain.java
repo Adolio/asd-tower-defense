@@ -40,8 +40,32 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_FOND = new Color(50,200,50);
 	private static final int LARGEUR = 500;
 	private static final int HAUTEUR = 500;
+	private static final int HAUTEUR_BARRE_VIE = 4; // pixels
 	
+	// % de la largeur de la creature
+	private static final float COEFF_LARGEUR_BARRE_VIE = 1.5f; // 150%
+
+	private static final int CADRILLAGE = 10; // unite du cadriallage en pixel
 	private static final float [] DASHES = {2.0F, 2.0F}; // trait tillé
+	
+	// 0.0f = 100% transparent et 1.0f vaut 100% opaque.
+	private static final float ALPHA_PERIMETRE_PORTEE = .6f;
+	private static final float ALPHA_SURFACE_PORTEE   = .3f;
+	private static final float ALPHA_MAILLAGE   	  = .4f;
+	private static final float ALPHA_SURFACE_ZONE_DA  = .5f;
+	
+	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
+	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
+	private static final Color COULEUR_MAILLAGE 	= Color.WHITE;
+	private static final Color COULEUR_SANTE 		= Color.GREEN;
+	private static final Color COULEUR_CHEMIN 		= Color.BLUE;
+	private static final Color COULEUR_CREATURE_SANS_IMAGE = Color.YELLOW;
+	private static final Color COULEUR_SELECTION	= Color.WHITE;
+	private static final Color COULEUR_POSE_IMPOSSIBLE = Color.RED;
+	private static final Color COULEUR_CONTENEUR_SANTE = Color.BLACK;
+	private static final Color COULEUR_RAYON_PORTEE = Color.WHITE;
+	
+	
 	private static final BasicStroke TRAIT_TILLE = new BasicStroke(
 			1.0f,BasicStroke.CAP_ROUND, 
             BasicStroke.JOIN_MITER, 
@@ -56,9 +80,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	// souris
 	private int sourisX, sourisY, // position reelle
 				sourisCaseX, sourisCaseY; // position sur le cadriallage virtuel
-	private boolean sourisSurTerrain;
 	
-	private int cadrillage = 10; // unite du cadriallage en pixel
+	private boolean sourisSurTerrain;
 	
 	// gestion des interactions avec les tours 
 	/**
@@ -79,9 +102,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	// le jeu a gerer
 	private Jeu jeu;
 	
-	private boolean afficherMaillage = true; // affichage du graphe ?
-
+	private boolean afficherMaillage; // affichage du graphe ?
+	
+	// affichage de tous les rayons de portee ?
+	private boolean afficherRayonsDePortee;
+	
 	private Fenetre_Jeu fenJeu;
+
 	
 	/**
 	 * Constructeur du panel du terrain
@@ -156,31 +183,39 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
-		
-		g2.setColor(Color.GRAY);
-		Rectangle zoneDepart = jeu.getZoneDepart();
-		g2.fillRect((int) zoneDepart.getX(), (int) zoneDepart.getY(), 
-					(int)zoneDepart.getWidth(), 
-					(int)zoneDepart.getHeight());
-		
-		g2.setColor(Color.GRAY);
-		Rectangle zoneArrivee = jeu.getZoneArrivee();
-		g2.fillRect((int) zoneArrivee.getX(), (int) zoneArrivee.getY(), 
-					(int)zoneArrivee.getWidth(), 
-					(int)zoneArrivee.getHeight());
+		if(afficherMaillage)
+		{
+			// affichage des surfaces
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_SURFACE_ZONE_DA));
+			
+			g2.setColor(COULEUR_ZONE_DEPART);
+			Rectangle zoneDepart = jeu.getZoneDepart();
+			g2.fillRect((int)zoneDepart.getX(), 
+						(int) zoneDepart.getY(), 
+						(int)zoneDepart.getWidth(), 
+						(int)zoneDepart.getHeight());
+			
+			g2.setColor(COULEUR_ZONE_ARRIVEE);
+			Rectangle zoneArrivee = jeu.getZoneArrivee();
+			g2.fillRect((int) zoneArrivee.getX(), 
+						(int) zoneArrivee.getY(), 
+						(int)zoneArrivee.getWidth(), 
+						(int)zoneArrivee.getHeight());
+		}
 		
 		//-------------------------------------
 		//-- Affichage du grillage du graphe --
 		//-------------------------------------
 		if(afficherMaillage)
 		{	
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_MAILLAGE));
 			
 			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
 			
 			if(arcsActifs != null)
 				for(Line2D arc : arcsActifs)
 				{
-					g2.setColor(Color.GREEN);
+					g2.setColor(COULEUR_MAILLAGE);
 					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
 							(int)arc.getX2(),(int)arc.getY2());
 				}
@@ -198,6 +233,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				g2.drawRect((int)n.getX(),(int)n.getY(),1,1);
 			}
 			*/
+			
+			// remet la valeur initiale
+	        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
 		
 		//-----------------------------
@@ -210,33 +248,39 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		{
 			creature = iCreatures.next();
 		
-			g2.setColor(Color.YELLOW);
-			
 			if(creature.getImage() != null)
+				// affichage de l'image de la creature au centre de sa position
 				g2.drawImage(creature.getImage(),
-						(int) creature.getX(), (int) creature.getY(), 
+						(int) (creature.getX() - creature.getWidth() / 2), 
+						(int) (creature.getY() - creature.getHeight() / 2), 
 						(int) creature.getWidth(), (int) creature.getHeight(), null);
 			else
-				g2.fillOval((int) creature.getCenterX(), 
-						(int) creature.getCenterY(), 
+			{
+				// affichage d'un cercle au centre de la position de la creature
+				g2.setColor(COULEUR_CREATURE_SANS_IMAGE);
+				g2.fillOval((int) (creature.getX() - creature.getWidth() / 2), 
+						(int) (creature.getY() - creature.getHeight() / 2),
 						(int) creature.getWidth(), 
 						(int) creature.getHeight());
+			}
 			
-			
-			int largeurBarre = (int) (creature.getWidth() * 2);
-			int hauteurBarre = 5;
+			//-----------------------------------
+			//-- affichage des barres de sante --
+			//-----------------------------------
+			int largeurBarre 	= (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
+			int positionXBarre 	= (int)(creature.getX()-creature.getWidth()/2
+										- (largeurBarre - creature.getWidth())/2);
+			int positionYBarre 	= (int)(creature.getY()+creature.getHeight()/2+2);
 			
 			// affichage des barres de vie
-			g2.setColor(Color.BLACK);
-			g2.fillRect((int)creature.getCenterX(), 
-					(int)(creature.getY()+creature.getHeight()+4), 
-					largeurBarre, hauteurBarre);
+			g2.setColor(COULEUR_CONTENEUR_SANTE);
+			g2.fillRect(positionXBarre,positionYBarre, 
+						largeurBarre, HAUTEUR_BARRE_VIE);
 			
-			g2.setColor(Color.GREEN);
-			g2.fillRect((int)creature.getCenterX(), 
-					(int)(creature.getY()+creature.getHeight()+5), 
-					(int)(creature.getSante()*largeurBarre/creature.getSanteMax()),
-					hauteurBarre-2);
+			g2.setColor(COULEUR_SANTE);
+			g2.fillRect(positionXBarre+1, positionYBarre+1, 
+					(int)(creature.getSante()*largeurBarre/creature.getSanteMax())-2,
+					HAUTEUR_BARRE_VIE-2);
 			
 			// affichage du chemin des creatures
 			if(afficherMaillage)
@@ -253,11 +297,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						while(it.hasNext())
 						{
 							point = it.next();
-								
-							//g2.setColor(Color.GREEN);
-							//g2.fillOval(point.x,point.y,4,4);
 							
-							g2.setColor(Color.BLUE);
+							g2.setColor(COULEUR_CHEMIN);
 							g2.drawLine(PointPrecedent.x, PointPrecedent.y, 
 										point.x, point.y);
 							PointPrecedent = point;
@@ -281,7 +322,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		{
 			dessinerTour(tourSelectionnee,g2,true);
 			
-			g2.setColor(Color.WHITE);
+			g2.setColor(COULEUR_SELECTION);
 			g2.setStroke(TRAIT_TILLE);
 			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
 					(int) (tourSelectionnee.getWidth()),
@@ -291,18 +332,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------------
 		//-- affichage des rayons de portee --
 		//------------------------------------
-		/*
 		if(afficherRayonsDePortee)
-		{
 			for(Tour tour : jeu.getTours())
-			{
-				g2.setColor(Color.WHITE);
-				g2.drawOval((int)(tour.getXi() - tour.getRayonAction() / 2 + tour.getWidth()/2), 
-							(int)(tour.getYi() - tour.getRayonAction() / 2 + tour.getHeight() / 2), 
-						(int)tour.getRayonAction(), (int)tour.getRayonAction());
-			}
-		}
-		*/
+				dessinerPortee(tour,g2);
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --
@@ -315,7 +347,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			// positionnnable ou non
 			if(!jeu.laTourPeutEtrePosee(tourAAjouter))
 			{
-				g2.setColor(Color.BLACK);
+				g2.setColor(COULEUR_POSE_IMPOSSIBLE);
 				g2.drawLine(sourisCaseX, sourisCaseY,
 						(int) (sourisCaseX + tourAAjouter.getWidth()),
 						(int) (sourisCaseY + tourAAjouter.getHeight()));
@@ -357,17 +389,17 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	private void dessinerPortee(Tour tour,Graphics2D g2)
 	{
-		// Set alpha.  0.0f is 100% transparent and 1.0f is 100% opaque.
-        float alpha = .3f;
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        
-		g2.setColor(tour.getCouleurDeFond());
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_PERIMETRE_PORTEE));
+		//g2.setColor(tour.getCouleurDeFond());
+        g2.setColor(COULEUR_RAYON_PORTEE);
 		g2.drawOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
 					(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
 					(int)tour.getRayonPortee()*2, 
 					(int)tour.getRayonPortee()*2);
 
-        g2.setColor(Color.WHITE);
+	
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_SURFACE_PORTEE));
+        g2.setColor(COULEUR_RAYON_PORTEE);
         g2.fillOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
         			(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
         			(int)tour.getRayonPortee()*2, 
@@ -377,11 +409,17 @@ public class Panel_Terrain extends JPanel implements Runnable,
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	}
 	
+	// TODO comment
 	public void toggleAfficherMaillage()
 	{
 		afficherMaillage = !afficherMaillage;
 	}
 	
+	// TODO comment
+	public void toggleAfficherRayonPortee()
+	{
+		afficherRayonsDePortee = !afficherRayonsDePortee;
+	}
 	
 	/**
 	 * Méthode de refraichissement du panel
@@ -476,8 +514,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		sourisY = me.getY();
 		
 		// mise a jour de la position de la souris sur le grillage vituel
-		sourisCaseX = Math.round(me.getX()/cadrillage)*cadrillage;
-		sourisCaseY = Math.round(me.getY()/cadrillage)*cadrillage;
+		sourisCaseX = Math.round(me.getX()/CADRILLAGE)*CADRILLAGE;
+		sourisCaseY = Math.round(me.getY()/CADRILLAGE)*CADRILLAGE;
 		
 		if(tourAAjouter != null)
 			tourAAjouter.setLocation(sourisCaseX, sourisCaseY);
