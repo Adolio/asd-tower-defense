@@ -34,8 +34,8 @@ import models.tours.TourDeGlace;
 public class Panel_MenuInteraction extends JPanel implements ActionListener															 
 {
 	private static final long serialVersionUID = 1L;
-	private JButton bTourFeu 		= new JButton("Feu");
-	private JButton bTourGlace 		= new JButton("Glace");
+	private JButton bTourFeu 		= new JButton(new ImageIcon(TourDeFeu.IMAGE));
+	private JButton bTourGlace 		= new JButton(new ImageIcon(TourDeGlace.IMAGE));
 	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES = new ImageIcon("img/icones/heart.png");
 	//private JLabel lScore 			= new JLabel();
@@ -60,11 +60,11 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		JPanel pTours = new JPanel();
 		
-		bTourFeu.setBackground(TourDeFeu.COULEUR);
+		//bTourFeu.setBackground(TourDeFeu.COULEUR);
 		bTourFeu.addActionListener(this);
 		pTours.add(bTourFeu);
 		
-		bTourGlace.setBackground(TourDeGlace.COULEUR);
+		//bTourGlace.setBackground(TourDeGlace.COULEUR);
 		bTourGlace.addActionListener(this);
 		pTours.add(bTourGlace);
 		
