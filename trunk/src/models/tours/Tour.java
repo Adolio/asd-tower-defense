@@ -350,7 +350,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * @param creature la creature
 	 * @return la distance en vol d'oiseau entre la tour et une creature
 	 */
-	private double getDistance(Creature creature)
+	synchronized private double getDistance(Creature creature)
 	{
 		return Point.distance(x, y, creature.x, creature.y);
 	}
