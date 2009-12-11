@@ -48,6 +48,9 @@ public class Maillage
 	// Le tableau des noeuds : Noeud[x][y]
 	private Noeud[][] noeuds;
 
+	// Le decalage de base.
+	private int xOffset, yOffset;
+
 	/**
 	 * Un maillage dynamique représentant une aire de jeu.
 	 * 
@@ -61,7 +64,8 @@ public class Maillage
 	 *             Levé si les dimensions ne correspondent pas.
 	 */
 	public Maillage(final int largeurPixels, final int hauteurPixels,
-			final int largeurDuNoeud) throws IllegalArgumentException
+			final int largeurDuNoeud, int xOffset, int yOffset)
+			throws IllegalArgumentException
 	{
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
@@ -83,11 +87,22 @@ public class Maillage
 		// Calcul du poids maximum pouvant avoir le graphe
 		DESACTIVE = 8 * NOMBRE_NOEUDS_X * NOMBRE_NOEUDS_Y * LARGEUR_NOEUD + 1;
 
+		// Les offsets du décalage
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+
 		// Initialisation du champs de noeuds
 		noeuds = new Noeud[NOMBRE_NOEUDS_X][NOMBRE_NOEUDS_Y];
 
 		// Construction du graphe
 		graphe = construireGraphe();
+	}
+	
+	public Maillage(final int largeurPixels, final int hauteurPixels,
+			final int largeurDuNoeud)
+			throws IllegalArgumentException
+	{
+		this(largeurPixels,hauteurPixels,largeurDuNoeud,0,0);
 	}
 
 	/**
@@ -299,8 +314,8 @@ public class Maillage
 			{
 				// Nouveau noeud avec sa position x,y en pixel
 				noeuds[x][y] = new Noeud( // Calcul des points
-						(x) * LARGEUR_NOEUD + DEMI_NOEUD, // Pixels en x
-						(y) * LARGEUR_NOEUD + DEMI_NOEUD); // Pixels en y
+						(x) * LARGEUR_NOEUD + DEMI_NOEUD + xOffset, // Pixels en x
+						(y) * LARGEUR_NOEUD + DEMI_NOEUD + yOffset);// Pixels en y
 
 				graphe.addVertex(noeuds[x][y]);
 			}
