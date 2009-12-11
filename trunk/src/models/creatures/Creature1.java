@@ -30,9 +30,9 @@ public class Creature1 extends Creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 */
-	public Creature1(int santeMax, int nbPiecesDOr)
+	public Creature1(int santeMax, int nbPiecesDOr, double vitesse)
 	{
-		this(0, 0, santeMax, nbPiecesDOr);
+		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
 	
 	/**
@@ -43,9 +43,9 @@ public class Creature1 extends Creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 */
-	public Creature1(int x, int y, int santeMax, int nbPiecesDOr)
+	public Creature1(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, 14, 14, santeMax,nbPiecesDOr,IMAGE);
+		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,IMAGE);
 	}
 
 	/**
@@ -53,6 +53,6 @@ public class Creature1 extends Creature
 	 */
 	public Creature copier()
 	{
-		return new Creature1(x,y,getSanteMax(),getNbPiecesDOr());
+		return new Creature1(x,y,getSanteMax(),getNbPiecesDOr(),getVitesse());
 	}
 }

@@ -26,15 +26,30 @@ public class Labyrinthe extends Terrain
 			  new Rectangle(320,280,20,60));
 		
 		
-		ajouterMur(new Rectangle(20,0,460,20));
-		ajouterMur(new Rectangle(0,0,20,500)); 		
-		ajouterMur(new Rectangle(20,480,440,20)); 	
-		ajouterMur(new Rectangle(460,140,20,360)); 
-		
-		ajouterMur(new Rectangle(140,140,340,20));
-		ajouterMur(new Rectangle(120,140,20,240));
-		ajouterMur(new Rectangle(140,360,200,20));
-		ajouterMur(new Rectangle(340,240,20,140));
-		ajouterMur(new Rectangle(240,240,100,20));
+		/* definition des murs du labyrinthe :
+		 
+		 		 1
+		|------------------
+		|
+		|           5
+		|	 |-------------
+		|	 |	   9	  |
+	  2 |	6|  -----|	  |
+		|	 |		 | 8  | 4
+		|    |-------|	  |
+		|		 7		  |
+		|-----------------|
+				3
+		*/
+	
+		ajouterMur(new Rectangle(20,0,460,20)); 	// 1
+		ajouterMur(new Rectangle(0,0,20,500));	 	// 2	
+		ajouterMur(new Rectangle(20,480,440,20)); 	// 3
+		ajouterMur(new Rectangle(460,140,20,360));  // 4
+		ajouterMur(new Rectangle(140,140,340,20));  // 5
+		ajouterMur(new Rectangle(120,140,20,240));	// 6
+		ajouterMur(new Rectangle(140,360,200,20));	// 7
+		ajouterMur(new Rectangle(340,240,20,140));	// 8
+		ajouterMur(new Rectangle(240,240,100,20));	// 9
 	}
 }
