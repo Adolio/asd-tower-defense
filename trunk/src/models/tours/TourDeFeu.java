@@ -49,18 +49,31 @@ public class TourDeFeu extends Tour
 	
 	public void ameliorer()
 	{
-		// le prix total est ajouté du prix d'achat de la tour
-		prixTotal 	+= prixAchat;
+		// que six niveau pour la tour
+		if(niveau <= 6)
+		{
+			// le prix total est ajouté du prix d'achat de la tour
+			prixTotal 	+= prixAchat;
+			
+			// augmentation du prix du prochain niveau
+			prixAchat 	*= 2;
+			
+			// augmentation des degats
+			degats    	*= 1.5;
+			
+			// augmentation du rayon de portee
+			rayonPortee += 10;
+			
+			// raccourcissement du temps de preparation du tire
+			tempsDePreparationDuTir	*= 0.8;
 		
-		prixAchat 	+= 10;
-		degats    	*= 2;
-		rayonPortee += 50;
-		
-		niveau++;
+			niveau++;
+		}
 	}
 
 	public void tirer(Creature creature)
 	{
+		// TODO
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 		creature.blesser(degats);
 	}

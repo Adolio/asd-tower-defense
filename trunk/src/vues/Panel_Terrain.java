@@ -38,8 +38,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	//-- proprietes du panel --
 	//-------------------------
 	private static final Color COULEUR_FOND = new Color(50,200,50);
-	private static final int LARGEUR = 500;
-	private static final int HAUTEUR = 500;
+	private final int LARGEUR;
+	private final int HAUTEUR;
 	private static final int HAUTEUR_BARRE_VIE = 4; // pixels
 	
 	// % de la largeur de la creature
@@ -64,12 +64,17 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_POSE_IMPOSSIBLE = Color.RED;
 	private static final Color COULEUR_CONTENEUR_SANTE = Color.BLACK;
 	private static final Color COULEUR_RAYON_PORTEE = Color.WHITE;
-	
+	private static final Color COULEUR_NIVEAU 		= Color.WHITE;
+	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
 	
 	private static final BasicStroke TRAIT_TILLE = new BasicStroke(
 			1.0f,BasicStroke.CAP_ROUND, 
             BasicStroke.JOIN_MITER, 
             10.0F, DASHES, 0.F);
+
+	
+
+	
 	
 	//------------
 	//-- thread --
@@ -109,6 +114,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	private Fenetre_Jeu fenJeu;
 
+	private ArrayList<Animation> animations = new ArrayList<Animation>();
+
 	
 	/**
 	 * Constructeur du panel du terrain
@@ -121,6 +128,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		this.jeu 	= jeu;
 		this.fenJeu = fenJeu;
 		
+		LARGEUR = jeu.getLargeurTerrain();
+		HAUTEUR = jeu.getHauteurTerrain();
 		// propriete du panel
 		setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
 		
@@ -164,21 +173,25 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		Graphics2D g2 = (Graphics2D) g;
 		
-		//--------------------------
-		//-- affichage du terrain --
-		//--------------------------
-		g2.setColor(COULEUR_FOND);
-		g2.fillRect(0, 0, LARGEUR, HAUTEUR);
-
 		// comment faire une rotation ?
         //AffineTransform tx = new AffineTransform();
         //double radians = -Math.PI/4;
         //tx.rotate(radians);
 		//g2.drawImage(terrain.getImageDeFond(), tx, this);
 		
+		//--------------------------
+		//-- affichage du terrain --
+		//--------------------------
 		if(jeu.getImageDeFondTerrain() != null)
+			// image de fond
 			g2.drawImage(jeu.getImageDeFondTerrain(), 0, 0, null);
-		
+		else
+		{
+			// couleur de fond
+			g2.setColor(COULEUR_FOND);
+			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
+		}
+			
 		
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
@@ -336,6 +349,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			for(Tour tour : jeu.getTours())
 				dessinerPortee(tour,g2);
 		
+		
+		//------------------------------
+		//-- affichage des animations --
+		//------------------------------
+		Iterator<Animation> iAnimations = animations.iterator();
+		while(iAnimations.hasNext())
+			iAnimations.next().dessiner(g2);
+	
 		//------------------------------------
 		//-- affichage de la tour a ajouter --
 		//------------------------------------
@@ -370,18 +391,30 @@ public class Panel_Terrain extends JPanel implements Runnable,
 							  final Graphics2D g2,
 							  final boolean avecPortee)
 	{
+		// dessin de l'image
 		if(tour.getImage() != null)
 			g2.drawImage(tour.getImage(), tour.getXi(), tour.getYi(), 
 					(int)tour.getWidth(), 
 					(int)tour.getHeight(),null);
+		// dessin d'un forme de couleur
 		else
-		{
+		{	 
 			g2.setColor(tour.getCouleurDeFond());
 			g2.fillRect(tour.getXi(), tour.getYi(), 
 				(int)tour.getWidth(), 
 				(int)tour.getHeight());
 		}
 		
+		
+		// dessin du niveau
+		for(int i=0;i < tour.getNiveau() - 1;i++)
+		{
+			g2.setColor(COULEUR_NIVEAU_PERIMETRE);
+			g2.fillRect(tour.getXi() + 4 * i + 1, (int) (tour.getYi() + tour.getHeight() - 4), 3,3);
+			g2.setColor(COULEUR_NIVEAU);
+			g2.fillRect(tour.getXi() + 4 * i + 2, (int) (tour.getYi() + tour.getHeight() - 3), 1,1);
+		}
+		// dessin de la portee
 		if(avecPortee)
 			dessinerPortee(tour,g2);
 	}
@@ -578,5 +611,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		tourAAjouter 		= null;
 		tourSelectionnee 	= null;
+	}
+
+	public void addAnimation(Animation animation)
+	{
+		animations.add(animation);
 	}
 }

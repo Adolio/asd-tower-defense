@@ -64,7 +64,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * La creature gere sont propre thread pour ce deplacer sur le terrain
 	 */
 	private Thread thread;
-	protected boolean enJeu;
+	private boolean enJeu;
 	
 	/**
 	 * vitesse de deplacement de la creature sur le terrain
@@ -217,7 +217,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	/**
 	 * Permet de faire avancer le creature sur son chemin.
 	 */
-	public void avancerSurChemin()
+	private void avancerSurChemin()
 	{
 		ArrayList<Point> chemin = getChemin();
 		
@@ -236,6 +236,16 @@ public abstract class Creature extends Rectangle implements Runnable
 			if(x == p.getX() && y == p.getY())
 				indiceCourantChemin++;
 		}
+		
+		if(chemin != null && indiceCourantChemin == chemin.size())
+		{
+			enJeu = false;
+			
+			// informe les ecouteurs que la creature est arrivee 
+			// a la fin du parcours
+			for( EcouteurDeCreature edc : ecouteursDeCreature)
+				edc.estArriveeEnZoneArrivee(this);
+		}
 	}
 	
 	/**
@@ -246,8 +256,9 @@ public abstract class Creature extends Rectangle implements Runnable
 	public void run()
 	{
 		// tant que la creature est en jeu et vivante
-		while(enJeu && sante >= 0)
+		while(enJeu && !estMorte())
 		{
+			// elle avance sur son chemin en direction de la zone d'arrivee
 			avancerSurChemin();
 			
 			// TODO a ameliorer, on peut faire mieux
@@ -267,16 +278,28 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public void blesser(int degats)
 	{
-		// diminution de la sante
-		sante -= degats;
-		
-		// appel des ecouteurs de la creature
-		for( EcouteurDeCreature edc : ecouteursDeCreature)
-			edc.creatureBlessee(this);
-		
-		// est-elle morte ?
-		if(sante <= 0)
-			mourrir();
+		// deja mort ?
+		if(!estMorte())
+		{
+			// diminution de la sante
+			sante -= degats;
+			
+			// appel des ecouteurs de la creature
+			for(EcouteurDeCreature edc : ecouteursDeCreature)
+				edc.creatureBlessee(this);
+			
+			// est-elle morte ?
+			if(estMorte())
+				mourrir();
+		}
+	}
+	
+	/**
+	 * Permet savoir si la creature est morte
+	 */
+	public boolean estMorte()
+	{
+		return sante <= 0;
 	}
 	
 	/**

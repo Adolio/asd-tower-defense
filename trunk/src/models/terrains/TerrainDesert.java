@@ -2,6 +2,9 @@ package models.terrains;
 
 import java.awt.Rectangle;
 
+import models.creatures.Creature1;
+import models.creatures.VagueDeCreatures;
+
 /**
  * Classe de gestion d'un terrain dans le desert.
  * 
@@ -21,7 +24,9 @@ public class TerrainDesert extends Terrain
 	 */
 	public TerrainDesert()
 	{
-		super(500, 500, "img/cartes/desert.png", 
+		super(500, 500, 200, 
+			  -10,0,520,500,
+			  "img/cartes/desert.png", 
 			  new Rectangle(520,40,20,60),
 			  new Rectangle(0,400,20,60));
 		
@@ -47,5 +52,14 @@ public class TerrainDesert extends Terrain
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
 		ajouterMur(new Rectangle(320,360,60,20));
+		
+		
+		// configuration des vagues de creatures
+		ajouterVague(new VagueDeCreatures(5, new Creature1(100,2,10),"Creatures terrestres faibles"));
+		ajouterVague(new VagueDeCreatures(10, new Creature1(100,2,10),"Creature terrestres faibles"));
+		ajouterVague(new VagueDeCreatures(5, new Creature1(300,4,10),"Creature terrestres moyennes"));
+		ajouterVague(new VagueDeCreatures(15, new Creature1(100,4,30),"Creature terrestres rapides"));
+		ajouterVague(new VagueDeCreatures(10, new Creature1(600,6,20),"Creature terrestres resistantes"));
+		ajouterVague(new VagueDeCreatures(1, new Creature1(5000,60,10),"Boss : Très résistant"));
 	}
 }

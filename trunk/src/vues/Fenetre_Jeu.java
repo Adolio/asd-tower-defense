@@ -2,7 +2,10 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import models.tours.Tour;
+import models.creatures.Creature;
+import models.creatures.EcouteurDeCreature;
 import models.jeu.Jeu;
 
 /**
@@ -19,7 +22,7 @@ import models.jeu.Jeu;
  * @see JFrame
  * @see ActionListener
  */
-public class Fenetre_Jeu extends JFrame implements ActionListener
+public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCreature
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -144,7 +147,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 		if(jeu.poserTour(tour))
 		{
 			panelTerrain.deselectionner();
-			panelMenuInteraction.miseAJourNbPiecesOr(jeu.getNbPiecesOr());
+			panelMenuInteraction.miseAJourNbPiecesOr();
 			
 			setTourAAcheter(tour.getCopieOriginale());
 			panelInfoTour.setTour(tour, panelInfoTour.MODE_ACHAT);
@@ -155,7 +158,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 	{
 		if(jeu.ameliorerTour(tour))
 		{
-			panelMenuInteraction.miseAJourNbPiecesOr(jeu.getNbPiecesOr());
+			panelMenuInteraction.miseAJourNbPiecesOr();
 			panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
 		}
 	}
@@ -191,6 +194,47 @@ public class Fenetre_Jeu extends JFrame implements ActionListener
 	
 	public void lancerVagueSuivante()
 	{
-		jeu.lancerVagueSuivante();
+		jeu.lancerVagueSuivante(this);
+	}
+
+	/**
+	 * methode regissant de l'interface EcouteurDeCreature
+	 * 
+	 * Permet d'etre informe lorsqu'une creature subie des degats.
+	 */
+	public void creatureBlessee(Creature creature)
+	{
+	
+	}
+
+	/**
+	 * methode regissant de l'interface EcouteurDeCreature
+	 * 
+	 * Permet d'etre informe lorsqu'une creature a ete tuee.
+	 */
+	public void creatureTuee(Creature creature)
+	{
+		jeu.creatureTuee(creature);
+
+		panelMenuInteraction.setNbPiecesOr(jeu.getNbPiecesOr());
+		
+		panelTerrain.addAnimation(
+				new GainDePiecesOr((int)creature.getCenterX(),
+								   (int)creature.getCenterY() - 2,
+								   creature.getNbPiecesDOr()));
+	}
+
+	// TODO
+	public void estArriveeEnZoneArrivee(Creature creature)
+	{
+		if(!jeu.estPerdu())
+		{
+			jeu.perdreUneVie();
+		
+			panelMenuInteraction.miseAJourNbViesRestantes();
+			
+			if(jeu.estPerdu())
+				JOptionPane.showMessageDialog(null,"Perdu.");
+		}
 	}
 }
