@@ -69,7 +69,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	/**
 	 * vitesse de deplacement de la creature sur le terrain
 	 */
-	private double vitesse = 10;
+	private double vitesse;
 	
 	/**
 	 * permet d'informer d'autres entites du programme lorsque la creature
@@ -89,13 +89,15 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * @param nbPiecesDOr le nombre de pieces de la creature
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
-					int santeMax, int nbPiecesDOr, Image image)
+					int santeMax, int nbPiecesDOr, double vitesse, 
+					Image image)
 	{
 		super(x,y,largeur,hauteur);
 		
 		this.nbPiecesDOr 	= nbPiecesDOr;
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
+		this.vitesse		= vitesse;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 		this.image 			= image;
 	}
@@ -156,7 +158,13 @@ public abstract class Creature extends Rectangle implements Runnable
 	{
 		return nbPiecesDOr;
 	}
-
+	
+	// TODO comment
+	public double getVitesse()
+	{
+		return vitesse;
+	}
+	
 	// TODO comment
 	public Image getImage()
 	{

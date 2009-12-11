@@ -59,12 +59,12 @@ public class Jeu implements EcouteurDeCreature
 	 */
 	private int indiceVagueCourante;
 	private VagueDeCreatures[] vagues = {
-										new VagueDeCreatures(5, new Creature1(50,2)),
-										new VagueDeCreatures(10, new Creature1(50,2)),
-										new VagueDeCreatures(5, new Creature1(200,4)),
-										new VagueDeCreatures(20, new Creature1(100,4)),
-										new VagueDeCreatures(10, new Creature1(300,30)),
-										new VagueDeCreatures(1, new Creature1(2000,100))
+										new VagueDeCreatures(5, new Creature1(50,2,10)),
+										new VagueDeCreatures(10, new Creature1(50,2,20)),
+										new VagueDeCreatures(5, new Creature1(200,4,30)),
+										new VagueDeCreatures(20, new Creature1(100,4,40)),
+										new VagueDeCreatures(10, new Creature1(300,30,120)),
+										new VagueDeCreatures(1, new Creature1(2000,100,200))
 										};
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
