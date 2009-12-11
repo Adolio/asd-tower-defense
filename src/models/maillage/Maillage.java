@@ -98,6 +98,12 @@ public class Maillage
 		graphe = construireGraphe();
 	}
 	
+	/**
+	 * @param largeurPixels
+	 * @param hauteurPixels
+	 * @param largeurDuNoeud
+	 * @throws IllegalArgumentException
+	 */
 	public Maillage(final int largeurPixels, final int hauteurPixels,
 			final int largeurDuNoeud)
 			throws IllegalArgumentException
