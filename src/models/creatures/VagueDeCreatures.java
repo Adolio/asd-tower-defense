@@ -14,16 +14,20 @@ public class VagueDeCreatures
 {
 	private final int NB_CREATURES;
 	private Creature creatureAEnvoyer;
+	private String description;
 	
 	/**
 	 * Constructeur de la vague de creatures
 	 * @param nbCreatures le nombre de copie de la creature a envoyer
 	 * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
 	 */
-	public VagueDeCreatures(int nbCreatures, Creature creatureAEnvoyer)
+	public VagueDeCreatures(int nbCreatures, 
+							Creature creatureAEnvoyer, 
+							String description)
 	{
 		this.NB_CREATURES		= nbCreatures;
 		this.creatureAEnvoyer 	= creatureAEnvoyer;
+		this.description		= description;
 	}
 	
 	/**
@@ -42,5 +46,14 @@ public class VagueDeCreatures
 	public Creature getNouvelleCreature()
 	{
 		return creatureAEnvoyer.copier();
+	}
+	
+	/**
+	 * Permet de recuperer la description de la vague.
+	 * @return la description de la vague.
+	 */
+	public String getDescription()
+	{
+		return description;
 	}
 }

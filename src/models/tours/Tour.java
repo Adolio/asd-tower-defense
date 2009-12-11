@@ -88,6 +88,8 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * Utilise pour savoir si la tour est en jeu. (thread active)
 	 */
 	private boolean enJeu;
+
+	protected long tempsDePreparationDuTir = 200;
 	
 	/**
 	 * Constructeur de la tour.
@@ -278,7 +280,7 @@ public abstract class Tour extends Rectangle implements Runnable
 				// preparation du tire
 				// TODO mieux gerer les temps
 				try{
-					Thread.sleep(200);
+					Thread.sleep(tempsDePreparationDuTir );
 				} 
 				catch (InterruptedException e){
 					e.printStackTrace();
@@ -357,4 +359,9 @@ public abstract class Tour extends Rectangle implements Runnable
 	
 	
 	abstract public Tour getCopieOriginale();
+
+	public int getNiveau()
+	{
+		return niveau;
+	}
 }

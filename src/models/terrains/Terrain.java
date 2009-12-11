@@ -7,8 +7,9 @@ import java.awt.Toolkit;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import models.creatures.Creature;
+import models.creatures.EcouteurDeCreature;
+import models.creatures.VagueDeCreatures;
 import models.maillage.Maillage;
 import models.maillage.Noeud;
 import models.maillage.PathNotFoundException;
@@ -41,6 +42,8 @@ import models.tours.Tour;
  */
 public abstract class Terrain
 {
+	private final int NB_PIECES_OR_INITIAL;
+
 	/**
 	 * Les tours sont posees sur le terrain et permettent de tuer les creatures.
 	 * 
@@ -97,6 +100,14 @@ public abstract class Terrain
 	private final Image IMAGE_DE_FOND;
 
 	/**
+	 * Gestion des vagues de creatures.
+	 * C'est le joueur que decident le moment ou il veut lancer une vague de
+	 * creatures. Une fois que toutes les vagues de creatures ont ete detruites,
+	 * le jeu est considere comme termine.
+	 */
+	private int indiceVagueCourante;
+	private ArrayList<VagueDeCreatures> vagues;
+	/**
 	 * Constructeur du terrain.
 	 * 
 	 * @param largeur
@@ -110,16 +121,28 @@ public abstract class Terrain
 	 * @param zoneArrivee
 	 *            la zone d'arrivee des creatures
 	 */
-	public Terrain(int largeur, int hauteur, String imageDeFond,
-			Rectangle zoneDepart, Rectangle zoneArrivee)
+	public Terrain(int largeur, int hauteur, 
+					int nbPiecesOrInitial, 
+					int positionMaillageX,
+					int positionMaillageY,
+					int largeurMaillage,
+					int hauteurMaillage,
+					String imageDeFond,
+					Rectangle zoneDepart, 
+					Rectangle zoneArrivee)
 	{
 		LARGEUR = largeur;
 		HAUTEUR = hauteur;
-		maillage = new Maillage(largeur+50, hauteur+50, PRECISION_MAILLAGE);
-		tours = new ArrayList<Tour>();
-		creatures = new ArrayList<Creature>();
+		maillage = new Maillage(largeurMaillage, hauteurMaillage, 
+						PRECISION_MAILLAGE,
+						positionMaillageX,positionMaillageY);
+		tours 		= new ArrayList<Tour>();
+		creatures 	= new ArrayList<Creature>();
+		vagues 		= new ArrayList<VagueDeCreatures>();
+		
 		ZONE_DEPART = zoneDepart;
 		ZONE_ARRIVEE = zoneArrivee;
+		NB_PIECES_OR_INITIAL = nbPiecesOrInitial;
 
 		// chargement de l'image
 		if (imageDeFond != null)
@@ -241,6 +264,12 @@ public abstract class Terrain
 	{
 		if (creature != null)
 			creatures.remove(creature);
+	}
+	
+	
+	protected void ajouterVague(VagueDeCreatures vagueDeCreatures)
+	{
+		vagues.add(vagueDeCreatures);
 	}
 
 	// ----------------------------------------------------------
@@ -393,6 +422,43 @@ public abstract class Terrain
 		}
 	}
 
+	public void lancerVagueSuivante(EcouteurDeCreature edc)
+	{
+		// il reste encore des vagues de creatures
+		if(indiceVagueCourante < vagues.size())
+		{
+			// recuperation de la vague
+			VagueDeCreatures vague = vagues.get(indiceVagueCourante);
+			
+			// creation des creatures de la vague
+			for(int i=0;i<vague.getNbCreatures();i++)
+			{	
+				// calcul de la position aleatoire de la creature
+				// dans la zone de depart
+				int xDepart = (int)(Math.random() * (ZONE_DEPART.getWidth() 
+								 + 1) + ZONE_DEPART.getX());
+				int yDepart = (int)(Math.random() * (ZONE_DEPART.getHeight() 
+								 + 1) + ZONE_DEPART.getY());
+				
+				// creation d'une nouvelle instance de la creature
+				// et affectation de diverses proprietes
+				Creature creature = vague.getNouvelleCreature();
+				creature.setX(xDepart);
+				creature.setY(yDepart);
+				creature.ajouterEcouteurDeCreature(edc);
+				creature.setChemin(getCheminLePlusCourt(
+										xDepart, 
+										yDepart, 
+										(int) ZONE_ARRIVEE.getCenterX(), 
+										(int) ZONE_ARRIVEE.getCenterY()));
+				
+				ajouterCreature(creature);
+				creature.demarrer();
+			}
+			indiceVagueCourante++;
+		}
+	}
+	
 	/**
 	 * Permet de recuperer le chemin le plus court entre deux points sur le
 	 * terrain.
@@ -416,8 +482,7 @@ public abstract class Terrain
 	{
 		try
 		{
-			return maillage.plusCourtChemin(xDepart, yDepart, xArrivee,
-					yArrivee);
+			return maillage.plusCourtChemin(xDepart, yDepart, xArrivee,yArrivee);
 		}
 		// les points sont hors du maillage
 		catch (IllegalArgumentException e)
@@ -445,5 +510,10 @@ public abstract class Terrain
 	public ArrayList<Noeud> getNoeuds()
 	{
 		return maillage.getNoeuds();
+	}
+
+	public int getNbPiecesOrInitial()
+	{
+		return NB_PIECES_OR_INITIAL;
 	}
 }

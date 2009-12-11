@@ -28,7 +28,7 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class Jeu implements EcouteurDeCreature
+public class Jeu
 {
 	/**
 	 * Score courant du joueur
@@ -49,23 +49,9 @@ public class Jeu implements EcouteurDeCreature
 	 * Cette variable fluctue en fonction des creatures tuees et de 
 	 * l'achat et vente des tours.
 	 */
-	private int nbPiecesOr 		= 1000;
+	private int nbPiecesOr;
 	
-	/**
-	 * Gestion des vagues de creatures.
-	 * C'est le joueur que decident le moment ou il veut lancer une vague de
-	 * creatures. Une fois que toutes les vagues de creatures ont ete detruites,
-	 * le jeu est considere comme termine.
-	 */
-	private int indiceVagueCourante;
-	private VagueDeCreatures[] vagues = {
-										new VagueDeCreatures(5, new Creature1(50,2,10)),
-										new VagueDeCreatures(10, new Creature1(50,2,20)),
-										new VagueDeCreatures(5, new Creature1(200,4,30)),
-										new VagueDeCreatures(20, new Creature1(100,4,40)),
-										new VagueDeCreatures(10, new Creature1(300,30,120)),
-										new VagueDeCreatures(1, new Creature1(2000,100,200))
-										};
+
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
 	 * - Les tours
@@ -82,6 +68,7 @@ public class Jeu implements EcouteurDeCreature
 	public Jeu(Terrain terrain)
 	{
 		this.terrain = terrain;
+		nbPiecesOr = terrain.getNbPiecesOrInitial();
 	}
 	
 	/**
@@ -227,46 +214,9 @@ public class Jeu implements EcouteurDeCreature
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
-	public void lancerVagueSuivante()
+	public void lancerVagueSuivante(EcouteurDeCreature edc)
 	{
-		// il reste encore des vagues de creatures
-		if(indiceVagueCourante < vagues.length)
-		{
-			// recuperation de la vague
-			VagueDeCreatures vague = vagues[indiceVagueCourante];
-			
-			// creation des creatures de la vague
-			for(int i=0;i<vague.getNbCreatures();i++)
-			{
-				// recuperation des zones
-				Rectangle depart  = terrain.getZoneDepart();
-				Rectangle arrivee = terrain.getZoneArrivee();
-				
-				// calcul de la position aleatoire de la creature
-				// dans la zone de depart
-				int xDepart = (int)(Math.random() * (depart.getWidth() 
-								 + 1) + depart.getX());
-				int yDepart = (int)(Math.random() * (depart.getHeight() 
-								 + 1) + depart.getY());
-				
-				// creation d'une nouvelle instance de la creature
-				// et affectation de diverses proprietes
-				Creature creature = vague.getNouvelleCreature();
-				creature.setX(xDepart);
-				creature.setY(yDepart);
-				creature.ajouterEcouteurDeCreature(this);
-				creature.setChemin(terrain.getCheminLePlusCourt(
-										xDepart, 
-										yDepart, 
-										(int) arrivee.getCenterX(), 
-										(int) arrivee.getCenterY()));
-				
-				terrain.ajouterCreature(creature);
-				creature.demarrer();
-			}
-			
-			indiceVagueCourante++;
-		}
+		terrain.lancerVagueSuivante(edc);
 	}
 
 	/**
@@ -279,16 +229,7 @@ public class Jeu implements EcouteurDeCreature
 		return terrain.getArcsActifs();
 	}
 
-	/**
-	 * methode regissant de l'interface EcouteurDeCreature
-	 * 
-	 * Permet d'etre informe lorsqu'une creature subie des degats.
-	 */
-	public void creatureBlessee(Creature creature)
-	{
 	
-	}
-
 	/**
 	 * methode regissant de l'interface EcouteurDeCreature
 	 * 
@@ -300,11 +241,9 @@ public class Jeu implements EcouteurDeCreature
 		
 		// gain de pieces d'or
 		nbPiecesOr 	+= creature.getNbPiecesDOr();
-		score 		+= creature.getNbPiecesDOr(); 
-		
-		// TODO mise a jour des vues
+		score 		+= creature.getNbPiecesDOr();
 	}
-
+	
 	public Rectangle getZoneDepart()
 	{
 		return terrain.getZoneDepart();
@@ -318,5 +257,25 @@ public class Jeu implements EcouteurDeCreature
 	public ArrayList<Noeud> getNoeuds()
 	{
 		return terrain.getNoeuds();
+	}
+
+	public int getHauteurTerrain()
+	{
+		return terrain.getHauteur();
+	}
+
+	public int getLargeurTerrain()
+	{
+		return terrain.getLargeur();
+	}
+
+	public void perdreUneVie()
+	{
+		viesRestantes--;		
+	}
+
+	public boolean estPerdu()
+	{
+		return viesRestantes <= 0;
 	}
 }

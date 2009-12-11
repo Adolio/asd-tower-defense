@@ -137,8 +137,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		panelInfoTour.effacerTour();
 	}
 
-	public void miseAJourNbPiecesOr(int nbPiecesOr)
+	public void miseAJourNbPiecesOr()
 	{
-		lNbPiecesOr.setText(nbPiecesOr+"");
+		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
+	}
+
+	public void miseAJourNbViesRestantes()
+	{
+		lVies.setText(jeu.getNbViesRestantes()+"");
 	}
 }

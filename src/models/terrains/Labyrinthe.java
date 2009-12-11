@@ -2,6 +2,9 @@ package models.terrains;
 
 import java.awt.Rectangle;
 
+import models.creatures.Creature1;
+import models.creatures.VagueDeCreatures;
+
 /**
  * Classe de gestion d'un terrain dans le desert.
  * 
@@ -21,10 +24,10 @@ public class Labyrinthe extends Terrain
 	 */
 	public Labyrinthe()
 	{
-		super(500, 500, "img/cartes/spiral3d.png", 
-			  new Rectangle(460,40,20,80),
+		super(480, 500, 100, 
+			  0,0,540,500,"img/cartes/spiral3d.png", 
+			  new Rectangle(500,40,20,80),
 			  new Rectangle(320,280,20,60));
-		
 		
 		/* definition des murs du labyrinthe :
 		 
@@ -51,5 +54,13 @@ public class Labyrinthe extends Terrain
 		ajouterMur(new Rectangle(140,360,200,20));	// 7
 		ajouterMur(new Rectangle(340,240,20,140));	// 8
 		ajouterMur(new Rectangle(240,240,100,20));	// 9
+		
+		// configuration des vagues de creatures
+		ajouterVague(new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"));
+		ajouterVague(new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"));
+		ajouterVague(new VagueDeCreatures(5, new Creature1(300,10,10),"Creature terrestres moyennes"));
+		ajouterVague(new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"));
+		ajouterVague(new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"));
+		ajouterVague(new VagueDeCreatures(1, new Creature1(10000,40,10),"Boss : Très résistant"));
 	}
 }

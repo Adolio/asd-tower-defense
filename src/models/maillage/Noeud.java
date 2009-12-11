@@ -32,7 +32,8 @@ public class Noeud extends Point
      */
     public Noeud(int x, int y) throws IllegalArgumentException
     {
-        verifierCoordonnees(x, y);
+        // TODO J'AI DECOMMENTE CA POUR QUE CA MARCHE !!! (aurelien)
+    	//verifierCoordonnees(x, y);
         this.x = x;
         this.y = y;
     }
