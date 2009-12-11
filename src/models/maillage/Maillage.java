@@ -314,9 +314,9 @@ public class Maillage
 		/*
 		 * Ajouter les noeuds au graphe.
 		 */
-		for (int x = 0; x < NOMBRE_NOEUDS_Y; x++)
+		for (int x = 0; x < NOMBRE_NOEUDS_X; x++)
 		{
-			for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
+			for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
 			{
 				// Nouveau noeud avec sa position x,y en pixel
 				noeuds[x][y] = new Noeud( // Calcul des points
@@ -330,9 +330,9 @@ public class Maillage
 		/*
 		 * Ajouter les arcs horizontaux.
 		 */
-		for (int y = 0; y < NOMBRE_NOEUDS_X; y++)
+		for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
 		{
-			for (int x = 0; x < NOMBRE_NOEUDS_Y - 1; x++)
+			for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
 			{
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y]), // Arrivée
@@ -344,9 +344,9 @@ public class Maillage
 		/*
 		 * Ajouter les arcs verticaux.
 		 */
-		for (int y = 0; y < NOMBRE_NOEUDS_X - 1; y++)
+		for (int y = 0; y < NOMBRE_NOEUDS_Y - 1; y++)
 		{
-			for (int x = 0; x < NOMBRE_NOEUDS_Y; x++)
+			for (int x = 0; x < NOMBRE_NOEUDS_X; x++)
 			{
 				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x][y + 1]), // Arrivée
