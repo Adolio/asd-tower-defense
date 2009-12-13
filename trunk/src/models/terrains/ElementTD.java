@@ -51,13 +51,13 @@ public class ElementTD extends Terrain
         ajouterVague(new VagueDeCreatures(
                 10, new Creature1(100,4,10),"Creature terrestres faibles"));
         ajouterVague(new VagueDeCreatures(
-                5, new Creature1(300,10,10),"Creature terrestres moyennes"));
+                5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"));
         ajouterVague(new VagueDeCreatures(
                 20, new Creature1(100,4,30),"Creature terrestres rapides"));
         ajouterVague(new VagueDeCreatures(
                 10, new Creature1(600,20,20),"Creature terrestres resistantes"));
         ajouterVague(new VagueDeCreatures(
-                1, new Creature1(10000,40,10),"Boss : Très résistant"));
+                1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant"));
     }
     
 }

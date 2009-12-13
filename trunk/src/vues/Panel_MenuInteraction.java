@@ -44,7 +44,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JLabel lTitreVies 		= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 		= new JLabel();
 	private JLabel lTitrePiecesOr 	= new JLabel(I_PIECES);
-	private JButton bLancerVagueSuivante = new JButton("Vague suivante");
+	private static final String TXT_VAGUE_SUIVANTE	= "Vague suivante";
+	private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
 	
 	private Fenetre_Jeu fenJeu;
 	private Jeu jeu;
@@ -117,6 +118,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		else if(source == bLancerVagueSuivante)
 		{
 			fenJeu.lancerVagueSuivante();
+			bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
 		}
 	}
 

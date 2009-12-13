@@ -507,13 +507,21 @@ public abstract class Terrain
 		return maillage.getArcsActifs();
 	}
 
+	// TODO comment
 	public ArrayList<Noeud> getNoeuds()
 	{
 		return maillage.getNoeuds();
 	}
 
+	// TODO comment
 	public int getNbPiecesOrInitial()
 	{
 		return NB_PIECES_OR_INITIAL;
+	}
+
+	// TODO comment
+	public int getNumVagueCourante()
+	{
+		return indiceVagueCourante+1;
 	}
 }

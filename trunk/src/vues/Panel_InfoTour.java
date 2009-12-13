@@ -104,8 +104,19 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 				lDescrition.setText(tour.getDescription());
 				
 				// adaptation des boutons
-				bAmeliorer.setVisible(true);
-				bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
+				if(tour.peutEncoreEtreAmelioree())
+				{
+					bAmeliorer.setVisible(true);
+					bAmeliorer.setEnabled(true);
+					bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
+				}
+				else
+				{
+					bAmeliorer.setVisible(true);
+					bAmeliorer.setText("[niveau max]");
+					bAmeliorer.setEnabled(false);
+				}
+				
 				bVendre.setVisible(true);
 				bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
 			}

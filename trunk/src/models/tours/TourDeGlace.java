@@ -22,6 +22,7 @@ public class TourDeGlace extends Tour
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
 	public static final Image IMAGE;
+	public static final int NIVEAU_MAX = 4;
 	
 	static
 	{
@@ -50,21 +51,9 @@ public class TourDeGlace extends Tour
 		// le prix total est ajouté du prix d'achat de la tour
 		prixTotal 	+= prixAchat;
 		
-		prixAchat 	+= 10;
-		degats    	*= 2;
-		rayonPortee += rayonPortee * 0.5;
-		
-		/*switch(niveau)
-		{
-			case 1 :
-				prixAchat 	= 20;
-				degats 		= 20;
-				break;
-			case 2 :
-				prixAchat 	= 40;
-				degats 		= 40;
-				break;
-		}*/
+		prixAchat 	*= 2;	// + 100%
+		degats    	*= 1.5; // + 50%
+		rayonPortee *= 1.2; // + 20%
 		
 		niveau++;
 	}
@@ -79,5 +68,10 @@ public class TourDeGlace extends Tour
 	public Tour getCopieOriginale()
 	{
 		return new TourDeGlace();
+	}
+	
+	public boolean peutEncoreEtreAmelioree()
+	{
+		return niveau <= NIVEAU_MAX;
 	}
 }
