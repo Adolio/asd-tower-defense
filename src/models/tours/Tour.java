@@ -359,6 +359,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	
 	
 	abstract public Tour getCopieOriginale();
+	abstract public boolean peutEncoreEtreAmelioree();
 
 	public int getNiveau()
 	{

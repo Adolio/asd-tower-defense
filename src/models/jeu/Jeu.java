@@ -5,9 +5,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import models.creatures.Creature;
-import models.creatures.Creature1;
 import models.creatures.EcouteurDeCreature;
-import models.creatures.VagueDeCreatures;
 import models.maillage.Noeud;
 import models.terrains.Terrain;
 import models.tours.Tour;
@@ -152,7 +150,8 @@ public class Jeu
 	 */
 	public boolean ameliorerTour(Tour tour)
 	{
-		if(nbPiecesOr >= tour.getPrixAchat())
+		if(nbPiecesOr >= tour.getPrixAchat() 
+		   && tour.peutEncoreEtreAmelioree())
 		{
 			// debit des pieces d'or
 			nbPiecesOr -= tour.getPrixAchat();
@@ -277,5 +276,10 @@ public class Jeu
 	public boolean estPerdu()
 	{
 		return viesRestantes <= 0;
+	}
+	
+	public int getNumVagueCourante()
+	{
+		return terrain.getNumVagueCourante();
 	}
 }

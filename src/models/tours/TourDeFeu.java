@@ -22,6 +22,7 @@ public class TourDeFeu extends Tour
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
 	public static final Image IMAGE;
+	public static final int NIVEAU_MAX = 5;
 	
 	static
 	{
@@ -81,5 +82,10 @@ public class TourDeFeu extends Tour
 	public Tour getCopieOriginale()
 	{
 		return new TourDeFeu();
+	}
+
+	public boolean peutEncoreEtreAmelioree()
+	{
+		return niveau <= NIVEAU_MAX;
 	}
 }

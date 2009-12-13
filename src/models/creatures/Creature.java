@@ -58,18 +58,18 @@ public abstract class Creature extends Rectangle implements Runnable
 	private int nbPiecesDOr;
 	
 	// TODO comment
-	private Image image;
+	protected Image image;
 	
 	/**
 	 * La creature gere sont propre thread pour ce deplacer sur le terrain
 	 */
 	private Thread thread;
-	private boolean enJeu;
+	protected boolean enJeu;
 	
 	/**
 	 * vitesse de deplacement de la creature sur le terrain
 	 */
-	private double vitesse;
+	protected double vitesse;
 	
 	/**
 	 * permet d'informer d'autres entites du programme lorsque la creature
@@ -217,7 +217,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	/**
 	 * Permet de faire avancer le creature sur son chemin.
 	 */
-	private void avancerSurChemin()
+	protected void avancerSurChemin()
 	{
 		ArrayList<Point> chemin = getChemin();
 		
