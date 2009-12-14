@@ -3,14 +3,14 @@ import java.awt.Rectangle;
 import models.creatures.*;
 
 /**
- * Classe de gestion du fameux terrain Element TD repris de chez Blizzard.
+ * Classe de gestion du terrain TerrainEau.
  * 
  * Cette classe hérite de la classe Terrain de base.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
- * @version 1.0 | 13 décembre 2009
+ * @version 1.0 | 14 décembre 2009
  * @since jdk1.6.0_16
  * @see Terrain
  */
@@ -18,7 +18,7 @@ public class TerrainEau extends Terrain
 {
     
     /**
-     * Constructeur d'un terrain ElementTD selon la célèbre map de Blizzard.
+     * Constructeur d'un terrain TerrainEau.
      */
     public TerrainEau () {
         super(500, 500, 100, 
@@ -28,7 +28,7 @@ public class TerrainEau extends Terrain
         );
     
         /*
-         * Définition des murs du labyrinthe.
+         * Définition des murs du terrain.
          */
         ajouterMur(new Rectangle(0, 0, 220, 20));
         ajouterMur(new Rectangle(220, 0, 60, 90));
