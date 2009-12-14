@@ -41,7 +41,7 @@ public class Main
 	  }
 	   
 	  // création du jeu
-	  Jeu jeu = new Jeu(new ElementTD());
+	  Jeu jeu = new Jeu(new TerrainEau());
 	  
 	  // création de la fenetre du jeu
 	  new Fenetre_Jeu(jeu);
