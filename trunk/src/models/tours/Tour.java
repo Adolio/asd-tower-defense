@@ -322,22 +322,23 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	private Creature getCreatureLaPlusProcheEtAPortee()
 	{
-		synchronized (this)
+
+		// le terrain a bien ete setter ?
+		if (terrain == null)
+			return null;
+
+		// variables temporaires pour calcul
+		Creature creatureLaPlusProche = null;
+		double distanceLaPlusProche = 0;
+		double distance = 0;
+
+		Iterator<Creature> iCreatures = terrain.getCreatures().iterator();
+		Creature creature;
+
+		// pour chaque creature sur le terrain
+		while (iCreatures.hasNext())
 		{
-			// le terrain a bien ete setter ?
-			if (terrain == null)
-				return null;
-
-			// variables temporaires pour calcul
-			Creature creatureLaPlusProche = null;
-			double distanceLaPlusProche = 0;
-			double distance = 0;
-
-			Iterator<Creature> iCreatures = terrain.getCreatures().iterator();
-			Creature creature;
-
-			// pour chaque creature sur le terrain
-			while (iCreatures.hasNext())
+			synchronized (iCreatures)
 			{
 				creature = iCreatures.next();
 
@@ -358,9 +359,10 @@ public abstract class Tour extends Rectangle implements Runnable
 					}
 				}
 			}
-
-			return creatureLaPlusProche;
 		}
+
+		return creatureLaPlusProche;
+
 	}
 
 	/**
