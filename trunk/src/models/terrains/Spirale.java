@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 
+import models.creatures.CarapaceKoopa;
 import models.creatures.Creature1;
 import models.creatures.VagueDeCreatures;
 
@@ -23,6 +24,16 @@ public class Spirale extends Terrain
 {
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
+    public static final VagueDeCreatures[] vagues = 
+    {
+    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
+    	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
+    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
+        new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
+        new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
+        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
+    };
+    
     
     static
     {
@@ -66,13 +77,18 @@ public class Spirale extends Terrain
 		ajouterMur(new Rectangle(140,360,200,20));	// 7
 		ajouterMur(new Rectangle(340,240,20,140));	// 8
 		ajouterMur(new Rectangle(240,240,100,20));	// 9
-		
-		// configuration des vagues de creatures
-		ajouterVague(new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"));
-		ajouterVague(new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"));
-		ajouterVague(new VagueDeCreatures(5, new Creature1(300,10,10),"Creature terrestres moyennes"));
-		ajouterVague(new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"));
-		ajouterVague(new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"));
-		ajouterVague(new VagueDeCreatures(1, new Creature1(10000,40,10),"Boss : Très résistant"));
+	}
+	
+    /**
+     * Permet de recuperer la vague suivante
+     * @return la vague suivante
+     */
+    VagueDeCreatures getVagueSuivante()
+	{
+    	if (indiceVagueCourante < 6)
+    		return vagues[indiceVagueCourante];
+    	else
+    		return new VagueDeCreatures(10, 
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante),"autogen");
 	}
 }

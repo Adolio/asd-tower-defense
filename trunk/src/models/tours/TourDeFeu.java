@@ -43,7 +43,7 @@ public class TourDeFeu extends Tour
 			  50,				// rayon de portee
 			  IMAGE);				
 	
-		description = "La tour de feu est une tour \nqui fait beaucoup degats," +
+		description = "La tour de feu est une tour qui fait beaucoup degats," +
 					  " mais elle est très lente. " +
 					  "Elle fait egalement des degats de zone.";
 	}

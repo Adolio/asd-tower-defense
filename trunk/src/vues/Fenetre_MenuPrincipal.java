@@ -25,16 +25,18 @@ import models.terrains.TerrainEau;
  */
 public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 {
-	private static final long serialVersionUID = 1L;
-	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
-	private static final ImageIcon I_AIDE 	= new ImageIcon("img/icones/help.png");
-	private static final String VERSION 	= "heig-vd :: ASD2-09 :: Tower Defense v0.1";
-
-	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
-	private final JMenu 	menuFichier 	= new JMenu("Fichier");
-	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
-	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
+	private static final long serialVersionUID 	= 1L;
+	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
+	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
+	private static final String VERSION 		= "heig-vd :: ASD2-09 :: Tower Defense v0.1";
+	private static final int IMAGE_MENU_LARGEUR = 214;
+	private static final int IMAGE_MENU_HAUTEUR = 214;
+	
+	private final JMenuBar 	menuPrincipal 		= new JMenuBar();
+	private final JMenu 	menuFichier 		= new JMenu("Fichier");
+	private final JMenu 	menuAide 			= new JMenu("Aide");
+	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",I_AIDE);
+	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",I_QUITTER);
 	
 	JButton[] boutonsTerrains = new JButton[4]; 
 
@@ -87,16 +89,16 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		
 		// creation des boutons
 		boutonsTerrains[0] = new JButton(new ImageIcon(
-							Outils.redimentionner(ElementTD.IMAGE_MENU,100,100)));
+							Outils.redimentionner(ElementTD.IMAGE_MENU,IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[1] = new JButton(new ImageIcon(
-							Outils.redimentionner(Spirale.IMAGE_MENU,100,100)));
+							Outils.redimentionner(Spirale.IMAGE_MENU,IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[2] = new JButton(new ImageIcon(
-							Outils.redimentionner(Objectif.IMAGE_MENU,100,100)));
+							Outils.redimentionner(Objectif.IMAGE_MENU,IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[3] = new JButton(new ImageIcon(
-							Outils.redimentionner(TerrainEau.IMAGE_MENU,100,100)));
+							Outils.redimentionner(TerrainEau.IMAGE_MENU,IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 
 		// ajout des boutons au panel et ajout des ecouteurs
 		JPanel pBoutonsTerrains = new JPanel(new FlowLayout());
@@ -114,7 +116,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		JLabel version = new JLabel(VERSION);
 		version.setForeground(new Color(200,200,200));
 		getContentPane().add(version,BorderLayout.SOUTH);
-		
 		
 		// dernieres proprietes
 		pack();

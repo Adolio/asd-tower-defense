@@ -104,7 +104,7 @@ public abstract class Terrain
 	 * creatures. Une fois que toutes les vagues de creatures ont ete detruites,
 	 * le jeu est considere comme termine.
 	 */
-	private int indiceVagueCourante;
+	protected int indiceVagueCourante;
 	private ArrayList<VagueDeCreatures> vagues;
 	/**
 	 * Constructeur du terrain.
@@ -145,6 +145,9 @@ public abstract class Terrain
 		vagues 		= new ArrayList<VagueDeCreatures>();
 	}
 
+	abstract VagueDeCreatures getVagueSuivante();
+	
+	
 	// ----------------------------------------------------------
 	// -- GETTER / SETTER BASIQUES --
 	// ----------------------------------------------------------
@@ -418,11 +421,14 @@ public abstract class Terrain
 
 	public void lancerVagueSuivante(EcouteurDeCreature edc)
 	{
+		/*
 		// il reste encore des vagues de creatures
 		if(indiceVagueCourante < vagues.size())
 		{
+		*/
 			// recuperation de la vague
-			VagueDeCreatures vague = vagues.get(indiceVagueCourante);
+			//VagueDeCreatures vague = vagues.get(indiceVagueCourante);
+			VagueDeCreatures vague = getVagueSuivante();
 			
 			// creation des creatures de la vague
 			for(int i=0;i<vague.getNbCreatures();i++)
@@ -450,7 +456,8 @@ public abstract class Terrain
 				creature.demarrer();
 			}
 			indiceVagueCourante++;
-		}
+		//}
+		
 	}
 	
 	/**
@@ -501,19 +508,28 @@ public abstract class Terrain
 		return maillage.getArcsActifs();
 	}
 
-	// TODO comment
+	/**
+	 * Permet de recuperer les noeuds du maillage
+	 * @return Une collection de noeuds
+	 */
 	public ArrayList<Noeud> getNoeuds()
 	{
 		return maillage.getNoeuds();
 	}
 
-	// TODO comment
+	/**
+	 * Permet de recuperer le nombre de pieces initial
+	 * @return le nombre de pieces initial
+	 */
 	public int getNbPiecesOrInitial()
 	{
 		return NB_PIECES_OR_INITIAL;
 	}
 
-	// TODO comment
+	/**
+	 * Permet de recuperer le numero de la vague courante
+	 * @return le numero de la vague courante
+	 */
 	public int getNumVagueCourante()
 	{
 		return indiceVagueCourante+1;
