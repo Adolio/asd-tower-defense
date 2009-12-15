@@ -354,6 +354,7 @@ public class Maillage
 			}
 		}
 
+		
 		/*
 		 * Ajouter les arcs diagonaux descendants.
 		 */
@@ -379,6 +380,7 @@ public class Maillage
 						POIDS_DIAGO); // Poids
 			}
 		}
+		
 
 		return graphe;
 	}
