@@ -338,8 +338,6 @@ public abstract class Tour extends Rectangle implements Runnable
 		// pour chaque creature sur le terrain
 		while (iCreatures.hasNext())
 		{
-			synchronized (iCreatures)
-			{
 				creature = iCreatures.next();
 
 				// calcul de la distance entre la tour et la creature
@@ -358,7 +356,6 @@ public abstract class Tour extends Rectangle implements Runnable
 						distanceLaPlusProche = distance;
 					}
 				}
-			}
 		}
 
 		return creatureLaPlusProche;
