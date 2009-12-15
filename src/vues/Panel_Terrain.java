@@ -355,7 +355,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------
 		Iterator<Animation> iAnimations = animations.iterator();
 		while(iAnimations.hasNext())
-			synchronized (iAnimations)
+			synchronized (this)
 			{
 				iAnimations.next().dessiner(g2);				
 			}
