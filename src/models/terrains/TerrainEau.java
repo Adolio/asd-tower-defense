@@ -21,9 +21,12 @@ public class TerrainEau extends Terrain
 {
     
 	public final static Image IMAGE_DE_FOND;
+	public final static Image IMAGE_MENU;
     
     static
     {
+        IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
+                                              "img/cartes/menu_principal/water.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/water.png");
     }
 	

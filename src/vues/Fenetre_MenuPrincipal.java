@@ -74,10 +74,10 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		//---------------------------
 		// attent que toutes les images soit complementements chargees
 		MediaTracker tracker = new MediaTracker(this);
-		tracker.addImage(ElementTD.IMAGE_DE_FOND, 0);
-		tracker.addImage(Spirale.IMAGE_DE_FOND, 1);
+		tracker.addImage(ElementTD.IMAGE_MENU, 0);
+		tracker.addImage(Spirale.IMAGE_MENU, 1);
 		tracker.addImage(Objectif.IMAGE_DE_FOND, 2);
-		tracker.addImage(TerrainEau.IMAGE_DE_FOND, 3);
+		tracker.addImage(TerrainEau.IMAGE_MENU, 3);
 		try { 
 			tracker.waitForAll(); 
 		} 
@@ -87,16 +87,16 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		
 		// creation des boutons
 		boutonsTerrains[0] = new JButton(new ImageIcon(
-							Outils.redimentionner(ElementTD.IMAGE_DE_FOND,100,100)));
+							Outils.redimentionner(ElementTD.IMAGE_MENU,100,100)));
 		
 		boutonsTerrains[1] = new JButton(new ImageIcon(
-							Outils.redimentionner(Spirale.IMAGE_DE_FOND,100,100)));
+							Outils.redimentionner(Spirale.IMAGE_MENU,100,100)));
 		
 		boutonsTerrains[2] = new JButton(new ImageIcon(
 							Outils.redimentionner(Objectif.IMAGE_DE_FOND,100,100)));
 		
 		boutonsTerrains[3] = new JButton(new ImageIcon(
-							Outils.redimentionner(TerrainEau.IMAGE_DE_FOND,100,100)));
+							Outils.redimentionner(TerrainEau.IMAGE_MENU,100,100)));
 
 		// ajout des boutons au panel et ajout des ecouteurs
 		JPanel pBoutonsTerrains = new JPanel(new FlowLayout());
