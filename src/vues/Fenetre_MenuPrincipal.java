@@ -76,7 +76,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		MediaTracker tracker = new MediaTracker(this);
 		tracker.addImage(ElementTD.IMAGE_MENU, 0);
 		tracker.addImage(Spirale.IMAGE_MENU, 1);
-		tracker.addImage(Objectif.IMAGE_DE_FOND, 2);
+		tracker.addImage(Objectif.IMAGE_MENU, 2);
 		tracker.addImage(TerrainEau.IMAGE_MENU, 3);
 		try { 
 			tracker.waitForAll(); 
@@ -93,7 +93,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 							Outils.redimentionner(Spirale.IMAGE_MENU,100,100)));
 		
 		boutonsTerrains[2] = new JButton(new ImageIcon(
-							Outils.redimentionner(Objectif.IMAGE_DE_FOND,100,100)));
+							Outils.redimentionner(Objectif.IMAGE_MENU,100,100)));
 		
 		boutonsTerrains[3] = new JButton(new ImageIcon(
 							Outils.redimentionner(TerrainEau.IMAGE_MENU,100,100)));
