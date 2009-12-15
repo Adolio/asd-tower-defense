@@ -1,5 +1,8 @@
 package models.terrains;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+
 import models.creatures.*;
 
 /**
@@ -17,12 +20,19 @@ import models.creatures.*;
 public class TerrainEau extends Terrain
 {
     
+	public final static Image IMAGE_DE_FOND;
+    
+    static
+    {
+    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/water.png");
+    }
+	
     /**
      * Constructeur d'un terrain TerrainEau.
      */
     public TerrainEau () {
         super(500, 500, 100, 
-              0, 0, 540, 500, "img/cartes/water.png", 
+              0, 0, 540, 500, IMAGE_DE_FOND, 
               new Rectangle(0, 30, 20, 80),
               new Rectangle(480, 390, 20, 80)
         );
