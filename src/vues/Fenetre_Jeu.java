@@ -150,7 +150,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 			panelMenuInteraction.miseAJourNbPiecesOr();
 			
 			setTourAAcheter(tour.getCopieOriginale());
-			panelInfoTour.setTour(tour, panelInfoTour.MODE_ACHAT);
+			panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
 		}
 	}
 	

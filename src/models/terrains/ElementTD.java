@@ -1,5 +1,8 @@
 package models.terrains;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+
 import models.creatures.*;
 
 /**
@@ -8,21 +11,27 @@ import models.creatures.*;
  * Cette classe hérite de la classe Terrain de base.
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Lazhar Farjallah
- * @version 1.0 | 13 décembre 2009
+ * @version 1.0 | 13 decembre 2009
  * @since jdk1.6.0_16
  * @see Terrain
  */
 public class ElementTD extends Terrain
 {
+    public final static Image IMAGE_DE_FOND;
     
+    static
+    {
+    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/elementTD.png");
+    }
+	
     /**
      * Constructeur d'un terrain ElementTD selon la célèbre map de Blizzard.
      */
     public ElementTD () {
         super(480, 500, 100, 
-              0, 0, 540, 500, "img/cartes/elementTD.png", 
+              0, 0, 540, 500, IMAGE_DE_FOND, 
               new Rectangle(110, 0, 80, 20),
               new Rectangle(230, 0, 80, 20)
         );

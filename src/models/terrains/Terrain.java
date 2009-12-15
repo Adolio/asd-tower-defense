@@ -3,7 +3,6 @@ package models.terrains;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -127,28 +126,23 @@ public abstract class Terrain
 					int positionMaillageY,
 					int largeurMaillage,
 					int hauteurMaillage,
-					String imageDeFond,
+					Image imageDeFond,
 					Rectangle zoneDepart, 
 					Rectangle zoneArrivee)
 	{
-		LARGEUR = largeur;
-		HAUTEUR = hauteur;
-		maillage = new Maillage(largeurMaillage, hauteurMaillage, 
-						PRECISION_MAILLAGE,
-						positionMaillageX,positionMaillageY);
+		LARGEUR 				= largeur;
+		HAUTEUR 				= hauteur;
+		ZONE_DEPART 			= zoneDepart;
+		ZONE_ARRIVEE 			= zoneArrivee;
+		NB_PIECES_OR_INITIAL 	= nbPiecesOrInitial;
+		IMAGE_DE_FOND 			= imageDeFond;
+		
+		maillage 	= new Maillage(largeurMaillage, hauteurMaillage, 
+									PRECISION_MAILLAGE,
+									positionMaillageX,positionMaillageY);
 		tours 		= new ArrayList<Tour>();
 		creatures 	= new ArrayList<Creature>();
 		vagues 		= new ArrayList<VagueDeCreatures>();
-		
-		ZONE_DEPART = zoneDepart;
-		ZONE_ARRIVEE = zoneArrivee;
-		NB_PIECES_OR_INITIAL = nbPiecesOrInitial;
-
-		// chargement de l'image
-		if (imageDeFond != null)
-			IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage(imageDeFond);
-		else
-			IMAGE_DE_FOND = null;
 	}
 
 	// ----------------------------------------------------------

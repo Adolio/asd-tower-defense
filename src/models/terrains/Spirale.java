@@ -1,6 +1,8 @@
 package models.terrains;
 
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 import models.creatures.Creature1;
 import models.creatures.VagueDeCreatures;
@@ -17,15 +19,22 @@ import models.creatures.VagueDeCreatures;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class Labyrinthe extends Terrain
+public class Spirale extends Terrain
 {
+    public final static Image IMAGE_DE_FOND;
+    
+    static
+    {
+    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/spirale.png");
+    }
+	
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
-	public Labyrinthe()
+	public Spirale()
 	{
 		super(480, 500, 100, 
-			  0,0,540,500,"img/cartes/spiral3d.png", 
+			  0,0,540,500,IMAGE_DE_FOND, 
 			  new Rectangle(500,40,20,80),
 			  new Rectangle(320,280,20,60));
 		

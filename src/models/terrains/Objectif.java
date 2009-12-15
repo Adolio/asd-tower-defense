@@ -1,7 +1,10 @@
 package models.terrains;
 
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
+import models.creatures.CarapaceKoopa;
 import models.creatures.Creature1;
 import models.creatures.VagueDeCreatures;
 
@@ -17,16 +20,23 @@ import models.creatures.VagueDeCreatures;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class TerrainDesert extends Terrain
+public class Objectif extends Terrain
 {
+	public final static Image IMAGE_DE_FOND;
+    
+    static
+    {
+    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/objectif.png");
+    }
+	
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
-	public TerrainDesert()
+	public Objectif()
 	{
 		super(500, 500, 200, 
-			  -10,0,520,500,
-			  "img/cartes/desert.png", 
+			  -10,0,560,500,
+			  IMAGE_DE_FOND, 
 			  new Rectangle(520,40,20,60),
 			  new Rectangle(0,400,20,60));
 		
@@ -54,12 +64,20 @@ public class TerrainDesert extends Terrain
 		ajouterMur(new Rectangle(320,360,60,20));
 		
 		
-		// configuration des vagues de creatures
-		ajouterVague(new VagueDeCreatures(5, new Creature1(100,2,10),"Creatures terrestres faibles"));
-		ajouterVague(new VagueDeCreatures(10, new Creature1(100,2,10),"Creature terrestres faibles"));
-		ajouterVague(new VagueDeCreatures(5, new Creature1(300,4,10),"Creature terrestres moyennes"));
-		ajouterVague(new VagueDeCreatures(15, new Creature1(100,4,30),"Creature terrestres rapides"));
-		ajouterVague(new VagueDeCreatures(10, new Creature1(600,6,20),"Creature terrestres resistantes"));
-		ajouterVague(new VagueDeCreatures(1, new Creature1(5000,60,10),"Boss : Très résistant"));
+        /*
+         * Configuration des vagues de créatures.
+         */
+        ajouterVague(new VagueDeCreatures(
+                5, new Creature1(100,4,10),"Creatures terrestres faibles"));
+        ajouterVague(new VagueDeCreatures(
+                10, new Creature1(100,4,10),"Creature terrestres faibles"));
+        ajouterVague(new VagueDeCreatures(
+                5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"));
+        ajouterVague(new VagueDeCreatures(
+                20, new Creature1(100,4,30),"Creature terrestres rapides"));
+        ajouterVague(new VagueDeCreatures(
+                10, new Creature1(600,20,20),"Creature terrestres resistantes"));
+        ajouterVague(new VagueDeCreatures(
+                1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant"));
 	}
 }

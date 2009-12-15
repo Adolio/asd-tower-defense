@@ -2,6 +2,7 @@ import javax.swing.UIManager;
 import models.jeu.Jeu;
 import models.terrains.*;
 import vues.Fenetre_Jeu;
+import vues.Fenetre_MenuPrincipal;
 
 /**
  * Classe principale du jeu Tower Defense.
@@ -41,9 +42,11 @@ public class Main
 	  }
 	   
 	  // création du jeu
-	  Jeu jeu = new Jeu(new TerrainEau());
+	  //Jeu jeu = new Jeu(new TerrainEau());
 	  
 	  // création de la fenetre du jeu
-	  new Fenetre_Jeu(jeu);
+	  //new Fenetre_Jeu(jeu);
+	  
+	  new Fenetre_MenuPrincipal();
    }
 }
