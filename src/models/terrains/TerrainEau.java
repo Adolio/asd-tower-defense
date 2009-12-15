@@ -20,16 +20,25 @@ import models.creatures.*;
 public class TerrainEau extends Terrain
 {
     
-	public final static Image IMAGE_DE_FOND;
-	public final static Image IMAGE_MENU;
-    
+	public static final Image IMAGE_DE_FOND;
+	public static final Image IMAGE_MENU;
+    public static final VagueDeCreatures[] vagues = 
+    {
+    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
+    	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
+    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
+        new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
+        new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
+        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
+    };
+	
     static
     {
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/water.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/water.png");
     }
-	
+
     /**
      * Constructeur d'un terrain TerrainEau.
      */
@@ -58,22 +67,18 @@ public class TerrainEau extends Terrain
         ajouterMur(new Rectangle(130, 220, 240, 60));
         ajouterMur(new Rectangle(220, 130, 60, 90));
         ajouterMur(new Rectangle(220, 280, 60, 90));
-        
-        /*
-         * Configuration des vagues de créatures.
-         */
-        ajouterVague(new VagueDeCreatures(
-                5, new Creature1(100,4,10),"Creatures terrestres faibles"));
-        ajouterVague(new VagueDeCreatures(
-                10, new Creature1(100,4,10),"Creature terrestres faibles"));
-        ajouterVague(new VagueDeCreatures(
-                5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"));
-        ajouterVague(new VagueDeCreatures(
-                20, new Creature1(100,4,30),"Creature terrestres rapides"));
-        ajouterVague(new VagueDeCreatures(
-                10, new Creature1(600,20,20),"Creature terrestres resistantes"));
-        ajouterVague(new VagueDeCreatures(
-                1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant"));
     }
     
+    /**
+     * Permet de recuperer la vague suivante
+     * @return la vague suivante
+     */
+    VagueDeCreatures getVagueSuivante()
+	{
+    	if (indiceVagueCourante < 6)
+    		return vagues[indiceVagueCourante];
+    	else
+    		return new VagueDeCreatures(10, 
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante),"autogen");
+	}
 }

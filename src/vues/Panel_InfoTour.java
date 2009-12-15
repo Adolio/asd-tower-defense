@@ -3,6 +3,8 @@ package vues;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,14 +33,19 @@ import models.tours.Tour;
  */
 public class Panel_InfoTour extends JPanel implements ActionListener
 {
-	
 	public static final int MODE_SELECTION 	= 0;
 	public static final int MODE_ACHAT 		= 1;
 	
 	private static final long serialVersionUID = 1L;
 	private Tour tour;
-	private JLabel lNom;
-	private JTextArea lDescrition;
+	
+	private JLabel lNom 			= new JLabel();
+	private JLabel lDegats 			= new JLabel();
+	private JLabel lPortee 			= new JLabel();
+	private JTextArea lDescrition 	= new JTextArea();
+	private JPanel pBoutons 		= new JPanel(new FlowLayout());
+	private JPanel pCaracteristiques= new JPanel(new GridLayout(0,2));
+	
 	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/hammer.png");
 	private static final ImageIcon I_VENDRE = new ImageIcon("img/icones/coins_add.png");
 	private static final String TXT_AMELIORER = "Ameliorer";
@@ -58,21 +65,39 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 
 		this.fenJeu = fenJeu;
 		
-		// TODO faire un system de formulaire (tableau)
-		lNom = new JLabel();
-		lDescrition = new JTextArea();
-		lDescrition.setEditable(false);
-		add(lNom,BorderLayout.NORTH);
-		add(lDescrition,BorderLayout.CENTER);
 		
-		JPanel pBoutons = new JPanel(new FlowLayout());
+		// TODO faire un system de formulaire (tableau)
+		
+		
+		
+		// champ degats
+		pCaracteristiques.add(new JLabel("Degats"));
+		pCaracteristiques.add(lDegats);
+		
+		// champ rayon de portee
+		pCaracteristiques.add(new JLabel("Rayon de portee"));
+		pCaracteristiques.add(lPortee);
+		
+		// champ description
+		pCaracteristiques.add(new JLabel("Description"));
+		lDescrition.setEditable(false);
+		lDescrition.setLineWrap(true);
+		lDescrition.setWrapStyleWord(true);
+		pCaracteristiques.add(lDescrition);
+		
+		JPanel pConteneurCaract = new JPanel();
+		pConteneurCaract.add(pCaracteristiques,BorderLayout.NORTH);
+		
+		// les boutons
 		
 		pBoutons.add(bAmeliorer);
 		pBoutons.add(bVendre);
-		
 		bAmeliorer.addActionListener(this);
 		bVendre.addActionListener(this);
 		
+		
+		add(lNom,BorderLayout.NORTH);
+		add(pConteneurCaract,BorderLayout.CENTER);
 		add(pBoutons,BorderLayout.SOUTH);
 	
 		// initialisation a vide
@@ -96,28 +121,32 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// tour ou pas ?
 		if(tour != null)
 		{
+			pCaracteristiques.setVisible(true);
+			
+			lDegats.setText(tour.getDegats()+"");
+			lPortee.setText(tour.getRayonPortee()+"");
+			lDescrition.setText(tour.getDescription());
+			
 			// tour selectionnee pour information
 			if(mode == 0)
 			{
 				// adaptation des champs
 				lNom.setText(tour.getNom()+" [ valeur total : "+tour.getPrixTotal()+"]");
-				lDescrition.setText(tour.getDescription());
+				
+				pBoutons.setVisible(true);
 				
 				// adaptation des boutons
 				if(tour.peutEncoreEtreAmelioree())
 				{
-					bAmeliorer.setVisible(true);
 					bAmeliorer.setEnabled(true);
 					bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
 				}
 				else
 				{
-					bAmeliorer.setVisible(true);
 					bAmeliorer.setText("[niveau max]");
 					bAmeliorer.setEnabled(false);
 				}
 				
-				bVendre.setVisible(true);
 				bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
 			}
 			// tour selectionnee pour achat
@@ -125,11 +154,9 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			{
 				// adaptation des champs
 				lNom.setText(tour.getNom()+" [ prix d'achat : "+tour.getPrixAchat()+"]");
-				lDescrition.setText(tour.getDescription());
 				
 				// adaptation des boutons
-				bAmeliorer.setVisible(false);
-				bVendre.setVisible(false);
+				pBoutons.setVisible(false);
 			}
 			
 			// sauvegarde de la tour pour les operations
@@ -138,10 +165,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// mode sans tour selectionnee
 		else
 		{
-			lNom.setText("");
-			lDescrition.setText("");
-			bAmeliorer.setVisible(false);
-			bVendre.setVisible(false);
+			pCaracteristiques.setVisible(false);
+			pBoutons.setVisible(false);
 		}
 	}
 

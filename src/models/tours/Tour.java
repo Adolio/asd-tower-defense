@@ -382,4 +382,10 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return niveau;
 	}
+
+	// TODO
+	public int getDegats()
+	{
+		return degats;
+	}
 }

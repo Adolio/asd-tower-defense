@@ -57,7 +57,9 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	private int nbPiecesDOr;
 	
-	// TODO comment
+	/**
+	 * Image actuelle de la creature
+	 */
 	protected Image image;
 	
 	/**
@@ -159,13 +161,19 @@ public abstract class Creature extends Rectangle implements Runnable
 		return nbPiecesDOr;
 	}
 	
-	// TODO comment
+	/**
+	 * Permet de recuperer la vitesse de la creature
+	 * @return la vitesse de la creature
+	 */
 	public double getVitesse()
 	{
 		return vitesse;
 	}
 	
-	// TODO comment
+	/**
+	 * Permet de recuperer l'image actuelle de la creature
+	 * @return l'image actuelle de la creature
+	 */
 	public Image getImage()
 	{
 		return image;
@@ -276,7 +284,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * Permet de faire subir des degats sur la creature
 	 * @param degats les degats recus
 	 */
-	public void blesser(int degats)
+	synchronized public void blesser(int degats)
 	{
 		// deja mort ?
 		if(!estMorte())

@@ -39,7 +39,7 @@ public class TourDeGlace extends Tour
 			  COULEUR,			// couleur de fond
 			  "Tour de glace",	// nom
 			  20,				// prix achat
-			  40,				// degats
+			  15,				// degats
 			  40,				// rayon de portee
 			  IMAGE);				
 		

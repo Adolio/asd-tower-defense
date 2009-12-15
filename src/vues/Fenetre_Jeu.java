@@ -204,7 +204,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	 */
 	public void creatureBlessee(Creature creature)
 	{
-	
+
 	}
 
 	/**
