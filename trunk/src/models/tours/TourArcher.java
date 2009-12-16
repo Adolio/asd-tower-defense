@@ -17,7 +17,7 @@ import models.creatures.Creature;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class TourDeFeu extends Tour
+public class TourArcher extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
@@ -30,22 +30,22 @@ public class TourDeFeu extends Tour
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
 	}
 	
-	public TourDeFeu()
+	public TourArcher()
 	{
 		super(0, 				// x
 			  0, 				// y
 			  20, 				// largeur
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Tour de feu",	// nom
+			  "Archer",	// nom
 			  10,				// prix achat
 			  5,				// degats
 			  50,				// rayon de portee
-			  IMAGE);				
+			  2,
+			  IMAGE);		
 	
-		description = "La tour de feu est une tour qui fait beaucoup degats," +
-					  " mais elle est très lente. " +
-					  "Elle fait egalement des degats de zone.";
+		description = "La tour d'archer est une tour qui a très rapide," +
+					  " mais elle fait peu de dégâts. ";
 	}
 	
 	public void ameliorer()
@@ -66,7 +66,7 @@ public class TourDeFeu extends Tour
 			rayonPortee += 10;
 			
 			// raccourcissement du temps de preparation du tire
-			tempsDePreparationDuTir	*= 0.8;
+			cadenceTir	*= 1.2;
 		
 			niveau++;
 		}
@@ -81,7 +81,7 @@ public class TourDeFeu extends Tour
 
 	public Tour getCopieOriginale()
 	{
-		return new TourDeFeu();
+		return new TourArcher();
 	}
 
 	public boolean peutEncoreEtreAmelioree()
