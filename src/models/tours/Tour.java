@@ -21,6 +21,11 @@ public abstract class Tour extends Rectangle implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 
+	
+	public static final int TYPE_TERRESTRE_ET_AIR 	= 0;
+	public static final int TYPE_TERRESTRE 			= 1;
+	public static final int TYPE_AIR 				= 2;
+	
 	/**
 	 * coefficient de prix de vente de la tour. utilisee pour calculer le prix
 	 * de vente de la tour.
@@ -69,6 +74,16 @@ public abstract class Tour extends Rectangle implements Runnable
 	protected double rayonPortee = 100;
 
 	/**
+	 * type de la tour
+	 * <p>
+	 * Peut prendre les 3 valeurs suivantes :
+	 * Tour.TYPE_TERRESTRE_ET_AIR
+	 * Tour.TYPE_TERRESTRE
+	 * Tour.TYPE_AIR
+	 */
+	protected int type;
+	
+	/**
 	 * image
 	 */
 	protected Image image;
@@ -111,24 +126,23 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	public Tour(int x, int y, int largeur, int hauteur, Color couleurDeFond,
 			String nom, int prixAchat, int degats, double rayonPortee, 
-			double cadenceTir, Image image)
+			double cadenceTir, int type, Image image)
 	{
-		this.x = x;
-		this.y = y;
+	    this.x = x;
+	    this.y = y;
 
 		width = largeur;
 		height = hauteur;
 
-		this.NOM = nom;
-		this.couleurDeFond = couleurDeFond;
-		this.prixAchat = prixAchat;
-		prixTotal = prixAchat;
-		this.degats = degats;
-		this.rayonPortee = rayonPortee;
-
-		this.cadenceTir = cadenceTir;
-		
-		this.image = image;
+		this.NOM			= nom;
+		this.couleurDeFond 	= couleurDeFond;
+		this.prixAchat 		= prixAchat;
+		prixTotal 			= prixAchat;
+		this.degats 		= degats;
+		this.rayonPortee 	= rayonPortee;
+		this.cadenceTir 	= cadenceTir;
+		this.type		 	= type;
+		this.image 			= image;
 	}
 
 	/**
@@ -308,8 +322,12 @@ public abstract class Tour extends Rectangle implements Runnable
 				{
 					e.printStackTrace();
 				}
-
-				tirer(creature);
+				   
+				if(type == TYPE_TERRESTRE_ET_AIR || 
+				   type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE ||
+				   type == TYPE_AIR       && creature.getType() == Creature.TYPE_AERIENNE)
+				    tirer(creature);
+				
 			} else
 			{
 				// si pas de creature aux environs, on attend

@@ -31,8 +31,8 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * definition des deux types de creature
 	 */
 	public static final int TYPE_TERRIENNE 	= 0;
-	public static final int TYPE_VOLANTE 	= 1;
-	private int type = TYPE_TERRIENNE;
+	public static final int TYPE_AERIENNE 	= 1;
+	private int type;
 	
 	/**
 	 * chemin actuel de la creature
@@ -92,7 +92,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
 					int santeMax, int nbPiecesDOr, double vitesse, 
-					Image image)
+					int type, Image image)
 	{
 		super(x,y,largeur,hauteur);
 		
@@ -102,6 +102,7 @@ public abstract class Creature extends Rectangle implements Runnable
 		this.vitesse		= vitesse;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 		this.image 			= image;
+		this.type           = type;
 	}
 
 	/**

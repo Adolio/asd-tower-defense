@@ -26,7 +26,7 @@ public class TourCanon extends Tour
 	
 	static
 	{
-		COULEUR = Color.BLUE;
+		COULEUR = new Color(64,64,64);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_2.png");
 	}
 	
@@ -42,11 +42,12 @@ public class TourCanon extends Tour
 			  15,				// degats
 			  40,				// rayon de portee
 			  1,
+			  Tour.TYPE_TERRESTRE,
 			  IMAGE);				
 		
-		description = "Le tour canon est une tour avec de bon dégât mais " +
-					  "elle est lente. De plus, elle n'attaque de " +
-					  "les creatures terrestres";
+		description = "Le tour canon est une tour avec de bons dégâts mais " +
+					  "lente. De plus, elle n'attaque que " +
+					  "les créatures terrestres";
 	}
 
 	public void ameliorer()
@@ -65,7 +66,9 @@ public class TourCanon extends Tour
 	public void tirer(Creature creature)
 	{
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
-		creature.blesser(degats);
+	    
+	    // seulement les terriennes
+	    creature.blesser(degats);
 	}
 
 
