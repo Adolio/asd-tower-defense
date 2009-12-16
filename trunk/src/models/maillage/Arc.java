@@ -1,5 +1,10 @@
+package models.maillage;
+
+import java.awt.geom.*;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
 /**
- * Fichier : Line.java
+ * Fichier : Arc.java
  * 
  * <p> But : 
  * <p> Remarques : 
@@ -9,14 +14,6 @@
  * @version 4 déc. 2009
  * @since jdk1.6.0_16 
  */
-package models.maillage;
-
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
-import org.jgrapht.graph.DefaultWeightedEdge;
-
 public class Arc extends DefaultWeightedEdge
 {
 	Noeud depart, arrivee;
