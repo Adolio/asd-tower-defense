@@ -89,7 +89,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	private boolean enJeu;
 
-	protected long tempsDePreparationDuTir = 200;
+	protected double cadenceTir; // par seconde
 
 	/**
 	 * Constructeur de la tour.
@@ -110,8 +110,8 @@ public abstract class Tour extends Rectangle implements Runnable
 	 *            le prix d'achat de la tour
 	 */
 	public Tour(int x, int y, int largeur, int hauteur, Color couleurDeFond,
-			String nom, int prixAchat, int degats, double rayonPortee,
-			Image image)
+			String nom, int prixAchat, int degats, double rayonPortee, 
+			double cadenceTir, Image image)
 	{
 		this.x = x;
 		this.y = y;
@@ -126,9 +126,20 @@ public abstract class Tour extends Rectangle implements Runnable
 		this.degats = degats;
 		this.rayonPortee = rayonPortee;
 
+		this.cadenceTir = cadenceTir;
+		
 		this.image = image;
 	}
 
+	/**
+	 * permet de recuperer le temps de preparation d'un tir
+	 * @return le temps de preparation d'un tir en miliseconde
+	 */
+	public double getCadenceTir()
+	{
+		return cadenceTir;
+	}
+	
 	/**
 	 * methode a redefinir qui prend les decision concernant les améliorations
 	 * de la tour.
@@ -292,7 +303,7 @@ public abstract class Tour extends Rectangle implements Runnable
 				// TODO mieux gerer les temps
 				try
 				{
-					Thread.sleep(tempsDePreparationDuTir);
+					Thread.sleep((long) (1000.0 / cadenceTir));
 				} catch (InterruptedException e)
 				{
 					e.printStackTrace();

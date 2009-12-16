@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import models.jeu.Jeu;
 import models.tours.Tour;
-import models.tours.TourDeFeu;
-import models.tours.TourDeGlace;
+import models.tours.TourArcher;
+import models.tours.TourCanon;
 
 /**
  * Panel de gestion des interactions avec le joueur.
@@ -34,8 +34,8 @@ import models.tours.TourDeGlace;
 public class Panel_MenuInteraction extends JPanel implements ActionListener															 
 {
 	private static final long serialVersionUID = 1L;
-	private JButton bTourFeu 		= new JButton(new ImageIcon(TourDeFeu.IMAGE));
-	private JButton bTourGlace 		= new JButton(new ImageIcon(TourDeGlace.IMAGE));
+	private JButton bTourFeu 		= new JButton(new ImageIcon(TourArcher.IMAGE));
+	private JButton bTourGlace 		= new JButton(new ImageIcon(TourCanon.IMAGE));
 	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES = new ImageIcon("img/icones/heart.png");
 	//private JLabel lScore 			= new JLabel();
@@ -107,12 +107,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		if(source == bTourFeu)
 		{
-			TourDeFeu tourDeFeu = new TourDeFeu();
+			TourArcher tourDeFeu = new TourArcher();
 			fenJeu.setTourAAcheter(tourDeFeu);
 		}
 		else if(source == bTourGlace)
 		{
-			TourDeGlace tourDeGlace = new TourDeGlace();
+			TourCanon tourDeGlace = new TourCanon();
 			fenJeu.setTourAAcheter(tourDeGlace);
 		}
 		else if(source == bLancerVagueSuivante)

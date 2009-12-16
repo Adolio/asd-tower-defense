@@ -17,7 +17,7 @@ import models.creatures.Creature;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class TourDeGlace extends Tour
+public class TourCanon extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
@@ -27,23 +27,26 @@ public class TourDeGlace extends Tour
 	static
 	{
 		COULEUR = Color.BLUE;
-		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_2.png");
 	}
 	
-	public TourDeGlace()
+	public TourCanon()
 	{
 		super(0, 				// x
 			  0, 				// y
 			  20, 				// largeur
 		      20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Tour de glace",	// nom
+			  "Canon",	// nom
 			  20,				// prix achat
 			  15,				// degats
 			  40,				// rayon de portee
+			  1,
 			  IMAGE);				
 		
-		description = "La tour de glace est une \ntour rapide qui ralenti les ennemis";
+		description = "Le tour canon est une tour avec de bon dégât mais " +
+					  "elle est lente. De plus, elle n'attaque de " +
+					  "les creatures terrestres";
 	}
 
 	public void ameliorer()
@@ -54,6 +57,7 @@ public class TourDeGlace extends Tour
 		prixAchat 	*= 2;	// + 100%
 		degats    	*= 1.5; // + 50%
 		rayonPortee *= 1.2; // + 20%
+		cadenceTir	*= 1.2;
 		
 		niveau++;
 	}
@@ -67,7 +71,7 @@ public class TourDeGlace extends Tour
 
 	public Tour getCopieOriginale()
 	{
-		return new TourDeGlace();
+		return new TourCanon();
 	}
 	
 	public boolean peutEncoreEtreAmelioree()
