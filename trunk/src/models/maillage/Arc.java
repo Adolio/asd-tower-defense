@@ -6,24 +6,43 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 /**
  * Fichier : Arc.java
  * 
- * <p> But : 
- * <p> Remarques : 
+ * <p>
+ * But : Modélise un arc du graphe, en étendant un {@link DefaultWeightedEdge}.
+ * <p>
+ * Remarques : Pour avoir une {@link Line2D} de l'arc il faut utiliser la
+ * méthode dédiée.
+ * 
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @author Pierre-Dominique Putallaz
  * @version 4 déc. 2009
- * @since jdk1.6.0_16 
+ * @since jdk1.6.0_16
  */
 public class Arc extends DefaultWeightedEdge
 {
+	// Les deux noeuds de départ et d'arrivée.
 	Noeud depart, arrivee;
 
+	/**
+	 * Construit un arc pondéré non orienté avec les noeuds de départs et
+	 * d'arrivée.
+	 * 
+	 * @param depart
+	 *            Le noeud de départ
+	 * @param arrivee
+	 *            Le noeud d'arrivée
+	 */
 	public Arc(Noeud depart, Noeud arrivee)
 	{
 		this.depart = depart;
 		this.arrivee = arrivee;
 	}
 
+	/**
+	 * Retourne une représentation sous forme de {@link Line2D} de l'arc.
+	 * 
+	 * @return une représentation sous forme de {@link Line2D} de l'arc.
+	 */
 	public Line2D toLine2D()
 	{
 		return new Line2D()
@@ -102,7 +121,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public void setLine(double x1, double y1, double x2, double y2)
 			{
-				// TODO Auto-generated method stub
+				throw new IllegalArgumentException("Méthode non implémentée");
 
 			}
 
@@ -114,13 +133,15 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public Rectangle2D getBounds2D()
 			{
-				return null;
+				throw new IllegalArgumentException("Méthode non implémentée");
 			}
 		};
 	}
 
 	/**
-	 * @return the depart
+	 * Retourne le noeud de départ.
+	 * 
+	 * @return le noeud de départ.
 	 */
 	public Noeud getDepart()
 	{
@@ -128,7 +149,8 @@ public class Arc extends DefaultWeightedEdge
 	}
 
 	/**
-	 * @return the arrivee
+	 * Retourne le noeud d'arrivée.
+	 * @return le noeud d'arrivée.
 	 */
 	public Noeud getArrivee()
 	{
