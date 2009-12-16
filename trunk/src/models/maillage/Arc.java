@@ -3,7 +3,8 @@
  * 
  * <p> But : 
  * <p> Remarques : 
- * 
+ * @author Aurélien Da Campo
+ * @author Lazhar Farjallah
  * @author Pierre-Dominique Putallaz
  * @version 4 déc. 2009
  * @since jdk1.6.0_16 
@@ -16,10 +17,10 @@ import java.awt.geom.Rectangle2D;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-public class Arc extends DefaultWeightedEdge 
+public class Arc extends DefaultWeightedEdge
 {
 	Noeud depart, arrivee;
-	
+
 	public Arc(Noeud depart, Noeud arrivee)
 	{
 		this.depart = depart;

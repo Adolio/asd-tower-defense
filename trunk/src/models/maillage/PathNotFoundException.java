@@ -3,8 +3,10 @@ package models.maillage;
  * Fichier : PathNotFoundException.java
  * 
  * <p> But : 
- * <p> Remarques : 
- * 
+ * <p> Remarques :
+ *  
+ * @author Aurélien Da Campo
+ * @author Lazhar Farjallah
  * @author Pierre-Dominique Putallaz
  * @version 5 déc. 2009
  * @since jdk1.6.0_16 
