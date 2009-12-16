@@ -107,25 +107,25 @@ public final class MeilleursScores
       try
       {
          // Ouverture d'un flux d'entrée depuis le fichier FICHIER.
-         FileInputStream fis = new FileInputStream(FICHIER);
+         FileInputStream fluxEntreeFichier = new FileInputStream(FICHIER);
          // Création d'un "flux objet" avec le flux d'entrée.
-         ObjectInputStream ois = new ObjectInputStream(fis);
+         ObjectInputStream fluxEntreeObjet = new ObjectInputStream(fluxEntreeFichier);
          try
          {
             // Désérialisation : lecture de l'objet depuis le flux d'entrée
             // (chargement des données du fichier).
-            scores = (ArrayList<Score>) ois.readObject();
+            scores = (ArrayList<Score>) fluxEntreeObjet.readObject();
          }
          finally
          {
             // On ferme les flux (important!).
             try
             {
-               ois.close();
+               fluxEntreeObjet.close();
             }
             finally
             {
-               fis.close();
+               fluxEntreeFichier.close();
             }
          }
       }
@@ -153,27 +153,27 @@ public final class MeilleursScores
       try
       {
          // Ouverture d'un flux de sortie vers le fichier FICHIER.
-         FileOutputStream fos = new FileOutputStream(FICHIER);
+         FileOutputStream fluxSortieFichier = new FileOutputStream(FICHIER);
          
          // Création d'un "flux objet" avec le flux fichier.
-         ObjectOutputStream oos = new ObjectOutputStream(fos);
+         ObjectOutputStream fluxSortieObjet = new ObjectOutputStream(fluxSortieFichier);
          try
          {
             // Sérialisation : écriture de l'objet dans le flux de sortie.
-            oos.writeObject(scores);
+            fluxSortieObjet.writeObject(scores);
             // On vide le tampon.
-            oos.flush();
+            fluxSortieObjet.flush();
          }
          finally
          {
             // Fermeture des flux (important!).
             try
             {
-               oos.close();
+               fluxSortieObjet.close();
             }
             finally
             {
-               fos.close();
+               fluxSortieFichier.close();
             }
          }
       }
