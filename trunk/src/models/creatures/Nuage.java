@@ -13,7 +13,7 @@ import java.awt.Toolkit;
  * @since jdk1.6.0_16
  * @see Creature
  */
-public class Creature1 extends Creature
+public class Nuage extends Creature
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -22,7 +22,7 @@ public class Creature1 extends Creature
 	
 	static
 	{
-		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/creature1.png");
+		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/nuage.gif");
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public class Creature1 extends Creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 */
-	public Creature1(int santeMax, int nbPiecesDOr, double vitesse)
+	public Nuage(int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -43,10 +43,10 @@ public class Creature1 extends Creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 */
-	public Creature1(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public Nuage(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
-		        Creature.TYPE_TERRIENNE, IMAGE);
+		super(x, y, 14, 14, santeMax, nbPiecesDOr, vitesse, 
+		      Creature.TYPE_AERIENNE, IMAGE);
 	}
 
 	/**
@@ -54,6 +54,6 @@ public class Creature1 extends Creature
 	 */
 	public Creature copier()
 	{
-		return new Creature1(x,y,getSanteMax(),getNbPiecesDOr(),getVitesse());
+		return new Nuage(x,y,getSanteMax(),getNbPiecesDOr(),getVitesse());
 	}
 }

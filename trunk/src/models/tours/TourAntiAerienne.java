@@ -17,7 +17,7 @@ import models.creatures.Creature;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class TourArcher extends Tour
+public class TourAntiAerienne extends Tour
 {
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
@@ -26,27 +26,27 @@ public class TourArcher extends Tour
 	
 	static
 	{
-		COULEUR = new Color(128,64,32);
-		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
+		COULEUR = Color.BLUE;
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
 	}
 	
-    public TourArcher()
+	public TourAntiAerienne()
 	{
-	    super(0,                // x
+		super(0, 				// x
 			  0, 				// y
 			  20, 				// largeur
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Archer",	// nom
-			  10,                // prix achat
-			  5,                 // degats
-			  50,                // rayon de portee
-			  2,
-			  Tour.TYPE_TERRESTRE_ET_AIR,
+			  "Anti Aérienne",	// nom
+			  30,				// prix achat
+			  40,				// degats
+			  50,				// rayon de portee
+			  3,
+			  Tour.TYPE_AIR,
 			  IMAGE);		
 	
-		description = "La tour d'archer est une tour qui est très rapide," +
-					  " mais elle fait peu de dégâts. ";
+		description = "La tour d'anti aérienne est une tour qui est très performante," +
+					  " mais elle n'attaque que les créatures volantes. ";
 	}
 	
 	public void ameliorer()
@@ -77,12 +77,12 @@ public class TourArcher extends Tour
 	{
 		// TODO
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
-		creature.blesser(degats);
+	    creature.blesser(degats);
 	}
 
 	public Tour getCopieOriginale()
 	{
-		return new TourArcher();
+		return new TourAntiAerienne();
 	}
 
 	public boolean peutEncoreEtreAmelioree()

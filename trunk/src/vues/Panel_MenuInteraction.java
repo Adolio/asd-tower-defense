@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import models.jeu.Jeu;
 import models.tours.Tour;
+import models.tours.TourAntiAerienne;
 import models.tours.TourArcher;
 import models.tours.TourCanon;
 
@@ -34,16 +35,17 @@ import models.tours.TourCanon;
 public class Panel_MenuInteraction extends JPanel implements ActionListener															 
 {
 	private static final long serialVersionUID = 1L;
-	private JButton bTourFeu 		= new JButton(new ImageIcon(TourArcher.IMAGE));
-	private JButton bTourGlace 		= new JButton(new ImageIcon(TourCanon.IMAGE));
+	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.IMAGE));
+	private JButton bTourCanon 				= new JButton(new ImageIcon(TourCanon.IMAGE));
+	private JButton bTourAntiAerienne 		= new JButton(new ImageIcon(TourAntiAerienne.IMAGE));
 	private static final ImageIcon I_PIECES = new ImageIcon("img/icones/coins.png");
-	private static final ImageIcon I_VIES = new ImageIcon("img/icones/heart.png");
-	//private JLabel lScore 			= new JLabel();
-	//private JLabel lTitreScore 		= new JLabel("Score :");
-	private JLabel lVies 			= new JLabel();
-	private JLabel lTitreVies 		= new JLabel(I_VIES);
-	private JLabel lNbPiecesOr 		= new JLabel();
-	private JLabel lTitrePiecesOr 	= new JLabel(I_PIECES);
+	private static final ImageIcon I_VIES 	= new ImageIcon("img/icones/heart.png");
+	//private JLabel lScore 				= new JLabel();
+	//private JLabel lTitreScore 			= new JLabel("Score :");
+	private JLabel lVies 					= new JLabel();
+	private JLabel lTitreVies 				= new JLabel(I_VIES);
+	private JLabel lNbPiecesOr 				= new JLabel();
+	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
 	private static final String TXT_VAGUE_SUIVANTE	= "Vague suivante";
 	private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
 	
@@ -62,12 +64,15 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		JPanel pTours = new JPanel();
 		
 		//bTourFeu.setBackground(TourDeFeu.COULEUR);
-		bTourFeu.addActionListener(this);
-		pTours.add(bTourFeu);
+		bTourArcher.addActionListener(this);
+		pTours.add(bTourArcher);
 		
 		//bTourGlace.setBackground(TourDeGlace.COULEUR);
-		bTourGlace.addActionListener(this);
-		pTours.add(bTourGlace);
+		bTourCanon.addActionListener(this);
+		pTours.add(bTourCanon);
+		
+		bTourAntiAerienne.addActionListener(this);
+		pTours.add(bTourAntiAerienne);
 		
 		//pTours.add(lTitreScore);
 		//pTours.add(lScore);
@@ -105,16 +110,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	{
 		Object source = ae.getSource();
 		
-		if(source == bTourFeu)
-		{
-			TourArcher tourDeFeu = new TourArcher();
-			fenJeu.setTourAAcheter(tourDeFeu);
-		}
-		else if(source == bTourGlace)
-		{
-			TourCanon tourDeGlace = new TourCanon();
-			fenJeu.setTourAAcheter(tourDeGlace);
-		}
+		if(source == bTourArcher)
+			fenJeu.setTourAAcheter(new TourArcher());
+		else if(source == bTourCanon)
+			fenJeu.setTourAAcheter(new TourCanon());
+		else if(source == bTourAntiAerienne)
+			fenJeu.setTourAAcheter(new TourAntiAerienne());
 		else if(source == bLancerVagueSuivante)
 		{
 			fenJeu.lancerVagueSuivante();
