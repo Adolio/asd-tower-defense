@@ -32,10 +32,9 @@ public class Maillage
 	private final int DESACTIVE;
 	// La largeur en pixel de chaque maille, ou noeud
 	private final int LARGEUR_NOEUD;
-
-	// TODO comment
+	// Le poid d'un arc diagonal
 	private final int POIDS_DIAGO;
-
+	// La demi-distance entre un point et un autre
 	private final int DEMI_NOEUD;
 	// La largeur en pixel totale du maillage (axe des x)
 	private final int LARGEUR_EN_PIXELS;
@@ -60,6 +59,10 @@ public class Maillage
 	 *            Hauteur en pixel de la zone.
 	 * @param largeurDuNoeud
 	 *            La largeur en pixel de chaque maille.
+	 * @param xOffset
+	 *            Le décalage en x du maillage, en pixels.
+	 * @param yOffset
+	 *            Le décalage en y du maillage, en pixels.
 	 * @throws IllegalArgumentException
 	 *             Levé si les dimensions ne correspondent pas.
 	 */
@@ -70,7 +73,7 @@ public class Maillage
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
 
-		// TODO comment
+		// Calcule une fois pour toute la distance diagonale
 		POIDS_DIAGO = (int) Math.sqrt(2 * LARGEUR_NOEUD * LARGEUR_NOEUD);
 
 		// Largeur du demi noeud
@@ -97,30 +100,39 @@ public class Maillage
 		// Construction du graphe
 		graphe = construireGraphe();
 	}
-	
+
 	/**
-	 * @param largeurPixels
-	 * @param hauteurPixels
-	 * @param largeurDuNoeud
-	 * @throws IllegalArgumentException
+	 * Constructeur sans décalage.
+	 * 
+	 * @see Maillage#Maillage(int, int, int, int, int)
 	 */
 	public Maillage(final int largeurPixels, final int hauteurPixels,
-			final int largeurDuNoeud)
-			throws IllegalArgumentException
+			final int largeurDuNoeud) throws IllegalArgumentException
 	{
-		this(largeurPixels,hauteurPixels,largeurDuNoeud,0,0);
+		this(largeurPixels, hauteurPixels, largeurDuNoeud, 0, 0);
 	}
 
 	/**
+	 * Méthode public pour calculer le chemin le plus court d'un point à un
+	 * autre. Les points sont données en pixels exactes dans le champs.
+	 * 
 	 * @param xDepart
+	 *            La coordonnée x du point de départ.
 	 * @param yDepart
+	 *            La coordonnée y du point de départ.
 	 * @param xArrivee
+	 *            La coordonnée x du point d'arrivée.
 	 * @param yArrivee
-	 * @return
+	 *            La coordonnée y du point d'arrivée.
+	 * @return Une liste de points qui représente le chemin à parcourir.
 	 * @throws PathNotFoundException
+	 *             Levé si aucun chemin n'est trouvé.
+	 * @throws IllegalArgumentException
+	 *             Levé si les coordonnées ne sont pas dans le champs.
 	 */
 	public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
-			int xArrivee, int yArrivee) throws PathNotFoundException
+			int xArrivee, int yArrivee) throws PathNotFoundException,
+			IllegalArgumentException
 	{
 		/*
 		 * Test des arguments
@@ -148,15 +160,17 @@ public class Maillage
 		if (dijkstraChemin.getWeight() >= DESACTIVE)
 			throw new PathNotFoundException("Il n'existe aucun chemin valide.");
 
+		// Retourne l'ArrayList des points.
 		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
 	}
 
 	/**
-	 * Active UNE ZONE --> IDEPENDANT DES TOURS !!!
+	 * Active une zone rectangulaire dans le champs.
 	 * 
 	 * @param rectangle
-	 *            la zone a activer
+	 *            La zone a activer
 	 * @throws IllegalArgumentException
+	 *             Si la zone à activer est hors champs.
 	 */
 	public void activerZone(Rectangle rectangle)
 			throws IllegalArgumentException
@@ -165,10 +179,10 @@ public class Maillage
 	}
 
 	/**
-	 * DESACTIVE UNE ZONE --> IDEPENDANT DES TOURS !!!
+	 * Désactive une zone dans le champs
 	 * 
 	 * @param rectangle
-	 *            la zone a désactiver, coordonnées en pixels unitaire
+	 *            la zone a désactiver.
 	 * @throws IllegalArgumentException
 	 *             Levé si le rectangle est hors champs.
 	 */
@@ -187,11 +201,9 @@ public class Maillage
 		return "Largeur du maillage : " + LARGEUR_EN_PIXELS + " pixels\n"
 				+ "Hauteur du maillage : " + HAUTEUR_EN_PIXELS + " pixels\n"
 				+ "Représentation      : 1 noeud = " + LARGEUR_NOEUD + "x"
-				+ LARGEUR_NOEUD + " pixels\n"
-				+
-				// graphe.toString() + "\n" +
-				"Nombre de noeuds    : " + graphe.vertexSet().size() + "\n"
-				+ "Nombre d'arcs       : " + graphe.edgeSet().size();
+				+ LARGEUR_NOEUD + " pixels\n" + "Nombre de noeuds    : "
+				+ graphe.vertexSet().size() + "\n" + "Nombre d'arcs       : "
+				+ graphe.edgeSet().size();
 	}
 
 	/**
@@ -214,6 +226,11 @@ public class Maillage
 		return HAUTEUR_EN_PIXELS;
 	}
 
+	/**
+	 * Retourne la liste complète des noeuds du maillage.
+	 * 
+	 * @return Les noeuds du maillage.
+	 */
 	public ArrayList<Noeud> getNoeuds()
 	{
 		ArrayList<Noeud> points = new ArrayList<Noeud>();
@@ -225,6 +242,11 @@ public class Maillage
 		return points;
 	}
 
+	/**
+	 * Retourne la liste des arcs actifs du maillage.
+	 * 
+	 * @return La liste des arcs actifs du maillage.
+	 */
 	public ArrayList<Line2D> getArcsActifs()
 	{
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
@@ -236,6 +258,11 @@ public class Maillage
 		return retour;
 	}
 
+	/**
+	 * Retourne la liste complète des arcs du maillage.
+	 * 
+	 * @return La liste complète des arcs du maillage.
+	 */
 	public ArrayList<Line2D> getArcs()
 	{
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
@@ -247,9 +274,14 @@ public class Maillage
 	}
 
 	/**
+	 * Méthode de service pour activer ou désactiver une zone.
+	 * 
 	 * @param rectangle
+	 *            La zone concernée.
 	 * @param active
+	 *            True s'il faut l'activer, False s'il faut la désactiver.
 	 * @throws IllegalArgumentException
+	 *             Levé si la zone est hors champs.
 	 */
 	private void zoneActive(final Rectangle rectangle, final boolean active)
 			throws IllegalArgumentException
@@ -260,13 +292,8 @@ public class Maillage
 		rectangleEstDansLeTerrain(rectangle);
 
 		/*
-		 * for (int i = pixelToNoeud(rectangle.x); i < pixelToNoeud(rectangle.x
-		 * + rectangle.width); ++i) for (int j = pixelToNoeud(rectangle.y); j <
-		 * pixelToNoeud(rectangle.y + rectangle.height); ++j) if (active)
-		 * activer(noeuds[i][j]); else desactiver(noeuds[i][j]);
+		 * Pour chaque noeuds on vérifie s'il intersecte avec la zone concernée.
 		 */
-		// Correction des arcs diagonaux
-		// TODO
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
 			{
@@ -307,6 +334,11 @@ public class Maillage
 			graphe.setEdgeWeight(edge, DESACTIVE);
 	}
 
+	/**
+	 * Méthode de service pour créer un graphe.
+	 * 
+	 * @return Le graphe à créer en fonctions de variables globales.
+	 */
 	private SimpleWeightedGraph<Noeud, Arc> construireGraphe()
 	{
 		SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
@@ -320,8 +352,10 @@ public class Maillage
 			{
 				// Nouveau noeud avec sa position x,y en pixel
 				noeuds[x][y] = new Noeud( // Calcul des points
-						(x) * LARGEUR_NOEUD + DEMI_NOEUD + xOffset, // Pixels en x
-						(y) * LARGEUR_NOEUD + DEMI_NOEUD + yOffset);// Pixels en y
+						(x) * LARGEUR_NOEUD + DEMI_NOEUD + xOffset, // Pixels en
+						// x
+						(y) * LARGEUR_NOEUD + DEMI_NOEUD + yOffset);// Pixels en
+				// y
 
 				graphe.addVertex(noeuds[x][y]);
 			}
@@ -354,7 +388,6 @@ public class Maillage
 			}
 		}
 
-		
 		/*
 		 * Ajouter les arcs diagonaux descendants.
 		 */
@@ -380,16 +413,31 @@ public class Maillage
 						POIDS_DIAGO); // Poids
 			}
 		}
-		
 
 		return graphe;
 	}
 
+	/**
+	 * Méthode de service pour faire la relation Point -> Noeud.
+	 * 
+	 * @param p
+	 *            Le point à chercher
+	 * @return Le noeud correspondant.
+	 */
 	private Noeud noeudAExact(Point p)
 	{
 		return noeuds[pixelToNoeud(p.x)][pixelToNoeud(p.y)];
 	}
 
+	/**
+	 * Méthode de servive pour faire la relation (x,y) -> Point
+	 * 
+	 * @param x
+	 *            La coordonnée x.
+	 * @param y
+	 *            La coordonnée y.
+	 * @return Le point correspondant.
+	 */
 	private Point pointA(int x, int y)
 	{
 		return new Point( // Calcul du point
@@ -397,11 +445,27 @@ public class Maillage
 				y - (y % LARGEUR_NOEUD) + DEMI_NOEUD); // Coord y
 	}
 
+	/**
+	 * Méthode de service pour faire la relation entre un pixel et un noeud.
+	 * 
+	 * @param n
+	 *            Le pixel
+	 * @return Le noeud correspondant.
+	 */
 	private int pixelToNoeud(int n)
 	{
 		return (n - DEMI_NOEUD) / LARGEUR_NOEUD;
 	}
 
+	/**
+	 * Méthode de service pour tester si le rectangle passé en paramètre est
+	 * dans le champs.
+	 * 
+	 * @param rectangle
+	 *            Le rectangle à tester.
+	 * @throws IllegalArgumentException
+	 *             Levé si le rectangle est hors chamos.
+	 */
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
