@@ -1,6 +1,7 @@
 package models.maillage;
 
 import org.jgrapht.*;
+
 /**
  * Fichier : GenerateurDArcs.java
  * 
@@ -13,7 +14,6 @@ import org.jgrapht.*;
  * @version 5 déc. 2009
  * @since jdk1.6.0_16 
  */
-
 public class GenerateurDArcs implements EdgeFactory<Noeud, Arc>
 {
 
