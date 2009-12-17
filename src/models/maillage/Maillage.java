@@ -28,26 +28,46 @@ import org.jgrapht.graph.*;
  */
 public class Maillage
 {
-	// Pour représenter un poids d'un arc non praticable
+	/**
+	 * Pour représenter un poids d'un arc non praticable
+	 */
 	private final int DESACTIVE;
-	// La largeur en pixel de chaque maille, ou noeud
+	/**
+	 * La largeur en pixel de chaque maille, ou noeud
+	 */
 	private final int LARGEUR_NOEUD;
-	// Le poid d'un arc diagonal
+	/**
+	 * Le poid d'un arc diagonal
+	 */
 	private final int POIDS_DIAGO;
-	// La demi-distance entre un point et un autre
+	/**
+	 * La demi-distance entre un point et un autre
+	 */
 	private final int DEMI_NOEUD;
-	// La largeur en pixel totale du maillage (axe des x)
+	/**
+	 * La largeur en pixel totale du maillage (axe des x)
+	 */
 	private final int LARGEUR_EN_PIXELS;
-	// La hauteur en pixel totale du maillage (axe des y)
+	/**
+	 * La hauteur en pixel totale du maillage (axe des y)
+	 */
 	private final int HAUTEUR_EN_PIXELS;
-	// Les dimensions en maille (ou noeuds) du maillage
+	/**
+	 * Les dimensions en maille (ou noeuds) du maillage
+	 */
 	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
-	// Le graphe
+	/**
+	 * Le graphe
+	 */
 	private SimpleWeightedGraph<Noeud, Arc> graphe;
-	// Le tableau des noeuds : Noeud[x][y]
+	/**
+	 * Le tableau des noeuds : Noeud[x][y]
+	 */
 	private Noeud[][] noeuds;
 
-	// Le decalage de base.
+	/**
+	 * Le decalage de base.
+	 */
 	private int xOffset, yOffset;
 
 	/**
@@ -148,9 +168,17 @@ public class Maillage
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
-				graphe, noeudAExact(pointA(xDepart, yDepart)),
-				noeudAExact(pointA(xArrivee, yArrivee)))).getPath();
+		GraphPath<Noeud, Arc> dijkstraChemin = 
+			(new DijkstraShortestPath<Noeud, Arc>
+			(
+				graphe, 
+				noeudAExact(
+						PointNodal.convert(xDepart, LARGEUR_NOEUD),
+						PointNodal.convert(yDepart, LARGEUR_NOEUD)),
+				noeudAExact(
+						PointNodal.convert(xArrivee, LARGEUR_NOEUD),
+						PointNodal.convert(yArrivee, LARGEUR_NOEUD))
+			)).getPath();
 
 		/*
 		 * S'il n'y a pas de chemin
@@ -350,12 +378,10 @@ public class Maillage
 		{
 			for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
 			{
-				// Nouveau noeud avec sa position x,y en pixel
-				noeuds[x][y] = new Noeud( // Calcul des points
-						(x) * LARGEUR_NOEUD + DEMI_NOEUD + xOffset, // Pixels en
-						// x
-						(y) * LARGEUR_NOEUD + DEMI_NOEUD + yOffset);// Pixels en
-				// y
+				noeuds[x][y] = new Noeud(
+						(x*LARGEUR_NOEUD) + xOffset, 
+						(y*LARGEUR_NOEUD) + yOffset,
+						LARGEUR_NOEUD);
 
 				graphe.addVertex(noeuds[x][y]);
 			}
@@ -368,10 +394,10 @@ public class Maillage
 		{
 			for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
+				graphe.setEdgeWeight(graphe.addEdge(
+						noeuds[x][y], // Source
 						noeuds[x + 1][y]), // Arrivée
 						LARGEUR_NOEUD); // Poids, en fait la distance
-
 			}
 		}
 
@@ -424,25 +450,9 @@ public class Maillage
 	 *            Le point à chercher
 	 * @return Le noeud correspondant.
 	 */
-	private Noeud noeudAExact(Point p)
+	private Noeud noeudAExact(int x, int y)
 	{
-		return noeuds[pixelToNoeud(p.x)][pixelToNoeud(p.y)];
-	}
-
-	/**
-	 * Méthode de servive pour faire la relation (x,y) -> Point
-	 * 
-	 * @param x
-	 *            La coordonnée x.
-	 * @param y
-	 *            La coordonnée y.
-	 * @return Le point correspondant.
-	 */
-	private Point pointA(int x, int y)
-	{
-		return new Point( // Calcul du point
-				x - (x % LARGEUR_NOEUD) + DEMI_NOEUD, // Coord x
-				y - (y % LARGEUR_NOEUD) + DEMI_NOEUD); // Coord y
+		return noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
 	}
 
 	/**
