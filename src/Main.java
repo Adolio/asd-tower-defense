@@ -1,4 +1,7 @@
 import javax.swing.UIManager;
+
+import vues.Fenetre_AjoutScore;
+import vues.Fenetre_MeilleursScores;
 import vues.Fenetre_MenuPrincipal;
 
 /**
@@ -37,7 +40,7 @@ public class Main
 		   * C'est juste le look and feel qui n'est pas installe.
 		   */ 
 	  }
-
+	  
 	  new Fenetre_MenuPrincipal();
    }
 }

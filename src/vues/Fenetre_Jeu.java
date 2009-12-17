@@ -243,7 +243,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 			panelMenuInteraction.miseAJourNbViesRestantes();
 			
 			if(jeu.estPerdu())
-				JOptionPane.showMessageDialog(null,"Perdu.");
+			{
+				new Fenetre_AjoutScore(jeu.getScore(), jeu.getNomTerrain());
+			    JOptionPane.showMessageDialog(null,"Perdu.");
+			}
 		}
 	}
 }

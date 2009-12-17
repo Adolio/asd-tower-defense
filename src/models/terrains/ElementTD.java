@@ -45,7 +45,7 @@ public class ElementTD extends Terrain
      */
     public ElementTD () {
         super(480, 500, 100, 
-              0, 0, 540, 500, IMAGE_DE_FOND, 
+              0, 0, 540, 500, IMAGE_DE_FOND, "ElementTD", 
               new Rectangle(110, 0, 80, 20),
               new Rectangle(230, 0, 80, 20)
         );

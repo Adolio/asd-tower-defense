@@ -90,7 +90,7 @@ public class Jeu
 				
 				// debit des pieces d'or
 				nbPiecesOr -= tour.getPrixAchat();
-				
+			
 				return true;
 			}
 		}
@@ -242,6 +242,8 @@ public class Jeu
 		
 		// gain de pieces d'or
 		nbPiecesOr 	+= creature.getNbPiecesDOr();
+		
+		// augmentation du score
 		score 		+= creature.getNbPiecesDOr();
 	}
 	
@@ -289,4 +291,14 @@ public class Jeu
 	{
 	    return "heig-vd - ASD2 :: Tower Defense "+VERSION;
 	}
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    public String getNomTerrain()
+    {
+        return terrain.getNom();
+    }
 }

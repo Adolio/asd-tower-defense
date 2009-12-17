@@ -7,9 +7,9 @@ import javax.swing.*;
 import models.jeu.Jeu;
 import models.outils.Outils;
 import models.terrains.ElementTD;
-import models.terrains.Objectif;
-import models.terrains.Spirale;
-import models.terrains.TerrainEau;
+import models.terrains.Desert;
+import models.terrains.Spiral;
+import models.terrains.WaterWorld;
 
 /**
  * Fenetre du menu principal du jeu.
@@ -75,9 +75,9 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		// attent que toutes les images soit complementements chargees
 		MediaTracker tracker = new MediaTracker(this);
 		tracker.addImage(ElementTD.IMAGE_MENU, 0);
-		tracker.addImage(Spirale.IMAGE_MENU, 1);
-		tracker.addImage(Objectif.IMAGE_MENU, 2);
-		tracker.addImage(TerrainEau.IMAGE_MENU, 3);
+		tracker.addImage(Spiral.IMAGE_MENU, 1);
+		tracker.addImage(Desert.IMAGE_MENU, 2);
+		tracker.addImage(WaterWorld.IMAGE_MENU, 3);
 		
 		try { 
 			tracker.waitForAll(); 
@@ -92,15 +92,15 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[1] = new JButton(new ImageIcon(
-							Outils.redimentionner(Spirale.IMAGE_MENU,
+							Outils.redimentionner(Spiral.IMAGE_MENU,
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[2] = new JButton(new ImageIcon(
-							Outils.redimentionner(Objectif.IMAGE_MENU,
+							Outils.redimentionner(Desert.IMAGE_MENU,
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 		
 		boutonsTerrains[3] = new JButton(new ImageIcon(
-							Outils.redimentionner(TerrainEau.IMAGE_MENU,
+							Outils.redimentionner(WaterWorld.IMAGE_MENU,
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 
 		// ajout des boutons au panel et ajout des ecouteurs
@@ -145,17 +145,17 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		}
 		else if(source == boutonsTerrains[1])
 		{
-			new Fenetre_Jeu(new Jeu(new Spirale()));
+			new Fenetre_Jeu(new Jeu(new Spiral()));
 			dispose();
 		}
 		else if(source == boutonsTerrains[2])
 		{
-			new Fenetre_Jeu(new Jeu(new Objectif()));
+			new Fenetre_Jeu(new Jeu(new Desert()));
 			dispose();
 		}
 		else if(source == boutonsTerrains[3])
 		{
-			new Fenetre_Jeu(new Jeu(new TerrainEau()));
+			new Fenetre_Jeu(new Jeu(new WaterWorld()));
 			dispose();
 		}
 	}
