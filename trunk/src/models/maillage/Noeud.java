@@ -24,7 +24,7 @@ public class Noeud extends PointNodal
 {
 
 	/**
-	 * Fanion pour savoir si le noeud est actif ou pas. Actif par defaut,
+	 * Fanion pour savoir si le noeud est actif ou pas. Actif par défaut,
 	 * obligatoirement.
 	 */
 	private boolean actif = true;
@@ -34,22 +34,11 @@ public class Noeud extends PointNodal
 	 *            La coordonnée x du centre du noeud, en pixel.
 	 * @param y
 	 *            La coordonnée y du centre du noeud, en pixel.
+	 * @param cote 
 	 */
 	public Noeud(int x, int y, int cote) 
 	{
 		super(x,y,cote);
-		
-	}
-
-	/**
-	 * Constructeur de copie à partir d'un autre noeud.
-	 * 
-	 * @param source
-	 *            Le noeud à copie.
-	 */
-	public Noeud(Noeud source)
-	{
-		this(source.x, source.y, source.LARGEUR_NOEUD);
 	}
 
 	/**
@@ -58,7 +47,7 @@ public class Noeud extends PointNodal
 	@Override
 	public String toString()
 	{
-		return "[" + x + ", " + y + "] Actif : " + actif;
+		return super.toString()+" Actif : " + actif;
 	}
 
 	/**
