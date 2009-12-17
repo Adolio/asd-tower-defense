@@ -28,6 +28,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
+	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
+	private static final ImageIcon I_INACTIF = null;
+	
 	public final static String FENETRE_TITRE = "ASD - Tower Defense";
 	
 	//---------------------------
@@ -137,9 +140,15 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		else if(source == itemAPropos)
 			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
 		else if(source == itemAfficherMaillage)
-			panelTerrain.toggleAfficherMaillage();
+			if(panelTerrain.toggleAfficherMaillage())
+			   itemAfficherMaillage.setIcon(I_ACTIF);
+			else
+			    itemAfficherMaillage.setIcon(I_INACTIF);
 		else if(source == itemAfficherRayonsPortee)
-			panelTerrain.toggleAfficherRayonPortee();
+		    if(panelTerrain.toggleAfficherRayonPortee())
+		        itemAfficherRayonsPortee.setIcon(I_ACTIF);
+		    else
+		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
 	}
 
 	public void acheterTour(Tour tour)

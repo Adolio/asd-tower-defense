@@ -28,7 +28,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 	private static final long serialVersionUID 	= 1L;
 	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
-	private static final String VERSION 		= "heig-vd :: ASD2-09 :: Tower Defense v0.1";
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
 	
@@ -117,7 +116,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		//pBoutonsTerrains.setBackground(Color.DARK_GRAY);
 		getContentPane().add(new JLabel(new ImageIcon("img/tours/towers.png")),BorderLayout.NORTH);
 		getContentPane().add(pBoutonsTerrains,BorderLayout.CENTER);
-		JLabel version = new JLabel(VERSION);
+		JLabel version = new JLabel(Jeu.getVersion());
 		version.setForeground(new Color(200,200,200));
 		getContentPane().add(version,BorderLayout.SOUTH);
 		

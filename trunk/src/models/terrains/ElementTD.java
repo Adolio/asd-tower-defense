@@ -26,7 +26,7 @@ public class ElementTD extends Terrain
     	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
     	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
     	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
-    	new VagueDeCreatures(10, new Nuage(100,6,20),"Creature volantes"),
+    	new VagueDeCreatures(10, new Nuage(100,6,10),"Creature volantes"),
     	new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
         new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
         new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
