@@ -38,4 +38,16 @@ public class Outils
         
         return dst;
     }
+	
+	/**
+	 * Permet d'arrondir une valeur reelle a un certain nombre de decimales
+	 * @param nombre le nombre a arrondir
+	 * @param nbDecimales le nombre de decimales souhaitees
+	 * @return le nombre arrondi a nbDecimal decimales
+	 */
+	public static double arrondir(double nombre, int nbDecimales)
+	{
+	    int mult10 = (int) Math.pow(10,nbDecimales);
+	    return (double) Math.round(nombre * mult10) / mult10;
+	}
 }
