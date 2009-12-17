@@ -1,6 +1,7 @@
 package models.maillage;
 
 import java.util.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -178,15 +179,23 @@ public class Maillage
 		/*
 		 * S'il n'y a pas de chemin
 		 */
+		List<Noeud> liste = Graphs.getPathVertexList(dijkstraChemin);
 		if (dijkstraChemin == null)
 			throw new PathNotFoundException("Le chemin n'existe pas!");
 		if (dijkstraChemin.getWeight() > DESACTIVE)
 		{
-			throw new PathNotFoundException("Le chemin n'existe pas!");
+			// Suppression du
+			ArrayList<Point> retour = new ArrayList<Point>();
+			for(Noeud n : liste){
+				System.out.println(n);
+				if(n.isActif())retour.add(n);
+			}
+			//throw new PathNotFoundException("Le chemin n'existe pas!");
 		}
+	
 
 		// Retourne l'ArrayList des points.
-		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
+		return new ArrayList<Point>(liste);
 	}
 
 	/**
@@ -449,6 +458,7 @@ public class Maillage
 	private Noeud noeudAExact(int x, int y)
 	{
 		Noeud noeud = noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
+		/*
 		if (!noeud.isActif())
 		{
 			for (int i = -1; i <= 1; ++i)
@@ -458,6 +468,7 @@ public class Maillage
 					if(noeud!=null && noeud.isActif()) return noeud;
 				}
 		}
+		*/
 		return noeud;
 	}
 
