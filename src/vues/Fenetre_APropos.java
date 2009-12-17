@@ -1,8 +1,15 @@
 package vues;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import models.jeu.Jeu;
 
 /**
  * Fenetre d'affichage d'information a propos du logiciel.
@@ -20,9 +27,13 @@ public class Fenetre_APropos extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
-	JLabel lAuteurs = new JLabel("ASD Tower Defense v1.0");
-	public final static int FENETRE_LARGEUR = 240;
-	public final static int FENETRE_HAUTEUR = 120;
+	private String[] auteurs = {
+	                            "Lazhar Farjallah",
+	                            "Pierre-Dominique Putallaz",
+	                            "Aurélien Da Campo"
+	                            };
+
+	JPanel pAuteurs = new JPanel(new GridLayout(0,2));
 	
 	/**
 	 * Constructeur de la fenetre.
@@ -30,12 +41,22 @@ public class Fenetre_APropos extends JFrame
 	public Fenetre_APropos()
 	{
 		super("A propos");
-		
-		setBounds(0,0,FENETRE_LARGEUR,FENETRE_HAUTEUR);
 		setResizable(false); // taille fixe
 		
-		getContentPane().add(lAuteurs,BorderLayout.NORTH);
+		pAuteurs.add(new JLabel("Auteurs :"));
+		for(String auteur : auteurs)
+		{
+		    pAuteurs.add(new JLabel(auteur));
+		    pAuteurs.add(new JPanel());
+		}
 		
+		JLabel lversion = new JLabel(Jeu.getVersion());
+		lversion.setFont(new Font("", Font.BOLD, 14));
+		
+		getContentPane().add(lversion,BorderLayout.NORTH);
+		getContentPane().add(pAuteurs,BorderLayout.CENTER);
+		
+		pack();
 		setVisible(true);
 		setLocationRelativeTo(null); // centrage de la fenetre
 	}

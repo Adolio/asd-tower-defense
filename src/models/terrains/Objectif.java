@@ -49,7 +49,7 @@ public class Objectif extends Terrain
 	 */
 	public Objectif()
 	{
-		super(500, 500, 200, 
+		super(500, 500, 10000, 
 			  -10,0,560,500,
 			  IMAGE_DE_FOND, 
 			  new Rectangle(520,40,20,60),
