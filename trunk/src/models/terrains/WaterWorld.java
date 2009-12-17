@@ -17,7 +17,7 @@ import models.creatures.*;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class TerrainEau extends Terrain
+public class WaterWorld extends Terrain
 {
     
 	public static final Image IMAGE_DE_FOND;
@@ -42,9 +42,9 @@ public class TerrainEau extends Terrain
     /**
      * Constructeur d'un terrain TerrainEau.
      */
-    public TerrainEau () {
+    public WaterWorld () {
         super(500, 500, 100, 
-              0, 0, 540, 500, IMAGE_DE_FOND, 
+              0, 0, 540, 500, IMAGE_DE_FOND, "WaterWorld",
               new Rectangle(0, 30, 20, 80),
               new Rectangle(480, 390, 20, 80)
         );

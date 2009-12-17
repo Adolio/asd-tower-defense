@@ -20,63 +20,63 @@ import models.creatures.VagueDeCreatures;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class Objectif extends Terrain
+public class Spiral extends Terrain
 {
-	public final static Image IMAGE_DE_FOND;
-	public final static Image IMAGE_MENU;
-    
+    public final static Image IMAGE_DE_FOND;
+    public final static Image IMAGE_MENU;
     public static final VagueDeCreatures[] vagues = 
     {
-    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
+    	new VagueDeCreatures(100, new Creature1(20,4,200),"Creatures terrestres faibles"),
     	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
     	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
         new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
         new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
         new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
     };
-	
+    
+    
     static
     {
-        IMAGE_MENU = Toolkit.getDefaultToolkit().getImage(
-                                              "img/cartes/menu_principal/objectif.png");
-    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/objectif.png");
+        IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
+                                              "img/cartes/menu_principal/spirale.png");
+    	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/spirale.png");
     }
 	
-    
-    
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
-	public Objectif()
+	public Spiral()
 	{
-		super(500, 500, 10000, 
-			  -10,0,560,500,
-			  IMAGE_DE_FOND, 
-			  new Rectangle(520,40,20,60),
-			  new Rectangle(0,400,20,60));
+		super(480, 500, 100, 
+			  0,0,540,500,IMAGE_DE_FOND, "Spiral",
+			  new Rectangle(500,40,20,80),
+			  new Rectangle(320,280,20,60));
 		
-		// murs entourant le terrain
-		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
-		ajouterMur(new Rectangle(0,0,500,20)); 		// haut
-		ajouterMur(new Rectangle(0,480,500,20)); 	// bas
-		ajouterMur(new Rectangle(480,120,20,380)); 	// droit
-		
-		// murs formant les coins
-		// haut - gauche
-		ajouterMur(new Rectangle(120,120,60,20));
-		ajouterMur(new Rectangle(120,120,20,60));
-		
-		// haut - droite
-		ajouterMur(new Rectangle(320,120,60,20));
-		ajouterMur(new Rectangle(360,120,20,60));
-		
-		// bas - gauche
-		ajouterMur(new Rectangle(120,320,20,60));
-		ajouterMur(new Rectangle(120,360,60,20));
-		
-		// bas - droite
-		ajouterMur(new Rectangle(360,320,20,60));
-		ajouterMur(new Rectangle(320,360,60,20));
+		/* definition des murs du labyrinthe :
+		 
+		 		 1
+		|------------------
+		|
+		|           5
+		|	 |-------------
+		|	 |	   9	  |
+	  2 |	6|  -----|	  |
+		|	 |		 | 8  | 4
+		|    |-------|	  |
+		|		 7		  |
+		|-----------------|
+				3
+		*/
+	
+		ajouterMur(new Rectangle(20,0,460,20)); 	// 1
+		ajouterMur(new Rectangle(0,0,20,500));	 	// 2	
+		ajouterMur(new Rectangle(20,480,440,20)); 	// 3
+		ajouterMur(new Rectangle(460,140,20,360));  // 4
+		ajouterMur(new Rectangle(140,140,340,20));  // 5
+		ajouterMur(new Rectangle(120,140,20,240));	// 6
+		ajouterMur(new Rectangle(140,360,200,20));	// 7
+		ajouterMur(new Rectangle(340,240,20,140));	// 8
+		ajouterMur(new Rectangle(240,240,100,20));	// 9
 	}
 	
     /**

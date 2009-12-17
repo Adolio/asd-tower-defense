@@ -31,7 +31,7 @@ public class Score implements Serializable, Comparable<Score>
    // Le nom du joueur.
    private String nomJoueur;
    // La date à laquelle le score est créé.
-   Date date;
+   private Date date;
    
    /**
     * Ce constructeur permet de créer un objet de type Score en fonction d'un nom de
@@ -58,9 +58,9 @@ public class Score implements Serializable, Comparable<Score>
     */
    public Score (Score score)
    {
-      valeur = score.valeur;
+      valeur    = score.valeur;
       nomJoueur = score.nomJoueur;
-      date = score.date;
+      date      = score.date;
    }
    
    /**
@@ -80,29 +80,17 @@ public class Score implements Serializable, Comparable<Score>
     */
    public String getNomJoueur ()
    {
-      return new String(nomJoueur);
+      return nomJoueur;
    }
    
    /**
-    * Setter pour le champ <tt>valeur</tt>
+    * Getter pour le champ <tt>date</tt>
     * 
-    * @param valeur
-    *        La valeur qu'on veut attribuer au champ <tt>valeur</tt>
+    * @return La valeur du champ <tt>date</tt>
     */
-   public void setValeur (int valeur)
+   public Date getDate()
    {
-      this.valeur = valeur;
-   }
-   
-   /**
-    * Setter pour le champ <tt>nomJoueur</tt>
-    * 
-    * @param nomJoueur
-    *        La valeur qu'on veut attribuer au champ <tt>nomJoueur</tt>
-    */
-   public void setNomJoueur (String nomJoueur)
-   {
-      this.nomJoueur = nomJoueur;
+      return new Date(date.getTime());
    }
    
    /**

@@ -41,7 +41,9 @@ import models.tours.Tour;
  */
 public abstract class Terrain
 {
-	private final int NB_PIECES_OR_INITIAL;
+	private final String NOM;
+
+    private final int NB_PIECES_OR_INITIAL;
 
 	/**
 	 * Les tours sont posees sur le terrain et permettent de tuer les creatures.
@@ -128,6 +130,7 @@ public abstract class Terrain
 					int largeurMaillage,
 					int hauteurMaillage,
 					Image imageDeFond,
+					String nom,
 					Rectangle zoneDepart, 
 					Rectangle zoneArrivee)
 	{
@@ -137,8 +140,8 @@ public abstract class Terrain
 		ZONE_ARRIVEE 			= zoneArrivee;
 		NB_PIECES_OR_INITIAL 	= nbPiecesOrInitial;
 		IMAGE_DE_FOND 			= imageDeFond;
-		
-		maillageTerrestre 	= new Maillage(largeurMaillage, hauteurMaillage, 
+		NOM                     = nom;
+		maillageTerrestre 	    = new Maillage(largeurMaillage, hauteurMaillage, 
 									PRECISION_MAILLAGE,
 									positionMaillageX,positionMaillageY);
 		
@@ -570,4 +573,9 @@ public abstract class Terrain
 	{
 		return indiceVagueCourante+1;
 	}
+
+    public String getNom()
+    {
+        return NOM;
+    }
 }

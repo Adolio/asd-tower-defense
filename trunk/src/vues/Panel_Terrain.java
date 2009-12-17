@@ -292,8 +292,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		{
 			g2.setColor(COULEUR_SELECTION);
 			g2.setStroke(TRAIT_TILLE);
-			g2.drawOval((int) (creatureSelectionnee.getX() - creatureSelectionnee.getWidth() / 2), 
-						(int) (creatureSelectionnee.getY() - creatureSelectionnee.getHeight() / 2),
+			g2.drawOval((int) (creatureSelectionnee.getX()), 
+						(int) (creatureSelectionnee.getY()),
 						(int) creatureSelectionnee.getWidth(),
 						(int) creatureSelectionnee.getHeight());
 		}
@@ -550,19 +550,22 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					return;
 				}
 		
-			
-			for(Creature creature : jeu.getCreatures())
-				if (creature.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
+			// parcours a l'envers car il faut traiter les creatures les plus
+			// devant en premier (les derniers affiches)
+			Creature creature;
+			ArrayList<Creature> creatures = jeu.getCreatures();
+			for(int i = creatures.size()-1; i >= 0 ;i--)
+			{
+			    creature = creatures.get(i);
+			    if (creature.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
 				{	
 					if (creatureSelectionnee == creature)
 						creatureSelectionnee = null; // deselection
 					else
-					{
 						creatureSelectionnee = creature; // la creature est selectionnee
-					}
-					
 					return;
 				}
+			}
 			
 			// aucun tour trouvee => clique dans le vide.
 			tourSelectionnee = null;
