@@ -186,11 +186,11 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			pCaracteristiques.setVisible(true);
 			
 			lDegats.setText(" : "+tour.getDegats());
-			lRayonPortee.setText(" : "+Outils.arrondir(tour.getRayonPortee(),2));
+			lRayonPortee.setText(" : "+String.format(" %.1f", tour.getRayonPortee()));
 			lDescrition.setText(tour.getDescription());
 			lNom.setForeground(tour.getCouleurDeFond());
 			lNom.setText(tour.getNom());
-			lCadenceTir.setText(" : "+Outils.arrondir(tour.getCadenceTir(),2)+" / sec.");
+			lCadenceTir.setText(" : "+String.format(" %.1f", tour.getCadenceTir())+" / sec.");
 			lType.setText(" : "+tour.getTexteType());
 			
 			// tour selectionnee pour information

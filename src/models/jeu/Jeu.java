@@ -28,7 +28,9 @@ import models.tours.Tour;
  */
 public class Jeu
 {
-	/**
+	private static final String VERSION = "v1.0";
+
+    /**
 	 * Score courant du joueur
 	 */
 	private int score;
@@ -281,5 +283,10 @@ public class Jeu
 	public int getNumVagueCourante()
 	{
 		return terrain.getNumVagueCourante();
+	}
+	
+	public static String getVersion()
+	{
+	    return "heig-vd - ASD2 :: Tower Defense "+VERSION;
 	}
 }

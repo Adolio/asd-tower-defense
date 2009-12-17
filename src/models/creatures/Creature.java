@@ -234,15 +234,18 @@ public abstract class Creature extends Rectangle implements Runnable
 		{
 			Point p = chemin.get(indiceCourantChemin);
 			
-			// avance sur le chemin
-			if(x > p.getX()) 	  x--;
-			else if(x < p.getX()) x++;
+			int centreX = (int) getCenterX();
+			int centreY = (int) getCenterY();
 			
-			if(y > p.getY()) 	  y--;
-			else if(y < p.getY()) y++;
+			// avance sur le chemin
+			if(centreX > p.getX()) 	     x--;
+			else if(centreX < p.getX())  x++;
+			
+			if(centreY > p.getY()) 	     y--;
+			else if(centreY < p.getY())  y++;
 			
 			// on a atteint un nouveau noeud du chemin
-			if(x == p.getX() && y == p.getY())
+			if(getCenterX() == p.getX() && getCenterY() == p.getY())
 				indiceCourantChemin++;
 		}
 		

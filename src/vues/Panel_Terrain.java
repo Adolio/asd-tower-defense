@@ -361,17 +361,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    if(creature.getImage() != null)
             // affichage de l'image de la creature au centre de sa position
             g2.drawImage(creature.getImage(),
-                    (int) (creature.getX() - creature.getWidth() / 2), 
-                    (int) (creature.getY() - creature.getHeight() / 2), 
-                    (int) creature.getWidth(), (int) creature.getHeight(), null);
+                    (int) creature.getX(), 
+                    (int) creature.getY(), 
+                    (int) creature.getWidth(), 
+                    (int) creature.getHeight(), null);
         else
         {
             // affichage d'un cercle au centre de la position de la creature
             g2.setColor(COULEUR_CREATURE_SANS_IMAGE);
-            g2.fillOval((int) (creature.getX() - creature.getWidth() / 2), 
-                    (int) (creature.getY() - creature.getHeight() / 2),
-                    (int) creature.getWidth(), 
-                    (int) creature.getHeight());
+            g2.fillOval((int) creature.getX(), 
+                        (int) creature.getY(),
+                        (int) creature.getWidth(), 
+                        (int) creature.getHeight());
         }
 	    
 	    // affichage des barres de sante
@@ -386,10 +387,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	// TODO
 	private void dessinerBarreDeSante(final Creature creature, final Graphics2D g2)
 	{
-	    int largeurBarre   = (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
-        int positionXBarre  = (int)(creature.getX()-creature.getWidth()/2
-                                    - (largeurBarre - creature.getWidth())/2);
-        int positionYBarre  = (int)(creature.getY()+creature.getHeight()/2+2);
+	    int largeurBarre    = (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
+        int positionXBarre  = (int) ( creature.getX() - 
+                              (largeurBarre - creature.getWidth()) / 2);
+        int positionYBarre  = (int)(creature.getY()+creature.getHeight());
         
         // affichage des barres de vie
         g2.setColor(COULEUR_CONTENEUR_SANTE);
@@ -484,15 +485,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	}
 	
 	// TODO comment
-	public void toggleAfficherMaillage()
+	public boolean toggleAfficherMaillage()
 	{
-		afficherMaillage = !afficherMaillage;
+		return afficherMaillage = !afficherMaillage;
 	}
 	
 	// TODO comment
-	public void toggleAfficherRayonPortee()
+	public boolean toggleAfficherRayonPortee()
 	{
-		afficherRayonsDePortee = !afficherRayonsDePortee;
+	    return afficherRayonsDePortee = !afficherRayonsDePortee;
 	}
 	
 	/**

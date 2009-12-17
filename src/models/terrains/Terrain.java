@@ -446,9 +446,12 @@ public abstract class Terrain
 			
 			// les tours n'affecte que le chemin des creatures terriennes
 			if(creature.getType() == Creature.TYPE_TERRIENNE)
-			    creature.setChemin(getCheminLePlusCourt(creature.x, creature.y,
-					(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
-							.getCenterY(),creature.getType()));
+			    creature.setChemin(getCheminLePlusCourt(
+			            (int) creature.getCenterX(),
+			            (int) creature.getCenterY(),
+			            (int) ZONE_ARRIVEE.getCenterX(), 
+			            (int) ZONE_ARRIVEE.getCenterY(),
+			            creature.getType()));
 		}
 	}
 
