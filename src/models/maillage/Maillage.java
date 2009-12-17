@@ -185,8 +185,6 @@ public class Maillage
 		 */
 		if (dijkstraChemin == null)
 			throw new PathNotFoundException("Le chemin n'existe pas!");
-		if (dijkstraChemin.getWeight() >= DESACTIVE)
-			throw new PathNotFoundException("Il n'existe aucun chemin valide.");
 
 		// Retourne l'ArrayList des points.
 		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
@@ -455,8 +453,11 @@ public class Maillage
 	private Noeud noeudAExact(int x, int y)
 	{
 		Noeud noeud = noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
-		if(!noeud.isActif())
+		if(!noeud.isActif()){
 			System.err.println("Erreur, le noeud est inactif.");
+			System.err.println("Entrée : x="+x+" y="+y);
+			System.err.println("Sortie : "+noeud.toString());
+			}
 		return noeud;
 	}
 
