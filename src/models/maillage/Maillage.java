@@ -108,7 +108,7 @@ public class Maillage
 		NOMBRE_NOEUDS_Y = (hauteurPixels / LARGEUR_NOEUD);
 
 		// Calcul du poids maximum pouvant avoir le graphe
-		DESACTIVE = 8 * NOMBRE_NOEUDS_X * NOMBRE_NOEUDS_Y * LARGEUR_NOEUD + 1;
+		DESACTIVE = 16 * NOMBRE_NOEUDS_X * NOMBRE_NOEUDS_Y * LARGEUR_NOEUD + 1;
 
 		// Les offsets du décalage
 		this.xOffset = xOffset;
@@ -168,23 +168,22 @@ public class Maillage
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-		GraphPath<Noeud, Arc> dijkstraChemin = 
-			(new DijkstraShortestPath<Noeud, Arc>
-			(
-				graphe, 
-				noeudAExact(
-						PointNodal.convert(xDepart, LARGEUR_NOEUD),
+		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
+				graphe, noeudAExact(PointNodal.convert(xDepart, LARGEUR_NOEUD),
 						PointNodal.convert(yDepart, LARGEUR_NOEUD)),
-				noeudAExact(
-						PointNodal.convert(xArrivee, LARGEUR_NOEUD),
-						PointNodal.convert(yArrivee, LARGEUR_NOEUD))
-			)).getPath();
+				noeudAExact(PointNodal.convert(xArrivee, LARGEUR_NOEUD),
+						PointNodal.convert(yArrivee, LARGEUR_NOEUD))))
+				.getPath();
 
 		/*
 		 * S'il n'y a pas de chemin
 		 */
 		if (dijkstraChemin == null)
 			throw new PathNotFoundException("Le chemin n'existe pas!");
+		if (dijkstraChemin.getWeight() > DESACTIVE)
+		{
+			throw new PathNotFoundException("Le chemin n'existe pas!");
+		}
 
 		// Retourne l'ArrayList des points.
 		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
@@ -376,10 +375,8 @@ public class Maillage
 		{
 			for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
 			{
-				noeuds[x][y] = new Noeud(
-						(x*LARGEUR_NOEUD) + xOffset, 
-						(y*LARGEUR_NOEUD) + yOffset,
-						LARGEUR_NOEUD);
+				noeuds[x][y] = new Noeud((x * LARGEUR_NOEUD) + xOffset,
+						(y * LARGEUR_NOEUD) + yOffset, LARGEUR_NOEUD);
 
 				graphe.addVertex(noeuds[x][y]);
 			}
@@ -392,8 +389,7 @@ public class Maillage
 		{
 			for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
 			{
-				graphe.setEdgeWeight(graphe.addEdge(
-						noeuds[x][y], // Source
+				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
 						noeuds[x + 1][y]), // Arrivée
 						LARGEUR_NOEUD); // Poids, en fait la distance
 			}
@@ -453,11 +449,15 @@ public class Maillage
 	private Noeud noeudAExact(int x, int y)
 	{
 		Noeud noeud = noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
-		if(!noeud.isActif()){
-			System.err.println("Erreur, le noeud est inactif.");
-			System.err.println("Entrée : x="+x+" y="+y);
-			System.err.println("Sortie : "+noeud.toString());
-			}
+		if (!noeud.isActif())
+		{
+			for (int i = -1; i <= 1; ++i)
+				for (int j = -i; j <= 1; ++j)
+				{
+					noeud = noeuds[pixelToNoeud(x)+i][pixelToNoeud(y)+j];
+					if(noeud!=null && noeud.isActif()) return noeud;
+				}
+		}
 		return noeud;
 	}
 
