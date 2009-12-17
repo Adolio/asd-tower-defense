@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import models.creatures.Creature;
+import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour de feu.
@@ -75,7 +76,10 @@ public class TourArcher extends Tour
 
 	public void tirer(Creature creature)
 	{
-		// TODO
+	    Musique m = new Musique("snd/arc.mp3");
+	    m.lire(1);
+	    
+	    // TODO
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 		creature.blesser(degats);
 	}

@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import models.creatures.Creature;
+import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour de glace.
@@ -66,6 +67,8 @@ public class TourCanon extends Tour
 	public void tirer(Creature creature)
 	{
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
+	    Musique m = new Musique("snd/canon.mp3");
+        m.lire(1);
 	    
 	    // seulement les terriennes
 	    creature.blesser(degats);
