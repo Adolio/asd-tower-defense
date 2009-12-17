@@ -454,7 +454,10 @@ public class Maillage
 	 */
 	private Noeud noeudAExact(int x, int y)
 	{
-		return noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
+		Noeud noeud = noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
+		if(!noeud.isActif())
+			System.err.println("Erreur, le noeud est inactif.");
+		return noeud;
 	}
 
 	/**
