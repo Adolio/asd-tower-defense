@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import models.outils.Outils;
 import models.tours.Tour;
 
 /**
@@ -51,11 +52,11 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JLabel lRayonPortee 			= new JLabel();
 	private JLabel lPrix 			= new JLabel();
 	private JLabel lTitrePrix 		= new JLabel();
-	private JLabel lTempsPrepTir	= new JLabel();
+	private JLabel lCadenceTir	= new JLabel();
 	private JTextArea lDescrition 	= new JTextArea();
 	private JPanel pBoutons 		= new JPanel(new FlowLayout());
 	private JPanel pCaracteristiques= new JPanel(new GridBagLayout());
-	
+	private JLabel lType            = new JLabel();
 	
 	
 	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/hammer.png");
@@ -107,11 +108,16 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		lRayonPortee.setFont(f);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp++, 1);
 		
-		// champ temps de preparation d'un tir
+		// champ cadence de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Cadence de tir"), 0, nbChamp, 1);
-		lTempsPrepTir.setFont(f);
-		ajouterChamp(pCaracteristiques, lTempsPrepTir, 1, nbChamp++, 1);
-		
+		lCadenceTir.setFont(f);
+		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp++, 1);
+
+		// champ type de tir
+		ajouterChamp(pCaracteristiques, new JLabel("Type de tir"), 0, nbChamp, 1);
+		lType.setFont(f);
+        ajouterChamp(pCaracteristiques, lType, 1, nbChamp++, 1);
+
 		// champ description
 		lDescrition.setPreferredSize(new Dimension(250,100));
 		lDescrition.setEditable(false);
@@ -180,14 +186,12 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			pCaracteristiques.setVisible(true);
 			
 			lDegats.setText(" : "+tour.getDegats());
-			lRayonPortee.setText(" : "+tour.getRayonPortee());
+			lRayonPortee.setText(" : "+Outils.arrondir(tour.getRayonPortee(),2));
 			lDescrition.setText(tour.getDescription());
 			lNom.setForeground(tour.getCouleurDeFond());
 			lNom.setText(tour.getNom());
-			
-			double cadence = (double) Math.round(tour.getCadenceTir() * 100) / 100;
-			
-			lTempsPrepTir.setText(" : "+cadence+" / sec.");
+			lCadenceTir.setText(" : "+Outils.arrondir(tour.getCadenceTir(),2)+" / sec.");
+			lType.setText(" : "+tour.getTexteType());
 			
 			// tour selectionnee pour information
 			if(mode == 0)

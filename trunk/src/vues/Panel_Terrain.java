@@ -53,6 +53,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final float ALPHA_SURFACE_PORTEE   = .3f;
 	private static final float ALPHA_MAILLAGE   	  = .4f;
 	private static final float ALPHA_SURFACE_ZONE_DA  = .5f;
+	private static final float ALPHA_TOUR_A_AJOUTER   = .7f;
 	
 	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
 	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
@@ -176,6 +177,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		Graphics2D g2 = (Graphics2D) g;
 		
+		// TODO
 		// comment faire une rotation ?
         //AffineTransform tx = new AffineTransform();
         //double radians = -Math.PI/4;
@@ -195,36 +197,30 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		}
 			
-		
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
 		if(afficherMaillage)
 		{
-			// affichage des surfaces
+			// modification de la transparence
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_SURFACE_ZONE_DA));
 			
+			// dessin de la zone de depart
 			g2.setColor(COULEUR_ZONE_DEPART);
-			Rectangle zoneDepart = jeu.getZoneDepart();
-			g2.fillRect((int)zoneDepart.getX(), 
-						(int) zoneDepart.getY(), 
-						(int)zoneDepart.getWidth(), 
-						(int)zoneDepart.getHeight());
+			dessinerZone(jeu.getZoneDepart(),g2);
 			
+			// dessin de la zone d'arrivee
 			g2.setColor(COULEUR_ZONE_ARRIVEE);
-			Rectangle zoneArrivee = jeu.getZoneArrivee();
-			g2.fillRect((int) zoneArrivee.getX(), 
-						(int) zoneArrivee.getY(), 
-						(int)zoneArrivee.getWidth(), 
-						(int)zoneArrivee.getHeight());
+			dessinerZone(jeu.getZoneArrivee(),g2);
 		}
 		
-		//-------------------------------------
-		//-- Affichage du grillage du graphe --
-		//-------------------------------------
+		//------------------------------------
+		//-- Affichage du maillage (graphe) --
+		//------------------------------------
 		if(afficherMaillage)
 		{	
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_MAILLAGE));
+		    // modification de la transparence
+		    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_MAILLAGE));
 			
 			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
 			
@@ -235,6 +231,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
 							(int)arc.getX2(),(int)arc.getY2());
 				}
+			
 			/*
 			ArrayList<Noeud> noeuds = jeu.getNoeuds();
 			
@@ -250,79 +247,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			}
 			*/
 			
-			// remet la valeur initiale
+			// reinitialisation de la transparence
 	        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
 		
-		//-----------------------------
-		//-- affichage des creatures --
-		//-----------------------------
-		
-		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
-		Creature creature;
-		while(iCreatures.hasNext())
-		{
-			creature = iCreatures.next();
-		
-			if(creature.getImage() != null)
-				// affichage de l'image de la creature au centre de sa position
-				g2.drawImage(creature.getImage(),
-						(int) (creature.getX() - creature.getWidth() / 2), 
-						(int) (creature.getY() - creature.getHeight() / 2), 
-						(int) creature.getWidth(), (int) creature.getHeight(), null);
-			else
-			{
-				// affichage d'un cercle au centre de la position de la creature
-				g2.setColor(COULEUR_CREATURE_SANS_IMAGE);
-				g2.fillOval((int) (creature.getX() - creature.getWidth() / 2), 
-						(int) (creature.getY() - creature.getHeight() / 2),
-						(int) creature.getWidth(), 
-						(int) creature.getHeight());
-			}
-			
-			//-----------------------------------
-			//-- affichage des barres de sante --
-			//-----------------------------------
-			int largeurBarre 	= (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
-			int positionXBarre 	= (int)(creature.getX()-creature.getWidth()/2
-										- (largeurBarre - creature.getWidth())/2);
-			int positionYBarre 	= (int)(creature.getY()+creature.getHeight()/2+2);
-			
-			// affichage des barres de vie
-			g2.setColor(COULEUR_CONTENEUR_SANTE);
-			g2.fillRect(positionXBarre,positionYBarre, 
-						largeurBarre, HAUTEUR_BARRE_VIE);
-			
-			g2.setColor(COULEUR_SANTE);
-			g2.fillRect(positionXBarre+1, positionYBarre+1, 
-					(int)(creature.getSante()*largeurBarre/creature.getSanteMax())-2,
-					HAUTEUR_BARRE_VIE-2);
-			
-			// affichage du chemin des creatures
-			if(afficherMaillage)
-			{
-				ArrayList<Point> chemin = creature.getChemin();
-				if(chemin != null && chemin.size() > 0)
-				{
-					Point PointPrecedent = chemin.get(0);
-					
-					synchronized(chemin)
-					{
-						Iterator<Point> it = chemin.iterator();
-						Point point;
-						while(it.hasNext())
-						{
-							point = it.next();
-							
-							g2.setColor(COULEUR_CHEMIN);
-							g2.drawLine(PointPrecedent.x, PointPrecedent.y, 
-										point.x, point.y);
-							PointPrecedent = point;
-						}
-					}
-				}
-			}
-		}
+		//----------------------------------------
+		//-- affichage des creatures terrestres --
+		//----------------------------------------
+		for(Creature creature : jeu.getCreatures())
+		    if(creature.getType() == Creature.TYPE_TERRIENNE)
+		        dessinerCreature(creature,g2);
 		
 		//-------------------------
 		//-- affichage des tours --
@@ -330,6 +264,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		for(Tour tour : jeu.getTours())
 			dessinerTour(tour,g2,false);
 		
+	    //--------------------------------------
+        //-- affichage des creatures aerienne --
+        //--------------------------------------
+        for(Creature creature : jeu.getCreatures())
+            if(creature.getType() == Creature.TYPE_AERIENNE)
+                dessinerCreature(creature,g2);
 		
 		//---------------------------------
 		//-- entour la tour selectionnee --
@@ -358,14 +298,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						(int) creatureSelectionnee.getHeight());
 		}
 		
-		
 		//------------------------------------
 		//-- affichage des rayons de portee --
 		//------------------------------------
 		if(afficherRayonsDePortee)
 			for(Tour tour : jeu.getTours())
 				dessinerPortee(tour,g2);
-		
 		
 		//------------------------------
 		//-- affichage des animations --
@@ -379,7 +317,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------------
 		if(tourAAjouter != null && sourisSurTerrain)
 		{
-			// dessin de la tour
+		    // modification de la transparence
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
+                                                        ALPHA_TOUR_A_AJOUTER));
+    
+		    // dessin de la tour
 			dessinerTour(tourAAjouter,g2,false);
 			
 			// positionnnable ou non
@@ -404,6 +346,88 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		}
 	}
 	
+	private void dessinerZone(final Rectangle zone, final Graphics2D g2)
+    {
+        g2.fillRect((int) zone.getX(), 
+                    (int) zone.getY(), 
+                    (int) zone.getWidth(), 
+                    (int) zone.getHeight());
+    }
+	
+	
+	// TODO
+	private void dessinerCreature(final Creature creature, final Graphics2D g2)
+	{
+	    if(creature.getImage() != null)
+            // affichage de l'image de la creature au centre de sa position
+            g2.drawImage(creature.getImage(),
+                    (int) (creature.getX() - creature.getWidth() / 2), 
+                    (int) (creature.getY() - creature.getHeight() / 2), 
+                    (int) creature.getWidth(), (int) creature.getHeight(), null);
+        else
+        {
+            // affichage d'un cercle au centre de la position de la creature
+            g2.setColor(COULEUR_CREATURE_SANS_IMAGE);
+            g2.fillOval((int) (creature.getX() - creature.getWidth() / 2), 
+                    (int) (creature.getY() - creature.getHeight() / 2),
+                    (int) creature.getWidth(), 
+                    (int) creature.getHeight());
+        }
+	    
+	    // affichage des barres de sante
+        dessinerBarreDeSante(creature,g2);
+        
+        // affichage du chemin des creatures
+        if(afficherMaillage)
+            dessinerCheminCreature(creature,g2);
+	}
+	
+	
+	// TODO
+	private void dessinerBarreDeSante(final Creature creature, final Graphics2D g2)
+	{
+	    int largeurBarre   = (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
+        int positionXBarre  = (int)(creature.getX()-creature.getWidth()/2
+                                    - (largeurBarre - creature.getWidth())/2);
+        int positionYBarre  = (int)(creature.getY()+creature.getHeight()/2+2);
+        
+        // affichage des barres de vie
+        g2.setColor(COULEUR_CONTENEUR_SANTE);
+        g2.fillRect(positionXBarre,positionYBarre, 
+                    largeurBarre, HAUTEUR_BARRE_VIE);
+        
+        g2.setColor(COULEUR_SANTE);
+        g2.fillRect(positionXBarre+1, positionYBarre+1, 
+                (int)(creature.getSante()*largeurBarre/creature.getSanteMax())-2,
+                HAUTEUR_BARRE_VIE-2);
+	}
+	
+	// TODO
+    private void dessinerCheminCreature(final Creature creature, final Graphics2D g2)
+    {
+    	ArrayList<Point> chemin = creature.getChemin();
+        if(chemin != null && chemin.size() > 0)
+        {
+            Point PointPrecedent = chemin.get(0);
+            
+            synchronized(chemin)
+            {
+                Iterator<Point> it = chemin.iterator();
+                Point point;
+                while(it.hasNext())
+                {
+                    point = it.next();
+                    
+                    g2.setColor(COULEUR_CHEMIN);
+                    g2.drawLine(PointPrecedent.x, PointPrecedent.y, 
+                                point.x, point.y);
+                    PointPrecedent = point;
+                }
+            }
+        }
+    }
+	
+	// TODO
 	private void dessinerTour(final Tour tour,
 							  final Graphics2D g2,
 							  final boolean avecPortee)

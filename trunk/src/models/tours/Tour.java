@@ -417,4 +417,14 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return degats;
 	}
+
+    public String getTexteType()
+    {
+        if(type == TYPE_TERRESTRE_ET_AIR)
+            return "Terrestre + air";
+        else if(type == TYPE_TERRESTRE)
+            return "Terrestre seulement";
+        else
+            return "Air seulement";
+    }
 }
