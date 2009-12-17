@@ -446,6 +446,8 @@ public class Maillage
 	/**
 	 * Méthode de service pour faire la relation Point -> Noeud.
 	 * 
+	 * Retourne le noeud actif le plus proche de la position x,y.
+	 * 
 	 * @param p
 	 *            Le point à chercher
 	 * @return Le noeud correspondant.
