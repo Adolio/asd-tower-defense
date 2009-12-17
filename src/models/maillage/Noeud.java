@@ -20,29 +20,25 @@ import java.awt.Point;
  * @version 30 nov. 2009
  * @since jdk1.6.0_16
  */
-public class Noeud extends Point
+public class Noeud extends PointNodal
 {
 
-	// Fanion pour savoir si le noeud est actif ou pas.
-	// Actif par defaut, obligatoirement.
+	/**
+	 * Fanion pour savoir si le noeud est actif ou pas. Actif par defaut,
+	 * obligatoirement.
+	 */
 	private boolean actif = true;
-
+	
 	/**
 	 * @param x
 	 *            La coordonnée x du centre du noeud, en pixel.
 	 * @param y
 	 *            La coordonnée y du centre du noeud, en pixel.
-	 * @throws IllegalArgumentException
-	 *             Levé si les arguments ne sont pas valides (plus petit que
-	 *             zéro).
 	 */
-	public Noeud(int x, int y) throws IllegalArgumentException
+	public Noeud(int x, int y, int cote) 
 	{
-		// Vérification des paramètres
-		verifierCoordonnees(x, y);
-		// Assignation aux membres de la classe parente.
-		this.x = x;
-		this.y = y;
+		super(x,y,cote);
+		
 	}
 
 	/**
@@ -53,7 +49,7 @@ public class Noeud extends Point
 	 */
 	public Noeud(Noeud source)
 	{
-		this(source.x, source.y);
+		this(source.x, source.y, source.LARGEUR_NOEUD);
 	}
 
 	/**
@@ -85,26 +81,4 @@ public class Noeud extends Point
 	{
 		return actif;
 	}
-
-	/**
-	 * Méthode de service pour tester si les coordonnées passées sont valides.
-	 * 
-	 * @param x
-	 *            La coordonnée x.
-	 * @param y
-	 *            La coordonnée y.
-	 * @throws IllegalArgumentException
-	 *             Levé si y ou x sont plus petits que zéro.
-	 */
-	private static void verifierCoordonnees(int x, int y)
-			throws IllegalArgumentException
-	{
-		if (x < 0)
-			throw new IllegalArgumentException("La coordonnée x est négative!");
-
-		if (y < 0)
-			throw new IllegalArgumentException("La coordonnée y est négative!");
-
-	}
-
 }
