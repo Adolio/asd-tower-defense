@@ -526,7 +526,10 @@ public abstract class Terrain
 		// aucun chemin ne reli les deux points
 		catch (PathNotFoundException e)
 		{
-			return null;
+			System.err.println("J'AI PAS DE CHEMIN");
+		    
+		    return null;
+			
 		}
 	}
 
