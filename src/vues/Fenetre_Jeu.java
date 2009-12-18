@@ -203,7 +203,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	
 	public void lancerVagueSuivante()
 	{
-		jeu.lancerVagueSuivante(this);
+	    jeu.lancerVagueSuivante(this);
+	    
+	    panelMenuInteraction.miseAJourInfoVagueSuivante();
 	}
 
 	/**

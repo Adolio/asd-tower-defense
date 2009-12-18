@@ -301,4 +301,9 @@ public class Jeu
     {
         return terrain.getNom();
     }
+
+    public String getDescriptionVagueCourante()
+    {
+        return terrain.getDescriptionVagueCourante();
+    }
 }
