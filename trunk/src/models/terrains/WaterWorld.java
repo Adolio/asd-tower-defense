@@ -79,6 +79,6 @@ public class WaterWorld extends Terrain
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante),"autogen");
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante));
 	}
 }

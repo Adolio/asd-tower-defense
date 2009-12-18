@@ -328,10 +328,24 @@ public abstract class Creature extends Rectangle implements Runnable
 
 	/**
 	 * Permet d'ajouter un ecouteur de la creature
+	 * 
 	 * @param edc une classe implémentant EcouteurDeCreature
 	 */
 	public void ajouterEcouteurDeCreature(EcouteurDeCreature edc)
 	{
 		ecouteursDeCreature.add(edc);
 	}
+
+	/**
+	 * Permet de recuperer le type de la creature sous forme textuelle
+	 * 
+	 * @return le type de la creature sous forme textuelle
+	 */
+    public String getNomType()
+    {
+        if(type == TYPE_TERRIENNE)
+            return "Terrienne";
+        else
+            return "Aerienne";
+    }
 }

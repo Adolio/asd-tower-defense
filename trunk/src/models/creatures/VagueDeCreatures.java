@@ -20,6 +20,7 @@ public class VagueDeCreatures
 	 * Constructeur de la vague de creatures
 	 * @param nbCreatures le nombre de copie de la creature a envoyer
 	 * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
+	 * @param description de la vague
 	 */
 	public VagueDeCreatures(int nbCreatures, 
 							Creature creatureAEnvoyer, 
@@ -29,6 +30,18 @@ public class VagueDeCreatures
 		this.creatureAEnvoyer 	= creatureAEnvoyer;
 		this.description		= description;
 	}
+	
+	/**
+     * Constructeur de la vague de creatures
+     * @param nbCreatures le nombre de copie de la creature a envoyer
+     * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
+     */
+    public VagueDeCreatures(int nbCreatures, 
+                            Creature creatureAEnvoyer)
+    {
+        this(nbCreatures,creatureAEnvoyer,"");
+    }
+	
 	
 	/**
 	 * Permet de recuperer le nombre de creatures dans la vague
@@ -56,4 +69,16 @@ public class VagueDeCreatures
 	{
 		return description;
 	}
+	
+	/**
+     * Permet de recuperer une synthese generee des proprietes de la vague
+     * @return la description de la vague.
+     */
+    public String toString()
+    {
+        return NB_CREATURES+" Creature(s) "+creatureAEnvoyer.getNomType().toLowerCase()+"(s) [ " +
+        		"sante : "+creatureAEnvoyer.getSanteMax()+", "+
+        		"\n                                          gain   : "+creatureAEnvoyer.getNbPiecesDOr()+", "+
+        		"\n                                          vit     : "+creatureAEnvoyer.getVitesse()+" ]";
+    } 
 }

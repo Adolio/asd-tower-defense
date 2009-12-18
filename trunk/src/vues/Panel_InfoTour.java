@@ -8,10 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,8 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
-import models.outils.Outils;
 import models.tours.Tour;
 
 /**
@@ -147,7 +143,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		//add(lNom,BorderLayout.NORTH);
 		add(pConteneurCaract,BorderLayout.NORTH);
-		add(pBoutons,BorderLayout.SOUTH);
+		add(pBoutons,BorderLayout.CENTER);
 	
 		// initialisation a vide
 		effacerTour();

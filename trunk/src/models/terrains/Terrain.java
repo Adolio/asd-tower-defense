@@ -108,7 +108,7 @@ public abstract class Terrain
 	 * le jeu est considere comme termine.
 	 */
 	protected int indiceVagueCourante;
-	private ArrayList<VagueDeCreatures> vagues;
+	
 	/**
 	 * Constructeur du terrain.
 	 * 
@@ -151,7 +151,6 @@ public abstract class Terrain
 		
 		tours 		= new ArrayList<Tour>();
 		creatures 	= new ArrayList<Creature>();
-		vagues 		= new ArrayList<VagueDeCreatures>();
 	}
 
 	abstract VagueDeCreatures getVagueSuivante();
@@ -271,12 +270,6 @@ public abstract class Terrain
 	{
 		if (creature != null)
 			creatures.remove(creature);
-	}
-	
-	
-	protected void ajouterVague(VagueDeCreatures vagueDeCreatures)
-	{
-		vagues.add(vagueDeCreatures);
 	}
 
 	// ----------------------------------------------------------
@@ -577,5 +570,16 @@ public abstract class Terrain
     public String getNom()
     {
         return NOM;
+    }
+
+    // TODO
+    public String getDescriptionVagueCourante()
+    {
+        //String descriptionVague = getVagueSuivante().getDescription();
+        
+        //if(!descriptionVague.isEmpty())
+        //    return descriptionVague;
+        //else
+            return getVagueSuivante().toString();
     }
 }

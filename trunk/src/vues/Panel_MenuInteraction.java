@@ -2,12 +2,15 @@ package vues;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import models.jeu.Jeu;
 import models.tours.Tour;
 import models.tours.TourAntiAerienne;
@@ -47,7 +50,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JLabel lNbPiecesOr 				= new JLabel();
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
 	private static final String TXT_VAGUE_SUIVANTE	= "Vague suivante";
-	private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
+	private JButton bLancerVagueSuivante   = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
+	private JTextArea taDescriptionVagueSuivante = new JTextArea();;
 	
 	private Fenetre_Jeu fenJeu;
 	private Jeu jeu;
@@ -89,9 +93,26 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		panelInfoTour = new Panel_InfoTour(fenJeu);
 		fenJeu.setPanelInfoTour(panelInfoTour);
 		
+		JPanel pVagueSuivante = new JPanel(new BorderLayout());
+		
+		miseAJourInfoVagueSuivante();
+		
+		pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
+		
+		
+		// style du champ de description de la vague suivante
+		taDescriptionVagueSuivante.setFont(new Font("",Font.TRUETYPE_FONT,10));
+		taDescriptionVagueSuivante.setPreferredSize(new Dimension(250,50));
+		taDescriptionVagueSuivante.setEditable(false);
+		taDescriptionVagueSuivante.setLineWrap(true);
+		taDescriptionVagueSuivante.setWrapStyleWord(true);
+		taDescriptionVagueSuivante.setBackground(new Color(200,200,200));
+		pVagueSuivante.add(taDescriptionVagueSuivante,BorderLayout.NORTH);
+		
+		
 		add(pTours,BorderLayout.NORTH);
 		add(panelInfoTour,BorderLayout.CENTER);
-		add(bLancerVagueSuivante,BorderLayout.SOUTH);
+		add(pVagueSuivante,BorderLayout.SOUTH);
 		bLancerVagueSuivante.addActionListener(this);
 	}
 	
@@ -117,10 +138,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		else if(source == bTourAntiAerienne)
 			fenJeu.setTourAAcheter(new TourAntiAerienne());
 		else if(source == bLancerVagueSuivante)
-		{
 			fenJeu.lancerVagueSuivante();
-			bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
-		}
 	}
 
 	public void setNbPiecesOr(int nbPiecesOr)
@@ -149,4 +167,10 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	{
 		lVies.setText(jeu.getNbViesRestantes()+"");
 	}
+
+    public void miseAJourInfoVagueSuivante()
+    {
+        taDescriptionVagueSuivante.setText(jeu.getDescriptionVagueCourante());
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
+    }
 }

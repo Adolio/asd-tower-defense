@@ -662,6 +662,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
 				fenJeu.ameliorerTour(tourSelectionnee);
 		}
+		// raccourci lancer vague suivante
+        else if(Character.isSpaceChar(ke.getKeyChar()))
+            fenJeu.lancerVagueSuivante();
 	}
 	public void keyPressed(KeyEvent ke){}
 	public void keyTyped(KeyEvent ke){}

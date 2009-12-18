@@ -1,7 +1,4 @@
 import javax.swing.UIManager;
-
-import vues.Fenetre_AjoutScore;
-import vues.Fenetre_MeilleursScores;
 import vues.Fenetre_MenuPrincipal;
 
 /**
