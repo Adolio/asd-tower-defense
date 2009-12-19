@@ -32,7 +32,9 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public static final int TYPE_TERRIENNE 	= 0;
 	public static final int TYPE_AERIENNE 	= 1;
-	private int type;
+
+    private final String NOM;
+	private final int TYPE;
 	
 	/**
 	 * chemin actuel de la creature
@@ -92,7 +94,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
 					int santeMax, int nbPiecesDOr, double vitesse, 
-					int type, Image image)
+					int type, Image image, String nom)
 	{
 		super(x,y,largeur,hauteur);
 		
@@ -102,7 +104,8 @@ public abstract class Creature extends Rectangle implements Runnable
 		this.vitesse		= vitesse;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 		this.image 			= image;
-		this.type           = type;
+		TYPE                = type;
+		NOM                 = nom;
 	}
 
 	/**
@@ -132,7 +135,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public int getType()
 	{
-		return type;
+		return TYPE;
 	}
 	
 	/**
@@ -343,9 +346,15 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
     public String getNomType()
     {
-        if(type == TYPE_TERRIENNE)
+        if(TYPE == TYPE_TERRIENNE)
             return "Terrienne";
         else
             return "Aerienne";
+    }
+
+    // TODO
+    public String getNom()
+    {
+        return NOM;
     }
 }

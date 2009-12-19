@@ -8,7 +8,9 @@ import javax.swing.border.EmptyBorder;
 import models.outils.MeilleursScores;
 
 /**
- * Fenetre qui permet d'ajouter un score au fichier des meilleurs scores.
+ * Fenetre qui informe le joueur que la partie est terminee (il a perdu).
+ * 
+ * Permet aussi d'ajouter un score au fichier des meilleurs scores.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
@@ -17,45 +19,61 @@ import models.outils.MeilleursScores;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class Fenetre_AjoutScore extends JFrame implements ActionListener
+public class Fenetre_PartieTerminee extends JDialog implements ActionListener
 {
-    private static final long serialVersionUID = 1L;
+    // constantes statiques
+    private static final long serialVersionUID      = 1L;
+    private static final Dimension TAILLE_FENETRE   = new Dimension(300,170);
+    private static final String TITRE_FORM          = "Partie terminée !";
+    private static final Font POLICE_TITRE          = new Font("",Font.BOLD,14);
+    
+    // membrea graphiques
     private JButton bOk             = new JButton("OK");
     private JTextField tfNomJoueur  = new JTextField();
-    private int score;
     private JPanel pFormulaire;
     private String nomFichier;
     private String nomTerrain;
+    
+    // autres membres
+    private int score;
     
     /**
      * Constructeur de la fenetre
      * @param score le score a ajouter
      */
-    public Fenetre_AjoutScore(int score, String nomTerrain)
+    public Fenetre_PartieTerminee(Frame fenParent,int score, String nomTerrain)
     {
         // preferences de la fenetre
-        super("Score");
+        super(fenParent,"Partie Terminée.",true);
         setLayout(new BorderLayout());
+        setPreferredSize(TAILLE_FENETRE);
+        setResizable(false);
         
         // init attributs membres
         this.score      = score;
         this.nomTerrain = nomTerrain;
         this.nomFichier = "donnees/"+nomTerrain+".ms";
         
-        
         // constructeur du formulaire
         pFormulaire = new JPanel(new GridLayout(0,2));
         pFormulaire.setBorder(new EmptyBorder(20,20,20,20));
-        pFormulaire.add(new JLabel("Nom du joueur : "));
+        
+        pFormulaire.add(new JLabel("Score obtenu : "));
+        pFormulaire.add(new JLabel(score+""));
+        
+        pFormulaire.add(new JLabel("Votre nom : "));
         pFormulaire.add(tfNomJoueur);
         pFormulaire.add(new JPanel());
         pFormulaire.add(bOk);
         bOk.addActionListener(this);
         
-        JLabel lTitreForm = new JLabel("Ajoutez votre score");
-        lTitreForm.setFont(new Font("",Font.BOLD,14));
-        getContentPane().add(lTitreForm,BorderLayout.NORTH);
-        getContentPane().add(pFormulaire,BorderLayout.CENTER);
+        JPanel conteneurTitre = new JPanel(new FlowLayout());
+        JLabel lTitreForm = new JLabel(TITRE_FORM);
+        lTitreForm.setFont(POLICE_TITRE);
+        conteneurTitre.add(lTitreForm);
+        
+        getContentPane().add(conteneurTitre,BorderLayout.NORTH);
+        getContentPane().add(pFormulaire,BorderLayout.SOUTH);
         
         // derniers parametres de la fenetre
         pack();

@@ -46,7 +46,7 @@ public class Creature1 extends Creature
 	public Creature1(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
-		        Creature.TYPE_TERRIENNE, IMAGE);
+		        Creature.TYPE_TERRIENNE, IMAGE, "Smiley");
 	}
 
 	/**

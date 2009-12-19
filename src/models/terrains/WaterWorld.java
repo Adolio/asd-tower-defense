@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import models.creatures.*;
+import models.outils.Musique;
 
 /**
  * Classe de gestion du terrain TerrainEau.
@@ -22,6 +23,8 @@ public class WaterWorld extends Terrain
     
 	public static final Image IMAGE_DE_FOND;
 	public static final Image IMAGE_MENU;
+	public final static Musique MUSIQUE_DE_FOND;
+	
     public static final VagueDeCreatures[] vagues = 
     {
     	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
@@ -34,6 +37,8 @@ public class WaterWorld extends Terrain
 	
     static
     {
+        MUSIQUE_DE_FOND = new Musique("snd/blizzard/Human_II_(High Seas).mp3");
+        
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/water.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/water.png");
@@ -49,6 +54,9 @@ public class WaterWorld extends Terrain
               new Rectangle(480, 390, 20, 80)
         );
     
+        setMusiqueDeFond(MUSIQUE_DE_FOND);
+        demarrerMusiqueDeFond();
+        
         /*
          * Définition des murs du terrain.
          */

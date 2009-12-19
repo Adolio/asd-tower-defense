@@ -2,7 +2,6 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import models.tours.Tour;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -61,9 +60,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	
 	
 	private Panel_InfoTour panelInfoTour;
-	
+	private Panel_InfoCreature panelInfoCreature;
 	private Jeu jeu;
-	
+
 	
 	/**
 	 * Constructeur de la fenêtre. Creer et affiche la fenetre.
@@ -110,11 +109,13 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		//-- panel du jeu et menu d'interaction --
 		//----------------------------------------
 		// creation des panels
+		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		panelTerrain = new Panel_Terrain(jeu, this);
+		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
 		panelMenuInteraction = new Panel_MenuInteraction(jeu,this);
 		
 		// ajout des panels
-		add(panelTerrain,BorderLayout.WEST);
+		add(conteneurTerrain,BorderLayout.WEST);
 		add(panelMenuInteraction,BorderLayout.EAST);
 		
 		//---------------------------------------
@@ -172,27 +173,38 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		}
 	}
 	
+	// TODO
 	public void tourSelectionnee(Tour tour,int mode)
 	{
 		panelMenuInteraction.setTourSelectionnee(tour,mode);
 	}
 
+	// TODO
 	public void setTourAAcheter(Tour tour)
 	{
 		panelTerrain.setTourAAjouter(tour);
 		panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
 	}
 
+	// TODO
 	public void objetSelectionnee(Object object)
 	{
-		panelTerrain.setTourSelectionnee((Tour)object);
+	    panelTerrain.setTourSelectionnee((Tour)object);
 	}
 	
+	// TODO
 	public void setPanelInfoTour(Panel_InfoTour panelInfoTour)
 	{
 		this.panelInfoTour = panelInfoTour;
 	}
+	
+	// TODO
+    public void setPanelInfoCreature(Panel_InfoCreature panelInfoCreature)
+    {
+        this.panelInfoCreature = panelInfoCreature;
+    }
 
+	// TODO
 	public void vendreTour(Tour tour)
 	{
 		jeu.vendreTour(tour);
@@ -201,6 +213,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		panelTerrain.setTourSelectionnee(null);
 	}
 	
+	// TODO
 	public void lancerVagueSuivante()
 	{
 	    jeu.lancerVagueSuivante(this);
@@ -246,9 +259,15 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 			
 			if(jeu.estPerdu())
 			{
-				new Fenetre_AjoutScore(jeu.getScore(), jeu.getNomTerrain());
-			    JOptionPane.showMessageDialog(null,"Perdu.");
+			    panelMenuInteraction.partieTerminee();
+			    
+			    new Fenetre_PartieTerminee(this, jeu.getScore(), jeu.getNomTerrain());
 			}
 		}
 	}
+
+    public void creatureSelectionnee(Creature creature)
+    {
+        panelInfoCreature.setCreature(creature);
+    }
 }

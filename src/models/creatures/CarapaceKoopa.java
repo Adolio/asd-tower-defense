@@ -52,7 +52,7 @@ public class CarapaceKoopa extends Creature implements Runnable
 	public CarapaceKoopa(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
-		        Creature.TYPE_TERRIENNE ,IMAGES[0]);
+		        Creature.TYPE_TERRIENNE ,IMAGES[0],"Carapace Koopa");
 	}
 
 	/**

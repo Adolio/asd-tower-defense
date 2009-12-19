@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Vector;
+
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
 import models.maillage.Noeud;
@@ -207,7 +209,7 @@ public class Jeu
 	 * Permet de recuperer les creatures sur le terrain.
 	 * @return les creatures du terrain.
 	 */
-	public ArrayList<Creature> getCreatures()
+	public Vector<Creature> getCreatures()
 	{
 		return terrain.getCreatures();
 	}
