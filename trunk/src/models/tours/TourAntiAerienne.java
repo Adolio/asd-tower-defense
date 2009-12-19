@@ -24,10 +24,12 @@ public class TourAntiAerienne extends Tour
 	public static final Color COULEUR;
 	public static final Image IMAGE;
 	public static final int NIVEAU_MAX = 5;
+	public static final Musique SON_FLECHE;
 	
 	static
 	{
-		COULEUR = Color.BLUE;
+	    SON_FLECHE = new Musique("snd/arc.mp3");
+	    COULEUR = Color.BLUE;
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
 	}
 	
@@ -77,8 +79,7 @@ public class TourAntiAerienne extends Tour
 	public void tirer(Creature creature)
 	{
 		// TODO
-	    Musique m = new Musique("snd/arc.mp3");
-        m.lire(1);
+	    SON_FLECHE.lire(1);
         
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 	    creature.blesser(degats);

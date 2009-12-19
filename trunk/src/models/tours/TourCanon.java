@@ -24,10 +24,12 @@ public class TourCanon extends Tour
 	public static final Color COULEUR;
 	public static final Image IMAGE;
 	public static final int NIVEAU_MAX = 4;
+	public static final Musique SON_CANON;
 	
 	static
 	{
-		COULEUR = new Color(64,64,64);
+	    SON_CANON = new Musique("snd/canon.mp3");
+	    COULEUR = new Color(64,64,64);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_2.png");
 	}
 	
@@ -67,8 +69,7 @@ public class TourCanon extends Tour
 	public void tirer(Creature creature)
 	{
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
-	    Musique m = new Musique("snd/canon.mp3");
-        m.lire(1);
+        //SON_CANON.lire(1);
 	    
 	    // seulement les terriennes
 	    creature.blesser(degats);

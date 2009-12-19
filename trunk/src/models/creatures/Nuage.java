@@ -46,7 +46,7 @@ public class Nuage extends Creature
 	public Nuage(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax, nbPiecesDOr, vitesse, 
-		      Creature.TYPE_AERIENNE, IMAGE);
+		      Creature.TYPE_AERIENNE, IMAGE,"Nuage");
 	}
 
 	/**

@@ -24,9 +24,11 @@ public class TourArcher extends Tour
 	public static final Color COULEUR;
 	public static final Image IMAGE;
 	public static final int NIVEAU_MAX = 5;
-	
-	static
-	{
+    public static final Musique SON_FLECHE;
+    
+    static
+    {
+        SON_FLECHE = new Musique("snd/arc.mp3");
 		COULEUR = new Color(128,64,32);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
 	}
@@ -76,8 +78,7 @@ public class TourArcher extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    Musique m = new Musique("snd/arc.mp3");
-	    m.lire(1);
+	    //SON_FLECHE.lire(1);
 	    
 	    // TODO
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));

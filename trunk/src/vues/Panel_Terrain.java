@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
+
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -105,7 +107,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	private Tour tourSelectionnee;
 	
-	// TODO comment
+	/**
+     * Lorsque le joueur clique sur une creature, elle devient selectionnee.
+     * Une fois selectionnee des informations sur la creature apparaissent
+     * dans le menu d'interaction.
+     */
 	private Creature creatureSelectionnee;
 	
 	// le jeu a gerer
@@ -254,10 +260,23 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//----------------------------------------
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
-		for(Creature creature : jeu.getCreatures())
+		for(int i=0;i < jeu.getCreatures().size(); i++)
+		{
+		    Creature creature = jeu.getCreatures().get(i);
+ 
+		    // TODO on peut faire mieux mais ca résout 
+		    // les problèmes de créatures fantomes
+		    if(creature.estMorte())
+		    {
+		        jeu.getCreatures().remove(i);
+		        i--;
+		        System.out.println("Panel_Terrain effacement d'une creature mal tuee");
+                continue;
+		    }
+		       
 		    if(creature.getType() == Creature.TYPE_TERRIENNE)
 		        dessinerCreature(creature,g2);
-		
+		}
 		//-------------------------
 		//-- affichage des tours --
 		//-------------------------
@@ -550,10 +569,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					return;
 				}
 		
+	        // aucun tour trouvee => clique dans le vide.
+            tourSelectionnee = null;
+            
+            fenJeu.tourSelectionnee(tourSelectionnee,
+                    Panel_InfoTour.MODE_SELECTION);
+			
 			// parcours a l'envers car il faut traiter les creatures les plus
 			// devant en premier (les derniers affiches)
 			Creature creature;
-			ArrayList<Creature> creatures = jeu.getCreatures();
+			Vector<Creature> creatures = jeu.getCreatures();
 			for(int i = creatures.size()-1; i >= 0 ;i--)
 			{
 			    creature = creatures.get(i);
@@ -563,15 +588,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						creatureSelectionnee = null; // deselection
 					else
 						creatureSelectionnee = creature; // la creature est selectionnee
+					
+					fenJeu.creatureSelectionnee(creatureSelectionnee);
+					
 					return;
 				}
 			}
 			
-			// aucun tour trouvee => clique dans le vide.
-			tourSelectionnee = null;
-			
-			fenJeu.tourSelectionnee(tourSelectionnee,
-					Panel_InfoTour.MODE_SELECTION);
+			// aucun creature trouvee => clique dans le vide.
+			creatureSelectionnee = null;
+			fenJeu.creatureSelectionnee(creatureSelectionnee);
 		}
 		else
 		{

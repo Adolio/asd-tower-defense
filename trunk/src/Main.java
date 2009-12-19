@@ -25,19 +25,22 @@ public class Main
     */
    public static void main(String[] args) 
    {
-      // modification du style de l'interface
-	  try 
-	  { 
-		  UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"); 
-	  } 
-	  catch (Exception e) 
-	  { 
-		  /* 
-		   * On fait rien, c'est pas grave. 
-		   * C'est juste le look and feel qui n'est pas installe.
-		   */ 
-	  }
-	  
+       
+       // modification du style de l'interface
+       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels())
+           if ("Nimbus".equals(laf.getName())) 
+               try 
+               {
+                   UIManager.setLookAndFeel(laf.getClassName());
+               } 
+               catch (Exception e) 
+               {
+                   /* 
+                    * On fait rien, c'est pas grave. 
+                    * C'est juste le look and feel qui n'est pas installe.
+                    */ 
+               } 
+
 	  new Fenetre_MenuPrincipal();
    }
 }

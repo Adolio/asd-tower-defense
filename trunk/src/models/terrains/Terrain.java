@@ -6,12 +6,15 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
+
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
 import models.creatures.VagueDeCreatures;
 import models.maillage.Maillage;
 import models.maillage.Noeud;
 import models.maillage.PathNotFoundException;
+import models.outils.Musique;
 import models.tours.Tour;
 
 /**
@@ -58,7 +61,7 @@ public abstract class Terrain
 	 * 
 	 * @see Creature
 	 */
-	private ArrayList<Creature> creatures;
+	private Vector<Creature> creatures;
 
 	/**
 	 * Les murs sont utilises pour empecher le joueur de construire des tours
@@ -109,6 +112,10 @@ public abstract class Terrain
 	 */
 	protected int indiceVagueCourante;
 	
+	
+	protected Musique musiqueDeFond;
+	
+	
 	/**
 	 * Constructeur du terrain.
 	 * 
@@ -145,12 +152,12 @@ public abstract class Terrain
 									PRECISION_MAILLAGE,
 									positionMaillageX,positionMaillageY);
 		
-		maillageAerien      = new Maillage(largeurMaillage, hauteurMaillage, 
+		maillageAerien          = new Maillage(largeurMaillage, hauteurMaillage, 
                                     PRECISION_MAILLAGE,
                                     positionMaillageX,positionMaillageY);
 		
 		tours 		= new ArrayList<Tour>();
-		creatures 	= new ArrayList<Creature>();
+		creatures 	= new Vector<Creature>();
 	}
 
 	abstract VagueDeCreatures getVagueSuivante();
@@ -243,7 +250,7 @@ public abstract class Terrain
 	 * 
 	 * @return la liste des creatures
 	 */
-	public ArrayList<Creature> getCreatures()
+	public Vector<Creature> getCreatures()
 	{
 		return creatures;
 	}
@@ -581,5 +588,17 @@ public abstract class Terrain
         //    return descriptionVague;
         //else
             return getVagueSuivante().toString();
+    }
+    
+    public void setMusiqueDeFond(Musique musiqueDeFond)
+    {
+        this.musiqueDeFond = musiqueDeFond;
+    }
+    
+    //TODO
+    public void demarrerMusiqueDeFond()
+    {
+        if(musiqueDeFond != null)
+            musiqueDeFond.lire(0);
     }
 }
