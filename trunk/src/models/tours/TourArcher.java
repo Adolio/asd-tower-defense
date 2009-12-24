@@ -23,6 +23,7 @@ public class TourArcher extends Tour
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
 	public static final Image IMAGE;
+	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
     public static final Musique SON_FLECHE;
     
@@ -31,6 +32,7 @@ public class TourArcher extends Tour
         SON_FLECHE = new Musique("snd/arc.mp3");
 		COULEUR = new Color(128,64,32);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
+		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourArcher.png");
 	}
 	
     public TourArcher()
@@ -46,7 +48,8 @@ public class TourArcher extends Tour
 			  50,                // rayon de portee
 			  2,
 			  Tour.TYPE_TERRESTRE_ET_AIR,
-			  IMAGE);		
+			  IMAGE,
+			  ICONE);		
 	
 		description = "La tour d'archer est une tour qui est très rapide," +
 					  " mais elle fait peu de dégâts. ";

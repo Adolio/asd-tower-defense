@@ -23,6 +23,7 @@ public class TourAntiAerienne extends Tour
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
 	public static final Image IMAGE;
+	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
 	public static final Musique SON_FLECHE;
 	
@@ -31,6 +32,7 @@ public class TourAntiAerienne extends Tour
 	    SON_FLECHE = new Musique("snd/arc.mp3");
 	    COULEUR = Color.BLUE;
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
+		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourAntiAerienne.png");
 	}
 	
 	public TourAntiAerienne()
@@ -46,7 +48,8 @@ public class TourAntiAerienne extends Tour
 			  50,				// rayon de portee
 			  3,
 			  Tour.TYPE_AIR,
-			  IMAGE);		
+			  IMAGE,
+			  ICONE);		
 	
 		description = "La tour d'anti aérienne est une tour qui est très performante," +
 					  " mais elle n'attaque que les créatures volantes. ";

@@ -200,7 +200,7 @@ public class Jeu
 	 * Permet de recuperer les tours sur le terrain.
 	 * @return les tours du terrain.
 	 */
-	public ArrayList<Tour> getTours()
+	public Vector<Tour> getTours()
 	{
 		return terrain.getTours();
 	}
@@ -307,5 +307,10 @@ public class Jeu
     public String getDescriptionVagueCourante()
     {
         return terrain.getDescriptionVagueCourante();
+    }
+
+    public void creatureArriveeEnZoneArrivee(Creature creature)
+    {
+        terrain.supprimerCreature(creature);
     }
 }
