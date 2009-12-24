@@ -209,7 +209,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	{
 		jeu.vendreTour(tour);
 		panelInfoTour.effacerTour();
-		panelMenuInteraction.setNbPiecesOr(jeu.getNbPiecesOr());
+		panelMenuInteraction.miseAJourNbPiecesOr();
 		panelTerrain.setTourSelectionnee(null);
 	}
 	
@@ -240,7 +240,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	{
 		jeu.creatureTuee(creature);
 
-		panelMenuInteraction.setNbPiecesOr(jeu.getNbPiecesOr());
+		panelMenuInteraction.miseAJourNbPiecesOr();
+		panelMenuInteraction.miseAJourScore();
 		
 		panelTerrain.addAnimation(
 				new GainDePiecesOr((int)creature.getCenterX(),
@@ -251,12 +252,17 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	// TODO
 	public void estArriveeEnZoneArrivee(Creature creature)
 	{
-		if(!jeu.estPerdu())
+		// si pas encore perdu
+	    if(!jeu.estPerdu())
 		{
-			jeu.perdreUneVie();
-		
+			// perd une vie
+	        jeu.perdreUneVie();
 			panelMenuInteraction.miseAJourNbViesRestantes();
 			
+			// efface la creature
+			jeu.creatureArriveeEnZoneArrivee(creature);
+			
+			// le joueur n'a plus de vie
 			if(jeu.estPerdu())
 			{
 			    panelMenuInteraction.partieTerminee();

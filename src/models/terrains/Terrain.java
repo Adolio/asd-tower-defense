@@ -53,7 +53,7 @@ public abstract class Terrain
 	 * 
 	 * @see Tour
 	 */
-	private ArrayList<Tour> tours;
+	private Vector<Tour> tours;
 
 	/**
 	 * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
@@ -156,7 +156,7 @@ public abstract class Terrain
                                     PRECISION_MAILLAGE,
                                     positionMaillageX,positionMaillageY);
 		
-		tours 		= new ArrayList<Tour>();
+		tours 		= new Vector<Tour>();
 		creatures 	= new Vector<Creature>();
 	}
 
@@ -288,7 +288,7 @@ public abstract class Terrain
 	 * 
 	 * @return la liste des tours
 	 */
-	public ArrayList<Tour> getTours()
+	public Vector<Tour> getTours()
 	{
 		return tours;
 	}

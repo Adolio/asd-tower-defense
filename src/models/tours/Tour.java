@@ -87,6 +87,11 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * image
 	 */
 	protected Image image;
+	
+	/**
+	 * icone pour les boutons
+	 */
+	protected final Image ICONE;
 
 	/**
 	 * le terrain pour recuperer des informations sur les creatures
@@ -126,7 +131,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	public Tour(int x, int y, int largeur, int hauteur, Color couleurDeFond,
 			String nom, int prixAchat, int degats, double rayonPortee, 
-			double cadenceTir, int type, Image image)
+			double cadenceTir, int type, Image image, Image icone)
 	{
 	    this.x = x;
 	    this.y = y;
@@ -143,6 +148,7 @@ public abstract class Tour extends Rectangle implements Runnable
 		this.cadenceTir 	= cadenceTir;
 		this.type		 	= type;
 		this.image 			= image;
+		ICONE = icone;
 	}
 
 	/**
@@ -276,6 +282,16 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return image;
 	}
+	
+	/**
+     * Permet de recuperer l'icone de la tour
+     * 
+     * @return l'icone de la tour
+     */
+    public Image getIcone()
+    {
+        return ICONE;
+    }
 
 	/**
 	 * Permet de mettre la tour en jeu. Cette methode demarre le thread de la

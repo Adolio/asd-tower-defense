@@ -34,9 +34,9 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private static final String TXT_VAGUE_SUIVANTE  = "lancer la vague";
 	
 	// membres graphiques
-	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.IMAGE));
-	private JButton bTourCanon 				= new JButton(new ImageIcon(TourCanon.IMAGE));
-	private JButton bTourAntiAerienne 		= new JButton(new ImageIcon(TourAntiAerienne.IMAGE));
+	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.ICONE));
+	private JButton bTourCanon 				= new JButton(new ImageIcon(TourCanon.ICONE));
+	private JButton bTourAntiAerienne 		= new JButton(new ImageIcon(TourAntiAerienne.ICONE));
 	private JButton bLancerVagueSuivante    = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
 	private JLabel lScore 				    = new JLabel();
 	private JLabel lTitreScore 			    = new JLabel("Score :");
@@ -180,12 +180,6 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		else if(source == bLancerVagueSuivante)
 			fenJeu.lancerVagueSuivante();
 	}
-
-	// TODO
-	public void setNbPiecesOr(int nbPiecesOr)
-	{
-		lNbPiecesOr.setText(nbPiecesOr+"");
-	}
 	
 	// TODO
 	public void ameliorerTour(Tour tour)
@@ -212,6 +206,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	{
 		lVies.setText(jeu.getNbViesRestantes()+"");
 	}
+	
+	//TODO
+	public void miseAJourScore()
+    {
+        lScore.setText(jeu.getScore()+"");
+    }
 
 	// TODO
     public void miseAJourInfoVagueSuivante()
@@ -220,6 +220,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
     }
 
+    // TODO
     public void partieTerminee()
     {
         bLancerVagueSuivante.setEnabled(false);

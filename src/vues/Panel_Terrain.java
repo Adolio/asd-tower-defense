@@ -326,11 +326,21 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		
 		//------------------------------
 		//-- affichage des animations --
-		//------------------------------
-		Iterator<Animation> iAnimations = animations.iterator();
-		while(iAnimations.hasNext())
-			iAnimations.next().dessiner(g2);
+		//------------------------------		
+		Animation a;
+		for(int i=0;i<animations.size();i++)
+		{
+		    a = animations.get(i);
 	
+		    if (!a.estTerminee())   
+                a.dessiner(g2);
+            else
+            {
+                animations.remove(i);
+                i--;
+            }
+		}
+		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --
 		//------------------------------------

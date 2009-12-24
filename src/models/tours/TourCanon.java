@@ -23,6 +23,7 @@ public class TourCanon extends Tour
 	private static final long serialVersionUID = 1L;
 	public static final Color COULEUR;
 	public static final Image IMAGE;
+	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
 	public static final Musique SON_CANON;
 	
@@ -31,6 +32,7 @@ public class TourCanon extends Tour
 	    SON_CANON = new Musique("snd/canon.mp3");
 	    COULEUR = new Color(64,64,64);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_2.png");
+		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourCanon.png");
 	}
 	
 	public TourCanon()
@@ -46,7 +48,8 @@ public class TourCanon extends Tour
 			  40,				// rayon de portee
 			  1,
 			  Tour.TYPE_TERRESTRE,
-			  IMAGE);				
+			  IMAGE,
+			  ICONE);				
 		
 		description = "Le tour canon est une tour avec de bons dégâts mais " +
 					  "lente. De plus, elle n'attaque que " +
