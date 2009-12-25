@@ -289,6 +289,10 @@ public abstract class Creature extends Rectangle implements Runnable
 
 	/**
 	 * Permet de faire subir des degats sur la creature
+	 * 
+	 * L'attaque pouvant venir de plusieurs tours en meme temps, cette 
+	 * methode doit etres synchronisee.
+	 * 
 	 * @param degats les degats recus
 	 */
 	synchronized public void blesser(int degats)

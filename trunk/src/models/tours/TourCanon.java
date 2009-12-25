@@ -2,6 +2,7 @@ package models.tours;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 
 import models.creatures.Creature;
@@ -26,6 +27,7 @@ public class TourCanon extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
 	public static final Musique SON_CANON;
+    private static final double PORTEE_DEGATS_ZONE = 50.0;
 	
 	static
 	{
@@ -74,8 +76,23 @@ public class TourCanon extends Tour
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
         //SON_CANON.lire(1);
 	    
-	    // seulement les terriennes
-	    creature.blesser(degats);
+	    // degats de zone
+	    int degatsFinal;
+	    double distanceImpact;
+
+	    for(int i=0;i < terrain.getCreatures().size();i++)
+	    {
+	        Creature tmpCreature = terrain.getCreatures().get(i);
+	        
+	        // si la creature est dans le splash
+	        distanceImpact = Point.distance(tmpCreature.x, tmpCreature.y, creature.x, creature.y);
+	        if(distanceImpact <= PORTEE_DEGATS_ZONE)
+	        {
+	            // calcul des degats en fonction de la distance de l'impact
+	            degatsFinal = (int) (degats - (distanceImpact / PORTEE_DEGATS_ZONE * degats));
+	            tmpCreature.blesser(degatsFinal);
+	        }
+	    }
 	}
 
 
