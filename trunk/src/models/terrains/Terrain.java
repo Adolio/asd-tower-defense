@@ -298,25 +298,28 @@ public abstract class Terrain
 	 * 
 	 * @param tour
 	 *            la tour a ajouter
+	 * @throws Exception si la zone n'est pas accessible (occupee)
 	 */
-	synchronized public boolean ajouterTour(Tour tour)
+	synchronized public void ajouterTour(Tour tour) throws Exception
 	{
 		// c'est bien une tour valide ?
-		if (tour != null)
-		{
-			if (!laTourPeutEtrePosee(tour) || laTourBloqueLeChemin(tour))
-				return false;
+		if (tour == null)
+		    throw new IllegalArgumentException("Tour nulle");    
+		    
+		// si elle peut pas etre posee
+		if (!laTourPeutEtrePosee(tour))
+		    throw new Exception("Pose impossible : Zone non accessible");
+		
+		// si elle bloque le chemin de A vers B
+		if (laTourBloqueLeChemin(tour))
+            throw new Exception("Pose impossible : Chemin bloqué");
+			
+		// desactive la zone dans le maillage qui correspond a la tour
+		desactiverZone(tour,true);
 
-			// desactive la zone dans le maillage qui correspond a la tour
-			desactiverZone(tour,true);
-
-			// ajout de la tour
-			tours.add(tour);
-			tour.setTerrain(this);
-
-			return true;
-		}
-		return false;
+		// ajout de la tour
+		tours.add(tour);
+		tour.setTerrain(this);
 	}
 
 	/**

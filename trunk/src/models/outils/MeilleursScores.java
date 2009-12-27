@@ -28,7 +28,7 @@ public final class MeilleursScores
 {
    
    // Le nombre maximum de scores qu'on va stocker dans le fichier sérialisé.
-   private final static int NOMBRE_MAX_SCORES = 10;
+   public final static int NOMBRE_MAX_SCORES = 10;
    // L'bjet permettant de représenter le fichier sérialisé avec lequel on traite.
    private final File FICHIER;
    // Pour stocker la liste des scores.

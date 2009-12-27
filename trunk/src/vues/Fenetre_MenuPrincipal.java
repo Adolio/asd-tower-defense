@@ -3,19 +3,18 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import models.jeu.Jeu;
 import models.outils.Outils;
-import models.terrains.ElementTD;
-import models.terrains.Desert;
-import models.terrains.Spiral;
-import models.terrains.WaterWorld;
+import models.terrains.*;
 
 /**
  * Fenetre du menu principal du jeu.
- * 
+ * <p>
  * Affiche un menu permettant au joueur de choisir 
  * sur quel terrain il veut jouer.
+ * <p>
+ * Les boutons des terrains ont ete fait completement statiques 
+ * pour gagner un temps precieux.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
@@ -25,19 +24,23 @@ import models.terrains.WaterWorld;
  */
 public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 {
-	private static final long serialVersionUID 	= 1L;
+	// constantes statiques
+    private static final long serialVersionUID 	= 1L;
 	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
+    private static final Color COULEUR_DE_FOND  = new Color(0,110,0);
+    private static final ImageIcon IMAGE_MENU   = new ImageIcon("img/tours/towers.png");
+    private static final Color COULEUR_TEXTE_VERSION = new Color(200,200,200);
 	
+	// elements du formulaire
 	private final JMenuBar 	menuPrincipal 		= new JMenuBar();
 	private final JMenu 	menuFichier 		= new JMenu("Fichier");
 	private final JMenu 	menuAide 			= new JMenu("Aide");
 	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",I_AIDE);
 	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",I_QUITTER);
-	
-	JButton[] boutonsTerrains = new JButton[4]; 
+	private final JButton[] boutonsTerrains     = new JButton[4]; 
 
 	/**
 	 * Constructeur de la fenetre du menu principal
@@ -111,13 +114,11 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 			pBoutonsTerrains.add(bouton);
 		}
 		
-		getContentPane().setBackground(new Color(0,110,0));
-		getContentPane().setForeground(Color.WHITE);
-		//pBoutonsTerrains.setBackground(Color.DARK_GRAY);
-		getContentPane().add(new JLabel(new ImageIcon("img/tours/towers.png")),BorderLayout.NORTH);
+		getContentPane().setBackground(COULEUR_DE_FOND);
+		getContentPane().add(new JLabel(IMAGE_MENU),BorderLayout.NORTH);
 		getContentPane().add(pBoutonsTerrains,BorderLayout.CENTER);
 		JLabel version = new JLabel(Jeu.getVersion());
-		version.setForeground(new Color(200,200,200));
+		version.setForeground(COULEUR_TEXTE_VERSION);
 		getContentPane().add(version,BorderLayout.SOUTH);
 		
 		// dernieres proprietes
@@ -126,18 +127,27 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		setVisible(true);
 	}
 
-
-	/**
-	 * gestion des evenements
-	 */
+    /**
+     * Gestionnaire des evenements. 
+     * <p>
+     * Cette methode est appelee en cas d'evenement
+     * sur un objet ecouteur de ActionListener
+     * 
+     * @param ae l'evenement associe
+     */
 	public void actionPerformed(ActionEvent ae)
 	{
 		Object source = ae.getSource();
 		
+		// quitter
 		if(source == itemQuitter)
 			System.exit(0); // Fermeture correcte du logiciel
+		
+		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
+			new Fenetre_APropos(this); // ouverture de la fenetre "A propos"
+		
+		// les terrains
 		else if(source == boutonsTerrains[0])
 		{
 			new Fenetre_Jeu(new Jeu(new ElementTD()));

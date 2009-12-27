@@ -1,8 +1,10 @@
 package vues;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
+
 import models.creatures.*;
 
 /**
@@ -26,8 +28,13 @@ public class Panel_InfoCreature extends JPanel
 	private static final ImageIcon I_VITESSE   = new ImageIcon("img/icones/running_man.gif");
 	private static final ImageIcon I_GAIN      = new ImageIcon("img/icones/coins_add.png");
 	private static final Dimension DIMENSION_PANEL = new Dimension(280, 120);
-	
-	// membres
+	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature");
+    private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(140,50);
+    private static final Font POLICE_NOM       = new Font("", Font.BOLD, 14);
+    private static final Border BORDURE_IMAGE_ET_NOM = new EmptyBorder(-5,-5,-5,-5);
+    private static final Font POLICE_DONNEES = new Font("Verdana", Font.BOLD, 12);
+    
+	// attributs
 	private JLabel lTitreType       = new JLabel("Type");
 	private JLabel lTitreSante      = new JLabel("Santé",I_SANTE,JLabel.LEFT);
 	private JLabel lTitreVitesse    = new JLabel("Vitesse",I_VITESSE,JLabel.LEFT);
@@ -37,11 +44,8 @@ public class Panel_InfoCreature extends JPanel
 	private JLabel lGain            = new JLabel();
 	private JLabel lImage           = new JLabel();
     private JLabel lNom             = new JLabel();
-   
     private JPanel pConteneur;
-	//private static final Border BORDURE = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-	private static final Border BORDURE = BorderFactory.createTitledBorder("Creature");
-	
+		
 	/**
 	 * Constructeur du panel
 	 */
@@ -52,43 +56,44 @@ public class Panel_InfoCreature extends JPanel
 		setBorder(BORDURE);
 		setPreferredSize(DIMENSION_PANEL);
 		
-		pConteneur = new JPanel(new GridLayout(0,2));
-		
-	
-		
+		lNom.setFont(POLICE_NOM);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setPreferredSize(new Dimension(140,50));
+		p.setPreferredSize(DIMENSION_IMAGE_ET_NOM);
+		p.setBorder(BORDURE_IMAGE_ET_NOM);
 		p.add(lImage);
-		lNom.setFont(new Font("", Font.BOLD, 14));
 		p.add(lNom);
-		p.setBorder(new EmptyBorder(-5,-5,-5,-5));
 		
 		
+		lSante.setFont(POLICE_DONNEES);
+		lVitesse.setFont(POLICE_DONNEES);
+		lGain.setFont(POLICE_DONNEES);
+		
+		pConteneur = new JPanel(new GridLayout(0,2));
 		pConteneur.add(p);
 		pConteneur.add(lTitreType);
-		
 		pConteneur.add(lTitreSante);
         pConteneur.add(lSante);
-		
         pConteneur.add(lTitreVitesse);
         pConteneur.add(lVitesse);
-        
         pConteneur.add(lTitreGain);
         pConteneur.add(lGain);
-        
         add(pConteneur,BorderLayout.WEST);
+        
         pConteneur.setVisible(false);
 	}
 	
+	/**
+	 * Permet d'effacer la creature
+	 */
 	public void effacerCreature()
 	{
 		setCreature(null);
 	}
 	
 	/**
-	 * Changement de la creature
+	 * Permet de changement la creature courante
 	 * 
-	 * Met à jour le panel pour afficher les bonnes informations
+	 * Met a jour le panel pour afficher les bonnes informations
 	 * 
 	 * @param creature La creature a afficher
 	 */
@@ -97,14 +102,16 @@ public class Panel_InfoCreature extends JPanel
 		// creature ou pas ?
 		if(creature != null)
 		{
-		    pConteneur.setVisible(true);
-			
-			lImage.setIcon(new ImageIcon(creature.getImage()));
+			// mise a jour des champs
+		    lImage.setIcon(new ImageIcon(creature.getImage()));
 			lNom.setText(creature.getNom());
 			lTitreType.setText(" ["+creature.getNomType()+"]");
 			lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
-			lVitesse.setText(" : "+String.format(" %.1f",creature.getVitesse()));
+			lVitesse.setText(" : "+String.format("%.1f",creature.getVitesse()));
 			lGain.setText(" : "+creature.getNbPiecesDOr());
+			
+			// affichage du panel
+			pConteneur.setVisible(true);
 		}
 		// mode sans creature selectionnee
 		else

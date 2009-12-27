@@ -6,8 +6,16 @@ import java.text.DateFormat;
 import javax.swing.*;
 import models.outils.*;
 
-// TODO
-public class Fenetre_MeilleursScores extends JFrame implements ActionListener
+/**
+ * Fenetre de gestion de l'affichage des meilleurs scores
+ * 
+ * @author Pierre-Dominique Putallaz
+ * @author Aurelien Da Campo
+ * @author Lazhar Farjallah
+ * @version 1.0 | 17 decembre 2009
+ * @since jdk1.6.0_16
+ */
+public class Fenetre_MeilleursScores extends JDialog
 {
     // constantes statiques
     private static final long serialVersionUID  = 1L;
@@ -28,15 +36,16 @@ public class Fenetre_MeilleursScores extends JFrame implements ActionListener
      * 
      * @param nomTerrain le nom du terrain dont on veut voir les meilleurs scores
      */
-    public Fenetre_MeilleursScores(String nomTerrain)
+    public Fenetre_MeilleursScores(String nomTerrain, Dialog parent)
     {
-        super("Les 10 Meilleurs scores");
+        // preference de la fenetre
+        super(parent,"Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores",true);
         setLayout(new BorderLayout());
         setResizable(false);
  
-        
+        // creation de la table de scores
         int i = 0;
-        String[][] data = new String[10][3];
+        String[][] data = new String[MeilleursScores.NOMBRE_MAX_SCORES][3];
         ms = new MeilleursScores("donnees/"+nomTerrain+".ms");
         
         for(Score score : ms.getScores())
@@ -57,30 +66,21 @@ public class Fenetre_MeilleursScores extends JFrame implements ActionListener
         tableScore.getColumnModel().getColumn(2).setPreferredWidth(120);
         
         
-        JLabel lTitreForm = new JLabel("Les 10 Meilleurs scores [Terrain : "+nomTerrain+"]");
+        JLabel lTitreForm = new JLabel("Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores [Terrain : "+nomTerrain+"]");
         lTitreForm.setFont(POLICE_TITRE);
         getContentPane().add(lTitreForm,BorderLayout.NORTH);
         getContentPane().add(tableScore,BorderLayout.CENTER);
         getContentPane().add(bFermer,BorderLayout.SOUTH);
         
-        bFermer.addActionListener(this);
+        bFermer.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                dispose();
+            }
+        });
         
+        // derniers parametres de la fenetre
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    /**
-     * Gestionnaire des evenements. 
-     * <p>
-     * Cette methode est appelee en cas d'evenement
-     * sur un objet ecouteur de ActionListener
-     * 
-     * @param ae l'evenement associe
-     */
-    public void actionPerformed(ActionEvent e)
-    {
-        // un seul bouton -> un seul choix
-        dispose();
     }
 }

@@ -30,7 +30,7 @@ import models.tours.Tour;
  */
 public class Jeu
 {
-	private static final String VERSION = "v1.0";
+	private static final String VERSION = "v1.0 | janvier 2010";
 
     /**
 	 * Score courant du joueur
@@ -78,26 +78,22 @@ public class Jeu
 	 * 
 	 * @param tour la tour a poser
 	 * @return true si operation realisee avec succes, false sinon 
+	 * @throws Exception si pas assez d'argent
 	 */
-	public boolean poserTour(Tour tour)
+	public void poserTour(Tour tour) throws Exception
 	{
 		// suffisemment d'argent ?
-		if(laTourPeutEtreAchetee(tour))
-		{
-			// ajout de la tour dans le terrain de jeu
-			if(terrain.ajouterTour(tour))
-			{
-				// la tour est mise en jeu
-				tour.demarrer();
-				
-				// debit des pieces d'or
-				nbPiecesOr -= tour.getPrixAchat();
-			
-				return true;
-			}
-		}
+		if(!laTourPeutEtreAchetee(tour))
+		    throw new Exception("Pose impossible : Pas assez d'argent");
 		
-		return false;
+	    // ajout de la tour dans le terrain de jeu
+		terrain.ajouterTour(tour);
+		
+		// la tour est mise en jeu
+		tour.demarrer();
+		
+		// debit des pieces d'or
+		nbPiecesOr -= tour.getPrixAchat();
 	}
 
 	/**
@@ -107,8 +103,8 @@ public class Jeu
 	 */
 	public boolean laTourPeutEtreAchetee(Tour tour)
 	{
-		if(tour != null)
-			return nbPiecesOr - tour.getPrixAchat() >= 0;
+	    if(tour != null)
+			return (nbPiecesOr - tour.getPrixAchat()) >= 0;
 		
 		return false;
 	}
@@ -151,22 +147,21 @@ public class Jeu
 	 * 
 	 * @param tour la tour a ameliorer
 	 * @return vrai si operation realisee avec succes, sinon faux 
+	 * @throws Exception 
 	 */
-	public boolean ameliorerTour(Tour tour)
+	public void ameliorerTour(Tour tour) throws Exception
 	{
-		if(nbPiecesOr >= tour.getPrixAchat() 
-		   && tour.peutEncoreEtreAmelioree())
-		{
-			// debit des pieces d'or
-			nbPiecesOr -= tour.getPrixAchat();
-			
-			// amelioration de la tour
-			tour.ameliorer();
-			
-			return true;
-		}
+	    if(!tour.peutEncoreEtreAmelioree())
+            throw new Exception("Amélioration impossible : Niveau max atteint");
+	    
+	    if(nbPiecesOr < tour.getPrixAchat())
+		    throw new Exception("Amélioration impossible : Pas assez d'argent");
+
+		// debit des pieces d'or
+		nbPiecesOr -= tour.getPrixAchat();
 		
-		return false;
+		// amelioration de la tour
+		tour.ameliorer();
 	}
 
 	/**

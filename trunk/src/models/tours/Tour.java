@@ -11,7 +11,7 @@ import models.terrains.Terrain;
  * Cette classe est abstraite et doit etre heritee pour etre ensuite instanciee.
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16

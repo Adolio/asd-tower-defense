@@ -3,6 +3,8 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import models.creatures.*;
 import models.jeu.*;
 import models.tours.*;
@@ -31,20 +33,25 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private static final long serialVersionUID      = 1L;
 	private static final ImageIcon I_PIECES         = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES 	        = new ImageIcon("img/icones/heart.png");
-	private static final String TXT_VAGUE_SUIVANTE  = "lancer la vague";
 	
 	// membres graphiques
 	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.ICONE));
 	private JButton bTourCanon 				= new JButton(new ImageIcon(TourCanon.ICONE));
 	private JButton bTourAntiAerienne 		= new JButton(new ImageIcon(TourAntiAerienne.ICONE));
-	private JButton bLancerVagueSuivante    = new JButton(TXT_VAGUE_SUIVANTE + " [niveau 1]");
+	private JButton bTourDeGlace            = new JButton(new ImageIcon(TourDeGlace.ICONE));
+    private JButton bTourDeFeu              = new JButton(new ImageIcon(TourDeFeu.ICONE));
+    private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
+	
+	
+	
+	
 	private JLabel lScore 				    = new JLabel();
 	private JLabel lTitreScore 			    = new JLabel("Score :");
 	private JLabel lVies 					= new JLabel();
 	private JLabel lTitreVies 				= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 				= new JLabel();
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
-	private JTextArea taDescrVagueSuivante  = new JTextArea();;
+	
 	
 	// autres membres
 	private Fenetre_Jeu fenJeu;
@@ -74,34 +81,57 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		JPanel pTours = new JPanel();
 		
 		bTourArcher.addActionListener(this);
+		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
 		pTours.add(bTourArcher);
 		
 		bTourCanon.addActionListener(this);
+		bTourCanon.setBorder(new EmptyBorder(5,5,5,5));
 		pTours.add(bTourCanon);
 		
 		bTourAntiAerienne.addActionListener(this);
+		bTourAntiAerienne.setBorder(new EmptyBorder(5,5,5,5));
 		pTours.add(bTourAntiAerienne);
 		
+		bTourDeGlace.addActionListener(this);
+		bTourDeGlace.setBorder(new EmptyBorder(5,5,5,5));
+        pTours.add(bTourDeGlace);
+
+        bTourDeFeu.addActionListener(this);
+        bTourDeFeu.setBorder(new EmptyBorder(5,5,5,5));
+        pTours.add(bTourDeFeu);
+        
+        bTourDeTerre.addActionListener(this);
+        bTourDeTerre.setBorder(new EmptyBorder(5,5,5,5));
+        pTours.add(bTourDeTerre);
+        
 		//------------------------------------------
         //-- panel des donnees du joueur          --
 		//-- (score, nb pieces or, vies restante) --
         //------------------------------------------
+		JPanel pJoueur = new JPanel();
+		
 		// score
-		pTours.add(lTitreScore);
+		pJoueur.add(lTitreScore);
 		lScore.setText(jeu.getScore()+"");
-		pTours.add(lScore);
+		pJoueur.add(lScore);
 	
 		// pieces d'or
-		pTours.add(lTitrePiecesOr);
+		pJoueur.add(lTitrePiecesOr);
 		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
-		pTours.add(lNbPiecesOr);
+		pJoueur.add(lNbPiecesOr);
 		
 		// vies restantes
-		pTours.add(lTitreVies);
+		pJoueur.add(lTitreVies);
 		lVies.setText(jeu.getNbViesRestantes()+"");
-		pTours.add(lVies);
+		pJoueur.add(lVies);
 
-	    add(pTours,BorderLayout.NORTH);
+		
+		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
+		
+		pToursEtJoueur.add(pJoueur,BorderLayout.NORTH);
+		pToursEtJoueur.add(pTours,BorderLayout.SOUTH);
+		
+	    add(pToursEtJoueur,BorderLayout.NORTH);
 		
 		//---------------------------
         //-- info tour et creature --
@@ -117,27 +147,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         
         add(pInfos,BorderLayout.CENTER);
         
-		//--------------------
-        //-- vague suivante --
-        //--------------------
-		JPanel pVagueSuivante = new JPanel(new BorderLayout());
-		miseAJourInfoVagueSuivante();
-
-		// style du champ de description de la vague suivante
-		taDescrVagueSuivante.setFont(new Font("",Font.TRUETYPE_FONT,10));
-		taDescrVagueSuivante.setPreferredSize(new Dimension(250,50));
-		taDescrVagueSuivante.setEditable(false);
-		taDescrVagueSuivante.setLineWrap(true);
-		taDescrVagueSuivante.setWrapStyleWord(true);
-		taDescrVagueSuivante.setBackground(new Color(200,200,200));
-		pVagueSuivante.add(taDescrVagueSuivante,BorderLayout.NORTH);
-		pVagueSuivante.setBorder(BorderFactory.createTitledBorder("Vagues suivante"));
 		
-		// bouton
-		bLancerVagueSuivante.addActionListener(this);
-		pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
-			
-		add(pVagueSuivante,BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -177,58 +187,55 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 			fenJeu.setTourAAcheter(new TourCanon());
 		else if(source == bTourAntiAerienne)
 			fenJeu.setTourAAcheter(new TourAntiAerienne());
-		else if(source == bLancerVagueSuivante)
-			fenJeu.lancerVagueSuivante();
+		else if(source == bTourDeGlace)
+		    fenJeu.setTourAAcheter(new TourDeGlace());
+		else if(source == bTourDeFeu)
+		    fenJeu.setTourAAcheter(new TourDeFeu());
+		else if(source == bTourDeTerre)
+            fenJeu.setTourAAcheter(new TourDeTerre());
+		
 	}
 	
-	// TODO
-	public void ameliorerTour(Tour tour)
-	{
-		jeu.ameliorerTour(tour);
-	}
-
-	// TODO
-	public void vendreTour(Tour tour)
-	{
-		jeu.vendreTour(tour);
-		fenJeu.objetSelectionnee(null);
-		panelInfoTour.effacerTour();
-	}
-
-	// TODO
+	/**
+	 * Permet de demander une mise a jour du nombre de pieces du joueur
+	 */
 	public void miseAJourNbPiecesOr()
 	{
 		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
 	}
 
-	// TODO
+	/**
+     * Permet de demander une mise a jour du nombre de vies restantes du joueur
+     */
 	public void miseAJourNbViesRestantes()
 	{
 		lVies.setText(jeu.getNbViesRestantes()+"");
 	}
 	
-	//TODO
+	/**
+     * Permet de demander une mise a jour du score du joueur
+     */
 	public void miseAJourScore()
     {
         lScore.setText(jeu.getScore()+"");
     }
 
-	// TODO
-    public void miseAJourInfoVagueSuivante()
-    {
-        taDescrVagueSuivante.setText(jeu.getDescriptionVagueCourante());
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
-    }
 
-    // TODO
+
+    /**
+     * Permet d'informer le panel que la partie est terminee
+     */
     public void partieTerminee()
     {
-        bLancerVagueSuivante.setEnabled(false);
+        // informe le panel des tours
         panelInfoTour.partieTerminee();
         
-        // TODO
+        // desactivation des tours
         bTourArcher.setEnabled(false);
         bTourCanon.setEnabled(false);
         bTourAntiAerienne.setEnabled(false);
+        bTourDeGlace.setEnabled(false);
+        bTourDeFeu.setEnabled(false);
+        bTourDeTerre.setEnabled(false);
     }
 }

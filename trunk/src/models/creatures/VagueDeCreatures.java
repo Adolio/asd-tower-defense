@@ -77,8 +77,8 @@ public class VagueDeCreatures
     public String toString()
     {
         return NB_CREATURES+" Creature(s) "+creatureAEnvoyer.getNomType().toLowerCase()+"(s) [ " +
-        		"sante : "+creatureAEnvoyer.getSanteMax()+", "+
-        		"\n                                          gain   : "+creatureAEnvoyer.getNbPiecesDOr()+", "+
-        		"\n                                          vit     : "+creatureAEnvoyer.getVitesse()+" ]";
+        		"sante : "+creatureAEnvoyer.getSanteMax()+", " +
+        		"gain   : "+creatureAEnvoyer.getNbPiecesDOr()+", "+
+        		"vit     : "+creatureAEnvoyer.getVitesse()+" ]";
     } 
 }

@@ -6,7 +6,7 @@ import vues.Fenetre_MenuPrincipal;
  * 
  * Cette classe contient la methode main du programme.
  * Elle s'occupe de configurer le style de l'interface graphique
- * et d'ouvrir la premiere fenetre du programme.
+ * et d'ouvrir le menu principal du programme.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -19,14 +19,14 @@ public class Main
    /**
     * Programme principal.
     * 
-    * Configure le style de l'interface et ouvre la premiere fenetre.
+    * Configure le style de l'interface et ouvre le menu principal.
     * 
     * @param args Les arguments fournis au programme principal.
     */
    public static void main(String[] args) 
    {
        
-       // modification du style de l'interface
+       // essaye de mettre le nouveau look and feel "Nimbus" fourni par Java
        for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels())
            if ("Nimbus".equals(laf.getName())) 
                try 
@@ -41,6 +41,7 @@ public class Main
                     */ 
                } 
 
+      // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }
 }

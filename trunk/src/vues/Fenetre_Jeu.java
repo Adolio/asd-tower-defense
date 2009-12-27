@@ -2,6 +2,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import models.tours.Tour;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -23,14 +24,13 @@ import models.jeu.Jeu;
  */
 public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCreature
 {
-	private static final long serialVersionUID = 1L;
-	
+	// constantes statiques
+    private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
 	private static final ImageIcon I_INACTIF = null;
-	
-	public final static String FENETRE_TITRE = "ASD - Tower Defense";
+	private static final String FENETRE_TITRE = "ASD - Tower Defense";
 	
 	//---------------------------
 	//-- declaration des menus --
@@ -53,14 +53,31 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	 * panel contenant le terrain de jeu
 	 */
 	private Panel_Terrain panelTerrain;
+	
 	/**
 	 * panel contenant le menu d'interaction
 	 */
 	private Panel_MenuInteraction panelMenuInteraction;
 	
-	
+	/**
+	 * panel pour afficher les caracteristiques d'une tour 
+	 * et permet d'ameliorer ou de vendre la tour en question
+	 */
 	private Panel_InfoTour panelInfoTour;
+	
+	/**
+	 * panel pour afficher les caracteristiques d'une creature
+	 */
 	private Panel_InfoCreature panelInfoCreature;
+
+	
+	private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
+    private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE 
+                                                       + " [niveau 1]");
+    private JEditorPane taConsole  = new JEditorPane("text/html","");
+    
+    
+	// autre attribut
 	private Jeu jeu;
 
 	
@@ -105,6 +122,28 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
 		
+	
+		
+		//--------------------
+        //-- vague suivante --
+        //--------------------
+        JPanel pVagueSuivante = new JPanel(new BorderLayout());
+        ajouterInfoVagueSuivanteDansConsole();
+
+        // style du champ de description de la vague suivante
+        taConsole.setFont(new Font("",Font.TRUETYPE_FONT,10));
+        taConsole.setEditable(false);
+        JScrollPane scrollConsole = new JScrollPane(taConsole);
+        scrollConsole.setPreferredSize(new Dimension(jeu.getLargeurTerrain(),50));
+        pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
+        
+        // bouton
+        bLancerVagueSuivante.addActionListener(this);
+        pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
+            
+        add(pVagueSuivante,BorderLayout.SOUTH);
+		
+
 		//----------------------------------------
 		//-- panel du jeu et menu d'interaction --
 		//----------------------------------------
@@ -126,110 +165,198 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		setLocationRelativeTo(null); // centrage de la fenetre
 	}
 
-	/**
-	 * Gestion des événements des divers éléments de la 
-	 * fenêtre (menu, bouttons, etc.).
-	 * 
-	 * @param ae l'événement associé à une action
-	 */
+    /**
+     * Gestionnaire des evenements. 
+     * <p>
+     * Cette methode est appelee en cas d'evenement
+     * sur un objet ecouteur de ActionListener
+     * 
+     * @param ae l'evenement associe
+     */
 	public void actionPerformed(ActionEvent ae)
 	{
 		Object source = ae.getSource();
 		
+		// quitter
 		if(source == itemQuitter)
 			System.exit(0); // Fermeture correcte du logiciel
+		
+		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_APropos(); // ouverture de la fenetre "A propos"
+			new Fenetre_APropos(this); // ouverture de la fenetre "A propos"
+		
+		// basculer affichage du maillage
 		else if(source == itemAfficherMaillage)
-			if(panelTerrain.toggleAfficherMaillage())
+			if(panelTerrain.basculerAffichageMaillage())
 			   itemAfficherMaillage.setIcon(I_ACTIF);
 			else
 			    itemAfficherMaillage.setIcon(I_INACTIF);
+		
+		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)
-		    if(panelTerrain.toggleAfficherRayonPortee())
+		    if(panelTerrain.basculerAffichageRayonPortee())
 		        itemAfficherRayonsPortee.setIcon(I_ACTIF);
 		    else
 		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
+		
+		else if(source == bLancerVagueSuivante)
+            lancerVagueSuivante();
 	}
 
+	/**
+	 * Permet d'informer la fenetre que le joueur veut acheter une tour
+	 * 
+	 * @param tour la tour voulue
+	 */
 	public void acheterTour(Tour tour)
 	{
-		if(jeu.poserTour(tour))
-		{
-			panelTerrain.deselectionner();
-			panelMenuInteraction.miseAJourNbPiecesOr();
-			
-			setTourAAcheter(tour.getCopieOriginale());
-			panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
-		}
+	    try
+	    {
+	        jeu.poserTour(tour);
+	        
+	        panelTerrain.toutDeselectionner();
+            panelMenuInteraction.miseAJourNbPiecesOr();
+            
+            setTourAAcheter(tour.getCopieOriginale());
+            panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
+	    }
+	    catch(Exception e)
+	    {
+	        ajouterTexteHTMLDansConsole("<font color='red'>" 
+	                               + e.getMessage()+"</font><br />");
+	    }
 	}
 	
+	/**
+	 * Permet d'informer la fenetre que le joueur veut ameliorer une tour
+	 * 
+	 * @param tour la tour a ameliorer
+	 */
 	public void ameliorerTour(Tour tour)
 	{
-		if(jeu.ameliorerTour(tour))
-		{
-			panelMenuInteraction.miseAJourNbPiecesOr();
-			panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
-		}
+	    try
+        {
+	        jeu.ameliorerTour(tour);
+	        
+	        panelMenuInteraction.miseAJourNbPiecesOr();
+            panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
+        }
+	    catch(Exception e)
+        {
+	        ajouterTexteHTMLDansConsole("<font color='red'>" 
+                    + e.getMessage()+"</font><br />");
+        }
 	}
 	
-	// TODO
+	/**
+     * Permet d'informer la fenetre que le joueur veut vendre une tour
+     * 
+     * @param tour la tour a ameliorer
+     */
+    public void vendreTour(Tour tour)
+    {
+        jeu.vendreTour(tour);
+        panelInfoTour.effacerTour();
+        panelMenuInteraction.miseAJourNbPiecesOr();
+        panelTerrain.setTourSelectionnee(null);
+    }
+	
+    /**
+     * Permet d'ajouter du text HTML dans la console
+     * 
+     * @param texte le texte a ajouter
+     */
+    public void ajouterTexteHTMLDansConsole(String texte)
+    {
+        String s = taConsole.getText();
+        taConsole.setText( s.substring(0,s.indexOf("</body>")) 
+                           + texte + 
+                           s.substring(s.indexOf("</body>")));
+    }
+    
+    
+	/**
+	 * Permet d'informer la fenetre qu'une tour a ete selectionnee
+	 * 
+	 * @param tour la tour selectionnee
+	 * @param mode le mode de selection
+	 */
 	public void tourSelectionnee(Tour tour,int mode)
 	{
 		panelMenuInteraction.setTourSelectionnee(tour,mode);
 	}
+	
+	/**
+     * Permet d'informer la fenetre qu'une creature a ete selectionnee
+     * 
+     * @param creature la creature selectionnee
+     */
+    public void creatureSelectionnee(Creature creature)
+    {
+        panelInfoCreature.setCreature(creature);
+    }
 
-	// TODO
+	/**
+     * Permet d'informer la fenetre qu'on change la tour a acheter
+     * 
+     * @param tour la nouvelle tour a acheter
+     */
 	public void setTourAAcheter(Tour tour)
 	{
 		panelTerrain.setTourAAjouter(tour);
 		panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
 	}
 
-	// TODO
-	public void objetSelectionnee(Object object)
-	{
-	    panelTerrain.setTourSelectionnee((Tour)object);
-	}
-	
-	// TODO
+	/**
+     * Permet de mettre a jour la reference vers le panel d'information
+     * d'une tour.
+     * 
+     * @param panelInfoTour le panel
+     */
 	public void setPanelInfoTour(Panel_InfoTour panelInfoTour)
 	{
 		this.panelInfoTour = panelInfoTour;
 	}
 	
-	// TODO
+	/**
+     * Permet de mettre a jour la reference vers le panel d'information
+     * d'une creature.
+     * 
+     * @param panelInfoCreature le panel
+     */
     public void setPanelInfoCreature(Panel_InfoCreature panelInfoCreature)
     {
         this.panelInfoCreature = panelInfoCreature;
     }
-
-	// TODO
-	public void vendreTour(Tour tour)
-	{
-		jeu.vendreTour(tour);
-		panelInfoTour.effacerTour();
-		panelMenuInteraction.miseAJourNbPiecesOr();
-		panelTerrain.setTourSelectionnee(null);
-	}
 	
-	// TODO
+	/**
+	 * Permet d'informer la fenetre que le joueur veut lancer une vague de
+	 * creatures.
+	 */
 	public void lancerVagueSuivante()
 	{
 	    jeu.lancerVagueSuivante(this);
 	    
-	    panelMenuInteraction.miseAJourInfoVagueSuivante();
+	    ajouterInfoVagueSuivanteDansConsole();
 	}
-
+	
+	/**
+     * Permet de demander une mise a jour des informations de la vague suivante
+     */
+    public void ajouterInfoVagueSuivanteDansConsole()
+    {
+        ajouterTexteHTMLDansConsole("["+jeu.getNumVagueCourante()+"] Vague suivante : "+jeu.getDescriptionVagueCourante()+"<br />");
+        
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
+    }
+	
 	/**
 	 * methode regissant de l'interface EcouteurDeCreature
 	 * 
 	 * Permet d'etre informe lorsqu'une creature subie des degats.
 	 */
 	public void creatureBlessee(Creature creature)
-	{
-
-	}
+	{}
 
 	/**
 	 * methode regissant de l'interface EcouteurDeCreature
@@ -249,7 +376,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 								   creature.getNbPiecesDOr()));
 	}
 
-	// TODO
+	/**
+     * methode regissant de l'interface EcouteurDeCreature
+     * 
+     * Permet d'etre informe lorsqu'une creature est arrivee en zone d'arrivee.
+     */
 	public void estArriveeEnZoneArrivee(Creature creature)
 	{
 		// si pas encore perdu
@@ -267,13 +398,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 			{
 			    panelMenuInteraction.partieTerminee();
 			    
+			    // desactivation de la vague suivante
+		        bLancerVagueSuivante.setEnabled(false);
+			    
 			    new Fenetre_PartieTerminee(this, jeu.getScore(), jeu.getNomTerrain());
 			}
 		}
 	}
-
-    public void creatureSelectionnee(Creature creature)
-    {
-        panelInfoCreature.setCreature(creature);
-    }
 }
