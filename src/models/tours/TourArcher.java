@@ -8,7 +8,7 @@ import models.creatures.Creature;
 import models.outils.Musique;
 
 /**
- * Classe de gestion d'une tour de feu.
+ * Classe de gestion d'une tour d'archer.
  * Cette classe derive de Tour.
  * 
  * @author Pierre-Dominique Putallaz

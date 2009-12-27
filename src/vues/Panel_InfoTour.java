@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
 import models.tours.*;
 
 /**
@@ -12,7 +13,7 @@ import models.tours.*;
  * Le joueur pourra voir les proprietes d'une tour caracterisee par
  * sont prix, ses degats, son rayon de portee, etc.
  * 
- * C'est dans ce panel que le joueur peut améliorer une tour ou la vendre.
+ * C'est dans ce panel que le joueur peut ameliorer une tour ou la vendre.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -34,8 +35,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_VENDRE     = "Vendre";
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Prix total";
-    private static final Dimension DIMENSION_PANEL = new Dimension(280, 250);
+    private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
     private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour");
+    private static final Font POLICE_DONNEES   = new Font("Verdana", Font.BOLD, 12);
+    private static final Font POLICE_NOM       = new Font("Arial",Font.BOLD,14);
+    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(250,80);
+    private static final Color COULEUR_FOND_DESCRIPTION = new Color(200,200,200);
+    private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
+    //private static final Border BORDURE_DESCRIPTION = new LineBorder(Color.DARK_GRAY,1,true);
     
 	// membres graphiques
 	private JLabel lNom 			 = new JLabel();
@@ -69,58 +76,50 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		setBorder(BORDURE);
 
 		this.fenJeu = fenJeu;
+
 		
-		Font f = new Font("Verdana", Font.BOLD, 12);
-		
+		JPanel pConteneurCaract = new JPanel();
 		int nbChamp = 0;
 		
 		// champ nom
-		lNom.setFont(new Font("Arial",Font.BOLD,14));
+		lNom.setFont(POLICE_NOM);
 		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 2);
 		
 		// champ prix
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
-		lPrix.setFont(f);
+		lPrix.setFont(POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp++, 1);
 		
 		// champ degats
 		ajouterChamp(pCaracteristiques, new JLabel("Degats"), 0, nbChamp, 1);
-		lDegats.setFont(f);
+		lDegats.setFont(POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp++, 1);
 	
 		// champ rayon de portee
 		ajouterChamp(pCaracteristiques, new JLabel("Rayon de portee"), 0, nbChamp, 1);
-		lRayonPortee.setFont(f);
+		lRayonPortee.setFont(POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp++, 1);
 		
 		// champ cadence de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Cadence de tir"), 0, nbChamp, 1);
-		lCadenceTir.setFont(f);
+		lCadenceTir.setFont(POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp++, 1);
 
 		// champ type de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Type de tir"), 0, nbChamp, 1);
-		lType.setFont(f);
+		lType.setFont(POLICE_DONNEES);
         ajouterChamp(pCaracteristiques, lType, 1, nbChamp++, 1);
 
 		// champ description
-		taDescrition.setPreferredSize(new Dimension(250,60));
+		taDescrition.setPreferredSize(DIMENSION_DESCRIPTION);
 		taDescrition.setEditable(false);
 		taDescrition.setLineWrap(true);
 		taDescrition.setWrapStyleWord(true);
-		taDescrition.setBackground(new Color(200,200,200));
-		taDescrition.setBorder(new EmptyBorder(5,5,5,5));
-		taDescrition.setBorder(new LineBorder(Color.DARK_GRAY,2,true));
-		
-		//lDescrition.setBackground(new Color(pCaracteristiques.getBackground().getRGB()));
-		
+		taDescrition.setBackground(COULEUR_FOND_DESCRIPTION);
+		taDescrition.setBorder(BORDURE_DESCRIPTION);
 		ajouterChamp(pCaracteristiques, taDescrition, 0, nbChamp++, 2);
 	
-
-		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.add(pCaracteristiques,BorderLayout.NORTH);
-		
-		
 		
 		// les boutons
 		pBoutons.add(bAmeliorer);
@@ -129,17 +128,25 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		bVendre.addActionListener(this);
 		
 		
-		//add(lNom,BorderLayout.NORTH);
-		JPanel p = new JPanel(new BorderLayout());
-		p.add(pConteneurCaract,BorderLayout.NORTH);
-		p.add(pBoutons,BorderLayout.SOUTH);
+		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
+		pConteneurCaraEtBoutons.add(pConteneurCaract,BorderLayout.NORTH);
+		pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		
-		add(p,BorderLayout.WEST);
+		add(pConteneurCaraEtBoutons,BorderLayout.WEST);
 	
 		// initialisation a vide
 		effacerTour();
 	}
 	
+	/**
+	 * Permet d'ajouter un champ dans un GridBagLayout
+	 * 
+	 * @param panel le GridBagLayout
+	 * @param composant le composant a ajouter
+	 * @param gridx position x dans la grille
+	 * @param gridy position y dans la grille
+	 * @param gridwidth largeur de la grille
+	 */
 	public void ajouterChamp(JPanel panel, Component composant, int gridx, int gridy, int gridwidth)
 	{
 		GridBagConstraints c = new GridBagConstraints();
@@ -152,16 +159,30 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		panel.add(composant,c);
 	}
 	
-	
+	/**
+	 * Permet de deselectionner la tour affichee
+	 */
 	public void effacerTour()
 	{
 		setTour(null, 0);
 	}
 	
 	/**
-	 * Changement de tour
+     * Permet d'informer de le panel que la partie est terminee.
+     * 
+     * Bloque tous les boutons.
+     */
+    public void partieTerminee()
+    {
+        bAmeliorer.setEnabled(false);
+        bVendre.setEnabled(false);
+        partieTerminee = true;
+    }
+	
+	/**
+	 * Permet de changer de tour
 	 * 
-	 * Met à jour le panel pour afficher les bonnes informations
+	 * Met a jour le panel pour afficher les bonnes informations
 	 * 
 	 * @param tour La tour a gerer
 	 */
@@ -170,14 +191,13 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// tour ou pas ?
 		if(tour != null)
 		{
-			pCaracteristiques.setVisible(true);
-			
-			lDegats.setText(" : "+tour.getDegats());
-			lRayonPortee.setText(" : "+String.format(" %.1f", tour.getRayonPortee()));
+			// mise a jour des caracteristiques
+		    lDegats.setText(" : "+tour.getDegats());
+			lRayonPortee.setText(" : "+String.format("%.1f", tour.getRayonPortee()));
 			taDescrition.setText(tour.getDescription());
 			lNom.setForeground(tour.getCouleurDeFond());
 			lNom.setText(tour.getNom());
-			lCadenceTir.setText(" : "+String.format(" %.1f", tour.getCadenceTir())+" / sec.");
+			lCadenceTir.setText(" : "+String.format("%.1f", tour.getCadenceTir())+" tirs / sec.");
 			lType.setText(" : "+tour.getTexteType());
 			
 			// tour selectionnee pour information
@@ -186,9 +206,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 				// adaptation des champs
 				lTitrePrix.setText(TXT_PRIX_TOTAL);
 				lPrix.setText(" : "+tour.getPrixTotal());
-				
-				pBoutons.setVisible(true);
-				
+
 				if(!partieTerminee)
 				{
     				// adaptation des boutons
@@ -205,6 +223,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 				}
 				
 				bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
+				pBoutons.setVisible(true);
 			}
 			// tour selectionnee pour achat
 			else if(mode == 1)
@@ -219,6 +238,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			
 			// sauvegarde de la tour pour les operations
 			this.tour = tour;
+			
+			pCaracteristiques.setVisible(true);
 		}
 		// mode sans tour selectionnee
 		else
@@ -228,27 +249,22 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		}
 	}
 
-	/**
-	 * Methode de gestion des evenements
-	 */
+    /**
+     * Gestionnaire des evenements. 
+     * <p>
+     * Cette methode est appelee en cas d'evenement
+     * sur un objet ecouteur de ActionListener
+     * 
+     * @param ae l'evenement associe
+     */
 	public void actionPerformed(ActionEvent ae)
 	{
 		Object source = ae.getSource();
 		
 		if(source == bAmeliorer)
-		{
 			fenJeu.ameliorerTour(tour);
-		}
+		
 		else if(source == bVendre)
-		{
 			fenJeu.vendreTour(tour);
-		}
 	}
-
-    public void partieTerminee()
-    {
-        bAmeliorer.setEnabled(false);
-        bVendre.setEnabled(false);
-        partieTerminee = true;
-    }
 }

@@ -80,9 +80,13 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
+    
     /**
-     * Gestion des evenements
+     * Gestionnaire des evenements. 
+     * <p>
+     * Cette methode est appelee en cas d'evenement
+     * sur un objet ecouteur de ActionListener
+     * 
      * @param ae l'evenement associe
      */
     public void actionPerformed(ActionEvent ae)
@@ -97,7 +101,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
             dispose(); // fermeture
             
             // ouverture de la fenetre des meilleurs scores
-            new Fenetre_MeilleursScores(nomTerrain);
+            new Fenetre_MeilleursScores(nomTerrain,this);
         } 
     }
 }
