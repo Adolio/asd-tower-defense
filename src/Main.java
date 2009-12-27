@@ -40,7 +40,7 @@ public class Main
                     * C'est juste le look and feel qui n'est pas installe.
                     */ 
                } 
-
+               
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }
