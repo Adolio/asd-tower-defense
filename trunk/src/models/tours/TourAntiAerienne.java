@@ -31,7 +31,7 @@ public class TourAntiAerienne extends Tour
 	{
 	    SON_FLECHE = new Musique("snd/arc.mp3");
 	    COULEUR = Color.BLUE;
-		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_3.png");
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourAntiAerienne.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourAntiAerienne.png");
 	}
 	

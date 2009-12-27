@@ -31,7 +31,7 @@ public class TourArcher extends Tour
     {
         SON_FLECHE = new Musique("snd/arc.mp3");
 		COULEUR = new Color(128,64,32);
-		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_1.png");
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourArcher.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourArcher.png");
 	}
 	

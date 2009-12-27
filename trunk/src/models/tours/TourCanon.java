@@ -33,7 +33,7 @@ public class TourCanon extends Tour
 	{
 	    SON_CANON = new Musique("snd/canon.mp3");
 	    COULEUR = new Color(64,64,64);
-		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/basic_tower_2.png");
+		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourCanon.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourCanon.png");
 	}
 	
