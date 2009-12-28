@@ -9,8 +9,10 @@ import models.creatures.Creature;
 import models.outils.Musique;
 
 /**
- * Classe de gestion d'une tour de glace.
- * Cette classe derive de Tour.
+ * Classe de gestion d'une tour a canon.
+ * <p>
+ * Le tour canon est une tour lente avec de bons degats de zone. 
+ * De plus, elle n'attaque que les creatures terrestres
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -27,7 +29,10 @@ public class TourCanon extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
 	public static final Musique SON_CANON;
-    private static final double PORTEE_DEGATS_ZONE = 50.0;
+    private static final double RAYON_IMPACT = 20.0;
+    private static final String DESCRIPTION = 
+        "Le tour canon est une tour avec de bons dégâts mais lente. " +
+        "De plus, elle n'attaque que les créatures terrestres";
 	
 	static
 	{
@@ -37,6 +42,9 @@ public class TourCanon extends Tour
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourCanon.png");
 	}
 	
+	/**
+     * Constructeur de la tour.
+     */
 	public TourCanon()
 	{
 		super(0, 				// x
@@ -44,18 +52,16 @@ public class TourCanon extends Tour
 			  20, 				// largeur
 		      20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Canon",	// nom
+			  "Canon",	        // nom
 			  20,				// prix achat
 			  15,				// degats
 			  40,				// rayon de portee
-			  1,
-			  Tour.TYPE_TERRESTRE,
-			  IMAGE,
-			  ICONE);				
+			  1,                // cadence de tir (tirs / sec.)
+              Tour.TYPE_TERRESTRE, // type
+              IMAGE,            // image sur terrain
+              ICONE);           // icone pour bouton			
 		
-		description = "Le tour canon est une tour avec de bons dégâts mais " +
-					  "lente. De plus, elle n'attaque que " +
-					  "les créatures terrestres";
+		description = DESCRIPTION;
 	}
 
 	public void ameliorer()
@@ -76,23 +82,9 @@ public class TourCanon extends Tour
 		// terrain.ajouteTire(new bouleDeGlace(this,creature));
         //SON_CANON.lire(1);
 	    
-	    // degats de zone
-	    int degatsFinal;
-	    double distanceImpact;
-
-	    for(int i=0;i < terrain.getCreatures().size();i++)
-	    {
-	        Creature tmpCreature = terrain.getCreatures().get(i);
-	        
-	        // si la creature est dans le splash
-	        distanceImpact = Point.distance(tmpCreature.x, tmpCreature.y, creature.x, creature.y);
-	        if(distanceImpact <= PORTEE_DEGATS_ZONE)
-	        {
-	            // calcul des degats en fonction de la distance de l'impact
-	            degatsFinal = (int) (degats - (distanceImpact / PORTEE_DEGATS_ZONE * degats));
-	            tmpCreature.blesser(degatsFinal);
-	        }
-	    }
+	    blesserCreaturesDansZoneImpact(new Point((int)creature.getCenterX(),
+	                                             (int)creature.getCenterY())
+	                                   ,RAYON_IMPACT);
 	}
 
 

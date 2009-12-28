@@ -9,7 +9,9 @@ import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour d'archer.
- * Cette classe derive de Tour.
+ * <p>
+ * La tour d'archer est une tour qui est rapide, 
+ * mais elle fait peu de degats. Elle attaque tous types de creatures.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -26,6 +28,9 @@ public class TourArcher extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
     public static final Musique SON_FLECHE;
+    private static final String DESCRIPTION = 
+        "La tour d'archer est une tour qui est rapide, " +
+        "mais elle fait peu de dégâts. Elle attaque tous types de créatures.";
     
     static
     {
@@ -35,6 +40,9 @@ public class TourArcher extends Tour
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourArcher.png");
 	}
 	
+    /**
+     * Constructeur de la tour.
+     */
     public TourArcher()
 	{
 	    super(0,                // x
@@ -42,17 +50,16 @@ public class TourArcher extends Tour
 			  20, 				// largeur
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Archer",	// nom
-			  10,                // prix achat
-			  5,                 // degats
-			  50,                // rayon de portee
-			  2,
-			  Tour.TYPE_TERRESTRE_ET_AIR,
-			  IMAGE,
-			  ICONE);		
+			  "Archer",	        // nom
+			  10,               // prix achat
+			  5,                // degats
+			  50,               // rayon de portee
+			  2,                // cadence de tir (tirs / sec.)
+			  Tour.TYPE_TERRESTRE_ET_AIR, // type
+			  IMAGE,            // image sur terrain
+			  ICONE);		    // icone pour bouton
 	
-		description = "La tour d'archer est une tour qui est très rapide," +
-					  " mais elle fait peu de dégâts. ";
+		description = DESCRIPTION;
 	}
 	
 	public void ameliorer()
@@ -81,9 +88,8 @@ public class TourArcher extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    //SON_FLECHE.lire(1);
-	    
 	    // TODO
+	    // SON_FLECHE.lire(1);
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 		creature.blesser(degats);
 	}

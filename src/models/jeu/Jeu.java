@@ -90,7 +90,7 @@ public class Jeu
 		terrain.ajouterTour(tour);
 		
 		// la tour est mise en jeu
-		tour.demarrer();
+		tour.mettreEnJeu();
 		
 		// debit des pieces d'or
 		nbPiecesOr -= tour.getPrixAchat();

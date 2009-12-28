@@ -5,10 +5,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import models.creatures.Creature;
 
-
 /**
  * Classe de gestion d'une tour de terre.
- * Cette classe derive de Tour.
+ * <p>
+ * La tour de terre est une tour lente qui fait enormement de degats
+ * et qui a une tres grande portee. Malheureusement, elle n'attaque
+ * que les creatures terrestre.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -24,6 +26,10 @@ public class TourDeTerre extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    private static final String DESCRIPTION = 
+        "La tour de terre est une tour lente qui fait enormement de degats" +
+        " et qui a une très grande portée. Malheureusement, elle n'attaque " +
+        "que les créatures terrestre.";
     
     static
     {
@@ -39,18 +45,16 @@ public class TourDeTerre extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Terre", // nom
-              100,                // prix achat
-              200,                 // degats
-              150,                // rayon de portee
-              0.5,
-              Tour.TYPE_TERRESTRE,
-              IMAGE,
-              ICONE);       
+              "Terre",          // nom
+              200,              // prix achat
+              200,              // degats
+              150,              // rayon de portee
+              0.5,              // cadence de tir (tirs / sec.)
+              Tour.TYPE_TERRESTRE,// type
+              IMAGE,            // image sur terrain
+              ICONE);           // icone pour bouton 
     
-        description = "La tour de terre est une tour lente qui fait enormement de degats" +
-        		      " et qui a une très grande portée. Malheureusement, elle n'attaque " +
-        		      "que les créatures terrestre.";
+        description = DESCRIPTION;
     }
     
     public void ameliorer()
