@@ -2,13 +2,17 @@ package models.tours;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import models.creatures.Creature;
 
 
 /**
  * Classe de gestion d'une tour de feu.
- * Cette classe derive de Tour.
+ * <p>
+ * La tour de feu est une tour qui est lente
+ * mais qui fait de gros degats de zone.
+ * Cette tour attaque tous types de creatures
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -24,6 +28,11 @@ public class TourDeFeu extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    private static final double RAYON_IMPACT = 10.0;
+    private static final String DESCRIPTION = 
+        "La tour de feu est une tour qui est lente " +
+        "mais qui fait de gros dégâts de zone. " +
+        "Cette tour attaque tous types de creatures";
     
     static
     {
@@ -40,15 +49,15 @@ public class TourDeFeu extends Tour
               20,               // hauteur
               COULEUR,          // couleur de fond
               "Feu",            // nom
-              80,               // prix achat
+              180,              // prix achat
               100,              // degats
               40,               // rayon de portee
-              1,
-              Tour.TYPE_TERRESTRE_ET_AIR,
-              IMAGE,
-              ICONE);       
+              1,                // cadence de tir (tirs / sec.)
+              Tour.TYPE_TERRESTRE_ET_AIR, // type
+              IMAGE,            // image sur terrain
+              ICONE);           // icone pour bouton
     
-        description = "La tour de feu est une tour qui de vitesse normal...";
+        description = DESCRIPTION;
     }
     
     public void ameliorer()
@@ -77,7 +86,9 @@ public class TourDeFeu extends Tour
 
     public void tirer(Creature creature)
     {
-        creature.blesser(degats);
+        blesserCreaturesDansZoneImpact(new Point((int)creature.getCenterX(),
+                                                 (int)creature.getCenterY())
+                                       ,RAYON_IMPACT);
     }
 
     public Tour getCopieOriginale()

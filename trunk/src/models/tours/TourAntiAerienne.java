@@ -8,8 +8,10 @@ import models.creatures.Creature;
 import models.outils.Musique;
 
 /**
- * Classe de gestion d'une tour de feu.
- * Cette classe derive de Tour.
+ * Classe de gestion d'une tour anti aerienne.
+ * <p>
+ * La tour anti aerienne est une tour qui est tres performante, 
+ * mais elle n'attaque que les creatures volantes. 
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -26,6 +28,10 @@ public class TourAntiAerienne extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
 	public static final Musique SON_FLECHE;
+	public static final String DESCRIPTION = 
+    	"La tour anti-aérienne est une tour qui est très performante," +
+        " mais elle n'attaque que les créatures volantes. ";
+	
 	
 	static
 	{
@@ -35,6 +41,9 @@ public class TourAntiAerienne extends Tour
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourAntiAerienne.png");
 	}
 	
+	/**
+     * Constructeur de la tour.
+     */
 	public TourAntiAerienne()
 	{
 		super(0, 				// x
@@ -46,13 +55,12 @@ public class TourAntiAerienne extends Tour
 			  30,				// prix achat
 			  40,				// degats
 			  50,				// rayon de portee
-			  3,
-			  Tour.TYPE_AIR,
-			  IMAGE,
-			  ICONE);		
+			  3,                // cadence de tir (tirs / sec.)
+			  Tour.TYPE_AIR,    // type
+			  IMAGE,            // image sur terrain
+			  ICONE);		    // icone pour bouton
 	
-		description = "La tour d'anti aérienne est une tour qui est très performante," +
-					  " mais elle n'attaque que les créatures volantes. ";
+		description = DESCRIPTION;
 	}
 	
 	public void ameliorer()
@@ -83,7 +91,6 @@ public class TourAntiAerienne extends Tour
 	{
 		// TODO
 	    SON_FLECHE.lire(1);
-        
 		// terrain.ajouteTire(new bouleDeFeu(this,creature));
 	    creature.blesser(degats);
 	}

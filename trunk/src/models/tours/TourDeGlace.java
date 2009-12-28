@@ -8,7 +8,9 @@ import models.creatures.Creature;
 
 /**
  * Classe de gestion d'une tour de glace.
- * Cette classe derive de Tour.
+ * <p>
+ * La tour de glace est une tour qui est rapide et qui ralenti les creatures.
+ * Cette tour attaque tous types de creatures
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -24,6 +26,10 @@ public class TourDeGlace extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    private static final String DESCRIPTION = 
+        "La tour de glace est une tour qui est rapide et " +
+        "qui ralenti les créatures. " +
+        "Cette tour attaque tous types de creatures";
     
     static
     {
@@ -39,17 +45,16 @@ public class TourDeGlace extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Glace", // nom
-              50,                // prix achat
-              50,                 // degats
-              50,                // rayon de portee
-              2,
-              Tour.TYPE_TERRESTRE_ET_AIR,
-              IMAGE,
-              ICONE);       
+              "Glace",          // nom
+              150,              // prix achat
+              50,               // degats
+              50,               // rayon de portee
+              2,                // cadence de tir (tirs / sec.)
+              Tour.TYPE_TERRESTRE_ET_AIR, // type
+              IMAGE,            // image sur terrain
+              ICONE);           // icone pour bouton      
     
-        description = "La tour de glace est une tour qui est rapide," +
-                      " qui ralenti les creatures. ";
+        description = DESCRIPTION;
     }
     
     public void ameliorer()

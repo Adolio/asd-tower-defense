@@ -1,13 +1,22 @@
 package models.tours;
 
 import java.awt.*;
-import java.util.*;
 import models.creatures.Creature;
 import models.terrains.Terrain;
 
 /**
  * Classe de gestion d'une tour
- * 
+ * <p>
+ * Les tours font parti des elements principaux du jeu Tower Defense. 
+ * Ce sont les entites qui permet de blesser et de ralentir les creatures 
+ * sur le terrain.
+ * <p>
+ * Cette classe implemente l'interface Runnable qui permet la tour d'avoir son
+ * propre thread et ainsi gerer elle-meme sa cadence de tir.
+ * <p>
+ * Pour tirer sur une creature du terrain, la creature doit etre a portee et 
+ * doit etre correspondre au type d'attaque de la tour (terre ou air).
+ * <p>
  * Cette classe est abstraite et doit etre heritee pour etre ensuite instanciee.
  * 
  * @author Pierre-Dominique Putallaz
@@ -18,9 +27,7 @@ import models.terrains.Terrain;
  */
 public abstract class Tour extends Rectangle implements Runnable
 {
-	private static final long serialVersionUID = 1L;
-
-	
+	private static final long serialVersionUID      = 1L;
 	public static final int TYPE_TERRESTRE_ET_AIR 	= 0;
 	public static final int TYPE_TERRESTRE 			= 1;
 	public static final int TYPE_AIR 				= 2;
@@ -30,11 +37,12 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * de vente de la tour.
 	 */
 	private static final double COEFF_PRIX_VENTE = 0.6;
+    private static final long TEMPS_ATTENTE_CREATURE_A_PORTEE = 20;
 
 	/**
 	 * couleur de fond de la tour
 	 */
-	private Color couleurDeFond;
+	private final Color COULEUR_DE_FOND;
 
 	/**
 	 * nom de la tour
@@ -106,7 +114,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	/**
 	 * Utilise pour savoir si la tour est en jeu. (thread active)
 	 */
-	private boolean enJeu;
+	protected boolean enJeu;
 
 	protected double cadenceTir; // par seconde
 
@@ -132,14 +140,12 @@ public abstract class Tour extends Rectangle implements Runnable
 			String nom, int prixAchat, int degats, double rayonPortee, 
 			double cadenceTir, int type, Image image, Image icone)
 	{
-	    this.x = x;
-	    this.y = y;
-
-		width = largeur;
-		height = hauteur;
-
-		this.NOM			= nom;
-		this.couleurDeFond 	= couleurDeFond;
+	    this.x              = x;
+	    this.y              = y;
+		width               = largeur;
+		height              = hauteur;
+		NOM			        = nom;
+		COULEUR_DE_FOND 	= couleurDeFond;
 		this.prixAchat 		= prixAchat;
 		prixTotal 			= prixAchat;
 		this.degats 		= degats;
@@ -147,30 +153,43 @@ public abstract class Tour extends Rectangle implements Runnable
 		this.cadenceTir 	= cadenceTir;
 		this.type		 	= type;
 		this.image 			= image;
-		ICONE = icone;
-	}
-
-	/**
-	 * permet de recuperer le temps de preparation d'un tir
-	 * @return le temps de preparation d'un tir en miliseconde
-	 */
-	public double getCadenceTir()
-	{
-		return cadenceTir;
+		ICONE               = icone;
 	}
 	
 	/**
-	 * methode a redefinir qui prend les decision concernant les améliorations
+	 * methode qui prend les decisions concernant les améliorations de la tour
 	 * de la tour.
 	 */
 	public abstract void ameliorer();
 
 	/**
-	 * methode a redefinir qui prend les decision concernant les tires de la
-	 * tour.
+	 * methode qui prend les decision concernant les attaques de la tour.
 	 */
 	public abstract void tirer(Creature creature);
 
+	/**
+     * Permet de recuperer une copie de l'originale de la tour actuelle
+     * 
+     * @return une tour ayant comme parent la classe Tour
+     */
+    abstract public Tour getCopieOriginale();
+
+    /**
+     * Permet de savoir si la tour peut encore etre ameliorer
+     * 
+     * @return true si elle peut encore l'etre, false sinon
+     */
+    abstract public boolean peutEncoreEtreAmelioree();
+	
+    /**
+     * permet de recuperer le temps de preparation d'un tir
+     * @return le temps de preparation d'un tir en miliseconde
+     */
+    public double getCadenceTir()
+    {
+        return cadenceTir;
+    }
+    
 	/**
 	 * Permet de modifier le terrain
 	 * 
@@ -189,7 +208,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	public Color getCouleurDeFond()
 	{
-		return couleurDeFond;
+		return COULEUR_DE_FOND;
 	}
 
 	/**
@@ -291,15 +310,55 @@ public abstract class Tour extends Rectangle implements Runnable
     {
         return ICONE;
     }
+    
+
+    /**
+     * Permet de recuperer le niveau actuel de la tour
+     * 
+     * @return le niveau actuel de la tour
+     */
+    public int getNiveau()
+    {
+        return niveau;
+    }
+
+    /**
+     * Permet de recuperer les degats infliges par l'attaque de la tour
+     * 
+     * @return les degats infliges par l'attaque de la tour
+     */
+    public int getDegats()
+    {
+        return degats;
+    }
+
+    /**
+     * Permet de recuperer le type de la tour sous la forme d'une chaine
+     * de caracteres.
+     * 
+     * @return le type de la tour sous forme verbeuse.
+     */
+    public String getTexteType()
+    {
+        if(type == TYPE_TERRESTRE_ET_AIR)
+            return "Terrestre + air";
+        else if(type == TYPE_TERRESTRE)
+            return "Terrestre seulement";
+        else
+            return "Air seulement";
+    }
 
 	/**
 	 * Permet de mettre la tour en jeu. Cette methode demarre le thread de la
 	 * tour. Des lors, elle tirera sur les creatures.
 	 */
-	public void demarrer()
+	public void mettreEnJeu()
 	{
-		thread = new Thread(this);
-		thread.start();
+		if(thread == null)
+	    {
+		    thread = new Thread(this);
+		    thread.start();
+	    }
 	}
 
 	/**
@@ -327,31 +386,24 @@ public abstract class Tour extends Rectangle implements Runnable
 			// si elle existe
 			if (creature != null)
 			{
-
-				// preparation du tire
-				// TODO mieux gerer les temps
-				try
-				{
+		        tirer(creature);
+			    
+			    // on se reprepare pour le tir suivant
+				try {
 					Thread.sleep((long) (1000.0 / cadenceTir));
-				} catch (InterruptedException e)
-				{
+				} 
+				catch (InterruptedException e){
 					e.printStackTrace();
 				}
-				   
-				if(type == TYPE_TERRESTRE_ET_AIR || 
-				   type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE ||
-				   type == TYPE_AIR       && creature.getType() == Creature.TYPE_AERIENNE)
-				    tirer(creature);
-				
-			} else
+			} 
+			else
 			{
-				// si pas de creature aux environs, on attend
-				// TODO mieux gerer les temps
-				try
-				{
-					Thread.sleep(50);
-				} catch (InterruptedException e)
-				{
+			    // si pas de creature aux environs, 
+			    // on attend pas trop longtemps
+				try {
+					Thread.sleep(TEMPS_ATTENTE_CREATURE_A_PORTEE);
+				} 
+				catch (InterruptedException e){
 					e.printStackTrace();
 				}
 			}
@@ -359,52 +411,67 @@ public abstract class Tour extends Rectangle implements Runnable
 	}
 
 	/**
+	 * Permet de savoir si une creature peut etre blessee.
+	 * 
+	 * Il s'agit en fait d'une verification des types.
+	 * 
+	 * @param creature le crature a testee
+	 * @return true si la creature peut etre blessee, false sinon
+	 */
+	private boolean estBlessable(Creature creature)
+	{
+	    return type == TYPE_TERRESTRE_ET_AIR 
+	        || type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE 
+	        || type == TYPE_AIR && creature.getType()       == Creature.TYPE_AERIENNE;
+	}
+	
+	/**
 	 * Permet de recuperer la creature la plus proche et a portee de la tour.
 	 * 
 	 * @return la creature la plus proche et a portee de la tour ou <b>null s'il
 	 *         n'y a pas de creature a portee</b>
 	 */
-	// TODO synchronized
-	synchronized private Creature getCreatureLaPlusProcheEtAPortee()
+	private Creature getCreatureLaPlusProcheEtAPortee()
 	{
-
 		// le terrain a bien ete setter ?
 		if (terrain == null)
 			return null;
 
 		// variables temporaires pour calcul
 		Creature creatureLaPlusProche = null;
-		double distanceLaPlusProche = 0;
-		double distance = 0;
+		double distanceLaPlusProche   = 0;
+		double distance               = 0;
 
-		Iterator<Creature> iCreatures = terrain.getCreatures().iterator();
-		Creature creature;
-
-		// pour chaque creature sur le terrain
-		while (iCreatures.hasNext())
-		{
-				creature = iCreatures.next();
-
-				// calcul de la distance entre la tour et la creature
-				distance = getDistance(creature);
-
-				// est-elle a portee ?
-				if (distance <= rayonPortee)
-				{
-					// la creature actuelle est-elle plus proche que la derniere
-					// creature a portee testee ?
-					if (creatureLaPlusProche == null
-							|| distance < distanceLaPlusProche)
-					{
-						// nouvelle creature plus proche trouvee!
-						creatureLaPlusProche = creature;
-						distanceLaPlusProche = distance;
-					}
-				}
-		}
-
+		// bloque la reference vers la collection des creatures
+		synchronized (terrain.getCreatures())
+        {
+    		// pour chaque creature sur le terrain
+    		for(Creature creature : terrain.getCreatures())
+    		{
+				// si la creature est accessible
+    		    if (estBlessable(creature))
+                {
+        		    // calcul de la distance entre la tour et la creature
+    				distance = getDistance(creature);
+    
+    				// est-elle a portee ?
+    				if (distance <= rayonPortee)
+    				{
+    					// la creature actuelle est-elle plus proche que la derniere
+    					// creature a portee testee ?
+    					if (creatureLaPlusProche == null 
+    					|| distance < distanceLaPlusProche)
+    					{ 
+    					    // nouvelle creature plus proche trouvee!
+    						creatureLaPlusProche = creature;
+    						distanceLaPlusProche = distance;
+    					}
+    				}
+                }
+    		}
+        }
+		
 		return creatureLaPlusProche;
-
 	}
 
 	/**
@@ -414,33 +481,42 @@ public abstract class Tour extends Rectangle implements Runnable
 	 *            la creature
 	 * @return la distance en vol d'oiseau entre la tour et une creature
 	 */
-	protected synchronized double getDistance(Creature creature)
+	protected double getDistance(Creature creature)
 	{
 		return Point.distance(x, y, creature.x, creature.y);
 	}
-
-	abstract public Tour getCopieOriginale();
-
-	abstract public boolean peutEncoreEtreAmelioree();
-
-	public int getNiveau()
+	
+	/**
+	 * Permet de blesser des creatures dans une zone d'impact
+	 * 
+	 * @param impact le point d'impact de l'attaque
+	 * @param rayonDImpact le rayon d'impact faisant des degats
+	 */
+	public void blesserCreaturesDansZoneImpact(Point impact, double rayonDImpact)
 	{
-		return niveau;
+	    // degats de zone
+        int degatsFinal;
+        double distanceImpact;
+        
+        // monopolisation de la collection des creatures
+        synchronized (terrain.getCreatures())
+        {
+            for(Creature tmpCreature : terrain.getCreatures())
+            {
+                // si la creature est dans le splash
+                distanceImpact = Point.distance(tmpCreature.getCenterX(), 
+                                                tmpCreature.getCenterY(), 
+                                                impact.x, 
+                                                impact.y);
+                
+                if(distanceImpact <= rayonDImpact)
+                {
+                    // calcul des degats en fonction de la distance de l'impact
+                    degatsFinal = (int) (degats - (distanceImpact / rayonDImpact * degats));
+                    tmpCreature.blesser(degatsFinal);
+                }
+            }
+        }
 	}
-
-	// TODO
-	public int getDegats()
-	{
-		return degats;
-	}
-
-    public String getTexteType()
-    {
-        if(type == TYPE_TERRESTRE_ET_AIR)
-            return "Terrestre + air";
-        else if(type == TYPE_TERRESTRE)
-            return "Terrestre seulement";
-        else
-            return "Air seulement";
-    }
+	
 }

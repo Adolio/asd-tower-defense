@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 /**
  * Classe de gestion d'une creature.
- * 
+ * <p>
  * Les creatures sont des bestioles qui attaque le joueur. L'objectif de celles-ci
  * est simple : ce rendre le plus vite possible (chemin le plus court) d'une zone
  * A a un zone B. Si la creature arrive a survivre jusqu'a la zone B, le joueur 
  * perdra une de ses precieuses vies.
- * 
+ * <p>
  * Il existe deux types de creatures, les volantes et les terriennes. Les volantes
  * ne sont pas affecter par les murs et l'emplacement des tours. Elle volent 
  * simplement de la zone A a la zone B sans suivre un chemin particulier.
