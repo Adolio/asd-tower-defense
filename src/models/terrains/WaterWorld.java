@@ -7,12 +7,12 @@ import models.creatures.*;
 import models.outils.Musique;
 
 /**
- * Classe de gestion du terrain TerrainEau.
+ * Classe de gestion du terrain WaterWorld.
  * 
- * Cette classe hérite de la classe Terrain de base.
+ * Cette classe herite de la classe Terrain de base.
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 14 décembre 2009
  * @since jdk1.6.0_16
@@ -27,12 +27,13 @@ public class WaterWorld extends Terrain
 	
     public static final VagueDeCreatures[] vagues = 
     {
-    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
-    	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
-    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
-        new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
-        new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
+        new VagueDeCreatures(5, new Creature1(100,4,10),2000,false),
+        new VagueDeCreatures(10, new Creature1(100,4,10),2000,false),
+        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
+        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
+        new VagueDeCreatures(20, new Creature1(100,4,30),500,false),
+        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false),
+        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss")
     };
 	
     static
@@ -54,8 +55,8 @@ public class WaterWorld extends Terrain
               new Rectangle(480, 390, 20, 80)
         );
     
-        setMusiqueDeFond(MUSIQUE_DE_FOND);
-        demarrerMusiqueDeFond();
+        musiqueDAmbiance = MUSIQUE_DE_FOND;
+        demarrerMusiqueDAmbiance();
         
         /*
          * Définition des murs du terrain.
@@ -81,12 +82,13 @@ public class WaterWorld extends Terrain
      * Permet de recuperer la vague suivante
      * @return la vague suivante
      */
-    VagueDeCreatures getVagueSuivante()
+    VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
     	if (indiceVagueCourante < 6)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante));
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    		,2000,false);
 	}
 }

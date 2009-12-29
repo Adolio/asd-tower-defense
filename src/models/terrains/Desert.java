@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 
 import models.creatures.CarapaceKoopa;
 import models.creatures.Creature1;
+import models.creatures.Nuage;
 import models.creatures.VagueDeCreatures;
 
 /**
@@ -27,12 +28,13 @@ public class Desert extends Terrain
     
     public static final VagueDeCreatures[] vagues = 
     {
-    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
-    	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
-    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
-        new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
-        new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
+        new VagueDeCreatures(5, new Creature1(100,4,10),2000,false,"Creatures terrestres faibles"),
+        new VagueDeCreatures(10, new Creature1(100,4,10),2000,false,"Creature terrestres faibles"),
+        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false,"Creature terrestres moyennes"),
+        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false,"Creature volantes"),
+        new VagueDeCreatures(20, new Creature1(100,4,30),500,false,"Creature terrestres rapides"),
+        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false,"Creature terrestres resistantes"),
+        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss : Très résistant")
     };
 	
     static
@@ -42,8 +44,6 @@ public class Desert extends Terrain
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/objectif.png");
     }
 	
-    
-    
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
@@ -83,12 +83,13 @@ public class Desert extends Terrain
      * Permet de recuperer la vague suivante
      * @return la vague suivante
      */
-    VagueDeCreatures getVagueSuivante()
+    VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
     	if (indiceVagueCourante < 6)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante));
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    		    ,2000,false);
 	}
 }

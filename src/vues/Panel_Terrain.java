@@ -338,27 +338,31 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//----------------------------------------
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
-		for(int i=0;i < jeu.getCreatures().size(); i++)
-		{
-		    Creature creature = jeu.getCreatures().get(i);
- 
-		    /* efface les creatures mortes
-		     * 
-		     * TODO on peut faire mieux mais ca résout 
-		     * les problèmes de créatures fantomes
-		     */
-		    if(creature.estMorte())
-		    {
-		        jeu.getCreatures().remove(i--);
-		        System.out.println("Panel_Terrain effacement d'une creature mal tuee");
-                continue;
-		    }
-		      
-		    // affichage des creature terriennes uniquement
-		    if(creature.getType() == Creature.TYPE_TERRIENNE)
-		        dessinerCreature(creature,g2);
-	
-		}
+		synchronized (jeu.getCreatures())
+        {
+    		for(int i=0;i < jeu.getCreatures().size(); i++)
+    		{
+    		    Creature creature = jeu.getCreatures().get(i);
+     
+    		    /* efface les creatures mortes
+    		     * 
+    		     * TODO on peut faire mieux mais ca résout 
+    		     * les problèmes de créatures fantomes
+    		     */
+    		    if(creature.estMorte())
+    		    {
+    		        jeu.getCreatures().remove(i--);
+    		        System.out.println("Panel_Terrain effacement d'une creature mal tuee");
+                    continue;
+    		    }
+    		      
+    		    // affichage des creature terriennes uniquement
+    		    if(creature.getType() == Creature.TYPE_TERRIENNE)
+    		        dessinerCreature(creature,g2);
+    	
+    		}
+        }
+		
 		//-------------------------
 		//-- affichage des tours --
 		//-------------------------
@@ -368,9 +372,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //--------------------------------------
         //-- affichage des creatures aerienne --
         //--------------------------------------
-        for(Creature creature : jeu.getCreatures())
-            if(creature.getType() == Creature.TYPE_AERIENNE)
-                dessinerCreature(creature,g2);
+		
+		synchronized (jeu.getCreatures())
+        {
+            for(Creature creature : jeu.getCreatures())
+                if(creature.getType() == Creature.TYPE_AERIENNE)
+                    dessinerCreature(creature,g2);
+        }
 		
 		//---------------------------------
 		//-- entour la tour selectionnee --

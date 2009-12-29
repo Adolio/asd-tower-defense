@@ -496,8 +496,9 @@ public class Maillage
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
-		if (rectangle.getX() < 0 || rectangle.getY() < 0)
-			throw new IllegalArgumentException("Origine trop petite");
+		// TODO j'ai supprimer car je doit pouvoir mettre des murs partout (aurelien)
+	    //if (rectangle.getX() < 0 || rectangle.getY() < 0)
+		//	throw new IllegalArgumentException("Origine trop petite");
 
 		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");

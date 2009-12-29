@@ -1,109 +1,132 @@
 package models.terrains;
 
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Vector;
-
-import models.creatures.Creature;
-import models.creatures.EcouteurDeCreature;
-import models.creatures.VagueDeCreatures;
-import models.maillage.Maillage;
-import models.maillage.Noeud;
-import models.maillage.PathNotFoundException;
+import java.util.*;
+import models.creatures.*;
+import models.maillage.*;
 import models.outils.Musique;
 import models.tours.Tour;
 
 /**
- * Classe de gestion d'un terrain du jeu.
- * 
- * Cette classe est abstraite, elle ne peut pas etre instanciee en tant que
- * telle mais doit etre heritee.
+ * Classe de gestion d'un terrain de jeu.
  * <p>
  * Cette classe contient tous les elements contenu sur le terrain, c'est a dire
  * :<br>
- * - Les tours<br>
- * - Les creatures<br>
- * - Le maillage<br>
- * - Les murs propres au terrain (simples zones inaccessibles)<br>
- * - Les zones de depart et arrivee des creatures<br>
- * - L'image de fond du terrain
+ * - Les tours
  * <p>
+ * - Les creatures : la liste des creatures et les vagues de creatures
+ * <p>
+ * - Les maillages : Il y a deux types de maillages, un pour les creatures terrestres 
+ * ou l'emplacement des tours a une influence sur le chemin des creatures 
+ * et un autre pour les creatures aerienne ou l'emplacement des tours n'a aucune 
+ * influence sur le chemin des creatures (elles passent par dessus les tours)
+ * <p>
+ * - Les murs propres au terrain : simples zones inaccessibles
+ * <p>
+ * - Les zones de depart et arrivee des creatures<br>
+ * <p>
+ * - L'image de fond du terrain
+ * <p><p>
  * Plusieurs methodes sont mises a disposition par cette classe pour gerer les
  * elements qu'elle contient.
+ * <p>
+ * De plus, cette classe est abstraite, elle ne peut pas etre instanciee en tant que
+ * telle mais doit etre heritee.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
+ * @see Tour
+ * @see Creature
  * @see Maillage
  */
 public abstract class Terrain
 {
-	private final String NOM;
+	/**
+	 * nom de la zone de jeu
+	 */
+    private final String NOM;
 
+    /**
+     * nombre de pieces d'or au debut de la partie
+     */
     private final int NB_PIECES_OR_INITIAL;
-
-	/**
-	 * Les tours sont posees sur le terrain et permettent de tuer les creatures.
-	 * 
-	 * @see Tour
-	 */
-	private Vector<Tour> tours;
-
-	/**
-	 * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
-	 * d'arrivee.
-	 * 
-	 * @see Creature
-	 */
-	private Vector<Creature> creatures;
-
-	/**
-	 * Les murs sont utilises pour empecher le joueur de construire des tours
-	 * dans certaines zones. Les creatures ne peuvent egalement pas si rendre.
-	 * En fait, les murs reflettent les zones de la carte non accessible. Les
-	 * murs ne sont pas affiches. Ils sont simplement utilises pour les controle
-	 * d'acces de la carte.
-	 */
-	protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
 
 	/**
 	 * Taille du terrain
 	 */
 	private final int LARGEUR, // en pixels
-			HAUTEUR; // en pixels
+			          HAUTEUR; // en pixels
 
 	/**
-	 * Le maillage permet de definire les chemins des cratures sur le terrain.
-	 * 
-	 * @see Maillage
+	 * precision du maillage, espace entre deux noeuds
 	 */
-	private final int PRECISION_MAILLAGE = 10; // espace entre deux noeuds en
-												// pixels
-	private final Maillage maillageTerrestre;
-	private final Maillage maillageAerien;
+	private final int PRECISION_MAILLAGE = 10; // pixels
 	
 	/**
-	 * Zones de depart et d'arrivee des creatures. Les creatures sont implentees
-	 * aleatoirement dans la zone de départ lorsqu'une vague des creatures est
-	 * sollicitee par le joueur. Ces dernieres doivent alors ce rendre dans la
-	 * zone d'arrivee en utilisant le chemin le plus cour fourni par le
-	 * maillage.
+     * Le maillage permet de definire les chemins des creatures sur le terrain.
+     * Ici, pour les creatures terriennes avec prise en compte de la position des
+     * tours.
+     * 
+     * @see Maillage
+     */
+	private final Maillage MAILLAGE_TERRESTRE;
+	
+	/**
+     * Le maillage permet de definire les chemins des creatures sur le terrain.
+     * Ici, pour les creatures volante sans prise en compte de la position des
+     * tours.
+     * 
+     * @see Maillage
+     */
+	private final Maillage MAILLAGE_AERIEN;
+	
+	/**
+	 * Les creatures sont implentees aleatoirement dans la zone de depart 
+	 * lorsqu'une vague des creatures est sollicitee par le joueur.
 	 */
 	private final Rectangle ZONE_DEPART;
+	
+	/**
+     * Les creatures doivent ce rendre dans la zone d'arrivee en utilisant 
+     * le chemin le plus cours fourni par le maillage.
+     */
 	private final Rectangle ZONE_ARRIVEE;
 
 	/**
-	 * Image de fond du terrain. <br/>
-	 * Note : les murs du terrain sont directement lies a cette image
+	 * Image de fond du terrain. <br>
+	 * Note : les murs du terrain sont normalement lies a cette image
 	 */
 	private final Image IMAGE_DE_FOND;
 
+	   /**
+     * Les tours sont posees sur le terrain et permettent de tuer les creatures.
+     * 
+     * @see Tour
+     */
+    private Vector<Tour> tours;
+
+    /**
+     * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
+     * d'arrivee.
+     * 
+     * @see Creature
+     */
+    private Vector<Creature> creatures;
+
+    /**
+     * Les murs sont utilises pour empecher le joueur de construire des tours
+     * dans certaines zones. Les creatures ne peuvent egalement pas si rendre.
+     * En fait, les murs reflettent les zones de la carte non accessible. Les
+     * murs ne sont pas affiches. Ils sont simplement utilises pour les controls
+     * d'acces de la carte.
+     */
+    protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
+	
+	
 	/**
 	 * Gestion des vagues de creatures.
 	 * C'est le joueur que decident le moment ou il veut lancer une vague de
@@ -112,23 +135,26 @@ public abstract class Terrain
 	 */
 	protected int indiceVagueCourante;
 	
-	
-	protected Musique musiqueDeFond;
+	/**
+	 * musique d'ambiance du terrain
+	 */
+	protected Musique musiqueDAmbiance;
 	
 	
 	/**
 	 * Constructeur du terrain.
 	 * 
-	 * @param largeur
-	 *            la largeur en pixels du terrain (utilisé pour le maillage)
-	 * @param hauteur
-	 *            la hauteur en pixels du terrain (utilisé pour le maillage)
-	 * @param imageDeFond
-	 *            le chemin jusqu'a l'image de fond
-	 * @param zoneDepart
-	 *            la zone de depart des creatures
-	 * @param zoneArrivee
-	 *            la zone d'arrivee des creatures
+	 * @param largeur la largeur en pixels du terrain (utilisé pour le maillage)
+	 * @param hauteur la hauteur en pixels du terrain (utilisé pour le maillage)
+	 * @param nbPiecesOrInitial le nom de piece d'or en debut de partie
+	 * @param positionMaillageX position du point 0 du maillage
+	 * @param positionMaillageY position du point 0 du maillage
+	 * @param largeurMaillage largeur du maillage en pixel
+	 * @param hauteurMaillage hauteur du maillage en pixel
+	 * @param imageDeFond le chemin jusqu'a l'image de fond
+	 * @param nom nom de la zone de jeu
+	 * @param zoneDepart la zone de depart des creatures
+	 * @param zoneArrivee la zone d'arrivee des creatures
 	 */
 	public Terrain(int largeur, int hauteur, 
 					int nbPiecesOrInitial, 
@@ -148,24 +174,31 @@ public abstract class Terrain
 		NB_PIECES_OR_INITIAL 	= nbPiecesOrInitial;
 		IMAGE_DE_FOND 			= imageDeFond;
 		NOM                     = nom;
-		maillageTerrestre 	    = new Maillage(largeurMaillage, hauteurMaillage, 
+		
+		// creation des deux maillages
+		MAILLAGE_TERRESTRE 	    = new Maillage(largeurMaillage, hauteurMaillage, 
 									PRECISION_MAILLAGE,
 									positionMaillageX,positionMaillageY);
 		
-		maillageAerien          = new Maillage(largeurMaillage, hauteurMaillage, 
+		MAILLAGE_AERIEN          = new Maillage(largeurMaillage, hauteurMaillage, 
                                     PRECISION_MAILLAGE,
                                     positionMaillageX,positionMaillageY);
 		
+		// creation des collections
 		tours 		= new Vector<Tour>();
 		creatures 	= new Vector<Creature>();
 	}
 
-	abstract VagueDeCreatures getVagueSuivante();
+	/**
+	 * Methode qui permet de recuperer la vague de creatures suivantes
+	 * @return la vague de creatures suivante
+	 */
+	abstract VagueDeCreatures getVagueDeCreaturesSuivante();
 	
 	
-	// ----------------------------------------------------------
-	// -- GETTER / SETTER BASIQUES --
-	// ----------------------------------------------------------
+	//------------------------------
+	//-- GETTER / SETTER BASIQUES --
+	//------------------------------
 
 	/**
 	 * Permet de recuperer la largeur du terrain.
@@ -216,34 +249,80 @@ public abstract class Terrain
 	{
 		return ZONE_ARRIVEE;
 	}
+	
+	   /**
+     * Permet de recuperer le nombre de pieces initial
+     * 
+     * @return le nombre de pieces initial
+     */
+    public int getNbPiecesOrInitial()
+    {
+        return NB_PIECES_OR_INITIAL;
+    }
 
-	// ----------------------------------------------------------
-	// -- GESTION DES MURS --
-	// ----------------------------------------------------------
+    /**
+     * Permet de recuperer le numero de la vague courante
+     * @return le numero de la vague courante
+     */
+    public int getNumVagueCourante()
+    {
+        return indiceVagueCourante;
+    }
+
+    /**
+     * Permet de recuperer le nom du terrain
+     * 
+     * @return le nom du terrain
+     */
+    public String getNom()
+    {
+        return NOM;
+    }
+
+    /**
+     * Permet de recuperer la description vague suivante
+     * 
+     * @return la description de la vague suivante
+     */
+    public String getDescriptionVagueSuivante()
+    {
+        String descriptionVague = getVagueDeCreaturesSuivante().getDescription();
+        
+        // s'il y a une description, on la retourne
+        if(!descriptionVague.isEmpty())
+            return descriptionVague;
+        
+        // sinon on genere une description
+        else
+            return getVagueDeCreaturesSuivante().toString();
+    }
+
+	//----------------------
+	//-- GESTION DES MURS --
+	//----------------------
 
 	/**
 	 * Permet d'ajouter un mur sur le terrain.
 	 * 
-	 * @param mur
-	 *            le mur ajouter
+	 * @param mur le mur ajouter
 	 */
-	synchronized public void ajouterMur(Rectangle mur)
+	public void ajouterMur(Rectangle mur)
 	{
 		// c'est bien un mur valide ?
-		if (mur != null)
-		{
-			// desactive la zone dans le maillage qui correspond au mur
-			maillageTerrestre.desactiverZone(mur);
-			maillageAerien.desactiverZone(mur);
-			
-			// ajout du mur
-			murs.add(mur);
-		}
+		if (mur == null)
+		    throw new IllegalArgumentException("Mur nul");
+		
+		// desactive la zone dans le maillage qui correspond au mur
+		MAILLAGE_TERRESTRE.desactiverZone(mur);
+		MAILLAGE_AERIEN.desactiverZone(mur);
+		
+		// ajout du mur
+		murs.add(mur);
 	}
 
-	// ----------------------------------------------------------
-	// -- GESTION DES CREATURES --
-	// ----------------------------------------------------------
+	//---------------------------
+	//-- GESTION DES CREATURES --
+	//---------------------------
 
 	/**
 	 * Permet de recuperer la liste des creatures sur le terrain.
@@ -258,13 +337,14 @@ public abstract class Terrain
 	/**
 	 * Permet d'ajouter une creature.
 	 * 
-	 * @param creature
-	 *            la creature a ajouter
+	 * @param creature la creature a ajouter
 	 */
 	synchronized public void ajouterCreature(Creature creature)
 	{
-		if (creature != null)
-			creatures.add(creature);
+		if (creature == null)
+		    throw new IllegalArgumentException("Creature nulle");
+		    
+		creatures.add(creature);
 	}
 
 	/**
@@ -296,11 +376,10 @@ public abstract class Terrain
 	/**
 	 * Permet d'ajouter une tour sur le terrain.
 	 * 
-	 * @param tour
-	 *            la tour a ajouter
+	 * @param tour la tour a ajouter
 	 * @throws Exception si la zone n'est pas accessible (occupee)
 	 */
-	synchronized public void ajouterTour(Tour tour) throws Exception
+	public void ajouterTour(Tour tour) throws Exception
 	{
 		// c'est bien une tour valide ?
 		if (tour == null)
@@ -311,7 +390,7 @@ public abstract class Terrain
 		    throw new Exception("Pose impossible : Zone non accessible");
 		
 		// si elle bloque le chemin de A vers B
-		if (laTourBloqueLeChemin(tour))
+		if (laTourBloqueraLeChemin(tour))
             throw new Exception("Pose impossible : Chemin bloqué");
 			
 		// desactive la zone dans le maillage qui correspond a la tour
@@ -325,31 +404,29 @@ public abstract class Terrain
 	/**
 	 * Permet de supprimer une tour du terrain.
 	 * 
-	 * @param tour
-	 *            la tour a supprimer
+	 * @param tour la tour a supprimer
 	 */
-	synchronized public void supprimerTour(Tour tour)
+	public void supprimerTour(Tour tour)
 	{
-		// c'est bien un tour valide ?
-		if (tour != null)
-		{
-			// arret du thread
-			tour.arreter();
+	 // c'est bien une tour valide ?
+        if (tour == null)
+            throw new IllegalArgumentException("Tour nulle");    
+		
+		// arret du thread
+		tour.arreter();
 
-			// suppression de la tour
-			tours.remove(tour);
+		// suppression de la tour
+		tours.remove(tour);
 
-			// reactive la zone dans le maillage qui correspond a la tour
-			activerZone(tour,true);
-		}
+		// reactive la zone dans le maillage qui correspond a la tour
+		activerZone(tour,true);
 	}
 
 	/**
 	 * Permet de savoir si une tour peut etre posee a un certain endroit sur le
 	 * terrain.
 	 * 
-	 * @param tour
-	 *            la tour a posee
+	 * @param tour la tour a posee
 	 * @return true si la tour peut etre posee, false sinon
 	 */
 	public boolean laTourPeutEtrePosee(Tour tour)
@@ -359,19 +436,28 @@ public abstract class Terrain
 		    return false;
 		
 		// il n'y a pas deja une tour
-		for (Tour tourCourante : tours)
-			if (tour.intersects(tourCourante))
-				return false;
-
+		synchronized (tours)
+        {
+		    for (Tour tourCourante : tours)
+	            if (tour.intersects(tourCourante))
+	                return false;
+        }
+		
 		// il n'y a pas un mur
-		for (Rectangle mur : murs)
-			if (tour.intersects(mur))
-				return false;
+		synchronized (murs)
+        {
+    		for (Rectangle mur : murs)
+    			if (tour.intersects(mur))
+    				return false;
+        }
 
 		// il n'y a pas deja une creature
-		for (Rectangle creature : creatures)
-			if (tour.intersects(creature))
-				return false;
+		synchronized (creatures)
+        {
+    		for (Rectangle creature : creatures)
+    			if (tour.intersects(creature))
+    				return false;
+        }
 
 		// il n'y a pas la zone de depart ou d'arrivee
 		if(tour.intersects(ZONE_DEPART)
@@ -382,7 +468,14 @@ public abstract class Terrain
 		return true;
 	}
 
-	public boolean laTourBloqueLeChemin(Tour tour)
+	/**
+	 * Permet de savoir si apres la pose d'une tour en parametre 
+	 * le chemin deviendra bloque ?
+	 * 
+	 * @param tour la tour a testee si elle bloquera le chemin
+	 * @return true si elle le bloquera lors de la pose, false sinon
+	 */
+	public boolean laTourBloqueraLeChemin(Tour tour)
 	{
 	    // c'est une tour valide ?
         if (tour == null)
@@ -391,33 +484,39 @@ public abstract class Terrain
 	    // si l'on construit la tour, il existe toujours un chemin
         desactiverZone(tour,false);
         if(getCheminLePlusCourt((int)ZONE_DEPART.getCenterX(), 
-                        (int)ZONE_DEPART.getCenterY(), 
-                             (int)ZONE_ARRIVEE.getCenterX(), (int)ZONE_ARRIVEE.getCenterY(), 
-                             Creature.TYPE_TERRIENNE) == null)
+                                (int)ZONE_DEPART.getCenterY(), 
+                                (int)ZONE_ARRIVEE.getCenterX(), 
+                                (int)ZONE_ARRIVEE.getCenterY(), 
+                                Creature.TYPE_TERRIENNE) == null)
         {
-            activerZone(tour,false);
+            // il existe un chemin, donc elle ne bloque pas.
+            activerZone(tour,false); // on reactive la zone
             return true;
         }
         
-        activerZone(tour,false);
+        // il n'existe pas de chemin, donc elle bloque le chemin.
+        activerZone(tour,false); // on reactive la zone
         return false;
 	}
 	
-	// ----------------------------------------------------------
-	// -- GESTION DU MAILLAGE --
-	// ----------------------------------------------------------
+	//-------------------------
+	//-- GESTION DU MAILLAGE --
+	//-------------------------
 
 	/**
 	 * Permet d'activer ou reactiver un zone rectangulaire du maillage.
 	 * 
-	 * @param zone
-	 *            la zone rectangulaire a activer
+	 * @param zone la zone rectangulaire a activer
+	 * @param miseAJourDesCheminsDesCreatures faut-il mettre a jour 
+	 *                                        les chemins des creatures ?
 	 */
 	private void activerZone(Rectangle zone, 
 	                         boolean miseAJourDesCheminsDesCreatures)
 	{
-		maillageTerrestre.activerZone(zone);
+		// activation de la zone
+	    MAILLAGE_TERRESTRE.activerZone(zone);
 
+	    // mise a jour des chemins si necessaire
 		if(miseAJourDesCheminsDesCreatures)
 		    miseAJourDesCheminsDesCreatures();
 	}
@@ -425,14 +524,17 @@ public abstract class Terrain
 	/**
 	 * Permet de desactiver un zone rectangulaire du maillage.
 	 * 
-	 * @param zone
-	 *            la zone rectangulaire a desactiver
+	 * @param zone la zone rectangulaire a desactiver
+	 * @param miseAJourDesCheminsDesCreatures faut-il mettre a jour 
+     *                                        les chemins des creatures ?
 	 */
 	private void desactiverZone(Rectangle zone, 
 	                            boolean miseAJourDesCheminsDesCreatures)
 	{
-		maillageTerrestre.desactiverZone(zone);
+	    // desactivation de la zone
+	    MAILLAGE_TERRESTRE.desactiverZone(zone);
 		
+	    // mise a jour des chemins si necessaire
 		if(miseAJourDesCheminsDesCreatures)
 		    miseAJourDesCheminsDesCreatures();
 	}
@@ -443,56 +545,34 @@ public abstract class Terrain
 	 */
 	synchronized private void miseAJourDesCheminsDesCreatures()
 	{
-		// mise a jour de tous les chemins
-		Iterator<Creature> iCreatures = creatures.iterator();
-		Creature creature;
-		while(iCreatures.hasNext())
-		{
-			creature = iCreatures.next();
-			
-			// les tours n'affecte que le chemin des creatures terriennes
-			if(creature.getType() == Creature.TYPE_TERRIENNE)
-			    creature.setChemin(getCheminLePlusCourt(
-			            (int) creature.getCenterX(),
-			            (int) creature.getCenterY(),
-			            (int) ZONE_ARRIVEE.getCenterX(), 
-			            (int) ZONE_ARRIVEE.getCenterY(),
-			            creature.getType()));
-		}
+		// Il ne doit pas y avoir de modifications sur la collection
+	    // durant le parcours.
+	    synchronized (creatures)
+        {
+            // mise a jour de tous les chemins
+        	for(Creature creature : creatures)
+        	{
+        		// les tours n'affecte que le chemin des creatures terriennes
+        		if(creature.getType() == Creature.TYPE_TERRIENNE)
+        		    creature.setChemin(getCheminLePlusCourt(
+        		            (int) creature.getCenterX(),
+        		            (int) creature.getCenterY(),
+        		            (int) ZONE_ARRIVEE.getCenterX(), 
+        		            (int) ZONE_ARRIVEE.getCenterY(),
+        		            creature.getType()));
+        	}
+        }
 	}
 
+	/**
+	 * Permet de lancer la vague de creatures suivantes
+	 * 
+	 * @param edc ecouteur de creature fourni a chacune des creatures
+	 */
 	public void lancerVagueSuivante(EcouteurDeCreature edc)
 	{
-		// recuperation de la vague
-		//VagueDeCreatures vague = vagues.get(indiceVagueCourante);
-		VagueDeCreatures vague = getVagueSuivante();
-		
-		// creation des creatures de la vague
-		for(int i=0;i<vague.getNbCreatures();i++)
-		{	
-			// calcul de la position aleatoire de la creature
-			// dans la zone de depart
-			int xDepart = (int)(Math.random() * (ZONE_DEPART.getWidth() 
-							 + 1) + ZONE_DEPART.getX());
-			int yDepart = (int)(Math.random() * (ZONE_DEPART.getHeight() 
-							 + 1) + ZONE_DEPART.getY());
-			
-			// creation d'une nouvelle instance de la creature
-			// et affectation de diverses proprietes
-			Creature creature = vague.getNouvelleCreature();
-			creature.setX(xDepart);
-			creature.setY(yDepart);
-			creature.ajouterEcouteurDeCreature(edc);
-			creature.setChemin(getCheminLePlusCourt(
-									xDepart, 
-									yDepart, 
-									(int) ZONE_ARRIVEE.getCenterX(), 
-									(int) ZONE_ARRIVEE.getCenterY(),
-									creature.getType()));
-			
-			ajouterCreature(creature);
-			creature.demarrer();
-		}
+		// lancement de la vague
+		getVagueDeCreaturesSuivante().lancerVague(this, edc);
 		indiceVagueCourante++;
 	}
 	
@@ -502,14 +582,10 @@ public abstract class Terrain
 	 * 
 	 * Cette methode fait appel au maillage pour decouvrir ce chemin
 	 * 
-	 * @param xDepart
-	 *            la position x du point de depart
-	 * @param yDepart
-	 *            la position y du point de depart
-	 * @param xArrivee
-	 *            la position x du point d'arrivee
-	 * @param yArrivee
-	 *            la position y du point d'arrivee
+	 * @param xDepart la position x du point de depart
+	 * @param yDepart la position y du point de depart
+	 * @param xArrivee la position x du point d'arrivee
+	 * @param yArrivee la position y du point d'arrivee
 	 * @return le chemin sous la forme d'un ArrayList de java.awt.Point ou
 	 *         <b>null si aucun chemin ne reli les deux points</b>.
 	 * @see Maillage
@@ -520,9 +596,9 @@ public abstract class Terrain
 		try
 		{
 			if(typeCreature == Creature.TYPE_TERRIENNE)
-			    return maillageTerrestre.plusCourtChemin(xDepart, yDepart, xArrivee,yArrivee);
+			    return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart, xArrivee,yArrivee);
 			else
-			    return maillageAerien.plusCourtChemin(xDepart, yDepart, xArrivee,yArrivee);
+			    return MAILLAGE_AERIEN.plusCourtChemin(xDepart, yDepart, xArrivee,yArrivee);
 		}
 		// les points sont hors du maillage
 		catch (IllegalArgumentException e)
@@ -532,76 +608,42 @@ public abstract class Terrain
 		// aucun chemin ne reli les deux points
 		catch (PathNotFoundException e)
 		{
-			System.err.println("J'AI PAS DE CHEMIN");
-		    
 		    return null;
-			
 		}
 	}
 
 	/**
-	 * Permet de recuperer la liste des arcs actifs du maillage.
+	 * Permet de recuperer la liste des arcs actifs du maillage terrestre.
 	 * 
 	 * @return une collection de java.awt.geom.Line2D representant les arcs
 	 *         actifs du maillage
 	 */
 	public ArrayList<Line2D> getArcsActifs()
 	{
-		return maillageTerrestre.getArcsActifs();
+		return MAILLAGE_TERRESTRE.getArcsActifs();
 	}
 
 	/**
-	 * Permet de recuperer les noeuds du maillage
+	 * Permet de recuperer les noeuds du maillage terrestre
+	 * 
 	 * @return Une collection de noeuds
 	 */
 	public ArrayList<Noeud> getNoeuds()
 	{
-		return maillageTerrestre.getNoeuds();
+		return MAILLAGE_TERRESTRE.getNoeuds();
 	}
-
+	
+	
+	//-------------
+    //-- MUSIQUE --
+    //-------------
+	
 	/**
-	 * Permet de recuperer le nombre de pieces initial
-	 * @return le nombre de pieces initial
-	 */
-	public int getNbPiecesOrInitial()
-	{
-		return NB_PIECES_OR_INITIAL;
-	}
-
-	/**
-	 * Permet de recuperer le numero de la vague courante
-	 * @return le numero de la vague courante
-	 */
-	public int getNumVagueCourante()
-	{
-		return indiceVagueCourante+1;
-	}
-
-    public String getNom()
+     * Permet de demarrer la lecture de la musique d'ambiance
+     */
+    public void demarrerMusiqueDAmbiance()
     {
-        return NOM;
-    }
-
-    // TODO
-    public String getDescriptionVagueCourante()
-    {
-        //String descriptionVague = getVagueSuivante().getDescription();
-        
-        //if(!descriptionVague.isEmpty())
-        //    return descriptionVague;
-        //else
-            return getVagueSuivante().toString();
-    }
-    
-    public void setMusiqueDeFond(Musique musiqueDeFond)
-    {
-        this.musiqueDeFond = musiqueDeFond;
-    }
-    
-    //TODO
-    public void demarrerMusiqueDeFond()
-    {
-        if(musiqueDeFond != null)
-            musiqueDeFond.lire(0);
+        if(musiqueDAmbiance != null)
+            musiqueDAmbiance.lire(0); // lecture infinie
     }
 }

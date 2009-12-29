@@ -1,5 +1,8 @@
 package models.creatures;
 
+import java.awt.Rectangle;
+import models.terrains.Terrain;
+
 /**
  * Structure permettant de stoquer des informations sur une vague de creatures.
  * 
@@ -10,38 +13,62 @@ package models.creatures;
  * @since jdk1.6.0_16
  * @see Creature
  */
-public class VagueDeCreatures
+public class VagueDeCreatures implements Runnable
 {
 	private final int NB_CREATURES;
+	private final long TEMPS_LANCER_ENTRE_CREATURE;
+	private final boolean POSITION_DEPART_ALEATOIRE;
+	
 	private Creature creatureAEnvoyer;
 	private String description;
+	private Thread thread;
+	private Terrain terrain;
+	private EcouteurDeCreature edc;
+	
 	
 	/**
 	 * Constructeur de la vague de creatures
 	 * @param nbCreatures le nombre de copie de la creature a envoyer
 	 * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
+	 * @param tempsLancerEntreCreature temps d'attente entre chaque creature envoyee
+	 * @param positionDepartAleatoire la creature est-elle positionnee aleatoirement 
+	 *                                dans la zone de depart ou au centre ?
 	 * @param description de la vague
 	 */
 	public VagueDeCreatures(int nbCreatures, 
 							Creature creatureAEnvoyer, 
+							long tempsLancerEntreCreature,
+							boolean positionDepartAleatoire,
 							String description)
 	{
-		this.NB_CREATURES		= nbCreatures;
-		this.creatureAEnvoyer 	= creatureAEnvoyer;
-		this.description		= description;
+		NB_CREATURES		        = nbCreatures;
+		TEMPS_LANCER_ENTRE_CREATURE = tempsLancerEntreCreature;
+		POSITION_DEPART_ALEATOIRE   = positionDepartAleatoire;
+		this.creatureAEnvoyer 	    = creatureAEnvoyer;
+		this.description		    = description;
 	}
 	
 	/**
      * Constructeur de la vague de creatures
+     * 
      * @param nbCreatures le nombre de copie de la creature a envoyer
      * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
+     * @param tempsLancerEntreCreature temps d'attente entre chaque creature envoyee
+     * @param positionDepartAleatoire la creature est-elle positionnee aleatoirement 
+     *                                dans la zone de depart ou au centre ?
      */
     public VagueDeCreatures(int nbCreatures, 
-                            Creature creatureAEnvoyer)
+                            Creature creatureAEnvoyer,
+                            long tempsLancerEntreCreature,
+                            boolean positionDepartAleatoire)
     {
-        this(nbCreatures,creatureAEnvoyer,"");
+        this(nbCreatures,
+             creatureAEnvoyer,
+             tempsLancerEntreCreature,
+             positionDepartAleatoire,
+             "");
     }
-	
+    
 	
 	/**
 	 * Permet de recuperer le nombre de creatures dans la vague
@@ -80,5 +107,69 @@ public class VagueDeCreatures
         		"sante : "+creatureAEnvoyer.getSanteMax()+", " +
         		"gain   : "+creatureAEnvoyer.getNbPiecesDOr()+", "+
         		"vit     : "+creatureAEnvoyer.getVitesse()+" ]";
+    }
+
+    
+    /**
+     * Permet de lancer la vague de creature sur le terrain
+     * 
+     * @param terrain le terrain en question
+     * @param edc l'ecouteur de creature fourni a chaque creature creee
+     */
+    public void lancerVague(Terrain terrain, EcouteurDeCreature edc)
+    {
+       this.terrain = terrain;
+       this.edc     = edc;
+       thread       = new Thread(this);
+       thread.start();
+    }
+    
+    
+    public void run()
+    {
+        // recuperation des zones
+        final Rectangle ZONE_DEPART  = terrain.getZoneDepart();
+        final Rectangle ZONE_ARRIVEE = terrain.getZoneArrivee();
+        
+        int xDepart = (int) ZONE_DEPART.getCenterX();
+        int yDepart = (int) ZONE_DEPART.getCenterY();
+        
+        // creation des creatures de la vague
+        for(int i=0;i<NB_CREATURES;i++)
+        {   
+            // calcul d'une position aleatoire de la creature dans la zone de depart
+            if(POSITION_DEPART_ALEATOIRE)
+            {
+                xDepart = (int)(Math.random() * (ZONE_DEPART.getWidth() 
+                        + 1) + ZONE_DEPART.getX());
+                yDepart = (int)(Math.random() * (ZONE_DEPART.getHeight() 
+                       + 1) + ZONE_DEPART.getY());
+            }
+            
+            // creation d'une nouvelle instance de la creature
+            // et affectation de diverses proprietes
+            Creature creature = getNouvelleCreature();
+            creature.setX(xDepart);
+            creature.setY(yDepart);
+            creature.ajouterEcouteurDeCreature(edc);
+            creature.setChemin(terrain.getCheminLePlusCourt(
+                                    xDepart, 
+                                    yDepart, 
+                                    (int) ZONE_ARRIVEE.getCenterX(), 
+                                    (int) ZONE_ARRIVEE.getCenterY(),
+                                    creature.getType()));
+          
+            terrain.ajouterCreature(creature);
+            creature.demarrer();
+            
+            // temps d'attente entre chaque creature
+            try{
+                Thread.sleep(TEMPS_LANCER_ENTRE_CREATURE);
+            } 
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
     } 
 }
