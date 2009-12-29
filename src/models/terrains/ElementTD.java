@@ -26,13 +26,13 @@ public class ElementTD extends Terrain
     
     public static final VagueDeCreatures[] vagues = 
     {
-    	new VagueDeCreatures(5, new Creature1(100,4,10),2000,false),
-    	new VagueDeCreatures(10, new Creature1(100,4,10),2000,false),
+    	new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
+    	new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
     	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
     	new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
-    	new VagueDeCreatures(20, new Creature1(100,4,30),500,false),
-        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss")
+    	new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
+        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
+        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
     };
     
     static
@@ -50,12 +50,20 @@ public class ElementTD extends Terrain
      */
     public ElementTD () 
     {
-        super(480, 500, 100, 
-              0, 0, 480, 540, IMAGE_DE_FOND, "ElementTD", 
-              new Rectangle(110, 0, 80, 20),
-              new Rectangle(230, 0, 80, 20)
-        );
-    
+        super(  480,  // largeur
+                500,  // hauteur
+                100,  // nbPiecesOrInitiales
+                20,   // nbViesInitiales
+                0,    // positionMaillageX
+                0,    // positionMaillageY
+                480,  // largeurMaillage
+                540,  // hauteurMaillage
+                IMAGE_DE_FOND, // imageDeFond
+                "ElementTD",  // nom
+                new Rectangle(110, 0, 80, 20),  // zoneDepart
+                new Rectangle(230, 0, 80, 20)   // zoneArrivee
+          );
+        
         musiqueDAmbiance = MUSIQUE_DE_FOND;
         demarrerMusiqueDAmbiance();
         
@@ -86,11 +94,11 @@ public class ElementTD extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < 6)
+    	if (indiceVagueCourante < vagues.length)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
     		,2000,false);
 	}
     

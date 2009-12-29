@@ -41,6 +41,7 @@ public class Outils
 	
 	/**
 	 * Permet d'arrondir une valeur reelle a un certain nombre de decimales
+	 * 
 	 * @param nombre le nombre a arrondir
 	 * @param nbDecimales le nombre de decimales souhaitees
 	 * @return le nombre arrondi a nbDecimal decimales

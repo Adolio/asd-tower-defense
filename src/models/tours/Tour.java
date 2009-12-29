@@ -59,6 +59,9 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	protected int degats;
 
+	
+	
+	
 	/**
 	 * niveau actuel de la tour
 	 */
@@ -492,7 +495,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * @param impact le point d'impact de l'attaque
 	 * @param rayonDImpact le rayon d'impact faisant des degats
 	 */
-	public void blesserCreaturesDansZoneImpact(Point impact, double rayonDImpact)
+	synchronized public void blesserCreaturesDansZoneImpact(Point impact, double rayonDImpact)
 	{
 	    // degats de zone
         int degatsFinal;
@@ -518,5 +521,4 @@ public abstract class Tour extends Rectangle implements Runnable
             }
         }
 	}
-	
 }

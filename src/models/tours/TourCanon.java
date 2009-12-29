@@ -29,7 +29,7 @@ public class TourCanon extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
 	public static final Musique SON_CANON;
-    private static final double RAYON_IMPACT = 20.0;
+    private static final double RAYON_IMPACT = 30.0;
     private static final String DESCRIPTION = 
         "Le tour canon est une tour avec de bons dégâts mais lente. " +
         "De plus, elle n'attaque que les créatures terrestres";

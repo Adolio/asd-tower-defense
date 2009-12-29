@@ -5,7 +5,9 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import models.creatures.CarapaceKoopa;
-import models.creatures.Creature1;
+import models.creatures.GrandeFlame;
+import models.creatures.PetiteFlame;
+import models.creatures.Smiley;
 import models.creatures.Nuage;
 import models.creatures.VagueDeCreatures;
 
@@ -28,13 +30,13 @@ public class Desert extends Terrain
     
     public static final VagueDeCreatures[] vagues = 
     {
-        new VagueDeCreatures(5, new Creature1(100,4,10),2000,false,"Creatures terrestres faibles"),
-        new VagueDeCreatures(10, new Creature1(100,4,10),2000,false,"Creature terrestres faibles"),
-        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false,"Creature terrestres moyennes"),
-        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false,"Creature volantes"),
-        new VagueDeCreatures(20, new Creature1(100,4,30),500,false,"Creature terrestres rapides"),
-        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false,"Creature terrestres resistantes"),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss : Très résistant")
+        new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
+        new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
+        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
+        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
+        new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
+        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
+        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
     };
 	
     static
@@ -49,11 +51,20 @@ public class Desert extends Terrain
 	 */
 	public Desert()
 	{
-		super(500, 500, 10000, 
-			  -10,0,560,500,
-			  IMAGE_DE_FOND, "Desert",
-			  new Rectangle(520,40,20,60),
-			  new Rectangle(0,400,20,60));
+		super(  500,      // largeur
+                500,      // hauteur
+                10000,    // nbPiecesOrInitiales
+                20,       // nbViesInitiales
+                -10,      // positionMaillageX
+                0,        // positionMaillageY
+                560,      // largeurMaillage
+                500,      // hauteurMaillage
+                IMAGE_DE_FOND, // imageDeFond
+                "Desert",  // nom
+                new Rectangle(520,40,20,60), // zoneDepart
+                new Rectangle(0,400,20,60)   // zoneArrivee
+          );
+		
 		
 		// murs entourant le terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
@@ -85,11 +96,11 @@ public class Desert extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < 6)
+    	if (indiceVagueCourante < vagues.length)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
     		    ,2000,false);
 	}
 }

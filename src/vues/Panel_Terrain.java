@@ -218,6 +218,26 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	}
 	
 	/**
+	 * Permet de recuperer la creature selectionnee
+	 * 
+	 * @return la creature selectionnee
+	 */
+	public Creature getCreatureSelectionnee()
+    {
+        return creatureSelectionnee;
+    }
+	
+	/**
+     * Permet de modifier la creature selectionnee depuis l'exterieur de l'objet
+     * 
+     * @param creature la creature a selectionnee
+     */
+    public void setCreatureSelectionnee(Creature creature)
+    {
+        creatureSelectionnee = creature;
+    }
+	
+	/**
      * Permet de tout deselectionner
      */
     public void toutDeselectionner()

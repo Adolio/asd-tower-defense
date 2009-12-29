@@ -356,7 +356,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	 * Permet d'etre informe lorsqu'une creature subie des degats.
 	 */
 	public void creatureBlessee(Creature creature)
-	{}
+	{
+	    panelInfoCreature.miseAJourSanteCreature();
+	    
+	}
 
 	/**
 	 * methode regissant de l'interface EcouteurDeCreature
@@ -366,10 +369,17 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	public void creatureTuee(Creature creature)
 	{
 		jeu.creatureTuee(creature);
-
+		
+		// on efface la creature des panels d'information
+		if(creature == panelTerrain.getCreatureSelectionnee())
+		{
+		    panelInfoCreature.effacerCreature();
+		    panelTerrain.setCreatureSelectionnee(null);
+		}
+		    
 		panelMenuInteraction.miseAJourNbPiecesOr();
 		panelMenuInteraction.miseAJourScore();
-		
+
 		panelTerrain.addAnimation(
 				new GainDePiecesOr((int)creature.getCenterX(),
 								   (int)creature.getCenterY() - 2,
@@ -384,17 +394,15 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	public void estArriveeEnZoneArrivee(Creature creature)
 	{
 		// si pas encore perdu
-	    if(!jeu.estPerdu())
+	    if(!jeu.aPerdu())
 		{
-			// perd une vie
-	        jeu.perdreUneVie();
 			panelMenuInteraction.miseAJourNbViesRestantes();
 			
 			// efface la creature
 			jeu.creatureArriveeEnZoneArrivee(creature);
 			
 			// le joueur n'a plus de vie
-			if(jeu.estPerdu())
+			if(jeu.aPerdu())
 			{
 			    panelMenuInteraction.partieTerminee();
 			    

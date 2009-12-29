@@ -33,13 +33,24 @@ public abstract class Creature extends Rectangle implements Runnable
 	public static final int TYPE_TERRIENNE 	= 0;
 	public static final int TYPE_AERIENNE 	= 1;
 
+	/**
+	 * nom de la creature
+	 */
     private final String NOM;
+    
+    /**
+     * type de la creature
+     */
 	private final int TYPE;
 	
 	/**
 	 * chemin actuel de la creature
 	 */
 	private ArrayList<Point> chemin;
+	
+	/**
+     * position actuelle sur le chemin
+     */
 	private int indiceCourantChemin;
 	
 	/**
@@ -68,19 +79,27 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * La creature gere sont propre thread pour ce deplacer sur le terrain
 	 */
 	private Thread thread;
+	
+	/**
+	 * la creature est-elle en eu ?
+	 */
 	protected boolean enJeu;
 	
 	/**
 	 * vitesse de deplacement de la creature sur le terrain
 	 */
-	protected double vitesse;
+	protected double vitesseNormale;
 	
+	/**
+     * ralentissement de deplacement de la creature sur le terrain
+     */
+    protected double coeffRalentissement; // 1.0 = 100%
+
 	/**
 	 * permet d'informer d'autres entites du programme lorsque la creature
 	 * subie des modifications.
 	 */
 	private ArrayList<EcouteurDeCreature> ecouteursDeCreature;
-	
 	
 	/**
 	 * Constructeur de la creature.
@@ -91,6 +110,10 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * @param hauteur la hauteur de la creature
 	 * @param santeMax la sante maximale de la creature
 	 * @param nbPiecesDOr le nombre de pieces de la creature
+	 * @param vitesse vitesse de deplacement de la creatures
+	 * @param type type de creature
+	 * @param image image de la creature sur le terrain
+	 * @param nom nom de l'espece de creature
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
 					int santeMax, int nbPiecesDOr, double vitesse, 
@@ -101,7 +124,7 @@ public abstract class Creature extends Rectangle implements Runnable
 		this.nbPiecesDOr 	= nbPiecesDOr;
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
-		this.vitesse		= vitesse;
+		this.vitesseNormale		= vitesse;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 		this.image 			= image;
 		TYPE                = type;
@@ -124,13 +147,14 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * Permet de recuperer le chemin actuellement suivi par la creature.
 	 * @return le chemin actuellement suivi par la creature
 	 */
-	public synchronized ArrayList<Point> getChemin()
+	public ArrayList<Point> getChemin()
 	{
 		return chemin;
 	}
 
 	/**
 	 * Permet de recuperer le type de la creature.
+	 * 
 	 * @return le type de la creature
 	 */
 	public int getType()
@@ -140,6 +164,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	
 	/**
 	 * Permet de recuperer la sante de la creature.
+	 * 
 	 * @return la sante de la creature
 	 */
 	public int getSante()
@@ -149,6 +174,7 @@ public abstract class Creature extends Rectangle implements Runnable
 
 	/**
 	 * Permet de recuperer la sante maximale de la creature.
+	 * 
 	 * @return la sante maximale de la creature
 	 */
 	public int getSanteMax()
@@ -158,6 +184,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	
 	/**
 	 * Permet de recuperer le nombre de pieces d'or de la creature.
+	 * 
 	 * @return le nombre de pieces d'or de la creature
 	 */
 	public int getNbPiecesDOr()
@@ -166,16 +193,51 @@ public abstract class Creature extends Rectangle implements Runnable
 	}
 	
 	/**
-	 * Permet de recuperer la vitesse de la creature
+	 * Permet de recuperer la vitesse normale (sans ralentissement) 
+	 * de la creature
+	 * 
 	 * @return la vitesse de la creature
 	 */
-	public double getVitesse()
+	public double getVitesseNormale()
 	{
-		return vitesse;
+		return vitesseNormale;
 	}
 	
 	/**
+     * Permet de recuperer la vitesse reelle de la creature (avec ralentissement)
+     * 
+     * @return la vitesse reelle de la creature
+     */
+    public double getVitesseReelle()
+    {
+        return vitesseNormale - vitesseNormale * coeffRalentissement;
+    }
+    
+    /**
+     * Permet de recuperer le coefficient de ralentissement
+     * @return
+     */
+    public double getCoeffRalentissement()
+    {
+        return coeffRalentissement;
+    }
+    
+    /**
+     * Permet de modifier le coefficient de ralentissement
+     * @param coeffRalentissement le nouveau coefficient de ralentissement
+     */
+    public void setCoeffRalentissement(double coeffRalentissement)
+    {
+        if(coeffRalentissement > 1.0)
+            this.coeffRalentissement = 1.0;
+        else  
+            this.coeffRalentissement = coeffRalentissement;
+    }
+    
+	
+	/**
 	 * Permet de recuperer l'image actuelle de la creature
+	 * 
 	 * @return l'image actuelle de la creature
 	 */
 	public Image getImage()
@@ -183,9 +245,31 @@ public abstract class Creature extends Rectangle implements Runnable
 		return image;
 	}
 	
+	/**
+     * Permet de recuperer le type de la creature sous forme textuelle
+     * 
+     * @return le type de la creature sous forme textuelle
+     */
+    public String getNomType()
+    {
+        if(TYPE == TYPE_TERRIENNE)
+            return "Terrienne";
+        else
+            return "Aerienne";
+    }
+
+    /**
+     * Permet de recuperer le nom de la creature
+     * @return le nom de la creature
+     */
+    public String getNom()
+    {
+        return NOM;
+    }
 	
 	/**
 	 * Permet de recuperer la position sur l'axe X de la creature
+	 * 
 	 * @param x la position sur l'axe X de la creature
 	 */
 	public void setX(int x)
@@ -195,6 +279,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	
 	/**
 	 * Permet de recuperer la position sur l'axe Y de la creature
+	 * 
 	 * @param x la position sur l'axe Y de la creature
 	 */
 	public void setY(int y)
@@ -204,6 +289,7 @@ public abstract class Creature extends Rectangle implements Runnable
 
 	/**
 	 * Permet de modifier le chemin actuel de la creature
+	 * 
 	 * @param chemin le nouveau chemin
 	 */
 	public void setChemin(ArrayList<Point> chemin)
@@ -211,7 +297,7 @@ public abstract class Creature extends Rectangle implements Runnable
 		this.chemin = chemin;
 		
 		// on est deja au point 0, on ne vas donc pas y aller...
-		// corrige un petit bug de retour en arriere.
+		// (i) corrige un petit bug de retour en arriere.
 		indiceCourantChemin = 1; 
 	}
 	
@@ -221,46 +307,8 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public void demarrer()
 	{
-		thread = new Thread(this);
+	    thread = new Thread(this);
 		thread.start();
-		enJeu = true;
-	}
-	
-	/**
-	 * Permet de faire avancer le creature sur son chemin.
-	 */
-	protected void avancerSurChemin()
-	{
-		ArrayList<Point> chemin = getChemin();
-		
-		if(chemin != null && indiceCourantChemin < chemin.size())
-		{
-			Point p = chemin.get(indiceCourantChemin);
-			
-			int centreX = (int) getCenterX();
-			int centreY = (int) getCenterY();
-			
-			// avance sur le chemin
-			if(centreX > p.getX()) 	     x--;
-			else if(centreX < p.getX())  x++;
-			
-			if(centreY > p.getY()) 	     y--;
-			else if(centreY < p.getY())  y++;
-			
-			// on a atteint un nouveau noeud du chemin
-			if(getCenterX() == p.getX() && getCenterY() == p.getY())
-				indiceCourantChemin++;
-		}
-		
-		if(chemin != null && indiceCourantChemin == chemin.size())
-		{
-			enJeu = false;
-			
-			// informe les ecouteurs que la creature est arrivee 
-			// a la fin du parcours
-			for( EcouteurDeCreature edc : ecouteursDeCreature)
-				edc.estArriveeEnZoneArrivee(this);
-		}
 	}
 	
 	/**
@@ -270,22 +318,66 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	public void run()
 	{
-		// tant que la creature est en jeu et vivante
+	    enJeu = true;
+	    
+	    // tant que la creature est en jeu et vivante
 		while(enJeu && !estMorte())
 		{
 			// elle avance sur son chemin en direction de la zone d'arrivee
 			avancerSurChemin();
 			
 			// TODO a ameliorer, on peut faire mieux
-			// le repos du thread defini la vistesse de deplacement de la creature
+			// le repos du thread defini la vitesse de deplacement de la creature
 			try{
-				Thread.sleep((long) (1.0/vitesse * 1000.0));
+				Thread.sleep((long) (1.0/getVitesseReelle() * 1000.0));
 			} 
 			catch (InterruptedException e){
 				e.printStackTrace();
 			}
 		}
 	}
+	
+	/**
+     * Permet de faire avancer le creature sur son chemin.
+     * 
+     * Celle-ci avance d'un pixel jusqu'au point suivant du chemin puis 
+     * increment alors l'indice courant du chemin.
+     */
+    protected void avancerSurChemin()
+    {
+        ArrayList<Point> chemin = getChemin();
+        
+        // on avance...
+        if(chemin != null && indiceCourantChemin < chemin.size())
+        {
+            Point p = chemin.get(indiceCourantChemin);
+            
+            int centreX = (int) getCenterX();
+            int centreY = (int) getCenterY();
+            
+            // avance sur le chemin
+            if(centreX > p.getX())       x--;
+            else if(centreX < p.getX())  x++;
+            
+            if(centreY > p.getY())       y--;
+            else if(centreY < p.getY())  y++;
+            
+            // on a atteint un nouveau noeud du chemin
+            if(getCenterX() == p.getX() && getCenterY() == p.getY())
+                indiceCourantChemin++;
+        }
+        
+        // la creature est arrivee a destination !
+        if(chemin != null && indiceCourantChemin == chemin.size())
+        {
+            enJeu = false;
+            
+            // informe les ecouteurs que la creature est arrivee 
+            // a la fin du parcours
+            for(EcouteurDeCreature edc : ecouteursDeCreature)
+                edc.estArriveeEnZoneArrivee(this);
+        }
+    }
 
 	/**
 	 * Permet de faire subir des degats sur la creature
@@ -297,7 +389,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 */
 	synchronized public void blesser(int degats)
 	{
-		// deja mort ?
+		// deja morte ?
 		if(!estMorte())
 		{
 			// diminution de la sante
@@ -336,29 +428,10 @@ public abstract class Creature extends Rectangle implements Runnable
 	/**
 	 * Permet d'ajouter un ecouteur de la creature
 	 * 
-	 * @param edc une classe implémentant EcouteurDeCreature
+	 * @param edc une classe implementant EcouteurDeCreature
 	 */
 	public void ajouterEcouteurDeCreature(EcouteurDeCreature edc)
 	{
 		ecouteursDeCreature.add(edc);
 	}
-
-	/**
-	 * Permet de recuperer le type de la creature sous forme textuelle
-	 * 
-	 * @return le type de la creature sous forme textuelle
-	 */
-    public String getNomType()
-    {
-        if(TYPE == TYPE_TERRIENNE)
-            return "Terrienne";
-        else
-            return "Aerienne";
-    }
-
-    // TODO
-    public String getNom()
-    {
-        return NOM;
-    }
 }

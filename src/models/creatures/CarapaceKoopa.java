@@ -13,12 +13,10 @@ import java.awt.Toolkit;
  * @since jdk1.6.0_16
  * @see Creature
  */
-public class CarapaceKoopa extends Creature implements Runnable
+public class CarapaceKoopa extends Creature
 {
 	private static final long serialVersionUID = 1L;
-	
 	private static final Image[] IMAGES;
-	
 	
 	static
 	{
@@ -33,8 +31,10 @@ public class CarapaceKoopa extends Creature implements Runnable
 	
 	/**
 	 * Constructeur de base.
+	 * 
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
+	 * @param vitesse vitesse de la creature
 	 */
 	public CarapaceKoopa(int santeMax, int nbPiecesDOr, double vitesse)
 	{
@@ -48,11 +48,37 @@ public class CarapaceKoopa extends Creature implements Runnable
 	 * @param y la position sur l'axe Y de la creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
+	 * @param vitesse vitesse de la creature
 	 */
 	public CarapaceKoopa(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
 		        Creature.TYPE_TERRIENNE ,IMAGES[0],"Carapace Koopa");
+		
+		Thread animation = new Thread( new Runnable()
+        {
+            public void run()
+            {
+                int i = 1;
+                enJeu = true;
+                
+                // tant que la creature est en jeu et vivante
+                while(enJeu && !estMorte())
+                {
+                    // image suivante
+                    i %= (IMAGES.length);
+                    image = IMAGES[i++];
+
+                    try{
+                        Thread.sleep(100);
+                    } 
+                    catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+		animation.start();
 	}
 
 	/**
@@ -60,37 +86,6 @@ public class CarapaceKoopa extends Creature implements Runnable
 	 */
 	public Creature copier()
 	{
-		return new CarapaceKoopa(x,y,getSanteMax(),getNbPiecesDOr(),getVitesse());
-	}
-	
-	/**
-	 * Methode de gestion du thread.
-	 * 
-	 * Cette methode est appeller par la methode demarrer.
-	 */
-	public void run()
-	{
-		int i = 1;
-		
-		// tant que la creature est en jeu et vivante
-		while(enJeu && !estMorte())
-		{
-			// elle avance sur son chemin en direction de la zone d'arrivee
-			avancerSurChemin();
-			
-			// image suivante
-			i %= (IMAGES.length);
-			image = IMAGES[i];
-			i++;
-					
-			// TODO a ameliorer, on peut faire mieux
-			// le repos du thread defini la vistesse de deplacement de la creature
-			try{
-				Thread.sleep((long) (1.0/vitesse * 1000.0));
-			} 
-			catch (InterruptedException e){
-				e.printStackTrace();
-			}
-		}
+		return new CarapaceKoopa(x,y,getSanteMax(),getNbPiecesDOr(),getVitesseNormale());
 	}
 }

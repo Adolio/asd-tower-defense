@@ -5,7 +5,9 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import models.creatures.CarapaceKoopa;
-import models.creatures.Creature1;
+import models.creatures.GrandeFlame;
+import models.creatures.PetiteFlame;
+import models.creatures.Smiley;
 import models.creatures.Nuage;
 import models.creatures.VagueDeCreatures;
 
@@ -27,13 +29,13 @@ public class Spiral extends Terrain
     public final static Image IMAGE_MENU;
     public static final VagueDeCreatures[] vagues = 
     {
-        new VagueDeCreatures(30, new Creature1(100,4,50),200,false,"Creatures terrestres faibles"),
-        new VagueDeCreatures(10, new Creature1(100,4,10),2000,false,"Creature terrestres faibles"),
-        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false,"Creature terrestres moyennes"),
-        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false,"Creature volantes"),
-        new VagueDeCreatures(20, new Creature1(100,4,30),500,false,"Creature terrestres rapides"),
-        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false,"Creature terrestres resistantes"),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss : Très résistant")
+        new VagueDeCreatures(30, new PetiteFlame(100,4,300),50,false),
+        new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
+        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
+        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
+        new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
+        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
+        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
     };
     
     
@@ -49,10 +51,19 @@ public class Spiral extends Terrain
 	 */
 	public Spiral()
 	{
-		super(480, 500, 100, 
-			  0,0,540,500,IMAGE_DE_FOND, "Spiral",
-			  new Rectangle(500,40,20,80),
-			  new Rectangle(320,280,20,60));
+		super(  480,  // largeur
+                500,  // hauteur
+                100,  // nbPiecesOrInitiales
+                20,   // nbViesInitiales
+                0,    // positionMaillageX
+                0,    // positionMaillageY
+                540,  // largeurMaillage
+                500,  // hauteurMaillage
+                IMAGE_DE_FOND, // imageDeFond
+                "Spiral",  // nom
+                new Rectangle(500,40,20,80),   // zoneDepart
+                new Rectangle(320,280,20,60)   // zoneArrivee
+          );
 		
 		/* definition des murs du labyrinthe :
 		 
@@ -87,11 +98,11 @@ public class Spiral extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < 6)
+    	if (indiceVagueCourante < vagues.length)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
     		,2000,false);
 	}
 }

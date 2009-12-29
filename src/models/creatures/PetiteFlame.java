@@ -13,24 +13,24 @@ import java.awt.Toolkit;
  * @since jdk1.6.0_16
  * @see Creature
  */
-public class Creature1 extends Creature
+public class PetiteFlame extends Creature
 {
 	private static final long serialVersionUID = 1L;
-	
 	private static final Image IMAGE;
-	
 	
 	static
 	{
-		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/creature1.png");
+		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/petiteFlame.png");
 	}
 	
 	/**
 	 * Constructeur de base.
+	 * 
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
+	 * @param vitesse vitesse de la creature
 	 */
-	public Creature1(int santeMax, int nbPiecesDOr, double vitesse)
+	public PetiteFlame(int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -42,18 +42,19 @@ public class Creature1 extends Creature
 	 * @param y la position sur l'axe Y de la creature
 	 * @param santeMax la sante max de cette creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
+	 * @param vitesse vitesse de la creature
 	 */
-	public Creature1(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public PetiteFlame(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
-		        Creature.TYPE_TERRIENNE, IMAGE, "Smiley");
+		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse,
+		        Creature.TYPE_TERRIENNE, IMAGE, "Petite Flame");
 	}
 
 	/**
-	 * permet de copier la creature
+	 * Permet de copier la creature
 	 */
 	public Creature copier()
 	{
-		return new Creature1(x,y,getSanteMax(),getNbPiecesDOr(),getVitesse());
+		return new PetiteFlame(x,y,getSanteMax(),getNbPiecesDOr(),getVitesseNormale());
 	}
 }
