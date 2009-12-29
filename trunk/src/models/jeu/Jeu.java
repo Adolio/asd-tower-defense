@@ -22,7 +22,7 @@ import models.tours.Tour;
  * - Les informations du jeu (score, pieces d'or, etc.)
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
@@ -299,9 +299,9 @@ public class Jeu
         return terrain.getNom();
     }
 
-    public String getDescriptionVagueCourante()
+    public String getDescriptionVagueSuivante()
     {
-        return terrain.getDescriptionVagueCourante();
+        return terrain.getDescriptionVagueSuivante();
     }
 
     public void creatureArriveeEnZoneArrivee(Creature creature)

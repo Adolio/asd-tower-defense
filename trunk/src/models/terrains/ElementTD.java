@@ -9,7 +9,7 @@ import models.outils.Musique;
 /**
  * Classe de gestion du fameux terrain Element TD repris de chez Blizzard.
  * 
- * Cette classe hérite de la classe Terrain de base.
+ * Cette classe herite de la classe Terrain de base.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
@@ -26,13 +26,13 @@ public class ElementTD extends Terrain
     
     public static final VagueDeCreatures[] vagues = 
     {
-    	new VagueDeCreatures(5, new Creature1(100,4,10),"Creatures terrestres faibles"),
-    	new VagueDeCreatures(10, new Creature1(100,4,10),"Creature terrestres faibles"),
-    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),"Creature terrestres moyennes"),
-    	new VagueDeCreatures(10, new Nuage(100,6,10),"Creature volantes"),
-    	new VagueDeCreatures(20, new Creature1(100,4,30),"Creature terrestres rapides"),
-        new VagueDeCreatures(10, new Creature1(600,20,20),"Creature terrestres resistantes"),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),"Boss : Très résistant")
+    	new VagueDeCreatures(5, new Creature1(100,4,10),2000,false),
+    	new VagueDeCreatures(10, new Creature1(100,4,10),2000,false),
+    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
+    	new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
+    	new VagueDeCreatures(20, new Creature1(100,4,30),500,false),
+        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false),
+        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss")
     };
     
     static
@@ -46,17 +46,18 @@ public class ElementTD extends Terrain
     }
 	
     /**
-     * Constructeur d'un terrain ElementTD selon la célèbre map de Blizzard.
+     * Constructeur d'un terrain ElementTD selon la celebre map de Blizzard.
      */
-    public ElementTD () {
+    public ElementTD () 
+    {
         super(480, 500, 100, 
-              0, 0, 540, 500, IMAGE_DE_FOND, "ElementTD", 
+              0, 0, 480, 540, IMAGE_DE_FOND, "ElementTD", 
               new Rectangle(110, 0, 80, 20),
               new Rectangle(230, 0, 80, 20)
         );
     
-        setMusiqueDeFond(MUSIQUE_DE_FOND);
-        demarrerMusiqueDeFond();
+        musiqueDAmbiance = MUSIQUE_DE_FOND;
+        demarrerMusiqueDAmbiance();
         
         /*
          * Définition des murs du labyrinthe.
@@ -66,7 +67,9 @@ public class ElementTD extends Terrain
         ajouterMur(new Rectangle(20, 480, 440, 20));
         ajouterMur(new Rectangle(460, 0, 20, 500));
         ajouterMur(new Rectangle(320, 0, 140, 20));
-        ajouterMur(new Rectangle(200, 0, 20, 100));
+        
+        ajouterMur(new Rectangle(200, -40, 20, 140));
+        
         ajouterMur(new Rectangle(120, 100, 240, 20));
         ajouterMur(new Rectangle(120, 120, 20, 20));
         ajouterMur(new Rectangle(340, 120, 20, 260));
@@ -81,13 +84,14 @@ public class ElementTD extends Terrain
      * Permet de recuperer la vague suivante
      * @return la vague suivante
      */
-    VagueDeCreatures getVagueSuivante()
+    VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
     	if (indiceVagueCourante < 6)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante));
+    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    		,2000,false);
 	}
     
 }

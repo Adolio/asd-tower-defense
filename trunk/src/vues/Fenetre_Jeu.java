@@ -345,9 +345,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
      */
     public void ajouterInfoVagueSuivanteDansConsole()
     {
-        ajouterTexteHTMLDansConsole("["+jeu.getNumVagueCourante()+"] Vague suivante : "+jeu.getDescriptionVagueCourante()+"<br />");
+        ajouterTexteHTMLDansConsole("["+(jeu.getNumVagueCourante()+1)+"] Vague suivante : "+jeu.getDescriptionVagueSuivante()+"<br />");
         
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+jeu.getNumVagueCourante()+"]");
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getNumVagueCourante()+1)+"]");
     }
 	
 	/**
