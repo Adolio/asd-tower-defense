@@ -45,6 +45,7 @@ public class Panel_InfoCreature extends JPanel
 	private JLabel lImage           = new JLabel();
     private JLabel lNom             = new JLabel();
     private JPanel pConteneur;
+    private Creature creature;
 		
 	/**
 	 * Constructeur du panel
@@ -99,7 +100,9 @@ public class Panel_InfoCreature extends JPanel
 	 */
 	public void setCreature(Creature creature)
 	{
-		// creature ou pas ?
+	    this.creature = creature;
+	    
+	    // creature ou pas ?
 		if(creature != null)
 		{
 			// mise a jour des champs
@@ -107,7 +110,7 @@ public class Panel_InfoCreature extends JPanel
 			lNom.setText(creature.getNom());
 			lTitreType.setText(" ["+creature.getNomType()+"]");
 			lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
-			lVitesse.setText(" : "+String.format("%.1f",creature.getVitesse()));
+			lVitesse.setText(" : "+String.format("%.1f",creature.getVitesseNormale()));
 			lGain.setText(" : "+creature.getNbPiecesDOr());
 			
 			// affichage du panel
@@ -117,4 +120,12 @@ public class Panel_InfoCreature extends JPanel
 		else
 		    pConteneur.setVisible(false);
 	}
+
+    public void miseAJourSanteCreature()
+    {
+        if(creature != null)
+        {
+            lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
+        }
+    }
 }

@@ -4,7 +4,10 @@ import java.awt.Rectangle;
 import models.terrains.Terrain;
 
 /**
- * Structure permettant de stoquer des informations sur une vague de creatures.
+ * Structure permettant de stoquer des informations et 
+ * lancer une vague de creatures.
+ * 
+ * Une vagues de creature contient un certain nombres de creatures du meme type.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -15,14 +18,49 @@ import models.terrains.Terrain;
  */
 public class VagueDeCreatures implements Runnable
 {
-	private final int NB_CREATURES;
+	/**
+	 * le nombre de creatures de la vague
+	 */
+    private final int NB_CREATURES;
+    
+    /**
+     * le temps d'attente entre chaque apparition de creature lors du lancement
+     * de la vague.
+     */
 	private final long TEMPS_LANCER_ENTRE_CREATURE;
+	
+	/**
+	 * position de la creature dans la zone de depart lors du lancement
+     * de la vague.
+     * 
+     * true     = aleatoire dans la zone
+     * false    = au centre de la zone
+	 */
 	private final boolean POSITION_DEPART_ALEATOIRE;
 	
-	private Creature creatureAEnvoyer;
-	private String description;
+	/**
+	 * le type de la creature a envoyer
+	 */
+	private final Creature CREATURE_A_ENVOYER;
+	
+	/**
+	 * la description de la vague
+	 */
+	private final String DESCRIPTION;
+	
+	/**
+	 * thread de gestion du lancement des creature
+	 */
 	private Thread thread;
+	
+	/**
+	 * le terrain su lequel lancer les creatures
+	 */
 	private Terrain terrain;
+	
+	/**
+	 * l'ecouteur de creature a fournir a chaque creature lors du lancement
+	 */
 	private EcouteurDeCreature edc;
 	
 	
@@ -33,7 +71,7 @@ public class VagueDeCreatures implements Runnable
 	 * @param tempsLancerEntreCreature temps d'attente entre chaque creature envoyee
 	 * @param positionDepartAleatoire la creature est-elle positionnee aleatoirement 
 	 *                                dans la zone de depart ou au centre ?
-	 * @param description de la vague
+	 * @param description description de la vague
 	 */
 	public VagueDeCreatures(int nbCreatures, 
 							Creature creatureAEnvoyer, 
@@ -44,12 +82,12 @@ public class VagueDeCreatures implements Runnable
 		NB_CREATURES		        = nbCreatures;
 		TEMPS_LANCER_ENTRE_CREATURE = tempsLancerEntreCreature;
 		POSITION_DEPART_ALEATOIRE   = positionDepartAleatoire;
-		this.creatureAEnvoyer 	    = creatureAEnvoyer;
-		this.description		    = description;
+		CREATURE_A_ENVOYER 	        = creatureAEnvoyer;
+		DESCRIPTION		            = description;
 	}
 	
 	/**
-     * Constructeur de la vague de creatures
+     * Constructeur de la vague de creatures sans description
      * 
      * @param nbCreatures le nombre de copie de la creature a envoyer
      * @param creatureAEnvoyer un objet de la creature a envoyer nbCreatures fois
@@ -69,7 +107,6 @@ public class VagueDeCreatures implements Runnable
              "");
     }
     
-	
 	/**
 	 * Permet de recuperer le nombre de creatures dans la vague
 	 * @return le nombre de creatures dans la vague
@@ -85,7 +122,7 @@ public class VagueDeCreatures implements Runnable
 	 */
 	public Creature getNouvelleCreature()
 	{
-		return creatureAEnvoyer.copier();
+		return CREATURE_A_ENVOYER.copier();
 	}
 	
 	/**
@@ -94,7 +131,7 @@ public class VagueDeCreatures implements Runnable
 	 */
 	public String getDescription()
 	{
-		return description;
+		return DESCRIPTION;
 	}
 	
 	/**
@@ -103,10 +140,10 @@ public class VagueDeCreatures implements Runnable
      */
     public String toString()
     {
-        return NB_CREATURES+" Creature(s) "+creatureAEnvoyer.getNomType().toLowerCase()+"(s) [ " +
-        		"sante : "+creatureAEnvoyer.getSanteMax()+", " +
-        		"gain   : "+creatureAEnvoyer.getNbPiecesDOr()+", "+
-        		"vit     : "+creatureAEnvoyer.getVitesse()+" ]";
+        return NB_CREATURES+" Creature(s) "+CREATURE_A_ENVOYER.getNomType().toLowerCase()+"(s) [ " +
+        		"sante : "+CREATURE_A_ENVOYER.getSanteMax()+", " +
+        		"gain : "+CREATURE_A_ENVOYER.getNbPiecesDOr()+", "+
+        		"vitesse : "+CREATURE_A_ENVOYER.getVitesseNormale()+" ]";
     }
 
     
@@ -166,8 +203,7 @@ public class VagueDeCreatures implements Runnable
             try{
                 Thread.sleep(TEMPS_LANCER_ENTRE_CREATURE);
             } 
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e){
                 e.printStackTrace();
             }
         }

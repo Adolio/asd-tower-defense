@@ -8,33 +8,33 @@ import java.util.Date;
  * <p>
  * Encodage : UTF-8
  * <p>
- * Cette classe permet de représenter le score d'un joueur en fonction de son nom, de
+ * Cette classe permet de representer le score d'un joueur en fonction de son nom, de
  * son score obtenu ainsi que de la date d'obtention du score.
  * <p>
  * Remarques : <br>
- * Cette classe implémente deux interfaces : {@link Serializable} et
+ * Cette classe implemente deux interfaces : {@link Serializable} et
  * {@link Comparable}
  * 
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Pierre-Dominique Putallaz
  * @author Lazhar Farjallah
- * @version 16 déc. 2009
+ * @version 16 dec. 2009
  * @since jdk1.6.0_16
  */
 public class Score implements Serializable, Comparable<Score>
 {
    
-   // La version de sérialisation.
+   // La version de serialisation.
    private static final long serialVersionUID = 1L;
    // La valeur du score du joueur.
    private int valeur;
    // Le nom du joueur.
    private String nomJoueur;
-   // La date à laquelle le score est créé.
+   // La date a laquelle le score est cree.
    private Date date;
    
    /**
-    * Ce constructeur permet de créer un objet de type Score en fonction d'un nom de
+    * Ce constructeur permet de creer un objet de type Score en fonction d'un nom de
     * joueur ainsi qu'une valeur de score obtenu.
     * 
     * @param nomJoueur
@@ -46,15 +46,15 @@ public class Score implements Serializable, Comparable<Score>
    {
       this.valeur = valeur;
       this.nomJoueur = nomJoueur;
-      // new Date() créé automatiquement la date courante.
+      // new Date() cree automatiquement la date courante.
       date = new Date();
    }
    
    /**
-    * Ce constructeur permet de créer un score en fonction d'un autre score donné.
+    * Ce constructeur permet de creer un score en fonction d'un autre score donne.
     * 
     * @param score
-    *        Le score à partir duquel on veut créer un nouvel objet Score.
+    *        Le score a partir duquel on veut creer un nouvel objet Score.
     */
    public Score (Score score)
    {
@@ -94,25 +94,25 @@ public class Score implements Serializable, Comparable<Score>
    }
    
    /**
-    * Cette méthode permet d'appliquer une politique de comparaison entre objets de
-    * type Score. Cette politique sera ensuite appliquée lors du tri d'une collection
+    * Cette methode permet d'appliquer une politique de comparaison entre objets de
+    * type Score. Cette politique sera ensuite appliquee lors du tri d'une collection
     * quelconque contenant des objets de type Score. Ici, on applique la politique
-    * suivante : on veut qu'un score plus élevé qu'un autre soit "plus grand" que
-    * lui, c'est-à-dire qu'un score plus élevé est classé avant un score moins élevé.
-    * En bref, on applique ici une politique de tri en ordre décroissant.
+    * suivante : on veut qu'un score plus eleve qu'un autre soit "plus grand" que
+    * lui, c'est-a-dire qu'un score plus eleve est classe avant un score moins eleve.
+    * En bref, on applique ici une politique de tri en ordre decroissant.
     * 
     * @see Comparable#compareTo(Object)
     */
    @Override
    public int compareTo (Score aComparer)
    {
-      // Le score à comparer est plus élevé que le score courant.
+      // Le score a comparer est plus eleve que le score courant.
       if (aComparer.valeur > valeur)
          return 1;
-      // Le score à comparer équivaut le score courant.
+      // Le score a comparer equivaut le score courant.
       else if (aComparer.valeur == valeur)
          return 0;
-      // Le score à comparer est plus petit que le score courant.
+      // Le score a comparer est plus petit que le score courant.
       else
          return -1;
    }

@@ -27,13 +27,13 @@ public class WaterWorld extends Terrain
 	
     public static final VagueDeCreatures[] vagues = 
     {
-        new VagueDeCreatures(5, new Creature1(100,4,10),2000,false),
-        new VagueDeCreatures(10, new Creature1(100,4,10),2000,false),
+        new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
+        new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
         new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
         new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
-        new VagueDeCreatures(20, new Creature1(100,4,30),500,false),
-        new VagueDeCreatures(10, new Creature1(600,20,20),1000,false),
-        new VagueDeCreatures(1, new CarapaceKoopa(10000,40,10),2000,false,"Boss")
+        new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
+        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
+        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
     };
 	
     static
@@ -49,12 +49,20 @@ public class WaterWorld extends Terrain
      * Constructeur d'un terrain TerrainEau.
      */
     public WaterWorld () {
-        super(500, 500, 100, 
-              0, 0, 540, 500, IMAGE_DE_FOND, "WaterWorld",
-              new Rectangle(0, 30, 20, 80),
-              new Rectangle(480, 390, 20, 80)
+        super(500,  // largeur
+              500,  // hauteur
+              100,  // nbPiecesOrInitiales
+              20,   // nbViesInitiales
+              0,    // positionMaillageX
+              0,    // positionMaillageY
+              540,  // largeurMaillage
+              500,  // hauteurMaillage
+              IMAGE_DE_FOND, // imageDeFond
+              "WaterWorld",  // nom
+              new Rectangle(0, 30, 20, 80),     // zoneDepart
+              new Rectangle(480, 390, 20, 80)   // zoneArrivee
         );
-    
+
         musiqueDAmbiance = MUSIQUE_DE_FOND;
         demarrerMusiqueDAmbiance();
         
@@ -84,11 +92,11 @@ public class WaterWorld extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < 6)
+    	if (indiceVagueCourante < vagues.length)
     		return vagues[indiceVagueCourante];
     	else
     		return new VagueDeCreatures(10, 
-    			new Creature1(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
+    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
     		,2000,false);
 	}
 }

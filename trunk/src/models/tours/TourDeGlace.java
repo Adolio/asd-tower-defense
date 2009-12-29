@@ -83,6 +83,7 @@ public class TourDeGlace extends Tour
 
     public void tirer(Creature creature)
     {
+        creature.setCoeffRalentissement(0.5); // perd 50% de sa vitesse
         creature.blesser(degats);
     }
 

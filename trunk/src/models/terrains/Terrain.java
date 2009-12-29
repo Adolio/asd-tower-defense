@@ -45,15 +45,22 @@ import models.tours.Tour;
  */
 public abstract class Terrain
 {
-	/**
+	
+
+    /**
 	 * nom de la zone de jeu
 	 */
     private final String NOM;
 
     /**
+     * nombre de vies au debut de la partie
+     */
+    private final int NB_VIES_INITIALES;
+    
+    /**
      * nombre de pieces d'or au debut de la partie
      */
-    private final int NB_PIECES_OR_INITIAL;
+    private final int NB_PIECES_OR_INITIALES;
 
 	/**
 	 * Taille du terrain
@@ -146,7 +153,7 @@ public abstract class Terrain
 	 * 
 	 * @param largeur la largeur en pixels du terrain (utilisé pour le maillage)
 	 * @param hauteur la hauteur en pixels du terrain (utilisé pour le maillage)
-	 * @param nbPiecesOrInitial le nom de piece d'or en debut de partie
+	 * @param nbPiecesOrInitiales le nom de piece d'or en debut de partie
 	 * @param positionMaillageX position du point 0 du maillage
 	 * @param positionMaillageY position du point 0 du maillage
 	 * @param largeurMaillage largeur du maillage en pixel
@@ -157,7 +164,8 @@ public abstract class Terrain
 	 * @param zoneArrivee la zone d'arrivee des creatures
 	 */
 	public Terrain(int largeur, int hauteur, 
-					int nbPiecesOrInitial, 
+					int nbPiecesOrInitiales,
+					int nbViesInitiales,
 					int positionMaillageX,
 					int positionMaillageY,
 					int largeurMaillage,
@@ -171,7 +179,8 @@ public abstract class Terrain
 		HAUTEUR 				= hauteur;
 		ZONE_DEPART 			= zoneDepart;
 		ZONE_ARRIVEE 			= zoneArrivee;
-		NB_PIECES_OR_INITIAL 	= nbPiecesOrInitial;
+		NB_PIECES_OR_INITIALES 	= nbPiecesOrInitiales;
+		NB_VIES_INITIALES       = nbViesInitiales;
 		IMAGE_DE_FOND 			= imageDeFond;
 		NOM                     = nom;
 		
@@ -250,14 +259,24 @@ public abstract class Terrain
 		return ZONE_ARRIVEE;
 	}
 	
-	   /**
+	/**
      * Permet de recuperer le nombre de pieces initial
      * 
-     * @return le nombre de pieces initial
+     * @return le nombre de pieces initiales
      */
-    public int getNbPiecesOrInitial()
+    public int getNbPiecesOrInitiales()
     {
-        return NB_PIECES_OR_INITIAL;
+        return NB_PIECES_OR_INITIALES;
+    }
+    
+    /**
+     * Permet de recuperer le nombre de vie du joueur en debut de partie
+     * 
+     * @return le nombre de vie du joueur en debut de partie
+     */
+    public int getNbViesInitiales()
+    {
+        return NB_VIES_INITIALES;
     }
 
     /**
@@ -378,6 +397,7 @@ public abstract class Terrain
 	 * 
 	 * @param tour la tour a ajouter
 	 * @throws Exception si la zone n'est pas accessible (occupee)
+	 * @throws Exception si la tour bloque empeche tous chemins
 	 */
 	public void ajouterTour(Tour tour) throws Exception
 	{
