@@ -1,6 +1,7 @@
 package models.tours;
 
 import java.awt.*;
+import java.util.Enumeration;
 import models.creatures.Creature;
 import models.terrains.Terrain;
 
@@ -501,24 +502,25 @@ public abstract class Tour extends Rectangle implements Runnable
         int degatsFinal;
         double distanceImpact;
         
-        // monopolisation de la collection des creatures
-        synchronized (terrain.getCreatures())
+        Enumeration<Creature> eCreatures = terrain.getCreatures().elements();
+        Creature tmpCreature;
+        while(eCreatures.hasMoreElements())
         {
-            for(Creature tmpCreature : terrain.getCreatures())
+            tmpCreature = eCreatures.nextElement();
+            
+            // si la creature est dans le splash
+            distanceImpact = Point.distance(tmpCreature.getCenterX(), 
+                                            tmpCreature.getCenterY(), 
+                                            impact.x, 
+                                            impact.y);
+            
+            if(distanceImpact <= rayonDImpact)
             {
-                // si la creature est dans le splash
-                distanceImpact = Point.distance(tmpCreature.getCenterX(), 
-                                                tmpCreature.getCenterY(), 
-                                                impact.x, 
-                                                impact.y);
-                
-                if(distanceImpact <= rayonDImpact)
-                {
-                    // calcul des degats en fonction de la distance de l'impact
-                    degatsFinal = (int) (degats - (distanceImpact / rayonDImpact * degats));
-                    tmpCreature.blesser(degatsFinal);
-                }
+                // calcul des degats en fonction de la distance de l'impact
+                degatsFinal = (int) (degats - (distanceImpact / rayonDImpact * degats));
+                tmpCreature.blesser(degatsFinal);
             }
         }
+        
 	}
 }
