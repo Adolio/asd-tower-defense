@@ -1,4 +1,4 @@
-package vues;
+package vues.animations;
 
 import java.awt.*;
 
@@ -33,8 +33,9 @@ public abstract class Animation extends Point
 	}
 
 	/**
-	 * Force les fils a creer une methode de dessin
-	 * @param g2
+	 * Permet de dessiner l'animation.
+	 * 
+	 * @param g2 le Graphics2D pour dessiner
 	 */
 	abstract public void dessiner(Graphics2D g2);
 

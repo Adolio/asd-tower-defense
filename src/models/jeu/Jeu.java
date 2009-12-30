@@ -6,6 +6,9 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import vues.animations.Animation;
+import vues.animations.GainDePiecesOr;
+
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
 import models.maillage.Noeud;
@@ -379,5 +382,17 @@ public class Jeu
         viesRestantes--;
         
         terrain.supprimerCreature(creature);
+    }
+
+    public ArrayList<Animation> getAnimations()
+    {
+        // TODO Auto-generated method stub
+        return terrain.getAnimations();
+    }
+
+    public void ajouterAnimation(Animation animation)
+    {
+        // TODO Auto-generated method stub
+        terrain.ajouteAnimation(animation);
     }
 }

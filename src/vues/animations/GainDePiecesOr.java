@@ -1,4 +1,4 @@
-package vues;
+package vues.animations;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -65,5 +65,8 @@ public class GainDePiecesOr extends Animation
 		
 		// l'animation monte
 		y--;
+		
+		// retabli la transparence
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
 	}
 }

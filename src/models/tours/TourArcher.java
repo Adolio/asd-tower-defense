@@ -3,9 +3,8 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-
+import vues.attaques.*;
 import models.creatures.Creature;
-import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour d'archer.
@@ -27,14 +26,12 @@ public class TourArcher extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
-    public static final Musique SON_FLECHE;
     private static final String DESCRIPTION = 
         "La tour d'archer est une tour qui est rapide, " +
         "mais elle fait peu de dégâts. Elle attaque tous types de créatures.";
     
     static
     {
-        SON_FLECHE = new Musique("snd/arc.mp3");
 		COULEUR = new Color(128,64,32);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourArcher.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourArcher.png");
@@ -88,9 +85,8 @@ public class TourArcher extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    // TODO
-	    // SON_FLECHE.lire(1);
-		// terrain.ajouteTire(new bouleDeFeu(this,creature));
+	    terrain.ajouteAnimation(new Fleche(terrain,this,creature));
+	    
 		creature.blesser(degats);
 	}
 

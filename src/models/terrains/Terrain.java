@@ -3,6 +3,7 @@ package models.terrains;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.*;
+import vues.animations.Animation;
 import models.creatures.*;
 import models.maillage.*;
 import models.outils.Musique;
@@ -133,7 +134,11 @@ public abstract class Terrain
      */
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
 	
-	
+    /**
+     * Liste des animations visible sur le terrain
+     */
+    private ArrayList<Animation> animations = new ArrayList<Animation>();
+    
 	/**
 	 * Gestion des vagues de creatures.
 	 * C'est le joueur que decident le moment ou il veut lancer une vague de
@@ -665,5 +670,17 @@ public abstract class Terrain
     {
         if(musiqueDAmbiance != null)
             musiqueDAmbiance.lire(0); // lecture infinie
+    }
+
+    // TODO
+    public void ajouteAnimation(Animation animation)
+    {
+        animations.add(animation);
+    }
+
+    public ArrayList<Animation> getAnimations()
+    {
+        // TODO Auto-generated method stub
+        return animations;
     }
 }
