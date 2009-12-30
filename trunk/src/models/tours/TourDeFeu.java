@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import vues.attaques.BouleDeFeu;
 import models.creatures.Creature;
 
 
@@ -86,6 +87,8 @@ public class TourDeFeu extends Tour
 
     public void tirer(Creature creature)
     {
+        terrain.ajouteAnimation(new BouleDeFeu(terrain,this,creature));
+        
         blesserCreaturesDansZoneImpact(new Point((int)creature.getCenterX(),
                                                  (int)creature.getCenterY())
                                        ,RAYON_IMPACT);

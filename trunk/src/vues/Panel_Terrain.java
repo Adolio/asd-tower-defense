@@ -1,6 +1,7 @@
 package vues;
 
 import java.awt.*;
+import vues.animations.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.*;
@@ -158,11 +159,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private boolean afficherRayonsDePortee;
 	
 	/**
-	 * Liste des animations visible sur le terrain
-	 */
-	private ArrayList<Animation> animations = new ArrayList<Animation>();
-
-	/**
 	 * Constructeur du panel du terrain
 	 * 
 	 * @param jeu Le jeu a gerer
@@ -270,10 +266,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
      * 
      * @param animation l'animation a ajouter
      */
-    public void addAnimation(Animation animation)
+    // TODO
+    /*public void addAnimation(Animation animation)
     {
-        animations.add(animation);
-    }
+        terrain
+    }*/
 	
 	/**
 	 * Surdéfinition de la méthode d'affichage du panel.
@@ -438,6 +435,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des animations --
 		//------------------------------		
 		Animation animation;
+		ArrayList<Animation> animations = jeu.getAnimations();
 		for(int i=0;i<animations.size();i++)
 		{
 		    animation = animations.get(i);

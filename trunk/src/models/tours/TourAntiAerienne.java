@@ -3,9 +3,8 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-
+import vues.attaques.Fleche;
 import models.creatures.Creature;
-import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour anti aerienne.
@@ -27,15 +26,12 @@ public class TourAntiAerienne extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
-	public static final Musique SON_FLECHE;
 	public static final String DESCRIPTION = 
     	"La tour anti-aérienne est une tour qui est très performante," +
         " mais elle n'attaque que les créatures volantes. ";
 	
-	
 	static
 	{
-	    SON_FLECHE = new Musique("snd/arc.mp3");
 	    COULEUR = Color.BLUE;
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourAntiAerienne.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourAntiAerienne.png");
@@ -89,9 +85,8 @@ public class TourAntiAerienne extends Tour
 
 	public void tirer(Creature creature)
 	{
-		// TODO
-	    SON_FLECHE.lire(1);
-		// terrain.ajouteTire(new bouleDeFeu(this,creature));
+	    terrain.ajouteAnimation(new Fleche(terrain,this,creature));
+	    
 	    creature.blesser(degats);
 	}
 

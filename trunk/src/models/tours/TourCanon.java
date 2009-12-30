@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-
+import vues.attaques.BouletDeCanon;
 import models.creatures.Creature;
-import models.outils.Musique;
 
 /**
  * Classe de gestion d'une tour a canon.
@@ -28,7 +27,6 @@ public class TourCanon extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
-	public static final Musique SON_CANON;
     private static final double RAYON_IMPACT = 30.0;
     private static final String DESCRIPTION = 
         "Le tour canon est une tour avec de bons dégâts mais lente. " +
@@ -36,7 +34,6 @@ public class TourCanon extends Tour
 	
 	static
 	{
-	    SON_CANON = new Musique("snd/canon.mp3");
 	    COULEUR = new Color(64,64,64);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourCanon.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourCanon.png");
@@ -79,8 +76,7 @@ public class TourCanon extends Tour
 	
 	public void tirer(Creature creature)
 	{
-		// terrain.ajouteTire(new bouleDeGlace(this,creature));
-        //SON_CANON.lire(1);
+	    terrain.ajouteAnimation(new BouletDeCanon(terrain,this,creature));
 	    
 	    blesserCreaturesDansZoneImpact(new Point((int)creature.getCenterX(),
 	                                             (int)creature.getCenterY())

@@ -1,4 +1,6 @@
 package vues;
+
+import vues.animations.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -380,10 +382,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		panelMenuInteraction.miseAJourNbPiecesOr();
 		panelMenuInteraction.miseAJourScore();
 
-		panelTerrain.addAnimation(
-				new GainDePiecesOr((int)creature.getCenterX(),
-								   (int)creature.getCenterY() - 2,
-								   creature.getNbPiecesDOr()));
+		jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
+                (int)creature.getCenterY() - 2,
+                creature.getNbPiecesDOr()));
+				
 	}
 
 	/**
