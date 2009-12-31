@@ -489,38 +489,4 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return Point.distance(x, y, creature.x, creature.y);
 	}
-	
-	/**
-	 * Permet de blesser des creatures dans une zone d'impact
-	 * 
-	 * @param impact le point d'impact de l'attaque
-	 * @param rayonDImpact le rayon d'impact faisant des degats
-	 */
-	synchronized public void blesserCreaturesDansZoneImpact(Point impact, double rayonDImpact)
-	{
-	    // degats de zone
-        int degatsFinal;
-        double distanceImpact;
-        
-        Enumeration<Creature> eCreatures = terrain.getCreatures().elements();
-        Creature tmpCreature;
-        while(eCreatures.hasMoreElements())
-        {
-            tmpCreature = eCreatures.nextElement();
-            
-            // si la creature est dans le splash
-            distanceImpact = Point.distance(tmpCreature.getCenterX(), 
-                                            tmpCreature.getCenterY(), 
-                                            impact.x, 
-                                            impact.y);
-            
-            if(distanceImpact <= rayonDImpact)
-            {
-                // calcul des degats en fonction de la distance de l'impact
-                degatsFinal = (int) (degats - (distanceImpact / rayonDImpact * degats));
-                tmpCreature.blesser(degatsFinal);
-            }
-        }
-        
-	}
 }

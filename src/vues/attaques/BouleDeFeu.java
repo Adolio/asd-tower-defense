@@ -1,6 +1,7 @@
 package vues.attaques;
 
 import java.awt.*;
+
 import models.creatures.Creature;
 import models.outils.MeilleursScores;
 import models.terrains.Terrain;
@@ -50,9 +51,13 @@ public class BouleDeFeu extends Attaque implements Runnable
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public BouleDeFeu(Terrain terrain, Tour attaquant, Creature cible)
+    public BouleDeFeu(Terrain terrain, Tour attaquant, Creature cible, 
+                      int degats, double rayonImpact)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        
+        this.degats         = degats;
+        this.rayonImpact    = rayonImpact;
         
         Thread thread = new Thread(this);
         thread.start();
@@ -101,6 +106,9 @@ public class BouleDeFeu extends Attaque implements Runnable
            {
                informerEcouteurAttaqueTerminee();
                estTerminee = true;
+               
+               attaquerCible();
+               
                break;
            }
 
