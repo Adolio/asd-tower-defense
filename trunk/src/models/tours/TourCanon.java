@@ -76,11 +76,7 @@ public class TourCanon extends Tour
 	
 	public void tirer(Creature creature)
 	{
-	    terrain.ajouteAnimation(new BouletDeCanon(terrain,this,creature));
-	    
-	    blesserCreaturesDansZoneImpact(new Point((int)creature.getCenterX(),
-	                                             (int)creature.getCenterY())
-	                                   ,RAYON_IMPACT);
+	    terrain.ajouteAnimation(new BouletDeCanon(terrain,this,creature,degats,RAYON_IMPACT));
 	}
 
 

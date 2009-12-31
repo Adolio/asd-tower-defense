@@ -46,7 +46,6 @@ public class Fleche extends Attaque implements Runnable
      */
     private double xQueue, yQueue;
     
-    
     static
     {
         SON_FLECHE = new Musique("snd/arc.mp3");
@@ -59,9 +58,11 @@ public class Fleche extends Attaque implements Runnable
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public Fleche(Terrain terrain, Tour attaquant, Creature cible)
+    public Fleche(Terrain terrain, Tour attaquant, Creature cible, int degats)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        
+        this.degats = degats;
         
         Thread thread = new Thread(this);
         thread.start();
@@ -113,6 +114,9 @@ public class Fleche extends Attaque implements Runnable
            {
                informerEcouteurAttaqueTerminee();
                estTerminee = true;
+               
+               attaquerCible();
+               
                break;
            }
 
