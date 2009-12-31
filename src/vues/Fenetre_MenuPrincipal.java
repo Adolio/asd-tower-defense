@@ -28,6 +28,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
     private static final long serialVersionUID 	= 1L;
 	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
+	private static final ImageIcon I_SCORE      = new ImageIcon("img/icones/star.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
     private static final Color COULEUR_DE_FOND  = new Color(0,110,0);
@@ -37,9 +38,17 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 	// elements du formulaire
 	private final JMenuBar 	menuPrincipal 		= new JMenuBar();
 	private final JMenu 	menuFichier 		= new JMenu("Fichier");
+	private final JMenu     menuMeilleursScore  = new JMenu("Scores");
 	private final JMenu 	menuAide 			= new JMenu("Aide");
 	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",I_AIDE);
 	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",I_QUITTER);
+	
+	private final JMenuItem itemMSElementTD     = new JMenuItem(ElementTD.NOM);
+    private final JMenuItem itemMSSpiral        = new JMenuItem(Spiral.NOM);
+    private final JMenuItem itemMSDesert        = new JMenuItem(Desert.NOM);
+    private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
+	
+	
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
 
 	/**
@@ -58,6 +67,18 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		//-- menu principal --
 		//--------------------
 		// menu Fichier
+		menuMeilleursScore.setIcon(I_SCORE);
+		menuFichier.add(menuMeilleursScore);
+		menuMeilleursScore.add(itemMSElementTD);
+		menuMeilleursScore.add(itemMSSpiral);
+		menuMeilleursScore.add(itemMSDesert);
+		menuMeilleursScore.add(itemMSWaterWorld);
+		
+		itemMSElementTD.addActionListener(this);
+		itemMSSpiral.addActionListener(this);
+		itemMSDesert.addActionListener(this);
+		itemMSWaterWorld.addActionListener(this);
+		
 		menuFichier.add(itemQuitter);
 		menuPrincipal.add(menuFichier);
 		
@@ -168,5 +189,13 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 			new Fenetre_Jeu(new Jeu(new WaterWorld()));
 			dispose();
 		}
+		else if(source == itemMSElementTD)
+		    new Fenetre_MeilleursScores(ElementTD.NOM, this);
+		else if(source == itemMSSpiral)
+            new Fenetre_MeilleursScores(Spiral.NOM, this);
+		else if(source == itemMSDesert)
+            new Fenetre_MeilleursScores(Desert.NOM, this);
+		else if(source == itemMSWaterWorld)
+            new Fenetre_MeilleursScores(WaterWorld.NOM, this);
 	}
 }

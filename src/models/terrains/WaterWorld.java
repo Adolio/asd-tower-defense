@@ -24,6 +24,7 @@ public class WaterWorld extends Terrain
 	public static final Image IMAGE_DE_FOND;
 	public static final Image IMAGE_MENU;
 	public final static Musique MUSIQUE_DE_FOND;
+	public final static String NOM = "WaterWorld";
 	
     public static final VagueDeCreatures[] vagues = 
     {
@@ -58,13 +59,12 @@ public class WaterWorld extends Terrain
               540,  // largeurMaillage
               500,  // hauteurMaillage
               IMAGE_DE_FOND, // imageDeFond
-              "WaterWorld",  // nom
+              NOM,  // nom
               new Rectangle(0, 30, 20, 80),     // zoneDepart
               new Rectangle(480, 390, 20, 80)   // zoneArrivee
         );
 
         musiqueDAmbiance = MUSIQUE_DE_FOND;
-        demarrerMusiqueDAmbiance();
         
         /*
          * Définition des murs du terrain.

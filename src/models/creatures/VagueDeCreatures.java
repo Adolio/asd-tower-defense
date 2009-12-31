@@ -63,6 +63,11 @@ public class VagueDeCreatures implements Runnable
 	 */
 	private EcouteurDeCreature edc;
 	
+	/**
+     * l'ecouteur de vague pour informer des evenements de la vague
+     */
+	private EcouteurDeVague edv;
+	
 	
 	/**
 	 * Constructeur de la vague de creatures
@@ -153,10 +158,11 @@ public class VagueDeCreatures implements Runnable
      * @param terrain le terrain en question
      * @param edc l'ecouteur de creature fourni a chaque creature creee
      */
-    public void lancerVague(Terrain terrain, EcouteurDeCreature edc)
+    public void lancerVague(Terrain terrain, EcouteurDeVague edv, EcouteurDeCreature edc)
     {
        this.terrain = terrain;
        this.edc     = edc;
+       this.edv     = edv;
        thread       = new Thread(this);
        thread.start();
     }
@@ -207,5 +213,18 @@ public class VagueDeCreatures implements Runnable
                 e.printStackTrace();
             }
         }
-    } 
+        
+        if(edv != null)
+            edv.vagueEntierementLancee(this);
+    }
+    
+    /**
+     * Permet de modifier l'ecouteur de vague
+     * 
+     * @param edv le nouvel ecouteur de vague
+     */
+    public void setEcouteurDeVague(EcouteurDeVague edv)
+    {
+        this.edv = edv;
+    }
 }

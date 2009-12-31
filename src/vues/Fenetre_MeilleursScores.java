@@ -32,14 +32,41 @@ public class Fenetre_MeilleursScores extends JDialog
     private MeilleursScores ms;
    
     /**
-     * Constructeur de la fenetre des meilleurs scores d'un terrain
+     * Constructeur de la fenetre des meilleurs scores d'un terrain avec une 
+     * boite de dialogue comme parent.
      * 
      * @param nomTerrain le nom du terrain dont on veut voir les meilleurs scores
+     * @param parent le Dialog parent
      */
     public Fenetre_MeilleursScores(String nomTerrain, Dialog parent)
     {
         // preference de la fenetre
         super(parent,"Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores",true);
+        
+        contruire(nomTerrain);
+    }
+    
+    /**
+     * Constructeur de la fenetre des meilleurs scores d'un terrain avec une 
+     * fenetre comme parent.
+     * 
+     * @param nomTerrain le nom du terrain dont on veut voir les meilleurs scores
+     * @param parent la Frame parent
+     */
+    public Fenetre_MeilleursScores(String nomTerrain, Frame parent)
+    {
+        super(parent,"Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores",true);
+    
+        contruire(nomTerrain);
+    }
+
+    /**
+     * Permet de construire le contenu de la fenetre.
+     * 
+     * @param nomTerrain le nom du terrain
+     */
+    private void contruire(String nomTerrain)
+    {
         setLayout(new BorderLayout());
         setResizable(false);
  

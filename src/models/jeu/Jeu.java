@@ -5,12 +5,10 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Vector;
-
 import vues.animations.Animation;
-import vues.animations.GainDePiecesOr;
-
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
+import models.creatures.EcouteurDeVague;
 import models.maillage.Noeud;
 import models.terrains.Terrain;
 import models.tours.Tour;
@@ -350,9 +348,9 @@ public class Jeu
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
-	public void lancerVagueSuivante(EcouteurDeCreature edc)
+	public void lancerVagueSuivante(EcouteurDeVague edv,EcouteurDeCreature edc)
 	{
-		terrain.lancerVagueSuivante(edc);
+		terrain.lancerVagueSuivante(edv, edc);
 	}
 
 	/**
@@ -383,16 +381,32 @@ public class Jeu
         
         terrain.supprimerCreature(creature);
     }
+    
+    /**
+     * Permet de demarrer la lecture de la musique d'ambiance du terrain
+     */
+    public void demarrerMusiqueDAmbianceDuTerrain()
+    {
+        terrain.demarrerMusiqueDAmbiance();
+    }
 
+    /**
+     * Permet de recuperer les animations
+     * 
+     * @return la collection d'animations
+     */
     public ArrayList<Animation> getAnimations()
     {
-        // TODO Auto-generated method stub
         return terrain.getAnimations();
     }
 
+    /**
+     * Permet d'ajouter une animation
+     * 
+     * @param animation l'aniatio a ajouter
+     */
     public void ajouterAnimation(Animation animation)
     {
-        // TODO Auto-generated method stub
         terrain.ajouteAnimation(animation);
     }
 }

@@ -27,6 +27,7 @@ public class Desert extends Terrain
 {
 	public final static Image IMAGE_DE_FOND;
 	public final static Image IMAGE_MENU;
+	public final static String NOM = "Desert";
     
     public static final VagueDeCreatures[] vagues = 
     {
@@ -60,7 +61,7 @@ public class Desert extends Terrain
                 560,      // largeurMaillage
                 500,      // hauteurMaillage
                 IMAGE_DE_FOND, // imageDeFond
-                "Desert",  // nom
+                NOM,  // nom
                 new Rectangle(520,40,20,60), // zoneDepart
                 new Rectangle(0,400,20,60)   // zoneArrivee
           );

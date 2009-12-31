@@ -27,6 +27,8 @@ public class Spiral extends Terrain
 {
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
+    public final static String NOM = "Spiral";
+    
     public static final VagueDeCreatures[] vagues = 
     {
         new VagueDeCreatures(30, new PetiteFlame(100,4,300),50,false),
@@ -60,7 +62,7 @@ public class Spiral extends Terrain
                 540,  // largeurMaillage
                 500,  // hauteurMaillage
                 IMAGE_DE_FOND, // imageDeFond
-                "Spiral",  // nom
+                NOM,  // nom
                 new Rectangle(500,40,20,80),   // zoneDepart
                 new Rectangle(320,280,20,60)   // zoneArrivee
           );
