@@ -151,7 +151,7 @@ public class Maillage
 	 * @throws IllegalArgumentException
 	 *             Levé si les coordonnées ne sont pas dans le champs.
 	 */
-	public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
+	synchronized public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
 			int xArrivee, int yArrivee) throws PathNotFoundException,
 			IllegalArgumentException
 	{
