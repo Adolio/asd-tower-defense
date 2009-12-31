@@ -23,6 +23,7 @@ public class ElementTD extends Terrain
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
     public final static Musique MUSIQUE_DE_FOND;
+    public final static String NOM = "ElementTD";
     
     public static final VagueDeCreatures[] vagues = 
     {
@@ -59,13 +60,12 @@ public class ElementTD extends Terrain
                 480,  // largeurMaillage
                 540,  // hauteurMaillage
                 IMAGE_DE_FOND, // imageDeFond
-                "ElementTD",  // nom
+                NOM,  // nom
                 new Rectangle(110, 0, 80, 20),  // zoneDepart
                 new Rectangle(230, 0, 80, 20)   // zoneArrivee
           );
-        
+ 
         musiqueDAmbiance = MUSIQUE_DE_FOND;
-        demarrerMusiqueDAmbiance();
         
         /*
          * Définition des murs du labyrinthe.
@@ -83,11 +83,9 @@ public class ElementTD extends Terrain
         ajouterMur(new Rectangle(340, 120, 20, 260));
         ajouterMur(new Rectangle(120, 360, 220, 20));
         ajouterMur(new Rectangle(20, 240, 220, 20));
-        ajouterMur(new Rectangle(220, 220, 20, 20));
-  
+        ajouterMur(new Rectangle(220, 220, 20, 20)); 
     }
 
-    
     /**
      * Permet de recuperer la vague suivante
      * @return la vague suivante

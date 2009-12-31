@@ -8,23 +8,27 @@ import javax.swing.*;
 import models.tours.Tour;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
+import models.creatures.EcouteurDeVague;
+import models.creatures.VagueDeCreatures;
 import models.jeu.Jeu;
 
 /**
  * Fenetre princiale du jeu. 
  * 
  * Elle permet voir le jeu et d'interagir avec en posant des tours sur le terrain 
- * et de les gérer. Elle fournie aussi de quoi gérer les vagues d'ennemis.
+ * et de les gerer. Elle fournie aussi de quoi gerer les vagues d'ennemis.
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
+ * @author Aurelien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  * @see JFrame
  * @see ActionListener
  */
-public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCreature
+public class Fenetre_Jeu extends JFrame implements ActionListener, 
+                                                    EcouteurDeCreature, 
+                                                    EcouteurDeVague
 {
 	// constantes statiques
     private static final long serialVersionUID = 1L;
@@ -47,7 +51,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem("activer / desactiver affichage des rayons de portee");
 	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
-
+	private final JMenuItem itemRetourMenu     = new JMenuItem("Retour vers le menu",I_QUITTER);
+	
 	//----------------------------
 	//-- declaration des panels --
 	//----------------------------
@@ -84,7 +89,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 
 	
 	/**
-	 * Constructeur de la fenêtre. Creer et affiche la fenetre.
+	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
@@ -102,6 +107,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		//-- menu principal --
 		//--------------------
 		// menu Fichier
+		menuFichier.add(itemRetourMenu);
 		menuFichier.add(itemQuitter);
 		menuPrincipal.add(menuFichier);
 		
@@ -115,6 +121,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		menuPrincipal.add(menuAide);
 		
 		// ajout des ecouteurs
+		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
@@ -159,6 +166,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		add(conteneurTerrain,BorderLayout.WEST);
 		add(panelMenuInteraction,BorderLayout.EAST);
 		
+		
+		// on demarre la musique au dernier moment
+		jeu.demarrerMusiqueDAmbianceDuTerrain();
+		
 		//---------------------------------------
 		//-- dernieres propietes de la fenetre --
 		//---------------------------------------
@@ -183,6 +194,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		if(source == itemQuitter)
 			System.exit(0); // Fermeture correcte du logiciel
 		
+		// retour au menu principal
+		else if(source == itemRetourMenu)
+            retourAuMenuPrincipal();  
+		    
 		// a propos
 		else if(source == itemAPropos)
 			new Fenetre_APropos(this); // ouverture de la fenetre "A propos"
@@ -202,10 +217,28 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
 		
 		else if(source == bLancerVagueSuivante)
-            lancerVagueSuivante();
+		{
+		    if(!jeu.aPerdu())
+		    {
+    		    lancerVagueSuivante();
+    		    bLancerVagueSuivante.setEnabled(false);
+		    }
+		    else
+		        retourAuMenuPrincipal();
+		}
 	}
 
 	/**
+	 * Permet de retourner au menu principal
+	 */
+	private void retourAuMenuPrincipal()
+    {
+	    dispose(); // destruction de la fenetre
+        System.gc(); // passage du remasse miette
+        new Fenetre_MenuPrincipal();
+    }
+
+    /**
 	 * Permet d'informer la fenetre que le joueur veut acheter une tour
 	 * 
 	 * @param tour la tour voulue
@@ -336,8 +369,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 	 * creatures.
 	 */
 	public void lancerVagueSuivante()
-	{
-	    jeu.lancerVagueSuivante(this);
+	{ 
+	    jeu.lancerVagueSuivante(this,this);
 	    
 	    ajouterInfoVagueSuivanteDansConsole();
 	}
@@ -408,11 +441,19 @@ public class Fenetre_Jeu extends JFrame implements ActionListener, EcouteurDeCre
 			{
 			    panelMenuInteraction.partieTerminee();
 			    
-			    // desactivation de la vague suivante
-		        bLancerVagueSuivante.setEnabled(false);
-			    
+			    // le bouton lancer vague suivante devient un retour au menu
+			    bLancerVagueSuivante.setEnabled(true);
+		        bLancerVagueSuivante.setText("Retour au menu");
+		        bLancerVagueSuivante.setIcon(I_QUITTER);
+		        
 			    new Fenetre_PartieTerminee(this, jeu.getScore(), jeu.getNomTerrain());
 			}
 		}
 	}
+
+    @Override
+    public void vagueEntierementLancee(VagueDeCreatures vagueDeCreatures)
+    {
+        bLancerVagueSuivante.setEnabled(true);
+    }
 }

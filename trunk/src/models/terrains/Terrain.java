@@ -594,10 +594,10 @@ public abstract class Terrain
 	 * 
 	 * @param edc ecouteur de creature fourni a chacune des creatures
 	 */
-	public void lancerVagueSuivante(EcouteurDeCreature edc)
+	public void lancerVagueSuivante(EcouteurDeVague edv, EcouteurDeCreature edc)
 	{
 		// lancement de la vague
-		getVagueDeCreaturesSuivante().lancerVague(this, edc);
+		getVagueDeCreaturesSuivante().lancerVague(this, edv, edc);
 		indiceVagueCourante++;
 	}
 	
@@ -672,15 +672,28 @@ public abstract class Terrain
             musiqueDAmbiance.lire(0); // lecture infinie
     }
 
-    // TODO
+    
+    //----------------
+    //-- ANIMATIONS --
+    //----------------
+    
+    /**
+     * Permet d'ajouter une animation
+     * 
+     * @param animation l'aniatio a ajouter
+     */
     public void ajouteAnimation(Animation animation)
     {
         animations.add(animation);
     }
-
+    
+    /**
+     * Permet de recuperer les animations
+     * 
+     * @return la collection d'animations
+     */
     public ArrayList<Animation> getAnimations()
     {
-        // TODO Auto-generated method stub
         return animations;
     }
 }
