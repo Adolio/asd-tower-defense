@@ -26,6 +26,7 @@ public class TourDeGlace extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    public static final int PRIX_ACHAT = 150;
     private static final String DESCRIPTION = 
         "La tour de glace est une tour qui est rapide et " +
         "qui ralenti les créatures. " +
@@ -46,8 +47,8 @@ public class TourDeGlace extends Tour
               20,               // hauteur
               COULEUR,          // couleur de fond
               "Glace",          // nom
-              150,              // prix achat
-              50,               // degats
+              PRIX_ACHAT,       // prix achat
+              30,               // degats
               50,               // rayon de portee
               2,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE_ET_AIR, // type
@@ -83,7 +84,7 @@ public class TourDeGlace extends Tour
 
     public void tirer(Creature creature)
     {
-        creature.setCoeffRalentissement(0.5); // perd 50% de sa vitesse
+        creature.setCoeffRalentissement(0.3); // perd 30% de sa vitesse
         creature.blesser(degats);
     }
 

@@ -42,17 +42,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private JButton bTourDeFeu              = new JButton(new ImageIcon(TourDeFeu.ICONE));
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
 	
-	
-	
-	
 	private JLabel lScore 				    = new JLabel();
 	private JLabel lTitreScore 			    = new JLabel("Score :");
 	private JLabel lVies 					= new JLabel();
 	private JLabel lTitreVies 				= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 				= new JLabel();
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
-	
-	
+		
 	// autres membres
 	private Fenetre_Jeu fenJeu;
 	private Jeu jeu;
@@ -112,19 +108,18 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		// score
 		pJoueur.add(lTitreScore);
-		lScore.setText(jeu.getScore()+"");
 		pJoueur.add(lScore);
-	
+		miseAJourScore();
+		
 		// pieces d'or
 		pJoueur.add(lTitrePiecesOr);
-		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
 		pJoueur.add(lNbPiecesOr);
+		miseAJourNbPiecesOr();
 		
 		// vies restantes
 		pJoueur.add(lTitreVies);
-		lVies.setText(jeu.getNbViesRestantes()+"");
 		pJoueur.add(lVies);
-
+		miseAJourNbViesRestantes();
 		
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
 		
@@ -146,8 +141,6 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         pInfos.add(panelInfoCreature,BorderLayout.CENTER);
         
         add(pInfos,BorderLayout.CENTER);
-        
-		
 	}
 	
 	/**
@@ -201,7 +194,16 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 */
 	public void miseAJourNbPiecesOr()
 	{
-		lNbPiecesOr.setText(jeu.getNbPiecesOr()+"");
+		int nbPiecesOr = jeu.getNbPiecesOr();
+	    
+		bTourArcher.setEnabled(nbPiecesOr > TourArcher.PRIX_ACHAT);
+	    bTourCanon.setEnabled(nbPiecesOr > TourCanon.PRIX_ACHAT);
+	    bTourAntiAerienne.setEnabled(nbPiecesOr > TourAntiAerienne.PRIX_ACHAT);
+	    bTourDeGlace.setEnabled(nbPiecesOr > TourDeGlace.PRIX_ACHAT);
+	    bTourDeFeu.setEnabled(nbPiecesOr > TourDeFeu.PRIX_ACHAT);
+	    bTourDeTerre.setEnabled(nbPiecesOr > TourDeTerre.PRIX_ACHAT);
+	    
+	    lNbPiecesOr.setText(nbPiecesOr+"");
 	}
 
 	/**

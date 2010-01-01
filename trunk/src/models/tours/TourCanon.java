@@ -2,7 +2,6 @@ package models.tours;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import vues.attaques.BouletDeCanon;
 import models.creatures.Creature;
@@ -28,6 +27,7 @@ public class TourCanon extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
     private static final double RAYON_IMPACT = 30.0;
+    public static final int PRIX_ACHAT = 20;
     private static final String DESCRIPTION = 
         "Le tour canon est une tour avec de bons dégâts mais lente. " +
         "De plus, elle n'attaque que les créatures terrestres";
@@ -50,7 +50,7 @@ public class TourCanon extends Tour
 		      20, 				// hauteur
 			  COULEUR,			// couleur de fond
 			  "Canon",	        // nom
-			  20,				// prix achat
+			  PRIX_ACHAT,		// prix achat
 			  15,				// degats
 			  40,				// rayon de portee
 			  1,                // cadence de tir (tirs / sec.)
