@@ -166,7 +166,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		add(conteneurTerrain,BorderLayout.WEST);
 		add(panelMenuInteraction,BorderLayout.EAST);
 		
-		
 		// on demarre la musique au dernier moment
 		jeu.demarrerMusiqueDAmbianceDuTerrain();
 		

@@ -51,4 +51,17 @@ public class Outils
 	    int mult10 = (int) Math.pow(10,nbDecimales);
 	    return (double) Math.round(nombre * mult10) / mult10;
 	}
+	
+    /**
+     * Permet de tirer un nombre entier aleatoire entre min et max 
+     * (bornes comprises)
+     * 
+     * @param min la borne inferieure du tirage
+     * @param max la borne superieure du tirage
+     * @return un nombre aleatoire entre min et max (bornes comprises)
+     */
+    public static int tirerNombrePseudoAleatoire(int min, int max)
+    {
+        return min + (int) Math.round(Math.random() * (max - min)); 
+    }
 }

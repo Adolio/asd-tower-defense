@@ -26,6 +26,7 @@ public class TourAntiAerienne extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
+	public static final int PRIX_ACHAT = 30;
 	public static final String DESCRIPTION = 
     	"La tour anti-aérienne est une tour qui est très performante," +
         " mais elle n'attaque que les créatures volantes. ";
@@ -48,7 +49,7 @@ public class TourAntiAerienne extends Tour
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
 			  "Anti Aérienne",	// nom
-			  30,				// prix achat
+			  PRIX_ACHAT,		// prix achat
 			  40,				// degats
 			  50,				// rayon de portee
 			  3,                // cadence de tir (tirs / sec.)

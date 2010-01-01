@@ -3,6 +3,7 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import vues.attaques.BouleDeTerre;
 import models.creatures.Creature;
 
 /**
@@ -26,6 +27,9 @@ public class TourDeTerre extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    public static final int PRIX_ACHAT = 300;
+    private static final double RAYON_IMPACT = 30;
+    
     private static final String DESCRIPTION = 
         "La tour de terre est une tour lente qui fait enormement de degats" +
         " et qui a une très grande portée. Malheureusement, elle n'attaque " +
@@ -46,7 +50,7 @@ public class TourDeTerre extends Tour
               20,               // hauteur
               COULEUR,          // couleur de fond
               "Terre",          // nom
-              200,              // prix achat
+              PRIX_ACHAT,       // prix achat
               200,              // degats
               150,              // rayon de portee
               0.5,              // cadence de tir (tirs / sec.)
@@ -83,7 +87,7 @@ public class TourDeTerre extends Tour
 
     public void tirer(Creature creature)
     {
-        creature.blesser(degats);
+        terrain.ajouteAnimation(new BouleDeTerre(terrain,this,creature,degats,RAYON_IMPACT));
     }
 
     public Tour getCopieOriginale()

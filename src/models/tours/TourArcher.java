@@ -26,6 +26,7 @@ public class TourArcher extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
+	public static final int PRIX_ACHAT = 10;
     private static final String DESCRIPTION = 
         "La tour d'archer est une tour qui est rapide, " +
         "mais elle fait peu de dégâts. Elle attaque tous types de créatures.";
@@ -48,7 +49,7 @@ public class TourArcher extends Tour
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
 			  "Archer",	        // nom
-			  10,               // prix achat
+			  PRIX_ACHAT,       // prix achat
 			  5,                // degats
 			  50,               // rayon de portee
 			  2,                // cadence de tir (tirs / sec.)
