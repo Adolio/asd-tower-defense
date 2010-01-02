@@ -1,11 +1,11 @@
 package vues;
 
 import java.awt.*;
-import vues.animations.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
+import models.animations.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.tours.Tour;
@@ -260,17 +260,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
     {
         return afficherRayonsDePortee = !afficherRayonsDePortee;
     }
-
-	/**
-     * Permet d'ajouter une animation
-     * 
-     * @param animation l'animation a ajouter
-     */
-    // TODO
-    /*public void addAnimation(Animation animation)
-    {
-        terrain
-    }*/
 	
 	/**
 	 * Surdéfinition de la méthode d'affichage du panel.
@@ -355,29 +344,28 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//----------------------------------------
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
-		synchronized (jeu.getCreatures())
+		Creature creature;
+		
+		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
+        while(iCreatures.hasNext())
         {
-    		for(int i=0;i < jeu.getCreatures().size(); i++)
-    		{
-    		    Creature creature = jeu.getCreatures().get(i);
-     
-    		    /* efface les creatures mortes
-    		     * 
-    		     * TODO on peut faire mieux mais ca résout 
-    		     * les problèmes de créatures fantomes
-    		     */
-    		    if(creature.estMorte())
-    		    {
-    		        jeu.getCreatures().remove(i--);
-    		        System.out.println("Panel_Terrain effacement d'une creature mal tuee");
-                    continue;
-    		    }
-    		      
-    		    // affichage des creature terriennes uniquement
-    		    if(creature.getType() == Creature.TYPE_TERRIENNE)
-    		        dessinerCreature(creature,g2);
-    	
-    		}
+            creature = iCreatures.next();
+            
+            /* efface les creatures mortes
+             * 
+             * TODO on peut faire mieux mais ca résout 
+             * les problèmes de créatures fantomes
+             */
+            if(creature.estMorte())
+            {
+                iCreatures.remove();
+                System.out.println("Panel_Terrain effacement d'une creature mal tuee");
+                continue;
+            }
+              
+            // affichage des creatures terriennes uniquement
+            if(creature.getType() == Creature.TYPE_TERRIENNE)
+                dessinerCreature(creature,g2);
         }
 		
 		//-------------------------
@@ -389,12 +377,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //--------------------------------------
         //-- affichage des creatures aerienne --
         //--------------------------------------
-		
-		synchronized (jeu.getCreatures())
+		Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
+        while(eCreatures.hasMoreElements())
         {
-            for(Creature creature : jeu.getCreatures())
-                if(creature.getType() == Creature.TYPE_AERIENNE)
-                    dessinerCreature(creature,g2);
+            creature = eCreatures.nextElement();
+            
+            // dessine toutes les barres de sante
+            dessinerBarreDeSante(creature, g2);
+            
+            if(creature.getType() == Creature.TYPE_AERIENNE)
+                dessinerCreature(creature,g2);
         }
 		
 		//---------------------------------
@@ -529,7 +521,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         }
 	    
 	    // affichage des barres de sante
-        dessinerBarreDeSante(creature,g2);
+        // dessinerBarreDeSante(creature,g2);
         
         // affichage du chemin des creatures
         if(afficherMaillage)
@@ -546,7 +538,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private void dessinerBarreDeSante(final Creature creature, final Graphics2D g2)
 	{
 	    // calculs des proprietes
-	    int largeurBarre    = (int)(creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
+	    int largeurBarre    = (int) (creature.getWidth() * COEFF_LARGEUR_BARRE_VIE);
         int positionXBarre  = (int) ( creature.getX() - 
                               (largeurBarre - creature.getWidth()) / 2);
         int positionYBarre  = (int)(creature.getY()+creature.getHeight());
@@ -558,8 +550,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
         
         // affichage du contenu
         g2.setColor(COULEUR_SANTE);
+        
         g2.fillRect(positionXBarre+1, positionYBarre+1, 
-                (int)(creature.getSante()*largeurBarre/creature.getSanteMax())-2,
+                (int)(creature.getSante()*(largeurBarre - 2)/creature.getSanteMax()),
                 HAUTEUR_BARRE_VIE-2);
 	}
 	

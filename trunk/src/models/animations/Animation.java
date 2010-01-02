@@ -1,4 +1,4 @@
-package vues.animations;
+package models.animations;
 
 import java.awt.*;
 

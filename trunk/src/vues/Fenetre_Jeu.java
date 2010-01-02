@@ -1,6 +1,6 @@
 package vues;
 
-import vues.animations.*;
+import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

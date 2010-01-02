@@ -3,7 +3,7 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import vues.attaques.BouletDeCanon;
+import models.attaques.BouletDeCanon;
 import models.creatures.Creature;
 
 /**
@@ -76,7 +76,7 @@ public class TourCanon extends Tour
 	
 	public void tirer(Creature creature)
 	{
-	    terrain.ajouteAnimation(new BouletDeCanon(terrain,this,creature,degats,RAYON_IMPACT));
+	    terrain.ajouterAnimation(new BouletDeCanon(terrain,this,creature,degats,RAYON_IMPACT));
 	}
 
 

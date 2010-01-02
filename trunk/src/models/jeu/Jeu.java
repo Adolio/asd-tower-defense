@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Vector;
-import vues.animations.Animation;
+import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
 import models.creatures.EcouteurDeVague;
@@ -407,6 +407,6 @@ public class Jeu
      */
     public void ajouterAnimation(Animation animation)
     {
-        terrain.ajouteAnimation(animation);
+        terrain.ajouterAnimation(animation);
     }
 }
