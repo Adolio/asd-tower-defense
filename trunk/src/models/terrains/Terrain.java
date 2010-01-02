@@ -672,6 +672,14 @@ public abstract class Terrain
             musiqueDAmbiance.lire(0); // lecture infinie
     }
 
+    /**
+     * Permet d'arreter la lecture de la musique d'ambiance
+     */
+    public void arreterMusiqueDAmbiance()
+    {
+        if(musiqueDAmbiance != null)
+            musiqueDAmbiance.arreter(); // arret de la lecture
+    }
     
     //----------------
     //-- ANIMATIONS --

@@ -249,6 +249,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	       "Etes-vous sûr de vouloir arrêter la partie ?", 
 	       "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
+	        jeu.arreterMusiqueDAmbianceDuTerrain();
+	        
 	        dispose(); // destruction de la fenetre
 	        System.gc(); // passage du remasse miette
 	        new Fenetre_MenuPrincipal();  

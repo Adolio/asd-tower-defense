@@ -2,10 +2,11 @@ package models.attaques;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
+import java.io.File;
 import models.creatures.Creature;
+import models.outils.EcouteurDeSon;
 import models.outils.MeilleursScores;
-import models.outils.Musique;
+import models.outils.Son2;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
@@ -22,13 +23,15 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class Fleche extends Attaque implements Runnable
+public class Fleche extends Attaque implements Runnable, EcouteurDeSon
 {
     // constantes finales
     private static final long serialVersionUID = 1L;
     private static final int LONGUEUR_FLECHE   = 10;
     private static final Color COULEUR_FLECHE  = new Color(128,0,0);
-    public static final Musique SON_FLECHE;
+    public static final File FICHIER_SON_ARC   = new File("snd/fleche.mp3");
+    private static int nbSonsArc;
+    private static final int MAX_SONS_ARC      = 3;
     
     // attributs membres
     /**
@@ -46,10 +49,6 @@ public class Fleche extends Attaque implements Runnable
      */
     private double xQueue, yQueue;
     
-    static
-    {
-        SON_FLECHE = new Musique("snd/arc.mp3");
-    }
 
     /**
      * Constructeur de l'attaque
@@ -67,8 +66,13 @@ public class Fleche extends Attaque implements Runnable
         Thread thread = new Thread(this);
         thread.start();
         
-        // TODO
-        //SON_FLECHE.lire(1);
+        if(nbSonsArc <= MAX_SONS_ARC)
+        {
+            Son2 s = new Son2(FICHIER_SON_ARC);
+            s.ajouterEcouteurDeMusique(this);
+            nbSonsArc++;
+            s.lire();
+        }
     }
 
     @Override
@@ -130,5 +134,11 @@ public class Fleche extends Attaque implements Runnable
        }
        
        estTerminee = true;
+    }
+
+    @Override
+    public void estTerminee(Son2 son)
+    {
+        nbSonsArc--;
     }
 }

@@ -392,6 +392,15 @@ public class Jeu
     }
 
     /**
+     * Permet d'arreter la lecture de la musique d'ambiance du terrain
+     */
+    public void arreterMusiqueDAmbianceDuTerrain()
+    {
+        terrain.arreterMusiqueDAmbiance();
+    }
+    
+    
+    /**
      * Permet de recuperer les animations
      * 
      * @return la collection d'animations
