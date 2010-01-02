@@ -27,7 +27,7 @@ public class TourDeTerre extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
-    public static final int PRIX_ACHAT = 300;
+    public static final int PRIX_ACHAT = 250;
     private static final double RAYON_IMPACT = 30;
     
     private static final String DESCRIPTION = 

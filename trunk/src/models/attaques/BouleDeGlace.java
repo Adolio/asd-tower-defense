@@ -1,14 +1,13 @@
 package models.attaques;
 
 import java.awt.*;
-
 import models.creatures.Creature;
 import models.outils.MeilleursScores;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
- * Attaque d'une boule de feu.
+ * Attaque d'une boule de glace.
  * 
  * Cette classe est une animation qui dessine une boule de feu  partant d'une tour
  * vers une creature.
@@ -20,12 +19,14 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class BouleDeFeu extends Attaque implements Runnable
+public class BouleDeGlace extends Attaque implements Runnable
 {
     // constantes finales
     private static final long serialVersionUID  = 1L;
-    private static final int DIAMETRE_BOULET    = 8;
+    private static final int DIAMETRE_BOULE     = 10;
     private static final Image IMAGE_BOULE;
+    private static final long DUREE_RALENTISSEMENT = 5000;
+    
     
     // attributs membres
     /**
@@ -40,7 +41,7 @@ public class BouleDeFeu extends Attaque implements Runnable
     
     static
     {
-        IMAGE_BOULE   = Toolkit.getDefaultToolkit().getImage("img/attaques/bouleDeFeu.png");
+        IMAGE_BOULE   = Toolkit.getDefaultToolkit().getImage("img/attaques/bouleDeGlace.png");
     }
     
     
@@ -51,13 +52,13 @@ public class BouleDeFeu extends Attaque implements Runnable
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public BouleDeFeu(Terrain terrain, Tour attaquant, Creature cible, 
-                      int degats, double rayonImpact)
+    public BouleDeGlace(Terrain terrain, Tour attaquant, Creature cible, 
+                      int degats, double coeffRalentissement)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         
-        this.degats         = degats;
-        this.rayonImpact    = rayonImpact;
+        this.degats                 = degats;
+        this.coeffRalentissement    = coeffRalentissement;
         
         Thread thread = new Thread(this);
         thread.start();
@@ -81,10 +82,10 @@ public class BouleDeFeu extends Attaque implements Runnable
              
         // dessin de la boule de feu
         g2.drawImage(IMAGE_BOULE, 
-                    (int) xCentreBoule - DIAMETRE_BOULET / 2, 
-                    (int) yCentreBoule - DIAMETRE_BOULET / 2, 
-                    DIAMETRE_BOULET, 
-                    DIAMETRE_BOULET, null);
+                    (int) xCentreBoule - DIAMETRE_BOULE / 2, 
+                    (int) yCentreBoule - DIAMETRE_BOULE / 2, 
+                    DIAMETRE_BOULE, 
+                    DIAMETRE_BOULE, null);
     }
 
     @Override
@@ -108,6 +109,13 @@ public class BouleDeFeu extends Attaque implements Runnable
                estTerminee = true;
                
                attaquerCibles();
+              
+               // ajout du ralentissement
+               if(cible.getCoeffRalentissement() == 0.0)
+               {
+                   cible.setCoeffRalentissement(coeffRalentissement);
+                   terrain.ajouterAnimation(new Glacon(terrain,attaquant,cible,DUREE_RALENTISSEMENT));
+               }
                
                break;
            }

@@ -1,7 +1,6 @@
 package models.tours;
 
 import java.awt.*;
-import java.util.Enumeration;
 import models.creatures.Creature;
 import models.terrains.Terrain;
 

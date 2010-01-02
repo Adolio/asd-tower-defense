@@ -26,17 +26,6 @@ public class WaterWorld extends Terrain
 	public final static Musique MUSIQUE_DE_FOND;
 	public final static String NOM = "WaterWorld";
 	
-    public static final VagueDeCreatures[] vagues = 
-    {
-        new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
-        new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
-        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
-        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
-        new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
-        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
-        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
-    };
-	
     static
     {
         MUSIQUE_DE_FOND = new Musique("snd/blizzard/Human_II_(High Seas).mp3");
@@ -92,11 +81,6 @@ public class WaterWorld extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < vagues.length)
-    		return vagues[indiceVagueCourante];
-    	else
-    		return new VagueDeCreatures(10, 
-    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
-    		,2000,false);
+        return genererVagueStandard();
 	}
 }

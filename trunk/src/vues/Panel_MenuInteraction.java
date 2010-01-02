@@ -196,12 +196,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	{
 		int nbPiecesOr = jeu.getNbPiecesOr();
 	    
-		bTourArcher.setEnabled(nbPiecesOr > TourArcher.PRIX_ACHAT);
-	    bTourCanon.setEnabled(nbPiecesOr > TourCanon.PRIX_ACHAT);
-	    bTourAntiAerienne.setEnabled(nbPiecesOr > TourAntiAerienne.PRIX_ACHAT);
-	    bTourDeGlace.setEnabled(nbPiecesOr > TourDeGlace.PRIX_ACHAT);
-	    bTourDeFeu.setEnabled(nbPiecesOr > TourDeFeu.PRIX_ACHAT);
-	    bTourDeTerre.setEnabled(nbPiecesOr > TourDeTerre.PRIX_ACHAT);
+		bTourArcher.setEnabled(nbPiecesOr >= TourArcher.PRIX_ACHAT);
+	    bTourCanon.setEnabled(nbPiecesOr >= TourCanon.PRIX_ACHAT);
+	    bTourAntiAerienne.setEnabled(nbPiecesOr >= TourAntiAerienne.PRIX_ACHAT);
+	    bTourDeGlace.setEnabled(nbPiecesOr >= TourDeGlace.PRIX_ACHAT);
+	    bTourDeFeu.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
+	    bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
 	    
 	    lNbPiecesOr.setText(nbPiecesOr+"");
 	}

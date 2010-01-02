@@ -3,12 +3,6 @@ package models.terrains;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-
-import models.creatures.CarapaceKoopa;
-import models.creatures.GrandeFlame;
-import models.creatures.PetiteFlame;
-import models.creatures.Smiley;
-import models.creatures.Nuage;
 import models.creatures.VagueDeCreatures;
 
 /**
@@ -28,17 +22,6 @@ public class Desert extends Terrain
 	public final static Image IMAGE_DE_FOND;
 	public final static Image IMAGE_MENU;
 	public final static String NOM = "Desert";
-    
-    public static final VagueDeCreatures[] vagues = 
-    {
-        new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
-        new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
-        new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
-        new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
-        new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
-        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
-        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
-    };
 	
     static
     {
@@ -97,11 +80,6 @@ public class Desert extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-    	if (indiceVagueCourante < vagues.length)
-    		return vagues[indiceVagueCourante];
-    	else
-    		return new VagueDeCreatures(10, 
-    			new Smiley(indiceVagueCourante*100,indiceVagueCourante,indiceVagueCourante)
-    		    ,2000,false);
+        return genererVagueStandard();
 	}
 }

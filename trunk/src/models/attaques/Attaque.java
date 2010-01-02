@@ -8,6 +8,17 @@ import models.creatures.Creature;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
+/**
+ * Classe de gestion d'une attaque venant d'une tour en direction d'une creature.
+ * 
+ * @author Pierre-Dominique Putallaz
+ * @author Aurélien Da Campo
+ * @author Lazhar Farjallah
+ * @version 1.0 | 30 janvier 2009
+ * @since jdk1.6.0_16
+ * @see Tour
+ * @see Creature
+ */
 abstract public class Attaque extends Animation
 {
     private static final long serialVersionUID = 1L;
@@ -16,11 +27,20 @@ abstract public class Attaque extends Animation
 
     protected int degats;
     protected double rayonImpact;
-    private double coeffRalentissement;
-    private Terrain terrain;
+    protected double coeffRalentissement;
+    
+    protected Terrain terrain;
     private ArrayList<EcouteurDAttaque> ecouteursDAttaque = new ArrayList<EcouteurDAttaque>();
     
-    // TODO
+    /**
+     * Constructeur de l'attaque
+     * 
+     * @param x position initiale x
+     * @param y position initiale y
+     * @param terrain le terrain sur lequel est l'attaque
+     * @param attaquant la tour attaquante
+     * @param cible la creature attaquee
+     */
     public Attaque(int x, int y, Terrain terrain, Tour attaquant, Creature cible)
     {
         super(x, y);
@@ -29,48 +49,23 @@ abstract public class Attaque extends Animation
         this.terrain    = terrain;
     }
     
-    // TODO
-    protected ArrayList<Creature> getCreaturesDansRayonDImpact()
-    {
-        ArrayList<Creature> creaturesDansRayonDImpact = new ArrayList<Creature>();
-    
-        // degats de zone
-        double distanceImpact;
-        
-        // monopolisation de la collection des creatures
-        synchronized (terrain.getCreatures())
-        {
-            for(Creature creature : terrain.getCreatures())
-            {
-                // si la creature est dans le splash
-                distanceImpact = Point.distance(creature.getCenterX(), 
-                                                creature.getCenterY(), 
-                                                cible.x, 
-                                                cible.y);
-                
-                if(distanceImpact <= rayonImpact)
-                    creaturesDansRayonDImpact.add(creature);
-            }
-        }
-    
-        return creaturesDansRayonDImpact;
-    }
-    
     /**
      * Permet d'effectuer toutes les operations necessaire pour blesser la creature
      * en fonction de la valeur des attributs.
      */
-    public void attaquerCible()
+    public ArrayList<Creature> attaquerCibles()
     {
-        // si l'attaque ralenti
-        if(coeffRalentissement > 0.0)
-            cible.setCoeffRalentissement(coeffRalentissement);
-        
         // s'il y a un rayon d'impact
         if(rayonImpact > 0.0)
-            blesserCreaturesDansZoneImpact();
+            return blesserCreaturesDansZoneImpact();
         else
+        {
             cible.blesser(degats);
+            
+            ArrayList<Creature> a = new ArrayList<Creature>();
+            a.add(cible); 
+            return a;
+        }
     }
     
     /**
@@ -79,9 +74,11 @@ abstract public class Attaque extends Animation
      * @param impact le point d'impact de l'attaque
      * @param rayonImpact le rayon d'impact faisant des degats
      */
-    synchronized public void blesserCreaturesDansZoneImpact()
+    synchronized public ArrayList<Creature> blesserCreaturesDansZoneImpact()
     {
         // degats de zone
+        ArrayList<Creature> a = new ArrayList<Creature>();
+        
         Point impact = new Point((int) cible.getCenterX(), (int) cible.getCenterY());
         int degatsFinal;
         double distanceImpact;
@@ -103,22 +100,35 @@ abstract public class Attaque extends Animation
                 // calcul des degats en fonction de la distance de l'impact
                 degatsFinal = (int) (degats - (distanceImpact / rayonImpact * degats));
                 tmpCreature.blesser(degatsFinal);
+                
+                a.add(tmpCreature);
+                
+                // si l'attaque ralenti
+                //if(coeffRalentissement > 0.0)
+                    
             }
         }
         
+        return a;
     }
     
-    // TODO
+    /**
+     * Permet d'ajouter un ecouteur d'attaque
+     * 
+     * @param ea l'ecouteur d'attaque
+     */
     public void ajouterEcouteurAttaque(EcouteurDAttaque ea)
     {
         ecouteursDAttaque.add(ea);
     }
     
-    // TODO
+    /**
+     * Permet d'informer tous les ecouteurs d'attaque que l'attaque est 
+     * terminee
+     */
     protected void informerEcouteurAttaqueTerminee()
     {
         for(EcouteurDAttaque ea : ecouteursDAttaque)
             ea.attaqueTerminee(attaquant, cible);
     }
-   
 }
