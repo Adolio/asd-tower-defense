@@ -3,6 +3,7 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import models.attaques.BouleDeGlace;
 import models.creatures.Creature;
 
 
@@ -26,6 +27,8 @@ public class TourDeGlace extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
+    private static final double COEFF_RALENTISSMENT = 0.4; // perd 40% de sa vitesse
+    
     public static final int PRIX_ACHAT = 150;
     private static final String DESCRIPTION = 
         "La tour de glace est une tour qui est rapide et " +
@@ -84,8 +87,9 @@ public class TourDeGlace extends Tour
 
     public void tirer(Creature creature)
     {
-        creature.setCoeffRalentissement(0.3); // perd 30% de sa vitesse
-        creature.blesser(degats);
+        
+        terrain.ajouterAnimation(new BouleDeGlace(terrain,this,creature,degats,
+                                                  COEFF_RALENTISSMENT));
     }
 
     public Tour getCopieOriginale()

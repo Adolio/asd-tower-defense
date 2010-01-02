@@ -47,7 +47,7 @@ public class Thwomp extends Creature
 	public Thwomp(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse,
-		        Creature.TYPE_TERRIENNE, IMAGE, "Smiley");
+		        Creature.TYPE_TERRIENNE, IMAGE, "Thwomp");
 	}
 
 	/**

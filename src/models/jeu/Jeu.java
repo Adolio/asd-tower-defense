@@ -379,6 +379,7 @@ public class Jeu
         // perd une vie
         viesRestantes--;
         
+        // efface la creature
         terrain.supprimerCreature(creature);
     }
     
@@ -395,7 +396,7 @@ public class Jeu
      * 
      * @return la collection d'animations
      */
-    public ArrayList<Animation> getAnimations()
+    public Vector<Animation> getAnimations()
     {
         return terrain.getAnimations();
     }

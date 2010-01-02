@@ -111,7 +111,7 @@ public class BouletDeCanon extends Attaque implements Runnable
                informerEcouteurAttaqueTerminee();
                estTerminee = true;
                 
-               attaquerCible();
+               attaquerCibles();
                
                break;
            }

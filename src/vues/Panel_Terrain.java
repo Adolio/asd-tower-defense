@@ -345,27 +345,29 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
 		Creature creature;
-		
-		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
-        while(iCreatures.hasNext())
+		synchronized (jeu.getCreatures())
         {
-            creature = iCreatures.next();
-            
-            /* efface les creatures mortes
-             * 
-             * TODO on peut faire mieux mais ca résout 
-             * les problèmes de créatures fantomes
-             */
-            if(creature.estMorte())
+    		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
+            while(iCreatures.hasNext())
             {
-                iCreatures.remove();
-                System.out.println("Panel_Terrain effacement d'une creature mal tuee");
-                continue;
+                creature = iCreatures.next();
+                
+                /* efface les creatures mortes
+                 * 
+                 * TODO on peut faire mieux mais ca résout 
+                 * les problèmes de créatures fantomes
+                 */
+                if(creature.estMorte())
+                {
+                    iCreatures.remove();
+                    System.out.println("Panel_Terrain effacement d'une creature mal tuee");
+                    continue;
+                }
+                  
+                // affichage des creatures terriennes uniquement
+                if(creature.getType() == Creature.TYPE_TERRIENNE)
+                    dessinerCreature(creature,g2);
             }
-              
-            // affichage des creatures terriennes uniquement
-            if(creature.getType() == Creature.TYPE_TERRIENNE)
-                dessinerCreature(creature,g2);
         }
 		
 		//-------------------------
@@ -425,18 +427,21 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		
 		//------------------------------
 		//-- affichage des animations --
-		//------------------------------		
-		Animation animation;
-		ArrayList<Animation> animations = jeu.getAnimations();
-		for(int i=0;i<animations.size();i++)
-		{
-		    animation = animations.get(i);
-	
-		    if (!animation.estTerminee())   
-                animation.dessiner(g2);
-            else
-                animations.remove(i--);
-		}
+		//------------------------------
+		synchronized (jeu.getAnimations())
+        {
+		    Animation animation;
+		    Iterator<Animation> iAnimation = jeu.getAnimations().iterator();
+    		while(iAnimation.hasNext())
+    		{
+    		    animation = iAnimation.next();
+    	
+    		    if (!animation.estTerminee())   
+                    animation.dessiner(g2);
+                else
+                    iAnimation.remove();
+    		} 
+        }
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --

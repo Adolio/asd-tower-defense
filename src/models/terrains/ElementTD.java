@@ -24,20 +24,7 @@ public class ElementTD extends Terrain
     public final static Image IMAGE_MENU;
     public final static Musique MUSIQUE_DE_FOND;
     public final static String NOM = "ElementTD";
-    
-    public static final VagueDeCreatures[] vagues = 
-    {
-    	new VagueDeCreatures(5, new Smiley(100,4,10),2000,false),
-    	new VagueDeCreatures(10, new Smiley(100,4,10),2000,false),
-    	new VagueDeCreatures(5, new CarapaceKoopa(300,10,10),2000,false),
-    	
-    	new VagueDeCreatures(10, new Nuage(100,6,10),2000,false),
-    	
-    	new VagueDeCreatures(20, new Smiley(100,4,30),500,false),
-        new VagueDeCreatures(10, new PetiteFlame(600,20,20),1000,false),
-        new VagueDeCreatures(1, new GrandeFlame(10000,40,10),2000,false,"Boss")
-    };
-    
+
     static
     {
         MUSIQUE_DE_FOND = new Musique("snd/blizzard/Human_I_(Fanfare).mp3");
@@ -67,7 +54,7 @@ public class ElementTD extends Terrain
                 new Rectangle(230, 0, 80, 20)   // zoneArrivee
           );
  
-        musiqueDAmbiance = MUSIQUE_DE_FOND;
+        //musiqueDAmbiance = MUSIQUE_DE_FOND;
         
         /*
          * Définition des murs du labyrinthe.
@@ -94,68 +81,6 @@ public class ElementTD extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-        // TODO
-        int indiceVagueCourante = this.indiceVagueCourante + 1;
-           
-        /*if (indiceVagueCourante < vagues.length)
-    		return vagues[indiceVagueCourante];
-    	else*/
-    	{
-    	    //int n = tirerNombrePseudoAleatoire(0,10)
-    	    int uniteVague = indiceVagueCourante % 10;
-    	   
-    	    // 5 normales
-    	    if(uniteVague == 1)
-        	    return new VagueDeCreatures(5, 
-        			new Smiley(indiceVagueCourante*100,6,10),2000,false);
-    	    
-    	    // 10 normales
-    	    else if(uniteVague == 2)
-                return new VagueDeCreatures(10, 
-                        new Pokey(indiceVagueCourante*100,6,10),2000,false);
-    	    
-    	    // 10 volantes
-            else if(uniteVague == 3)
-                return new VagueDeCreatures(10,
-                        new Boo(indiceVagueCourante*100,10,20),1000,false);
-    	    
-    	    // 10 resistantes
-    	    else if(uniteVague == 4)
-                return new VagueDeCreatures(10, 
-                        new CarapaceKoopa(indiceVagueCourante*150,8,10),2000,false);
-    	    
-    	    // 10 rapides
-    	    else if(uniteVague == 5)
-                return new VagueDeCreatures(10, 
-                        new Smiley(indiceVagueCourante*80,8,30),500,false);
-
-    	    // 20 normales
-    	    else if(uniteVague == 6)
-                return new VagueDeCreatures(10, 
-                        new Smiley(indiceVagueCourante*100,6,10),2000,false);
-    	    
-    	    // 15 resistantes
-    	    else if(uniteVague == 7)
-                return new VagueDeCreatures(15, 
-                        new Thwomp(indiceVagueCourante*150,8,10),2000,false);
-    	    
-    	    // 10 volantes
-            else if(uniteVague == 8)
-                return new VagueDeCreatures(10,
-                        new Boo(indiceVagueCourante*100,10,20),1000,false);
-    	    
-    	    // 5 pre-boss
-    	    else if(uniteVague == 9)
-                return new VagueDeCreatures(3, 
-                        new PetiteFlame(indiceVagueCourante*200,indiceVagueCourante,10),
-                        2000,false);
-    	    
-    	    // boss
-    	    else
-                return new VagueDeCreatures(1, 
-                        new GrandeFlame(indiceVagueCourante*500,indiceVagueCourante*5,10)
-                    ,2000,false);
-    	}
+        return genererVagueStandard();
 	}
-    
 }

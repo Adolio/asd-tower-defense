@@ -109,10 +109,10 @@ public class Panel_InfoCreature extends JPanel
 		    lImage.setIcon(new ImageIcon(creature.getImage()));
 			lNom.setText(creature.getNom());
 			lTitreType.setText(" ["+creature.getNomType()+"]");
-			lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
-			lVitesse.setText(" : "+String.format("%.1f",creature.getVitesseNormale()));
 			lGain.setText(" : "+creature.getNbPiecesDOr());
 			
+			miseAJourInfosVariables();
+
 			// affichage du panel
 			pConteneur.setVisible(true);
 		}
@@ -121,11 +121,27 @@ public class Panel_InfoCreature extends JPanel
 		    pConteneur.setVisible(false);
 	}
 
-    public void miseAJourSanteCreature()
+	/**
+	 * Permet de mettre a jour les informations variable de la creature
+	 */
+    public void miseAJourInfosVariables()
     {
         if(creature != null)
         {
             lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
+
+            // vitesse
+            if(creature.getCoeffRalentissement() > 0.0)
+            {
+                lVitesse.setForeground(Color.BLUE);
+                lVitesse.setText(" : "+String.format("%.1f",creature.getVitesseReelle())
+                                +" (-"+(creature.getCoeffRalentissement() * 100.0)+"%)");
+            }
+            else
+            {
+                lVitesse.setForeground(Color.BLACK);
+                lVitesse.setText(" : "+String.format("%.1f",creature.getVitesseNormale()));
+            }
         }
     }
 }

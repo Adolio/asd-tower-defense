@@ -137,7 +137,7 @@ public abstract class Terrain
     /**
      * Liste des animations visible sur le terrain
      */
-    private ArrayList<Animation> animations = new ArrayList<Animation>();
+    private Vector<Animation> animations = new Vector<Animation>();
     
 	/**
 	 * Gestion des vagues de creatures.
@@ -676,7 +676,6 @@ public abstract class Terrain
     //----------------
     //-- ANIMATIONS --
     //----------------
-    
     /**
      * Permet d'ajouter une animation
      * 
@@ -692,8 +691,64 @@ public abstract class Terrain
      * 
      * @return la collection d'animations
      */
-    public ArrayList<Animation> getAnimations()
+    public Vector<Animation> getAnimations()
     {
         return animations;
+    }
+    
+    /**
+     * Permet de generer une vague en fonction de son indice de vague courante
+     * 
+     * Cette methode permet d'eviter de gerer les vagues pour chaque terrain.
+     * Mias rien n'empeche au developpeur de terrain de gerer lui-meme les vagues
+     * qu'il veut envoye.
+     * 
+     * @return la vague generee
+     */
+    public VagueDeCreatures genererVagueStandard()
+    {
+        int noVague    = indiceVagueCourante + 1;
+        int uniteVague = noVague % 10;
+       
+        // 5 normales
+        if(uniteVague == 1)
+            return new VagueDeCreatures(5, 
+                new Smiley(noVague*100,6,20),1000,false);
+        // 10 normales
+        else if(uniteVague == 2)
+            return new VagueDeCreatures(10, 
+                    new Pokey(noVague*100,6,20),1000,false);
+        // 10 volantes
+        else if(uniteVague == 3)
+            return new VagueDeCreatures(10,
+                    new Boo(noVague*100,10,20),1000,false);
+        // 10 resistantes
+        else if(uniteVague == 4)
+            return new VagueDeCreatures(10, 
+                    new CarapaceKoopa(noVague*150,8,10),2000,false);
+        // 10 rapides
+        else if(uniteVague == 5)
+            return new VagueDeCreatures(10, 
+                    new Smiley(noVague*80,8,30),500,false);
+        // 20 normales
+        else if(uniteVague == 6)
+            return new VagueDeCreatures(10, 
+                    new Smiley(noVague*100,6,20),1000,false);
+        // 15 resistantes
+        else if(uniteVague == 7)
+            return new VagueDeCreatures(15, 
+                    new Thwomp(noVague*150,8,10),2000,false);
+        // 10 volantes
+        else if(uniteVague == 8)
+            return new VagueDeCreatures(10,
+                    new Boo(noVague*100,10,20),1000,false);
+        // 5 pre-boss
+        else if(uniteVague == 9)
+            return new VagueDeCreatures(3, 
+                    new PetiteFlame(noVague*500,noVague*2,10),2000,false);
+        // boss
+        else
+            return new VagueDeCreatures(1, 
+                    new GrandeFlame(noVague*1000,noVague*5,10),2000,false);
     }
 }

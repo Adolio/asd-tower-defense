@@ -107,7 +107,7 @@ public class BouleDeTerre extends Attaque implements Runnable
                informerEcouteurAttaqueTerminee();
                estTerminee = true;
                
-               attaquerCible();
+               attaquerCibles();
                
                break;
            }

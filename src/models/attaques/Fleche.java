@@ -115,7 +115,7 @@ public class Fleche extends Attaque implements Runnable
                informerEcouteurAttaqueTerminee();
                estTerminee = true;
                
-               attaquerCible();
+               attaquerCibles();
                
                break;
            }

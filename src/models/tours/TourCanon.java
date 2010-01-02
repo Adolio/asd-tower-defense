@@ -29,7 +29,7 @@ public class TourCanon extends Tour
     private static final double RAYON_IMPACT = 30.0;
     public static final int PRIX_ACHAT = 20;
     private static final String DESCRIPTION = 
-        "Le tour canon est une tour avec de bons dégâts mais lente. " +
+        "La tour canon est une tour avec de bons dégâts mais lente. " +
         "De plus, elle n'attaque que les créatures terrestres";
 	
 	static

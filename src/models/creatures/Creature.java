@@ -229,7 +229,9 @@ public abstract class Creature extends Rectangle implements Runnable
     public void setCoeffRalentissement(double coeffRalentissement)
     {
         if(coeffRalentissement > 1.0)
-            this.coeffRalentissement = 1.0;
+            coeffRalentissement = 1.0;
+        else if(coeffRalentissement < 0.0)
+            coeffRalentissement = 0.0;
         else  
             this.coeffRalentissement = coeffRalentissement;
     }

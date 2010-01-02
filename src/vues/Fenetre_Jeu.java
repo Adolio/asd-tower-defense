@@ -51,7 +51,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem("activer / desactiver affichage des rayons de portee");
 	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
-	private final JMenuItem itemRetourMenu     = new JMenuItem("Retour vers le menu",I_QUITTER);
+	private final JMenuItem itemRetourMenu  = new JMenuItem("Retour vers le menu",I_QUITTER);
 	
 	//----------------------------
 	//-- declaration des panels --
@@ -191,7 +191,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		
 		// quitter
 		if(source == itemQuitter)
-			System.exit(0); // Fermeture correcte du logiciel
+			quitter();
 		
 		// retour au menu principal
 		else if(source == itemRetourMenu)
@@ -228,13 +228,31 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	}
 
 	/**
+	 * Permet de proposer au joueur s'il veut quitter le programme
+	 */
+	private void quitter()
+    {
+	    if(JOptionPane.showConfirmDialog(this, 
+	            "Etes-vous sûr de vouloir quitter le jeu ?", 
+	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	    {
+	        System.exit(0); // Fermeture correcte du logiciel
+	    }
+    }
+
+    /**
 	 * Permet de retourner au menu principal
 	 */
 	private void retourAuMenuPrincipal()
     {
-	    dispose(); // destruction de la fenetre
-        System.gc(); // passage du remasse miette
-        new Fenetre_MenuPrincipal();
+	    if(JOptionPane.showConfirmDialog(this, 
+	       "Etes-vous sûr de vouloir arrêter la partie ?", 
+	       "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	    {
+	        dispose(); // destruction de la fenetre
+	        System.gc(); // passage du remasse miette
+	        new Fenetre_MenuPrincipal();  
+	    }
     }
 
     /**
@@ -391,7 +409,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	 */
 	public void creatureBlessee(Creature creature)
 	{
-	    panelInfoCreature.miseAJourSanteCreature();
+	    panelInfoCreature.miseAJourInfosVariables();
 	    
 	}
 
@@ -430,10 +448,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		// si pas encore perdu
 	    if(!jeu.aPerdu())
 		{
-			panelMenuInteraction.miseAJourNbViesRestantes();
-			
-			// efface la creature
-			jeu.creatureArriveeEnZoneArrivee(creature);
+	        // indication au jeu
+            jeu.creatureArriveeEnZoneArrivee(creature);
+	        
+            // mise a jour des infos
+	        panelMenuInteraction.miseAJourNbViesRestantes();
 			
 			// le joueur n'a plus de vie
 			if(jeu.aPerdu())
