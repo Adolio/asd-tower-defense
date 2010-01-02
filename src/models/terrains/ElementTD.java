@@ -54,7 +54,7 @@ public class ElementTD extends Terrain
                 new Rectangle(230, 0, 80, 20)   // zoneArrivee
           );
  
-        //musiqueDAmbiance = MUSIQUE_DE_FOND;
+        musiqueDAmbiance = MUSIQUE_DE_FOND;
         
         /*
          * Définition des murs du labyrinthe.

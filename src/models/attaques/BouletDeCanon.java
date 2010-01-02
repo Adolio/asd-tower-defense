@@ -1,9 +1,11 @@
 package models.attaques;
 
 import java.awt.*;
+import java.io.File;
 import models.creatures.Creature;
+import models.outils.EcouteurDeSon;
 import models.outils.MeilleursScores;
-import models.outils.Musique;
+import models.outils.Son2;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
@@ -20,13 +22,15 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class BouletDeCanon extends Attaque implements Runnable
+public class BouletDeCanon extends Attaque implements Runnable, EcouteurDeSon
 {
     // constantes finales
     private static final long serialVersionUID  = 1L;
     private static final int DIAMETRE_BOULET    = 8;
     private static final Image IMAGE_BOULET;
-    public static final Musique SON_CANON;
+    public static final File FICHIER_SON_BOULET   = new File("snd/boulet.mp3");
+    private static int nbSonsBoulet;
+    private static final int MAX_SONS_BOULET      = 3;
     
     // attributs membres
     /**
@@ -41,7 +45,6 @@ public class BouletDeCanon extends Attaque implements Runnable
     
     static
     {
-        SON_CANON      = new Musique("snd/canon.mp3");
         IMAGE_BOULET   = Toolkit.getDefaultToolkit().getImage("img/attaques/bouletDeCanon.png");
     }
     
@@ -64,7 +67,13 @@ public class BouletDeCanon extends Attaque implements Runnable
         Thread thread = new Thread(this);
         thread.start();
         
-        SON_CANON.lire(1);
+        if(nbSonsBoulet <= MAX_SONS_BOULET)
+        {
+            Son2 s = new Son2(FICHIER_SON_BOULET);
+            s.ajouterEcouteurDeMusique(this);
+            nbSonsBoulet++;
+            s.lire();
+        }
     }
 
     @Override
@@ -126,5 +135,11 @@ public class BouletDeCanon extends Attaque implements Runnable
        }
        
        estTerminee = true;
+    }
+    
+    @Override
+    public void estTerminee(Son2 son)
+    {
+        nbSonsBoulet--;
     }
 }
