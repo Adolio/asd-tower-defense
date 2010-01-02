@@ -3,7 +3,7 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import vues.attaques.Fleche;
+import models.attaques.Fleche;
 import models.creatures.Creature;
 
 /**
@@ -86,7 +86,7 @@ public class TourAntiAerienne extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    terrain.ajouteAnimation(new Fleche(terrain,this,creature,degats));
+	    terrain.ajouterAnimation(new Fleche(terrain,this,creature,degats));
 	}
 
 	public Tour getCopieOriginale()

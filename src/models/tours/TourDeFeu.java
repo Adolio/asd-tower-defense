@@ -3,7 +3,7 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import vues.attaques.BouleDeFeu;
+import models.attaques.BouleDeFeu;
 import models.creatures.Creature;
 
 
@@ -87,7 +87,7 @@ public class TourDeFeu extends Tour
 
     public void tirer(Creature creature)
     {
-        terrain.ajouteAnimation(new BouleDeFeu(terrain,this,creature,degats,RAYON_IMPACT));
+        terrain.ajouterAnimation(new BouleDeFeu(terrain,this,creature,degats,RAYON_IMPACT));
     }
 
     public Tour getCopieOriginale()

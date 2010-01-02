@@ -3,7 +3,7 @@ package models.terrains;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.*;
-import vues.animations.Animation;
+import models.animations.Animation;
 import models.creatures.*;
 import models.maillage.*;
 import models.outils.Musique;
@@ -682,7 +682,7 @@ public abstract class Terrain
      * 
      * @param animation l'aniatio a ajouter
      */
-    public void ajouteAnimation(Animation animation)
+    public void ajouterAnimation(Animation animation)
     {
         animations.add(animation);
     }
