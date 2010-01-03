@@ -116,7 +116,7 @@ public class Musique
     * 
     * @return Le pourcentage du volume du systeme actuel.
     */
-   public int getVolume ()
+   public static int getVolume ()
    {
       return 100 * (int) (((FloatControl) ctrlIn).getValue() / ((FloatControl) ctrlIn)
             .getMaximum());
@@ -129,7 +129,7 @@ public class Musique
     * @param volumePourcent
     *        Le pourcentage du volume qu'on veut appliquer.
     */
-   public void setVolume (int volumePourcent)
+   public static void setVolume (int volumePourcent)
    {
       // Pour les ports de sortie audio.
       Port lineOut;
