@@ -34,7 +34,7 @@ public class Musique
    // Pour avoir une trace de tous les objets Son lances et threades.
    private ArrayList<Son> listeSons = new ArrayList<Son>();
    // Controle d'entree pour le volume.
-   private Control ctrlIn;
+   private static Control ctrlIn;
    
    /**
     * Ce constructeur permet de construire un objet de type Musique en fonction du
