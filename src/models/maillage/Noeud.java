@@ -67,11 +67,15 @@ public class Noeud extends Point
 		return r;
 	}
 	
-	public static int[] coordonnee(Noeud noeud){
+	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY){
 		int[] r = convert(noeud);
-		r[0] = r[0]/noeud.LARGEUR_NOEUD;
-		r[1] = r[1]/noeud.LARGEUR_NOEUD;
+		r[0] = (r[0]+deltaX)/noeud.LARGEUR_NOEUD;
+		r[1] = (r[1]+deltaY)/noeud.LARGEUR_NOEUD;
 		return r;
+	}
+	
+	public static int[] coordonnee(Noeud noeud){
+		return coordonnee(noeud,0,0);
 	}
 
 	public String toString()

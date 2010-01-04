@@ -338,7 +338,7 @@ public class Maillage
 		/*
 		 * Ajouter les arcs manquants
 		 */
-		int[] xy = Noeud.coordonnee(noeud);
+		int[] xy = Noeud.coordonnee(noeud,xOffset,yOffset);
 		int x, y;
 		for (int i = -1; i <= 1; i++)
 		{
@@ -349,6 +349,8 @@ public class Maillage
 			{
 				y = xy[1] + j;
 				if ((i == 0 && j == 0) || y < 0 || y > noeuds[x].length)
+					continue;
+				if (!noeuds[x][y].isActif())
 					continue;
 				graphe.addVertex(noeuds[x][y]);
 				graphe.addEdge(noeud, noeuds[x][y]);
