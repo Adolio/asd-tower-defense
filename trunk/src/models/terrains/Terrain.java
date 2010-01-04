@@ -645,7 +645,7 @@ public abstract class Terrain
 	 */
 	public ArrayList<Line2D> getArcsActifs()
 	{
-		return MAILLAGE_TERRESTRE.getArcsActifs();
+		return MAILLAGE_TERRESTRE.getArcs();
 	}
 
 	/**
