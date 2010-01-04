@@ -20,7 +20,7 @@ import java.awt.Point;
  * @version 30 nov. 2009
  * @since jdk1.6.0_16
  */
-public class Noeud extends PointNodal
+public class Noeud extends Point
 {
 
 	/**
@@ -28,26 +28,38 @@ public class Noeud extends PointNodal
 	 * obligatoirement.
 	 */
 	private boolean actif = true;
-	
+
+	protected final int LARGEUR_NOEUD;
+
 	/**
 	 * @param x
 	 *            La coordonnée x du centre du noeud, en pixel.
 	 * @param y
 	 *            La coordonnée y du centre du noeud, en pixel.
-	 * @param cote 
+	 * @param cote
 	 */
-	public Noeud(int x, int y, int cote) 
+	public Noeud(int x, int y, int cote)
 	{
-		super(x,y,cote);
+		this.x = convert(x, cote);
+		this.y = convert(y, cote);
+		this.LARGEUR_NOEUD = cote;
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * Converti un point en coordonnées modales.
+	 * 
+	 * @param i
+	 * @param cote
+	 * @return
 	 */
-	@Override
+	public static int convert(int i, int cote)
+	{
+		return i - (i % cote) + (cote / 2);
+	}
+
 	public String toString()
 	{
-		return super.toString()+" Actif : " + actif;
+		return super.toString() + " coté : " + LARGEUR_NOEUD;
 	}
 
 	/**
@@ -70,4 +82,5 @@ public class Noeud extends PointNodal
 	{
 		return actif;
 	}
+
 }
