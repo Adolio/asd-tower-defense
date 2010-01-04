@@ -29,6 +29,9 @@ import org.jgrapht.graph.*;
  */
 public class Maillage
 {
+	/*
+	 * Constantes
+	 */
 	/**
 	 * Pour représenter un poids d'un arc non praticable
 	 */
@@ -57,6 +60,10 @@ public class Maillage
 	 * Les dimensions en maille (ou noeuds) du maillage
 	 */
 	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
+
+	/*
+	 * Attributs
+	 */
 	/**
 	 * Le graphe
 	 */
@@ -65,7 +72,6 @@ public class Maillage
 	 * Le tableau des noeuds : Noeud[x][y]
 	 */
 	private Noeud[][] noeuds;
-
 	/**
 	 * Le decalage de base.
 	 */
@@ -151,9 +157,9 @@ public class Maillage
 	 * @throws IllegalArgumentException
 	 *             Levé si les coordonnées ne sont pas dans le champs.
 	 */
-	synchronized public ArrayList<Point> plusCourtChemin(int xDepart, int yDepart,
-			int xArrivee, int yArrivee) throws PathNotFoundException,
-			IllegalArgumentException
+	synchronized public ArrayList<Point> plusCourtChemin(int xDepart,
+			int yDepart, int xArrivee, int yArrivee)
+			throws PathNotFoundException, IllegalArgumentException
 	{
 		/*
 		 * Test des arguments
@@ -179,23 +185,17 @@ public class Maillage
 		/*
 		 * S'il n'y a pas de chemin
 		 */
-		List<Noeud> liste = Graphs.getPathVertexList(dijkstraChemin);
 		if (dijkstraChemin == null)
 			throw new PathNotFoundException("Le chemin n'existe pas!");
+
+		/*
+		 * S'il n'existe pas de chemin valide (maillage bloqué)
+		 */
 		if (dijkstraChemin.getWeight() > DESACTIVE)
-		{
-			// Suppression du
-			ArrayList<Point> retour = new ArrayList<Point>();
-			for(Noeud n : liste){
-				System.out.println(n);
-				if(n.isActif())retour.add(n);
-			}
-			//throw new PathNotFoundException("Le chemin n'existe pas!");
-		}
-	
+			throw new PathNotFoundException("Il n'existe pas de chemin valide.");
 
 		// Retourne l'ArrayList des points.
-		return new ArrayList<Point>(liste);
+		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
 	}
 
 	/**
@@ -457,19 +457,7 @@ public class Maillage
 	 */
 	private Noeud noeudAExact(int x, int y)
 	{
-		Noeud noeud = noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
-		/*
-		if (!noeud.isActif())
-		{
-			for (int i = -1; i <= 1; ++i)
-				for (int j = -i; j <= 1; ++j)
-				{
-					noeud = noeuds[pixelToNoeud(x)+i][pixelToNoeud(y)+j];
-					if(noeud!=null && noeud.isActif()) return noeud;
-				}
-		}
-		*/
-		return noeud;
+		return noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
 	}
 
 	/**
@@ -496,9 +484,10 @@ public class Maillage
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
-		// TODO j'ai supprimer car je doit pouvoir mettre des murs partout (aurelien)
-	    //if (rectangle.getX() < 0 || rectangle.getY() < 0)
-		//	throw new IllegalArgumentException("Origine trop petite");
+		// TODO j'ai supprimer car je doit pouvoir mettre des murs partout
+		// (aurelien)
+		// if (rectangle.getX() < 0 || rectangle.getY() < 0)
+		// throw new IllegalArgumentException("Origine trop petite");
 
 		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");
