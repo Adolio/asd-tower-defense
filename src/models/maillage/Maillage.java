@@ -206,7 +206,7 @@ public class Maillage
 	 * @throws IllegalArgumentException
 	 *             Si la zone à activer est hors champs.
 	 */
-	public void activerZone(Rectangle rectangle)
+	synchronized public void activerZone(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
 		zoneActive(rectangle, true);
@@ -220,7 +220,7 @@ public class Maillage
 	 * @throws IllegalArgumentException
 	 *             Levé si le rectangle est hors champs.
 	 */
-	public void desactiverZone(Rectangle rectangle)
+	synchronized public void desactiverZone(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
 		zoneActive(rectangle, false);
@@ -274,22 +274,6 @@ public class Maillage
 				points.add(noeud);
 
 		return points;
-	}
-
-	/**
-	 * Retourne la liste des arcs actifs du maillage.
-	 * 
-	 * @return La liste des arcs actifs du maillage.
-	 */
-	public ArrayList<Line2D> getArcsActifs()
-	{
-		ArrayList<Line2D> retour = new ArrayList<Line2D>();
-
-		for (Arc edge : graphe.edgeSet())
-			if (graphe.getEdgeWeight(edge) != DESACTIVE)
-				retour.add(edge.toLine2D());
-
-		return retour;
 	}
 
 	/**
@@ -350,9 +334,7 @@ public class Maillage
 	private void activer(Noeud noeud)
 	{
 		noeud.setActif(true);
-		for (Arc edge : graphe.edgesOf(noeud))
-			if (edge.getArrivee().isActif() && edge.getDepart().isActif())
-				graphe.setEdgeWeight(edge, LARGEUR_NOEUD);
+		graphe.addVertex(noeud);
 	}
 
 	/**
@@ -364,8 +346,7 @@ public class Maillage
 	private void desactiver(Noeud noeud)
 	{
 		noeud.setActif(false);
-		for (Arc edge : graphe.edgesOf(noeud))
-			graphe.setEdgeWeight(edge, DESACTIVE);
+		graphe.removeVertex(noeud);
 	}
 
 	/**
