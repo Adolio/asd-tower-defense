@@ -29,6 +29,9 @@ public class Noeud extends Point
 	 */
 	private boolean actif = true;
 
+	/**
+	 * Largeur du noeud
+	 */
 	protected final int LARGEUR_NOEUD;
 
 	/**
@@ -55,6 +58,20 @@ public class Noeud extends Point
 	public static int convert(int i, int cote)
 	{
 		return i - (i % cote) + (cote / 2);
+	}
+
+	public static int[] convert(Noeud noeud)
+	{
+		int[] r = { convert(noeud.x, noeud.LARGEUR_NOEUD),
+				convert(noeud.y, noeud.LARGEUR_NOEUD) };
+		return r;
+	}
+	
+	public static int[] coordonnee(Noeud noeud){
+		int[] r = convert(noeud);
+		r[0] = r[0]/noeud.LARGEUR_NOEUD;
+		r[1] = r[1]/noeud.LARGEUR_NOEUD;
+		return r;
 	}
 
 	public String toString()

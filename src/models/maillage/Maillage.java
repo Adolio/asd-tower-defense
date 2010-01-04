@@ -338,7 +338,23 @@ public class Maillage
 		/*
 		 * Ajouter les arcs manquants
 		 */
-		// TODO
+		int[] xy = Noeud.coordonnee(noeud);
+		int x, y;
+		for (int i = -1; i <= 1; i++)
+		{
+			x = xy[0] + i;
+			if (x < 0 || x > noeuds.length)
+				continue;
+			for (int j = -1; j <= 1; j++)
+			{
+				y = xy[1] + j;
+				if ((i == 0 && j == 0) || y < 0 || y > noeuds[x].length)
+					continue;
+				graphe.addVertex(noeuds[x][y]);
+				graphe.addEdge(noeud, noeuds[x][y]);
+
+			}
+		}
 	}
 
 	/**
@@ -470,10 +486,6 @@ public class Maillage
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
-		// TODO j'ai supprimer car je doit pouvoir mettre des murs partout
-		// (aurelien)
-		// if (rectangle.getX() < 0 || rectangle.getY() < 0)
-		// throw new IllegalArgumentException("Origine trop petite");
 
 		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");
