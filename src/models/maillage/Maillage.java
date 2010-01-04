@@ -309,7 +309,7 @@ public class Maillage
 		rectangleEstDansLeTerrain(rectangle);
 
 		/*
-		 * Pour chaque noeuds on vérifie s'il intersecte avec la zone concernée.
+		 * Pour chaque noeuds on vérifie s'il intersect avec la zone concernée.
 		 */
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
@@ -332,28 +332,36 @@ public class Maillage
 	 */
 	private void activer(Noeud noeud)
 	{
+		// Activation du noeud
 		noeud.setActif(true);
 		// Replanter le noeud dans le graphe
 		graphe.addVertex(noeud);
+
 		/*
 		 * Ajouter les arcs manquants
 		 */
-		int[] xy = Noeud.coordonnee(noeud,xOffset,yOffset);
-		int x, y;
+		int[] xy = Noeud.coordonnee(noeud, xOffset, yOffset);
+		int x,y;
 		for (int i = -1; i <= 1; i++)
 		{
 			x = xy[0] + i;
+			// Si le noeud n'est pas hors cadre
 			if (x < 0 || x > noeuds.length)
 				continue;
 			for (int j = -1; j <= 1; j++)
 			{
 				y = xy[1] + j;
-				if ((i == 0 && j == 0) || y < 0 || y > noeuds[x].length)
+				// Si le noeud n'est pas hors cadre
+				if ( y < 0 || y > noeuds[x].length)
 					continue;
-				if (!noeuds[x][y].isActif())
+				// Si le noeud est inactif, on passe à l'itération suivante
+				if ((i == 0 && j == 0) || !noeuds[x][y].isActif())
 					continue;
+				// Ajout du noeud à l'ensemble
 				graphe.addVertex(noeuds[x][y]);
-				graphe.addEdge(noeud, noeuds[x][y]);
+				// Calcul du nouvel arc avec le bon poids
+				graphe.setEdgeWeight(graphe.addEdge(noeud, noeuds[x][y]), (Math
+						.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD : POIDS_DIAGO);
 
 			}
 		}
@@ -367,6 +375,7 @@ public class Maillage
 	 */
 	private void desactiver(Noeud noeud)
 	{
+		// Désactivation du noeud
 		noeud.setActif(false);
 		// Supprimer le noeud ainsi que tous les arcs relatifs
 		graphe.removeVertex(noeud);
