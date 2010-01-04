@@ -60,22 +60,48 @@ public class Noeud extends Point
 		return i - (i % cote) + (cote / 2);
 	}
 
+	/**
+	 * 
+	 * @param noeud
+	 * @return
+	 */
 	public static int[] convert(Noeud noeud)
 	{
 		int[] r = { convert(noeud.x, noeud.LARGEUR_NOEUD),
 				convert(noeud.y, noeud.LARGEUR_NOEUD) };
 		return r;
 	}
-	
-	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY){
+
+	/**
+	 * Retourne les coordonnées nodales d'un noeud passé en paramètre, avec des
+	 * deltas x et y
+	 * 
+	 * @param noeud
+	 *            Le noeud à convertir
+	 * @param deltaX
+	 *            Le delta sur l'axe des x
+	 * @param deltaY
+	 *            Le delta sur l'axe des y
+	 * @return un tableau de deux éléments contenant les coordonnées converties.
+	 */
+	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY)
+	{
 		int[] r = convert(noeud);
-		r[0] = (r[0]+deltaX)/noeud.LARGEUR_NOEUD;
-		r[1] = (r[1]+deltaY)/noeud.LARGEUR_NOEUD;
+		r[0] = (r[0] - deltaX) / noeud.LARGEUR_NOEUD;
+		r[1] = (r[1] - deltaY) / noeud.LARGEUR_NOEUD;
 		return r;
 	}
-	
-	public static int[] coordonnee(Noeud noeud){
-		return coordonnee(noeud,0,0);
+
+	/**
+	 * Retourne les coordonnées nodales d'un noeud passé en paramètre
+	 * 
+	 * @param noeud
+	 *            Le noeud à convertir
+	 * @return un tableau de deux éléments contenant les x et y.
+	 */
+	public static int[] coordonnee(Noeud noeud)
+	{
+		return coordonnee(noeud, 0, 0);
 	}
 
 	public String toString()
