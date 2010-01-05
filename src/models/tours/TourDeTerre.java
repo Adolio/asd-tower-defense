@@ -51,7 +51,7 @@ public class TourDeTerre extends Tour
               COULEUR,          // couleur de fond
               "Terre",          // nom
               PRIX_ACHAT,       // prix achat
-              200,              // degats
+              150,              // degats
               150,              // rayon de portee
               0.5,              // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE,// type

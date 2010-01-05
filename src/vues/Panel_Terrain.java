@@ -396,7 +396,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//---------------------------------
 		if(tourSelectionnee != null)
 		{
-			dessinerPortee(tourSelectionnee,g2);
+			dessinerPortee(tourSelectionnee,g2,COULEUR_RAYON_PORTEE);
 			
 			g2.setColor(COULEUR_SELECTION);
 			g2.setStroke(TRAIT_TILLE);
@@ -423,7 +423,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------------
 		if(afficherRayonsDePortee)
 			for(Tour tour : jeu.getTours())
-				dessinerPortee(tour,g2);
+				dessinerPortee(tour,g2,COULEUR_RAYON_PORTEE);
 		
 		//------------------------------
 		//-- affichage des animations --
@@ -456,24 +456,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 			// positionnnable ou non
 			if(!jeu.laTourPeutEtrePosee(tourAAjouter))
-			{
-				g2.setColor(COULEUR_POSE_IMPOSSIBLE);
-				g2.drawLine(sourisCaseX, sourisCaseY,
-						(int) (sourisCaseX + tourAAjouter.getWidth()),
-						(int) (sourisCaseY + tourAAjouter.getHeight()));
-				
-				g2.drawLine(sourisCaseX, 
-				        (int) (sourisCaseY + tourAAjouter.getHeight()),
-						(int) (sourisCaseX + tourAAjouter.getWidth()),
-						sourisCaseY);
-				
-				g2.drawRect(sourisCaseX, sourisCaseY,
-						(int) (tourAAjouter.getWidth()),
-						(int) (tourAAjouter.getHeight()));
-			}
+				dessinerPortee(tourAAjouter,g2,COULEUR_POSE_IMPOSSIBLE);
 			else
 				// affichage du rayon de portee
-				dessinerPortee(tourAAjouter,g2);
+				dessinerPortee(tourAAjouter,g2,COULEUR_RAYON_PORTEE);
 		}
 	}
 
@@ -638,7 +624,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		}
 		// dessin de la portee
 		if(avecPortee)
-			dessinerPortee(tour,g2);
+			dessinerPortee(tour,g2,COULEUR_RAYON_PORTEE);
 	}
 	
 	/**
@@ -647,11 +633,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param tour la tour concernee
 	 * @param g2 le Graphics2D pour dessiner
 	 */
-	private void dessinerPortee(Tour tour,Graphics2D g2)
+	private void dessinerPortee(Tour tour,Graphics2D g2, Color couleurRayonDePortee)
 	{
         // affichage du perimetre du rayon de portee
 	    setTransparence(ALPHA_PERIMETRE_PORTEE,g2);
-        g2.setColor(COULEUR_RAYON_PORTEE);
+        g2.setColor(couleurRayonDePortee);
 		g2.drawOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
 					(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
 					(int)tour.getRayonPortee()*2, 
@@ -659,7 +645,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 
 		// affichage de la surface du rayon de portee
 		setTransparence(ALPHA_SURFACE_PORTEE,g2);
-        g2.setColor(COULEUR_RAYON_PORTEE);
+        g2.setColor(couleurRayonDePortee);
         g2.fillOval((int)(tour.getXi() - tour.getRayonPortee() + tour.getWidth()/2), 
         			(int)(tour.getYi() - tour.getRayonPortee() + tour.getHeight()/2), 
         			(int)tour.getRayonPortee()*2, 

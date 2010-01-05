@@ -29,7 +29,7 @@ public class TourDeGlace extends Tour
     public static final int NIVEAU_MAX = 5;
     private static final double COEFF_RALENTISSMENT = 0.4; // perd 40% de sa vitesse
     
-    public static final int PRIX_ACHAT = 150;
+    public static final int PRIX_ACHAT = 100;
     private static final String DESCRIPTION = 
         "La tour de glace est une tour qui est rapide et " +
         "qui ralenti les créatures. " +

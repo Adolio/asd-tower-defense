@@ -29,10 +29,10 @@ public class TourDeFeu extends Tour
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
     private static final double RAYON_IMPACT = 20.0;
-    public static final int PRIX_ACHAT = 200;
+    public static final int PRIX_ACHAT = 150;
     private static final String DESCRIPTION = 
-        "La tour de feu est une tour qui est lente " +
-        "mais qui fait de gros dégâts de zone. " +
+        "La tour de feu est une tour qui très rapide " +
+        "mais qui fait de faible dégâts. " +
         "Cette tour attaque tous types de creatures";
     
     static
@@ -51,9 +51,9 @@ public class TourDeFeu extends Tour
               COULEUR,          // couleur de fond
               "Feu",            // nom
               PRIX_ACHAT,       // prix achat
-              100,              // degats
+              10,              // degats
               40,               // rayon de portee
-              1,                // cadence de tir (tirs / sec.)
+              10,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE_ET_AIR, // type
               IMAGE,            // image sur terrain
               ICONE);           // icone pour bouton
