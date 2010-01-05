@@ -90,7 +90,8 @@ public abstract class Terrain
      * 
      * @see Maillage
      */
-	private final Maillage MAILLAGE_AERIEN;
+	//private final Maillage MAILLAGE_AERIEN;
+	ArrayList<Point> cheminAerien;
 	
 	/**
 	 * Les creatures sont implentees aleatoirement dans la zone de depart 
@@ -194,15 +195,15 @@ public abstract class Terrain
 									PRECISION_MAILLAGE,
 									positionMaillageX,positionMaillageY);
 		
-		MAILLAGE_AERIEN          = new Maillage(largeurMaillage, hauteurMaillage, 
-                                    PRECISION_MAILLAGE,
-                                    positionMaillageX,positionMaillageY);
+		//MAILLAGE_AERIEN          = new Maillage(largeurMaillage, hauteurMaillage, 
+        //                            PRECISION_MAILLAGE,
+        //                            positionMaillageX,positionMaillageY);
 		
 		// creation des collections
 		tours 		= new Vector<Tour>();
 		creatures 	= new Vector<Creature>();
 	}
-
+	
 	/**
 	 * Methode qui permet de recuperer la vague de creatures suivantes
 	 * @return la vague de creatures suivante
@@ -338,7 +339,7 @@ public abstract class Terrain
 		
 		// desactive la zone dans le maillage qui correspond au mur
 		MAILLAGE_TERRESTRE.desactiverZone(mur);
-		MAILLAGE_AERIEN.desactiverZone(mur);
+		//MAILLAGE_AERIEN.desactiverZone(mur);
 		
 		// ajout du mur
 		murs.add(mur);
@@ -612,12 +613,13 @@ public abstract class Terrain
 	 * @param xArrivee la position x du point d'arrivee
 	 * @param yArrivee la position y du point d'arrivee
 	 * @return le chemin sous la forme d'un ArrayList de java.awt.Point ou
-	 *         <b>null si aucun chemin ne reli les deux points</b>.
+	 *         <b>null si aucun chemin ne relie les deux points</b>.
 	 * @see Maillage
 	 */
 	public ArrayList<Point> getCheminLePlusCourt(int xDepart, int yDepart,
 			int xArrivee, int yArrivee, int typeCreature)
 	{
+		/*
 		try
 		{
 			if(typeCreature == Creature.TYPE_TERRIENNE)
@@ -630,11 +632,34 @@ public abstract class Terrain
 		{
 			return null;
 		}
-		// aucun chemin ne reli les deux points
+		// aucun chemin ne relie les deux points
 		catch (PathNotFoundException e)
 		{
 		    return null;
 		}
+		*/
+		try
+		{
+			if (cheminAerien == null)
+				cheminAerien = MAILLAGE_TERRESTRE.plusCourtChemin(ZONE_DEPART.x,
+						ZONE_DEPART.y, ZONE_ARRIVEE.x, ZONE_ARRIVEE.y);
+			
+			if (typeCreature == Creature.TYPE_TERRIENNE)
+				return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart,
+						xArrivee, yArrivee);
+
+			return cheminAerien;
+
+		} catch (IllegalArgumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PathNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
