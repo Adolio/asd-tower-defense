@@ -367,7 +367,7 @@ public class Maillage
 					throw new IllegalArgumentException(
 							"Le noeud ciblé ne peut pas être nul");
 				// Si le noeud est inactif, on passe à l'itération suivante
-				if (cible.equals(noeud) || !cible.isActif())
+				if (!cible.isActif() || cible.equals(noeud) )
 					continue;
 				// Ajout du noeud à l'ensemble
 				graphe.addVertex(cible);
