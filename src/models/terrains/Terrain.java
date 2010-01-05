@@ -534,19 +534,27 @@ public abstract class Terrain
 
 		// si l'on construit la tour, il existe toujours un chemin
 		desactiverZone(tour, false);
-		if (getCheminLePlusCourt((int) ZONE_DEPART.getCenterX(),
-				(int) ZONE_DEPART.getCenterY(),
-				(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
-						.getCenterY(), Creature.TYPE_TERRIENNE) == null)
+		
+		try
 		{
+    		// calcul du chemin et attente une exception 
+		    // PathNotFoundException s'il y a un probleme
+		    getCheminLePlusCourt((int) ZONE_DEPART.getCenterX(),
+    				(int) ZONE_DEPART.getCenterY(),
+    				(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
+    						.getCenterY(), Creature.TYPE_TERRIENNE);
+    		
 			// il existe un chemin, donc elle ne bloque pas.
 			activerZone(tour, false); // on reactive la zone
-			return true;
+			return false;
+    	
 		}
-
-		// il n'existe pas de chemin, donc elle bloque le chemin.
-		activerZone(tour, false); // on reactive la zone
-		return false;
+		catch(PathNotFoundException e)
+	    {
+		    // il n'existe pas de chemin, donc elle bloque le chemin.
+	        activerZone(tour, false); // on reactive la zone
+	        return true;
+	    }
 	}
 
 	// -------------------------
@@ -593,7 +601,7 @@ public abstract class Terrain
 
 	/**
 	 * Permet de mettre a jour les chemins des creatures lors de la modification
-	 * du maillage.
+	 * du maillage. 
 	 */
 	synchronized private void miseAJourDesCheminsDesCreatures()
 	{
@@ -606,10 +614,21 @@ public abstract class Terrain
 			{
 				// les tours n'affecte que le chemin des creatures terriennes
 				if (creature.getType() == Creature.TYPE_TERRIENNE)
-					creature.setChemin(getCheminLePlusCourt((int) creature
-							.getCenterX(), (int) creature.getCenterY(),
-							(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
-									.getCenterY(), creature.getType()));
+                    try
+                    {
+                        creature.setChemin(getCheminLePlusCourt((int) creature
+                        		.getCenterX(), (int) creature.getCenterY(),
+                        		(int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
+                        				.getCenterY(), creature.getType()));
+                    } catch (IllegalArgumentException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (PathNotFoundException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
 			}
 		}
 	}
@@ -643,29 +662,19 @@ public abstract class Terrain
 	 *            la position y du point d'arrivee
 	 * @return le chemin sous la forme d'un ArrayList de java.awt.Point ou
 	 *         <b>null si aucun chemin ne relie les deux points</b>.
+	 * @throws PathNotFoundException 
+	 * @throws IllegalArgumentException 
 	 * @see Maillage
 	 */
 	public ArrayList<Point> getCheminLePlusCourt(int xDepart, int yDepart,
-			int xArrivee, int yArrivee, int typeCreature)
+			int xArrivee, int yArrivee, int typeCreature) throws IllegalArgumentException, PathNotFoundException
 	{
-		try
-		{
-			if (typeCreature == Creature.TYPE_TERRIENNE)
-				return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart,
-						xArrivee, yArrivee);
+	
+		if (typeCreature == Creature.TYPE_TERRIENNE)
+			return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart,
+					xArrivee, yArrivee);
 
-			return cheminAerien;
-
-		} catch (IllegalArgumentException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PathNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return cheminAerien;
 	}
 
 	/**
