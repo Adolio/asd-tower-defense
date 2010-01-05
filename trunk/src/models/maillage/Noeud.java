@@ -24,10 +24,10 @@ public class Noeud extends Point
 {
 
 	/**
-	 * Fanion pour savoir si le noeud est actif ou pas. Actif par défaut,
+	 * Fanion pour savoir si le noeud est actif ou pas. Inactif par défaut,
 	 * obligatoirement.
 	 */
-	private boolean actif = true;
+	private boolean actif = false;
 
 	/**
 	 * Largeur du noeud
