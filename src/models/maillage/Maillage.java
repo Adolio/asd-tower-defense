@@ -67,7 +67,8 @@ public class Maillage
 	/**
 	 * Le graphe
 	 */
-	private SimpleWeightedGraph<Noeud, Arc> graphe;
+	private SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
+			new GenerateurDArcs());;
 	/**
 	 * Le tableau des noeuds : Noeud[x][y]
 	 */
@@ -125,7 +126,7 @@ public class Maillage
 		noeuds = new Noeud[NOMBRE_NOEUDS_X][NOMBRE_NOEUDS_Y];
 
 		// Construction du graphe
-		graphe = construireGraphe();
+		construireGraphe();
 	}
 
 	/**
@@ -332,6 +333,8 @@ public class Maillage
 	 */
 	private void activer(Noeud noeud)
 	{
+		if (noeud == null)
+			throw new IllegalArgumentException("Le noeud passé en paramêtre");
 		// Activation du noeud
 		noeud.setActif(true);
 		// Replanter le noeud dans le graphe
@@ -341,27 +344,40 @@ public class Maillage
 		 * Ajouter les arcs manquants
 		 */
 		int[] xy = Noeud.coordonnee(noeud, xOffset, yOffset);
-		int x,y;
+		int x, y;
+		Noeud cible;
+		Arc arc;
 		for (int i = -1; i <= 1; i++)
 		{
 			x = xy[0] + i;
 			// Si le noeud n'est pas hors cadre
-			if (x < 0 || x > noeuds.length)
+			if (x < 0 || x >= noeuds.length)
 				continue;
 			for (int j = -1; j <= 1; j++)
 			{
 				y = xy[1] + j;
 				// Si le noeud n'est pas hors cadre
-				if ( y < 0 || y > noeuds[x].length)
+				if (y < 0 || y >= noeuds[x].length)
 					continue;
+				/*
+				 * Extraction de la cible
+				 */
+				cible = noeuds[x][y];
+				if (cible == null)
+					throw new IllegalArgumentException(
+							"Le noeud ciblé ne peut pas être nul");
 				// Si le noeud est inactif, on passe à l'itération suivante
-				if ((i == 0 && j == 0) || !noeuds[x][y].isActif())
+				if ((i == 0 && j == 0) || !cible.isActif())
 					continue;
 				// Ajout du noeud à l'ensemble
-				graphe.addVertex(noeuds[x][y]);
+				graphe.addVertex(cible);
 				// Calcul du nouvel arc avec le bon poids
-				graphe.setEdgeWeight(graphe.addEdge(noeud, noeuds[x][y]), (Math
-						.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD : POIDS_DIAGO);
+				arc = graphe.addEdge(noeud, cible);
+				// Si l'arc est déjà dans le set, on sort de la fonction
+				if(arc == null)
+					return;
+				graphe.setEdgeWeight(arc,
+						(Math.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD : POIDS_DIAGO);
 
 			}
 		}
@@ -381,82 +397,23 @@ public class Maillage
 		graphe.removeVertex(noeud);
 	}
 
-	/**
-	 * Méthode de service pour créer un graphe.
-	 * 
-	 * @return Le graphe à créer en fonctions de variables globales.
-	 */
-	private SimpleWeightedGraph<Noeud, Arc> construireGraphe()
+	private void construireGraphe()
 	{
-		SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
-				new GenerateurDArcs());
 		/*
 		 * Ajouter les noeuds au graphe.
 		 */
 		for (int x = 0; x < NOMBRE_NOEUDS_X; x++)
-		{
 			for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
-			{
 				noeuds[x][y] = new Noeud((x * LARGEUR_NOEUD) + xOffset,
 						(y * LARGEUR_NOEUD) + yOffset, LARGEUR_NOEUD);
 
-				graphe.addVertex(noeuds[x][y]);
-			}
-		}
-
 		/*
-		 * Ajouter les arcs horizontaux.
+		 * Active tout les noeuds (et calcul les vertex) 
 		 */
-		for (int y = 0; y < NOMBRE_NOEUDS_Y; y++)
-		{
-			for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
-			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
-						noeuds[x + 1][y]), // Arrivée
-						LARGEUR_NOEUD); // Poids, en fait la distance
-			}
-		}
+		for (Noeud[] ligne : noeuds)
+			for (Noeud noeud : ligne)
+				activer(noeud);
 
-		/*
-		 * Ajouter les arcs verticaux.
-		 */
-		for (int y = 0; y < NOMBRE_NOEUDS_Y - 1; y++)
-		{
-			for (int x = 0; x < NOMBRE_NOEUDS_X; x++)
-			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
-						noeuds[x][y + 1]), // Arrivée
-						LARGEUR_NOEUD); // Poids
-			}
-		}
-
-		/*
-		 * Ajouter les arcs diagonaux descendants.
-		 */
-		for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
-		{
-			for (int y = 0; y < NOMBRE_NOEUDS_Y - 1; y++)
-			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
-						noeuds[x + 1][y + 1]), // Arrivée
-						POIDS_DIAGO); // Poids
-			}
-		}
-
-		/*
-		 * Ajouter les arcs diagonaux ascendants.
-		 */
-		for (int x = 0; x < NOMBRE_NOEUDS_X - 1; x++)
-		{
-			for (int y = 1; y < NOMBRE_NOEUDS_Y; y++)
-			{
-				graphe.setEdgeWeight(graphe.addEdge(noeuds[x][y], // Source
-						noeuds[x + 1][y - 1]), // Arrivée
-						POIDS_DIAGO); // Poids
-			}
-		}
-
-		return graphe;
 	}
 
 	/**
