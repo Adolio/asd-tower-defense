@@ -130,4 +130,9 @@ public class Noeud extends Point
 		return actif;
 	}
 
+	public boolean equals(Noeud noeud)
+	{
+		return x == noeud.x && y == noeud.y && LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
+	}
+
 }
