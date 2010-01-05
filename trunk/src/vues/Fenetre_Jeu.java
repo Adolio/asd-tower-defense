@@ -278,7 +278,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	    {
 	        ajouterTexteHTMLDansConsole("<font color='red'>" 
 	                               + e.getMessage()+"</font><br />");
-	        e.printStackTrace();
 	    }
 	}
 	
