@@ -347,8 +347,12 @@ public abstract class Terrain
 		 */
 		try
 		{
-			cheminAerien = MAILLAGE_TERRESTRE.plusCourtChemin(ZONE_DEPART.x,
-					ZONE_DEPART.y, ZONE_ARRIVEE.x, ZONE_ARRIVEE.y);
+			cheminAerien = MAILLAGE_TERRESTRE.plusCourtChemin(
+			        (int)ZONE_DEPART.getCenterX(),
+			        (int)ZONE_DEPART.getCenterY(), 
+			        (int)ZONE_ARRIVEE.getCenterX(), 
+			        (int)ZONE_ARRIVEE.getCenterY());
+			
 		} catch (IllegalArgumentException e)
 		{
 			// TODO Auto-generated catch block
