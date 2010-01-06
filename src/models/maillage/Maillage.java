@@ -32,11 +32,7 @@ public class Maillage
 	/*
 	 * Constantes
 	 */
-	/**
-	 * Pour représenter un poids d'un arc non praticable
-	 */
-	private final int DESACTIVE;
-	/**
+    /**
 	 * La largeur en pixel de chaque maille, ou noeud
 	 */
 	private final int LARGEUR_NOEUD;
@@ -115,9 +111,6 @@ public class Maillage
 		NOMBRE_NOEUDS_X = (largeurPixels / LARGEUR_NOEUD);
 		NOMBRE_NOEUDS_Y = (hauteurPixels / LARGEUR_NOEUD);
 
-		// Calcul du poids maximum pouvant avoir le graphe
-		DESACTIVE = 16 * NOMBRE_NOEUDS_X * NOMBRE_NOEUDS_Y * LARGEUR_NOEUD + 1;
-
 		// Les offsets du décalage
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
@@ -130,7 +123,7 @@ public class Maillage
 	}
 
 	/**
-	 * Constructeur sans décalage.
+	 * Constructeur sans décalage, fonction curryfiée
 	 * 
 	 * @see Maillage#Maillage(int, int, int, int, int)
 	 */
@@ -177,9 +170,9 @@ public class Maillage
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
 		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
-				graphe, noeudAExact(Noeud.convert(xDepart, LARGEUR_NOEUD),
-						Noeud.convert(yDepart, LARGEUR_NOEUD)), noeudAExact(
-						Noeud.convert(xArrivee, LARGEUR_NOEUD), Noeud.convert(
+				graphe, noeudAExact(Noeud.centre(xDepart, LARGEUR_NOEUD),
+						Noeud.centre(yDepart, LARGEUR_NOEUD)), noeudAExact(
+						Noeud.centre(xArrivee, LARGEUR_NOEUD), Noeud.centre(
 								yArrivee, LARGEUR_NOEUD)))).getPath();
 
 		/*
@@ -187,12 +180,6 @@ public class Maillage
 		 */
 		if (dijkstraChemin == null)
 			throw new PathNotFoundException("Le chemin n'existe pas!");
-
-		/*
-		 * S'il n'existe pas de chemin valide (maillage bloqué)
-		 */
-		if (dijkstraChemin.getWeight() > DESACTIVE)
-			throw new PathNotFoundException("Il n'existe pas de chemin valide.");
 
 		// Retourne l'ArrayList des points.
 		return new ArrayList<Point>(Graphs.getPathVertexList(dijkstraChemin));
@@ -315,9 +302,8 @@ public class Maillage
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
 			{
-				Rectangle rec = new Rectangle(noeud.x - DEMI_NOEUD, noeud.y
-						- DEMI_NOEUD, LARGEUR_NOEUD, LARGEUR_NOEUD);
-				if (rectangle.intersects(rec))
+				if (rectangle.intersects(new Rectangle(noeud.x - DEMI_NOEUD,
+						noeud.y - DEMI_NOEUD, LARGEUR_NOEUD, LARGEUR_NOEUD)))
 					if (active)
 						activer(noeud);
 					else
@@ -333,11 +319,13 @@ public class Maillage
 	 */
 	private void activer(Noeud noeud)
 	{
+		// Vérifie si le noeud n'est pas null
 		if (noeud == null)
-			throw new IllegalArgumentException("Le noeud passé en paramêtre");
+			throw new IllegalArgumentException(
+					"Le noeud passé en paramêtre est null");
 		// Activation du noeud
 		noeud.setActif(true);
-		// Replanter le noeud dans le graphe
+		// Replanter le noeud dans le graphe, s'il n'est pas déjà présent
 		graphe.addVertex(noeud);
 
 		/*
@@ -366,18 +354,19 @@ public class Maillage
 				if (cible == null)
 					throw new IllegalArgumentException(
 							"Le noeud ciblé ne peut pas être nul");
-				// Si le noeud est inactif, on passe à l'itération suivante
-				if (!cible.isActif() || cible.equals(noeud) )
+				// Si le noeud cible n'est pas actif ou s'il s'agit du noeud
+				// courant
+				if (!cible.isActif() || cible.equals(noeud))
 					continue;
-				// Ajout du noeud à l'ensemble
+				// Ajout du noeud à l'ensemble. La méthode test si le noeud est
+				// déjà présent
 				graphe.addVertex(cible);
-				// Calcul du nouvel arc avec le bon poids
+				// Calcul du nouvel arc
 				arc = graphe.addEdge(noeud, cible);
-				// Si l'arc est déjà dans le set, on sort de la fonction
-				if(arc == null)
-					return;
+				// Ajout du poids à l'arc
 				graphe.setEdgeWeight(arc,
-						(Math.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD : POIDS_DIAGO);
+						(Math.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD
+								: POIDS_DIAGO);
 
 			}
 		}
@@ -408,7 +397,7 @@ public class Maillage
 						(y * LARGEUR_NOEUD) + yOffset, LARGEUR_NOEUD);
 
 		/*
-		 * Active tout les noeuds (et calcul les vertex) 
+		 * Active tout les noeuds (et calcul les vertex)
 		 */
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
