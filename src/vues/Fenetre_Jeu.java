@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -86,6 +87,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
     
 	// autre attribut
 	private Jeu jeu;
+    private boolean vaguePeutEtreLancee = true;
 
 	
 	/**
@@ -217,7 +219,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		
 		else if(source == bLancerVagueSuivante)
 		{
-		    if(!jeu.aPerdu())
+		    if(!jeu.partieEstPerdu())
 		    {
     		    lancerVagueSuivante();
     		    bLancerVagueSuivante.setEnabled(false);
@@ -249,7 +251,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	       "Etes-vous sûr de vouloir arrêter la partie ?", 
 	       "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
-	        jeu.arreterMusiqueDAmbianceDuTerrain();
+	        // TODO controle si ca marche
+	        //jeu.arreterMusiqueDAmbianceDuTerrain();
+	        GestionnaireSons.arreterTousLesSons();
+	        jeu.terminerLaPartie();
 	        
 	        dispose(); // destruction de la fenetre
 	        System.gc(); // passage du remasse miette
@@ -299,7 +304,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         {
 	        ajouterTexteHTMLDansConsole("<font color='red'>" 
                     + e.getMessage()+"</font><br />");
-	        e.printStackTrace();
         }
 	}
 	
@@ -390,9 +394,13 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	 */
 	public void lancerVagueSuivante()
 	{ 
-	    jeu.lancerVagueSuivante(this,this);
-	    
-	    ajouterInfoVagueSuivanteDansConsole();
+	    if(vaguePeutEtreLancee)
+	    {
+	        jeu.lancerVagueSuivante(this,this);
+	        ajouterInfoVagueSuivanteDansConsole();
+	        bLancerVagueSuivante.setEnabled(false);
+	        vaguePeutEtreLancee = false;
+	    }
 	}
 	
 	/**
@@ -449,7 +457,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	public void estArriveeEnZoneArrivee(Creature creature)
 	{
 		// si pas encore perdu
-	    if(!jeu.aPerdu())
+	    if(!jeu.partieEstPerdu())
 		{
 	        // indication au jeu
             jeu.creatureArriveeEnZoneArrivee(creature);
@@ -458,8 +466,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	        panelMenuInteraction.miseAJourNbViesRestantes();
 			
 			// le joueur n'a plus de vie
-			if(jeu.aPerdu())
+			if(jeu.partieEstPerdu())
 			{
+			    jeu.terminerLaPartie();
+			    
 			    panelMenuInteraction.partieTerminee();
 			    
 			    // le bouton lancer vague suivante devient un retour au menu
@@ -476,5 +486,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
     public void vagueEntierementLancee(VagueDeCreatures vagueDeCreatures)
     {
         bLancerVagueSuivante.setEnabled(true);
+        vaguePeutEtreLancee = true;
     }
 }

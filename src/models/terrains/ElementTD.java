@@ -2,9 +2,8 @@ package models.terrains;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-
+import java.io.File;
 import models.creatures.*;
-import models.outils.Musique;
 
 /**
  * Classe de gestion du fameux terrain Element TD repris de chez Blizzard.
@@ -22,12 +21,12 @@ public class ElementTD extends Terrain
 {
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
-    public final static Musique MUSIQUE_DE_FOND;
+    public final static File  FICHIER_MUSIQUE_DE_FOND;
     public final static String NOM = "ElementTD";
 
     static
     {
-        MUSIQUE_DE_FOND = new Musique("snd/blizzard/Human_I_(Fanfare).mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/blizzard/Human_I_(Fanfare).mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                           "img/cartes/menu_principal/elementTD.png");
@@ -54,7 +53,7 @@ public class ElementTD extends Terrain
                 new Rectangle(230, 0, 80, 20)   // zoneArrivee
           );
  
-        musiqueDAmbiance = MUSIQUE_DE_FOND;
+        fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
         /*
          * Définition des murs du labyrinthe.

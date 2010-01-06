@@ -2,9 +2,8 @@ package models.terrains;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-
+import java.io.File;
 import models.creatures.*;
-import models.outils.Musique;
 
 /**
  * Classe de gestion du terrain WaterWorld.
@@ -23,12 +22,12 @@ public class WaterWorld extends Terrain
     
 	public static final Image IMAGE_DE_FOND;
 	public static final Image IMAGE_MENU;
-	public final static Musique MUSIQUE_DE_FOND;
+	public final static File FICHIER_MUSIQUE_DE_FOND;
 	public final static String NOM = "WaterWorld";
 	
     static
     {
-        MUSIQUE_DE_FOND = new Musique("snd/blizzard/Human_II_(High Seas).mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/blizzard/Human_II_(High Seas).mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/water.png");
@@ -53,7 +52,7 @@ public class WaterWorld extends Terrain
               new Rectangle(480, 390, 20, 80)   // zoneArrivee
         );
 
-        musiqueDAmbiance = MUSIQUE_DE_FOND;
+        fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
         /*
          * Définition des murs du terrain.

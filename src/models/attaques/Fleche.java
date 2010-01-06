@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.File;
 import models.creatures.Creature;
-import models.outils.EcouteurDeSon;
+import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
 import models.outils.Son2;
 import models.terrains.Terrain;
@@ -23,14 +23,13 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class Fleche extends Attaque implements Runnable, EcouteurDeSon
+public class Fleche extends Attaque implements Runnable
 {
     // constantes finales
     private static final long serialVersionUID = 1L;
     private static final int LONGUEUR_FLECHE   = 10;
     private static final Color COULEUR_FLECHE  = new Color(128,0,0);
     public static final File FICHIER_SON_ARC   = new File("snd/fleche.mp3");
-    private static int nbSonsArc;
     private static final int MAX_SONS_ARC      = 3;
     
     // attributs membres
@@ -65,14 +64,14 @@ public class Fleche extends Attaque implements Runnable, EcouteurDeSon
         
         Thread thread = new Thread(this);
         thread.start();
-        
-        if(nbSonsArc <= MAX_SONS_ARC)
+       
+        if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_ARC) < MAX_SONS_ARC)
         {
-            Son2 s = new Son2(FICHIER_SON_ARC);
-            s.ajouterEcouteurDeMusique(this);
-            nbSonsArc++;
-            s.lire();
+            Son2 son = new Son2(FICHIER_SON_ARC);
+            GestionnaireSons.ajouterSon(son);
+            son.lire();
         }
+        
     }
 
     @Override
@@ -102,8 +101,10 @@ public class Fleche extends Attaque implements Runnable, EcouteurDeSon
     @Override
     public void run()
     {
+        enJeu = true;
+        
        // si la creature meurt on arrete l'attaque
-       while(!cible.estMorte())
+       while(!cible.estMorte() || enJeu)
        {    
            // la fleche avance
            distanceTeteTour += 5;
@@ -134,11 +135,5 @@ public class Fleche extends Attaque implements Runnable, EcouteurDeSon
        }
        
        estTerminee = true;
-    }
-
-    @Override
-    public void estTerminee(Son2 son)
-    {
-        nbSonsArc--;
     }
 }

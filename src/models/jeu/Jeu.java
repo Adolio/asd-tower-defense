@@ -244,7 +244,7 @@ public class Jeu
      * 
      * @return true s'il a perdu, false sinon
      */
-    public boolean aPerdu()
+    public boolean partieEstPerdu()
     {
         return viesRestantes <= 0;
     }
@@ -418,5 +418,11 @@ public class Jeu
     public void ajouterAnimation(Animation animation)
     {
         terrain.ajouterAnimation(animation);
+    }
+
+    // TODO
+    public void terminerLaPartie()
+    {
+        terrain.arreterTout(); 
     }
 }

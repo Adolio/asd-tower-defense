@@ -677,7 +677,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void run()
 	{
 		// Tant que la partie est en cours...
-		while(true)
+		while(!jeu.partieEstPerdu())
 		{
 			// Raffraichissement du panel
 			repaint(); // -> appel paint
@@ -867,8 +867,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		}
 		
 		// raccourci lancer vague suivante
-        if(Character.isSpaceChar(ke.getKeyChar()))
+        if(Character.isSpaceChar(ke.getKeyChar()))  
             fenJeu.lancerVagueSuivante();
+     
 	}
 	
 	public void keyPressed(KeyEvent ke){}
