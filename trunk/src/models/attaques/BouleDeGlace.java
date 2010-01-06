@@ -91,8 +91,10 @@ public class BouleDeGlace extends Attaque implements Runnable
     @Override
     public void run()
     {
+       enJeu = true;
+        
        // si la creature meurt on arrete l'attaque
-       while(!cible.estMorte())
+       while(!cible.estMorte() || enJeu)
        {    
            // la fleche avance
            distanceCentreBoule += 5;

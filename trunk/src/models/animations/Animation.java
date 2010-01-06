@@ -19,6 +19,7 @@ public abstract class Animation extends Point
 {
 	private static final long serialVersionUID = 1L;
 	protected boolean estTerminee;
+    protected boolean enJeu;
 	
 	/**
 	 * Constructeur de l'animation.
@@ -50,4 +51,11 @@ public abstract class Animation extends Point
     {
         return estTerminee;
     }
+    
+    // TODO
+    public void arreter()
+    {
+        enJeu = false;
+    }
+    
 }

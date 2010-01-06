@@ -34,8 +34,6 @@ public class Son2 extends Thread
     private File fichier;
     // Pour savoir si le son actuel est à l'arret.
     private boolean arret = false;
-    // Controle d'entree pour le volume.
-    private static Control ctrlIn;
     
     private ArrayList<EcouteurDeSon> ecouteursDeSon = new ArrayList<EcouteurDeSon>();
 
@@ -147,71 +145,18 @@ public class Son2 extends Thread
      * Permet d'ajouter un ecouteur de son
      * @param eds l'ecouteur de son
      */
-    public void ajouterEcouteurDeMusique(EcouteurDeSon eds)
+    public void ajouterEcouteurDeSon(EcouteurDeSon eds)
     {
         ecouteursDeSon.add(eds);
     }
     
     /**
-     * Cette methode permet de savoir (en pourcentage) quel est le volume actuel
-     * du systeme.
+     * Permet de recuperer le fichier du son
      * 
-     * @return Le pourcentage du volume du systeme actuel.
+     * @return le fichier du son
      */
-    public int getVolume()
+    public File getFichier()
     {
-        return 100 * (int) (((FloatControl) ctrlIn).getValue() / ((FloatControl) ctrlIn)
-                .getMaximum());
-    }
-
-    /**
-     * Cette methode permet de regler le volume du systeme en fonction d'un
-     * pourcentage donne.
-     * 
-     * @param volumePourcent Le pourcentage du volume qu'on veut appliquer.
-     */
-    public void setVolume(int volumePourcent)
-    {
-        // Pour les ports de sortie audio.
-        Port lineOut;
-
-        try
-        {
-            // Le systeme possede une sortie LINE_OUT.
-            if (AudioSystem.isLineSupported(Port.Info.LINE_OUT))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.LINE_OUT);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme possede une sortie HEADPHONE.
-            else if (AudioSystem.isLineSupported(Port.Info.HEADPHONE))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.HEADPHONE);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme possede une sortie SPEAKER.
-            else if (AudioSystem.isLineSupported(Port.Info.SPEAKER))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.SPEAKER);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme ne possede pas de sortie audio (triste!).
-            else
-            {
-                System.out.println("Impossible d'avoir une sortie audio!");
-                return;
-            }
-
-            // On recupere le controle d'entree du volume.
-            ctrlIn = lineOut.getControl(FloatControl.Type.VOLUME);
-            // On change le volume du systeme avec celui donne en parametre.
-            ((FloatControl) ctrlIn).setValue(volumePourcent / 100.0f);
-        } catch (Exception erreur) // Une erreur liee au volume est survenue.
-        {
-            erreur.printStackTrace();
-        }
+        return fichier;
     }
 }

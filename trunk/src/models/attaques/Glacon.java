@@ -61,10 +61,11 @@ public class Glacon extends Attaque implements Runnable
     @Override
     public void run()
     {
+        enJeu = true;
+        
         // on endors le thread
         int etapeI = 100;
-        
-        for(double i=0.0;i < DUREE_RALENTISSEMENT;i += etapeI)
+        for(double i=0.0;i < DUREE_RALENTISSEMENT && enJeu;i += etapeI)
         {
             if(cible.estMorte())
                 break;

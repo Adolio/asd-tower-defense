@@ -381,6 +381,15 @@ public abstract class Creature extends Rectangle implements Runnable
         }
     }
 
+    /**
+     * Permet d'arreter la creature, de la sortir du jeu
+     */
+    public void arreter()
+    {
+        enJeu = false;
+    }
+    
+    
 	/**
 	 * Permet de faire subir des degats sur la creature
 	 * 

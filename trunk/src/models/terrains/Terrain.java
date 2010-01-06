@@ -2,11 +2,13 @@ package models.terrains;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.io.File;
 import java.util.*;
 import models.animations.Animation;
 import models.creatures.*;
 import models.maillage.*;
-import models.outils.Musique;
+import models.outils.GestionnaireSons;
+import models.outils.Son2;
 import models.tours.Tour;
 
 /**
@@ -76,7 +78,7 @@ public abstract class Terrain
 	private final int PRECISION_MAILLAGE = 10; // pixels
 
 	/**
-	 * Le maillage permet de definire les chemins des creatures sur le terrain.
+	 * Le maillage permet de definir les chemins des creatures sur le terrain.
 	 * Ici, pour les creatures terriennes avec prise en compte de la position
 	 * des tours.
 	 * 
@@ -85,11 +87,9 @@ public abstract class Terrain
 	private final Maillage MAILLAGE_TERRESTRE;
 
 	/**
-	 * Le maillage permet de definire les chemins des creatures sur le terrain.
-	 * Ici, pour les creatures volante sans prise en compte de la position des
-	 * tours.
+	 * Les creatures volantes n'ont pas besoins d'une maillage mais uniquement
+	 * du chemin le plus court entre la zone de depart et la zone d'arrivee
 	 */
-	// TODO comment
 	ArrayList<Point> cheminAerien;
 
 	/**
@@ -149,8 +149,9 @@ public abstract class Terrain
 	/**
 	 * musique d'ambiance du terrain
 	 */
-	protected Musique musiqueDAmbiance;
+	protected File fichierMusiqueDAmbiance;
 
+	
 	/**
 	 * Constructeur du terrain.
 	 * 
@@ -707,8 +708,13 @@ public abstract class Terrain
 	 */
 	public void demarrerMusiqueDAmbiance()
 	{
-		if (musiqueDAmbiance != null)
-			musiqueDAmbiance.lire(0); // lecture infinie
+		if (fichierMusiqueDAmbiance != null)
+		{
+			Son2 musiqueDAmbiance = new Son2(fichierMusiqueDAmbiance);
+		    
+		    GestionnaireSons.ajouterSon(musiqueDAmbiance);
+		    musiqueDAmbiance.lire(0); // lecture infinie
+		}
 	}
 
 	/**
@@ -716,8 +722,8 @@ public abstract class Terrain
 	 */
 	public void arreterMusiqueDAmbiance()
 	{
-		if (musiqueDAmbiance != null)
-			musiqueDAmbiance.arreter(); // arret de la lecture
+		if (fichierMusiqueDAmbiance != null)
+		    GestionnaireSons.arreterTousLesSons(fichierMusiqueDAmbiance);
 	}
 
 	// ----------------
@@ -799,4 +805,35 @@ public abstract class Terrain
 			return new VagueDeCreatures(1, new GrandeFlame(noVague * 1000,
 					noVague * 5, 10), 2000, false);
 	}
+
+	// TODO
+    public void arreterTout()
+    {
+        // arret de toutes les tours
+        synchronized (tours)
+        {
+            for(Tour tour : tours)
+                tour.arreter();
+            
+            tours.clear();
+        }
+        
+        // arret de toutes les creatures
+        synchronized (creatures)
+        {
+            for(Creature creature : creatures)
+                creature.arreter();
+            
+            creatures.clear();
+        }
+        
+        // arret de toutes les creatures
+        synchronized (animations)
+        {
+            for(Animation animation : animations)
+                animation.arreter();
+            
+            animations.clear();
+        }  
+    }
 }

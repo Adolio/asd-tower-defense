@@ -3,7 +3,7 @@ package models.attaques;
 import java.awt.*;
 import java.io.File;
 import models.creatures.Creature;
-import models.outils.EcouteurDeSon;
+import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
 import models.outils.Son2;
 import models.terrains.Terrain;
@@ -22,14 +22,13 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class BouletDeCanon extends Attaque implements Runnable, EcouteurDeSon
+public class BouletDeCanon extends Attaque implements Runnable
 {
     // constantes finales
     private static final long serialVersionUID  = 1L;
     private static final int DIAMETRE_BOULET    = 8;
     private static final Image IMAGE_BOULET;
     public static final File FICHIER_SON_BOULET   = new File("snd/boulet.mp3");
-    private static int nbSonsBoulet;
     private static final int MAX_SONS_BOULET      = 3;
     
     // attributs membres
@@ -67,12 +66,11 @@ public class BouletDeCanon extends Attaque implements Runnable, EcouteurDeSon
         Thread thread = new Thread(this);
         thread.start();
         
-        if(nbSonsBoulet <= MAX_SONS_BOULET)
+        if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_BOULET) < MAX_SONS_BOULET)
         {
-            Son2 s = new Son2(FICHIER_SON_BOULET);
-            s.ajouterEcouteurDeMusique(this);
-            nbSonsBoulet++;
-            s.lire();
+            Son2 son = new Son2(FICHIER_SON_BOULET);
+            GestionnaireSons.ajouterSon(son);
+            son.lire();
         }
     }
 
@@ -103,8 +101,10 @@ public class BouletDeCanon extends Attaque implements Runnable, EcouteurDeSon
     @Override
     public void run()
     {
+       enJeu = true;
+       
        // si la creature meurt on arrete l'attaque
-       while(!cible.estMorte())
+       while(!cible.estMorte() || enJeu)
        {    
            // la fleche avance
            distanceCentreBoulet += 5;
@@ -135,11 +135,5 @@ public class BouletDeCanon extends Attaque implements Runnable, EcouteurDeSon
        }
        
        estTerminee = true;
-    }
-    
-    @Override
-    public void estTerminee(Son2 son)
-    {
-        nbSonsBoulet--;
     }
 }
