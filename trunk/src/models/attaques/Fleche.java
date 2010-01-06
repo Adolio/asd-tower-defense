@@ -6,7 +6,7 @@ import java.io.File;
 import models.creatures.Creature;
 import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
-import models.outils.Son2;
+import models.outils.Son;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
@@ -67,7 +67,7 @@ public class Fleche extends Attaque implements Runnable
        
         if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_ARC) < MAX_SONS_ARC)
         {
-            Son2 son = new Son2(FICHIER_SON_ARC);
+            Son son = new Son(FICHIER_SON_ARC);
             GestionnaireSons.ajouterSon(son);
             son.lire();
         }

@@ -28,7 +28,7 @@ import javax.sound.sampled.Port;
 public class GestionnaireSons
 {
     // liste des sons
-    private static Vector<Son2> sons = new Vector<Son2>();
+    private static Vector<Son> sons = new Vector<Son>();
     // controle d'entree pour le volume.
     private static Control ctrlIn;
     // ecouteur de son de la classe
@@ -39,7 +39,7 @@ public class GestionnaireSons
         // une fois le son terminee, on le supprime de la collection des sons
         eds = new EcouteurDeSon(){
             @Override
-            public void estTerminee(Son2 son)
+            public void estTerminee(Son son)
             {
                 sons.remove(son);
             }
@@ -51,7 +51,7 @@ public class GestionnaireSons
      * 
      * @param son le son a ajouter
      */
-    public static void ajouterSon(Son2 son)
+    public static void ajouterSon(Son son)
     {
         son.ajouterEcouteurDeSon(eds); // ajout de l'ecouteur
         sons.add(son);
@@ -64,9 +64,9 @@ public class GestionnaireSons
     {
         synchronized (sons)
         {
-            Enumeration<Son2> eSons = sons.elements();
+            Enumeration<Son> eSons = sons.elements();
             
-            Son2 son;
+            Son son;
             while(eSons.hasMoreElements())
             {
                 son = eSons.nextElement();
@@ -87,8 +87,8 @@ public class GestionnaireSons
     {
         synchronized (sons)
         {
-            Iterator<Son2> iSons = sons.iterator();
-            Son2 son;
+            Iterator<Son> iSons = sons.iterator();
+            Son son;
             while(iSons.hasNext())
             {
                 son = iSons.next();
@@ -111,7 +111,7 @@ public class GestionnaireSons
     {
         int nbSons = 0;
         
-        for(Son2 son : sons)
+        for(Son son : sons)
             if(son.isAlive())
                 nbSons++;
         
@@ -131,7 +131,7 @@ public class GestionnaireSons
     
         synchronized (sons)
         {
-            for(Son2 son : sons)
+            for(Son son : sons)
                 if(son.getFichier() == fichier && son.isAlive())
                     nbSons++;
         

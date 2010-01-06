@@ -8,7 +8,7 @@ import models.animations.Animation;
 import models.creatures.*;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
-import models.outils.Son2;
+import models.outils.Son;
 import models.tours.Tour;
 
 /**
@@ -533,6 +533,9 @@ public abstract class Terrain
 		if (tour == null)
 			return false;
 
+	 
+		
+		
 		// si l'on construit la tour, il existe toujours un chemin
 		desactiverZone(tour, false);
 		
@@ -710,7 +713,7 @@ public abstract class Terrain
 	{
 		if (fichierMusiqueDAmbiance != null)
 		{
-			Son2 musiqueDAmbiance = new Son2(fichierMusiqueDAmbiance);
+			Son musiqueDAmbiance = new Son(fichierMusiqueDAmbiance);
 		    
 		    GestionnaireSons.ajouterSon(musiqueDAmbiance);
 		    musiqueDAmbiance.lire(0); // lecture infinie
@@ -766,47 +769,63 @@ public abstract class Terrain
 
 		// 5 normales
 		if (uniteVague == 1)
-			return new VagueDeCreatures(5, new Smiley(noVague * 100, 6, 20),
+			return new VagueDeCreatures(5, new Smiley(fSante(noVague), 6, 20),
 					1000, false);
 		// 10 normales
 		else if (uniteVague == 2)
-			return new VagueDeCreatures(10, new Pokey(noVague * 100, 6, 20),
+			return new VagueDeCreatures(10, new Pokey(fSante(noVague), 6, 20),
 					1000, false);
 		// 10 volantes
 		else if (uniteVague == 3)
-			return new VagueDeCreatures(10, new Boo(noVague * 100, 10, 20),
+			return new VagueDeCreatures(10, new Boo(fSante(noVague), 10, 20),
 					1000, false);
 		// 10 resistantes
 		else if (uniteVague == 4)
-			return new VagueDeCreatures(10, new CarapaceKoopa(noVague * 150, 8,
+			return new VagueDeCreatures(10, new CarapaceKoopa((int) (fSante(noVague)*1.5), 8,
 					10), 2000, false);
 		// 10 rapides
 		else if (uniteVague == 5)
-			return new VagueDeCreatures(10, new Smiley(noVague * 80, 8, 30),
+			return new VagueDeCreatures(10, new Smiley((int) (fSante(noVague) * 0.8), 8, 30),
 					500, false);
 		// 20 normales
 		else if (uniteVague == 6)
-			return new VagueDeCreatures(10, new Smiley(noVague * 100, 6, 20),
+			return new VagueDeCreatures(10, new Smiley(fSante(noVague), 6, 20),
 					1000, false);
 		// 15 resistantes
 		else if (uniteVague == 7)
-			return new VagueDeCreatures(15, new Thwomp(noVague * 150, 8, 10),
+			return new VagueDeCreatures(15, new Thwomp((int) (fSante(noVague)*1.5), 8, 10),
 					2000, false);
 		// 10 volantes
 		else if (uniteVague == 8)
-			return new VagueDeCreatures(10, new Boo(noVague * 100, 10, 20),
+			return new VagueDeCreatures(10, new Boo(fSante(noVague), 10, 20),
 					1000, false);
 		// 5 pre-boss
 		else if (uniteVague == 9)
-			return new VagueDeCreatures(3, new PetiteFlame(noVague * 500,
+			return new VagueDeCreatures(3, new PetiteFlame(fSante(noVague) * 5,
 					noVague * 2, 10), 2000, false);
 		// boss
 		else
-			return new VagueDeCreatures(1, new GrandeFlame(noVague * 1000,
+			return new VagueDeCreatures(1, new GrandeFlame(fSante(noVague) * 50,
 					noVague * 5, 10), 2000, false);
 	}
 
-	// TODO
+    /**
+     * Permet de calculer la sante d'une creer de facon exponentielle
+     * pour rendre le jeu de plus en plus dur.
+     * 
+     * @param noVague le numero de la vague
+     * 
+     * @return la valeur de la sante
+     */
+    private int fSante(int noVague)
+    {
+        return (int) (1.0/50.0 * noVague * noVague * noVague * noVague 
+                      + 0.25 * noVague + 100);
+    }
+	
+	/**
+	 * Permet de stope tous les threads des elements du terrain
+	 */
     public void arreterTout()
     {
         // arret de toutes les tours
@@ -835,5 +854,5 @@ public abstract class Terrain
             
             animations.clear();
         }  
-    }
+    }  
 }

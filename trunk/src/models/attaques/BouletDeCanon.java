@@ -5,7 +5,7 @@ import java.io.File;
 import models.creatures.Creature;
 import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
-import models.outils.Son2;
+import models.outils.Son;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
@@ -68,7 +68,7 @@ public class BouletDeCanon extends Attaque implements Runnable
         
         if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_BOULET) < MAX_SONS_BOULET)
         {
-            Son2 son = new Son2(FICHIER_SON_BOULET);
+            Son son = new Son(FICHIER_SON_BOULET);
             GestionnaireSons.ajouterSon(son);
             son.lire();
         }

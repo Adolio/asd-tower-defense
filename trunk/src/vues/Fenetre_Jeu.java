@@ -251,8 +251,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	       "Etes-vous sûr de vouloir arrêter la partie ?", 
 	       "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
-	        // TODO controle si ca marche
-	        //jeu.arreterMusiqueDAmbianceDuTerrain();
 	        GestionnaireSons.arreterTousLesSons();
 	        jeu.terminerLaPartie();
 	        
@@ -474,6 +472,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 			    
 			    // le bouton lancer vague suivante devient un retour au menu
 			    bLancerVagueSuivante.setEnabled(true);
+			    vaguePeutEtreLancee = false;
 		        bLancerVagueSuivante.setText("Retour au menu");
 		        bLancerVagueSuivante.setIcon(I_QUITTER);
 		        

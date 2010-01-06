@@ -2,7 +2,6 @@ package models.outils;
 
 import java.io.*;
 import java.util.*;
-import javax.sound.sampled.*;
 import javazoom.jl.player.Player;
 
 /**
@@ -22,7 +21,7 @@ import javazoom.jl.player.Player;
  * @version 17 dec. 2009
  * @since jdk1.6.0_16
  */
-public class Son2 extends Thread
+public class Son extends Thread
 {
     // Le player de son.
     private Player player;
@@ -45,7 +44,7 @@ public class Son2 extends Thread
      * @param repetitions Le nombre de fois que la musique doit etre jouee. Si
      *            cette valeur vaut 0, la musique est repetee a l'infini.
      */
-    public Son2(File fichier)
+    public Son(File fichier)
     {
         this.fichier = fichier;
     }
