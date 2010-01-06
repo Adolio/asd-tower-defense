@@ -43,21 +43,31 @@ public class Noeud extends Point
 	 */
 	public Noeud(int x, int y, int cote)
 	{
-		this.x = convert(x, cote);
-		this.y = convert(y, cote);
+		this.x = centre(x, cote);
+		this.y = centre(y, cote);
 		this.LARGEUR_NOEUD = cote;
 	}
 
 	/**
-	 * Converti un point en coordonnées modales.
+	 * Calcul le centre du noeud contenant la coordonnée passée en paramêtre.
 	 * 
-	 * @param i
+	 * @param i La coordonnée quelconque en pixel
+	 * @param cote La largeur du noeud en pixel
+	 * @return La coordonnée du centre du noeud en pixel
+	 */
+	public static int centre(int i, int cote)
+	{
+		return i - (i % cote) + (cote / 2);
+	}
+	
+	/**
+	 * Converti un point quelconque en pixel en la coordonnée modale du noeud correspondand
+	 * @param x
 	 * @param cote
 	 * @return
 	 */
-	public static int convert(int i, int cote)
-	{
-		return i - (i % cote) + (cote / 2);
+	public static int pixelANodale(int x, int cote){
+		return (centre(x,cote) - (cote/2)) / cote;
 	}
 
 	/**
@@ -67,8 +77,8 @@ public class Noeud extends Point
 	 */
 	public static int[] convert(Noeud noeud)
 	{
-		int[] r = { convert(noeud.x, noeud.LARGEUR_NOEUD),
-				convert(noeud.y, noeud.LARGEUR_NOEUD) };
+		int[] r = { centre(noeud.x, noeud.LARGEUR_NOEUD),
+				centre(noeud.y, noeud.LARGEUR_NOEUD) };
 		return r;
 	}
 
