@@ -51,23 +51,30 @@ public class Noeud extends Point
 	/**
 	 * Calcul le centre du noeud contenant la coordonnée passée en paramêtre.
 	 * 
-	 * @param i La coordonnée quelconque en pixel
-	 * @param cote La largeur du noeud en pixel
+	 * @param i
+	 *            La coordonnée quelconque en pixel
+	 * @param cote
+	 *            La largeur du noeud en pixel
 	 * @return La coordonnée du centre du noeud en pixel
 	 */
 	public static int centre(int i, int cote)
 	{
 		return i - (i % cote) + (cote / 2);
 	}
-	
+
 	/**
-	 * Converti un point quelconque en pixel en la coordonnée modale du noeud correspondand
+	 * Converti un point quelconque en pixel en la coordonnée modale du noeud
+	 * correspondant
+	 * 
 	 * @param x
+	 *            Le point quelconque en pixel
 	 * @param cote
-	 * @return
+	 *            Le coté du noeud
+	 * @return La coordonnée nodale correspondante.
 	 */
-	public static int pixelANodale(int x, int cote){
-		return (centre(x,cote) - (cote/2)) / cote;
+	public static int pixelANodale(int x, int cote)
+	{
+		return (centre(x, cote) - (cote / 2)) / cote;
 	}
 
 	/**
@@ -145,7 +152,8 @@ public class Noeud extends Point
 	 */
 	public boolean equals(Noeud noeud)
 	{
-		return x == noeud.x && y == noeud.y && LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
+		return x == noeud.x && y == noeud.y
+				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
 	}
 
 }

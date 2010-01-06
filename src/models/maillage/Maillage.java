@@ -32,7 +32,7 @@ public class Maillage
 	/*
 	 * Constantes
 	 */
-    /**
+	/**
 	 * La largeur en pixel de chaque maille, ou noeud
 	 */
 	private final int LARGEUR_NOEUD;
@@ -170,10 +170,8 @@ public class Maillage
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
 		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
-				graphe, noeudAExact(Noeud.centre(xDepart, LARGEUR_NOEUD),
-						Noeud.centre(yDepart, LARGEUR_NOEUD)), noeudAExact(
-						Noeud.centre(xArrivee, LARGEUR_NOEUD), Noeud.centre(
-								yArrivee, LARGEUR_NOEUD)))).getPath();
+				graphe, noeudContenantLePoint(xDepart-xOffset, yDepart-yOffset),
+				noeudContenantLePoint(xArrivee-xOffset, yArrivee-yOffset))).getPath();
 
 		/*
 		 * S'il n'y a pas de chemin
@@ -414,21 +412,10 @@ public class Maillage
 	 *            Le point à chercher
 	 * @return Le noeud correspondant.
 	 */
-	private Noeud noeudAExact(int x, int y)
+	private Noeud noeudContenantLePoint(int x, int y)
 	{
-		return noeuds[pixelToNoeud(x)][pixelToNoeud(y)];
-	}
-
-	/**
-	 * Méthode de service pour faire la relation entre un pixel et un noeud.
-	 * 
-	 * @param n
-	 *            Le pixel
-	 * @return Le noeud correspondant.
-	 */
-	private int pixelToNoeud(int n)
-	{
-		return (n - DEMI_NOEUD) / LARGEUR_NOEUD;
+		return noeuds[Noeud.pixelANodale(x, LARGEUR_NOEUD)][Noeud.pixelANodale(
+				y, LARGEUR_NOEUD)];
 	}
 
 	/**
