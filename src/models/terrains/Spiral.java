@@ -82,6 +82,6 @@ public class Spiral extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-        return genererVagueStandard();
+        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
 }
