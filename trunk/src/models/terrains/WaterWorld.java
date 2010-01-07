@@ -80,6 +80,6 @@ public class WaterWorld extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-        return genererVagueStandard();
+        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
 }

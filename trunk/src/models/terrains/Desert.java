@@ -80,6 +80,6 @@ public class Desert extends Terrain
      */
     VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
-        return genererVagueStandard();
+        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
 }

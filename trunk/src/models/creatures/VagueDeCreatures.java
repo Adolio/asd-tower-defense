@@ -242,4 +242,138 @@ public class VagueDeCreatures implements Runnable
     {
         this.edv = edv;
     }
+    
+    
+
+ 
+    private static final double VITESSE_CREATURE_LENTE = 10.0;
+    private static final double VITESSE_CREATURE_RAPIDE = 30.0;
+    private static final double VITESSE_CREATURE_NORMALE = 20.0;
+
+    private static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
+    private static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
+    private static final long TEMPS_APPARITION_CREATURE_NORMALE = 1000;
+
+    private static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
+    private static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
+    private static final double COEF_SANTE_PRE_BOSS = 5.0;
+    private static final double COEF_SANTE_BOSS = 20.0;
+
+    private static final boolean DEPART_ALEATOIRE_CREATURES = false;
+    
+    /**
+     * Permet de generer une vague en fonction de son indice de vague courante
+     * 
+     * Cette methode permet d'eviter de gerer les vagues pour chaque terrain.
+     * Mias rien n'empeche au developpeur de terrain de gerer lui-meme les
+     * vagues qu'il veut envoye.
+     * 
+     * @return la vague generee
+     */
+    public static VagueDeCreatures genererVagueStandard(int indiceVagueCourante)
+    {
+        int noVague = indiceVagueCourante + 1;
+        int uniteVague = noVague % 10;
+
+        final int SANTE_CREATURE_NORMALE = fSante(noVague);
+        final int GAIN_VAGUE_COURANTE    = fGainVague(SANTE_CREATURE_NORMALE);
+
+        switch (uniteVague)
+        {
+
+        case 1: // 5 normales
+            return new VagueDeCreatures(5, new Smiley(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 2: // 10 normales
+            return new VagueDeCreatures(10, new Pokey(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 3: // 10 volantes
+            return new VagueDeCreatures(10, new Boo(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 4: // 10 resistantes
+            return new VagueDeCreatures(
+                    10,
+                    new CarapaceKoopa(
+                    (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
+                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_LENTE),
+                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+
+        case 5: // 10 rapides
+            return new VagueDeCreatures(
+                    10,
+                    new Smiley(
+                    (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
+                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_RAPIDE),
+                    TEMPS_APPARITION_CREATURE_RAPIDE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 6: // 20 normales
+            return new VagueDeCreatures(20, new Smiley(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 20, VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 7: // 15 resistantes
+            return new VagueDeCreatures(
+                    15,
+                    new Thwomp(
+                    (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
+                    GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_LENTE),
+                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+
+        case 8: // 10 volantes
+            return new VagueDeCreatures(10, new Boo(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    DEPART_ALEATOIRE_CREATURES);
+
+        case 9: // 3 pre-boss
+            return new VagueDeCreatures(3, new PetiteFlame(
+                    (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_PRE_BOSS),
+                    GAIN_VAGUE_COURANTE / 3, VITESSE_CREATURE_LENTE),
+                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+
+        default: // boss
+            return new VagueDeCreatures(1, new GrandeFlame(
+                    (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_BOSS),
+                    GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
+                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+        }
+    }
+
+    /**
+     * Permet de calculer la sante d'une creature de facon exponentielle pour
+     * rendre le jeu de plus en plus dur.
+     * 
+     * @param noVague le numero de la vague
+     * 
+     * @return la valeur de la sante
+     */
+    private static int fSante(int noVague)
+    {
+        return (int) (1.0 / 50.0 * noVague * noVague * noVague * noVague + 0.25
+                * noVague + 100);
+    }
+
+    /**
+     * Permet de calculer les gains de pieces d'or d'une vague des creatures.
+     * 
+     * @param santeCreature la sante d'une creature de la vague
+     * 
+     * @return la valeur de gain de la vague entiere
+     */
+    private static int fGainVague(int santeCreature)
+    {
+        return (int) (1.0/10.0 * santeCreature) + 10;
+    }
+    
 }
