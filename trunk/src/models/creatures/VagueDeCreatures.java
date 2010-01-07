@@ -316,9 +316,9 @@ public class VagueDeCreatures implements Runnable
                     TEMPS_APPARITION_CREATURE_RAPIDE,
                     DEPART_ALEATOIRE_CREATURES);
 
-        case 6: // 20 normales
-            return new VagueDeCreatures(20, new Smiley(SANTE_CREATURE_NORMALE,
-                    GAIN_VAGUE_COURANTE / 20, VITESSE_CREATURE_NORMALE),
+        case 6: // 15 normales
+            return new VagueDeCreatures(15, new Smiley(SANTE_CREATURE_NORMALE,
+                    GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
@@ -373,7 +373,7 @@ public class VagueDeCreatures implements Runnable
      */
     private static int fGainVague(int santeCreature)
     {
-        return (int) (0.15 * santeCreature) + 10;
+        return (int) (0.07 * santeCreature) + 30;
     }
     
 }
