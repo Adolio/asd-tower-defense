@@ -180,7 +180,7 @@ public class Maillage
 		} catch (IllegalArgumentException e)
 		{
 			// Mise à null du chemin en cas d'erreur
-			dijkstraChemin = null;
+			return null;
 		}
 		/*
 		 * S'il n'y a pas de chemin
