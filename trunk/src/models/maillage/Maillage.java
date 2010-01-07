@@ -169,10 +169,27 @@ public class Maillage
 		/*
 		 * Calcul par Dijkstra du chemin le plus cours d'un point à un autre.
 		 */
-		GraphPath<Noeud, Arc> dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
-				graphe, noeudContenantLePoint(xDepart-xOffset, yDepart-yOffset),
-				noeudContenantLePoint(xArrivee-xOffset, yArrivee-yOffset))).getPath();
-
+		GraphPath<Noeud, Arc> dijkstraChemin;
+		try
+		{
+			dijkstraChemin = (new DijkstraShortestPath<Noeud, Arc>(
+					graphe,
+					noeudContenantLePoint(xDepart - xOffset, yDepart - yOffset),
+					noeudContenantLePoint(xArrivee - xOffset, yArrivee
+							- yOffset))).getPath();
+		} catch (IllegalArgumentException e)
+		{
+			/*
+			 * Affichage d'un message pour l'utilisateur
+			 */
+			System.err
+					.println("Une erreur est survenur lors du calcul du chemin.");
+			System.err.println(this);
+			System.err.println("De : (" + xDepart + ";" + yDepart + ")");
+			System.err.println("A : (" + xArrivee + ";" + yArrivee + ")");
+			// On sort de la fonction en faisant remonter l'exception
+			throw e;
+		}
 		/*
 		 * S'il n'y a pas de chemin
 		 */
@@ -222,7 +239,8 @@ public class Maillage
 				+ "Représentation      : 1 noeud = " + LARGEUR_NOEUD + "x"
 				+ LARGEUR_NOEUD + " pixels\n" + "Nombre de noeuds    : "
 				+ graphe.vertexSet().size() + "\n" + "Nombre d'arcs       : "
-				+ graphe.edgeSet().size();
+				+ graphe.edgeSet().size() + "\nDécalage : X=" + xOffset + " Y="
+				+ yOffset;
 	}
 
 	/**
