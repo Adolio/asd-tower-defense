@@ -257,7 +257,7 @@ public class VagueDeCreatures implements Runnable
     private static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
     private static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
     private static final double COEF_SANTE_PRE_BOSS = 5.0;
-    private static final double COEF_SANTE_BOSS = 20.0;
+    private static final double COEF_SANTE_BOSS = 13.0;
 
     private static final boolean DEPART_ALEATOIRE_CREATURES = false;
     
@@ -360,7 +360,7 @@ public class VagueDeCreatures implements Runnable
      */
     private static int fSante(int noVague)
     {
-        return (int) (1.0 / 50.0 * noVague * noVague * noVague * noVague + 0.25
+        return (int) (0.01 * noVague * noVague * noVague * noVague + 0.25
                 * noVague + 100);
     }
 
@@ -373,7 +373,7 @@ public class VagueDeCreatures implements Runnable
      */
     private static int fGainVague(int santeCreature)
     {
-        return (int) (1.0/10.0 * santeCreature) + 10;
+        return (int) (0.15 * santeCreature) + 10;
     }
     
 }
