@@ -56,7 +56,7 @@ public class Maillage
 	 * Les dimensions en maille (ou noeuds) du maillage
 	 */
 	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
-
+	
 	/*
 	 * Attributs
 	 */
@@ -73,7 +73,7 @@ public class Maillage
 	 * Le decalage de base.
 	 */
 	private int xOffset, yOffset;
-
+	
 	/**
 	 * Un maillage dynamique représentant une aire de jeu.
 	 * 
@@ -151,7 +151,7 @@ public class Maillage
 	 * @throws IllegalArgumentException
 	 *             Levé si les coordonnées ne sont pas dans le champs.
 	 */
-	synchronized public ArrayList<Point> plusCourtChemin(int xDepart,
+	public synchronized ArrayList<Point> plusCourtChemin(int xDepart,
 			int yDepart, int xArrivee, int yArrivee)
 			throws PathNotFoundException, IllegalArgumentException
 	{
@@ -179,16 +179,8 @@ public class Maillage
 							- yOffset))).getPath();
 		} catch (IllegalArgumentException e)
 		{
-			/*
-			 * Affichage d'un message pour l'utilisateur
-			 */
-			System.err
-					.println("Une erreur est survenur lors du calcul du chemin.");
-			System.err.println(this);
-			System.err.println("De : (" + xDepart + ";" + yDepart + ")");
-			System.err.println("A : (" + xArrivee + ";" + yArrivee + ")");
-			// On sort de la fonction en faisant remonter l'exception
-			throw e;
+			// Mise à null du chemin en cas d'erreur
+			dijkstraChemin = null;
 		}
 		/*
 		 * S'il n'y a pas de chemin
@@ -331,7 +323,7 @@ public class Maillage
 	 * Active l'ensemble des arcs d'un noeud.
 	 * 
 	 * @param noeud
-	 *            Le noeud ton on active les arcs.
+	 *            Le noeud dont on active les arcs.
 	 */
 	private void activer(Noeud noeud)
 	{
