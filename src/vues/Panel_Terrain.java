@@ -564,7 +564,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
             // initialisation du point precedent
             Point PointPrecedent = chemin.get(0);
             
-            // TODO control de la concurrence
             // bloque la reference du chemin
             synchronized(chemin)
             {

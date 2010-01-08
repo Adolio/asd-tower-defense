@@ -40,7 +40,7 @@ public class WaterWorld extends Terrain
     public WaterWorld () {
         super(500,  // largeur
               500,  // hauteur
-              100,  // nbPiecesOrInitiales
+              150,  // nbPiecesOrInitiales
               20,   // nbViesInitiales
               0,    // positionMaillageX
               0,    // positionMaillageY
