@@ -266,7 +266,8 @@ public class Maillage
 	}
 
 	/**
-	 * Retourne la liste complète des noeuds du maillage.
+	 * Retourne la liste complète des copies des noeuds du maillage, actifs ou
+	 * inactifs.
 	 * 
 	 * @return Les noeuds du maillage.
 	 */
@@ -275,7 +276,7 @@ public class Maillage
 		ArrayList<Noeud> points = new ArrayList<Noeud>();
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
-				points.add(noeud);
+				points.add(new Noeud(noeud));
 		return points;
 	}
 
