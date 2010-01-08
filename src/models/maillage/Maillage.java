@@ -266,11 +266,9 @@ public class Maillage
 	public ArrayList<Noeud> getNoeuds()
 	{
 		ArrayList<Noeud> points = new ArrayList<Noeud>();
-
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
 				points.add(noeud);
-
 		return points;
 	}
 
@@ -282,10 +280,8 @@ public class Maillage
 	public ArrayList<Line2D> getArcs()
 	{
 		ArrayList<Line2D> retour = new ArrayList<Line2D>();
-
 		for (Arc edge : graphe.edgeSet())
 			retour.add(edge.toLine2D());
-
 		return retour;
 	}
 
@@ -302,9 +298,7 @@ public class Maillage
 	private void zoneActive(final Rectangle rectangle, final boolean active)
 			throws IllegalArgumentException
 	{
-		/*
-		 * Vérification de la validité du rectangle
-		 */
+		// Vérification de la validité du rectangle
 		rectangleEstDansLeTerrain(rectangle);
 
 		/*
@@ -378,7 +372,6 @@ public class Maillage
 				graphe.setEdgeWeight(arc,
 						(Math.abs(i) != Math.abs(j)) ? LARGEUR_NOEUD
 								: POIDS_DIAGO);
-
 			}
 		}
 	}
@@ -413,7 +406,6 @@ public class Maillage
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
 				activer(noeud);
-
 	}
 
 	/**
@@ -443,10 +435,8 @@ public class Maillage
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
-
 		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");
-
 		if (rectangle.getY() + rectangle.getHeight() > HAUTEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Hauteur hors cadre");
 	}
