@@ -1,13 +1,14 @@
 package models.maillage;
 
-import java.util.*;
-import java.util.List;
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.*;
-import org.jgrapht.graph.*;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 /**
  * Fichier : Maillage.java
@@ -56,7 +57,7 @@ public class Maillage
 	 * Les dimensions en maille (ou noeuds) du maillage
 	 */
 	private final int NOMBRE_NOEUDS_X, NOMBRE_NOEUDS_Y;
-	
+
 	/*
 	 * Attributs
 	 */
@@ -73,7 +74,7 @@ public class Maillage
 	 * Le decalage de base.
 	 */
 	private int xOffset, yOffset;
-	
+
 	/**
 	 * Un maillage dynamique représentant une aire de jeu.
 	 * 
@@ -123,9 +124,11 @@ public class Maillage
 	}
 
 	/**
-	 * Constructeur sans décalage, fonction curryfiée
 	 * 
-	 * @see Maillage#Maillage(int, int, int, int, int)
+	 * @param largeurPixels
+	 * @param hauteurPixels
+	 * @param largeurDuNoeud
+	 * @throws IllegalArgumentException
 	 */
 	public Maillage(final int largeurPixels, final int hauteurPixels,
 			final int largeurDuNoeud) throws IllegalArgumentException
@@ -231,8 +234,8 @@ public class Maillage
 				+ "Représentation      : 1 noeud = " + LARGEUR_NOEUD + "x"
 				+ LARGEUR_NOEUD + " pixels\n" + "Nombre de noeuds    : "
 				+ graphe.vertexSet().size() + "\n" + "Nombre d'arcs       : "
-				+ graphe.edgeSet().size() + "\nDécalage : X=" + xOffset + " Y="
-				+ yOffset;
+				+ graphe.edgeSet().size() + "\nDécalage           : X="
+				+ xOffset + " Y=" + yOffset;
 	}
 
 	/**

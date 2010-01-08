@@ -78,18 +78,6 @@ public class Noeud extends Point
 	}
 
 	/**
-	 * 
-	 * @param noeud
-	 * @return
-	 */
-	public static int[] convert(Noeud noeud)
-	{
-		int[] r = { centre(noeud.x, noeud.LARGEUR_NOEUD),
-				centre(noeud.y, noeud.LARGEUR_NOEUD) };
-		return r;
-	}
-
-	/**
 	 * Retourne les coordonnées nodales d'un noeud passé en paramètre, avec des
 	 * deltas x et y
 	 * 
@@ -103,22 +91,10 @@ public class Noeud extends Point
 	 */
 	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY)
 	{
-		int[] r = convert(noeud);
-		r[0] = (r[0] - deltaX) / noeud.LARGEUR_NOEUD;
-		r[1] = (r[1] - deltaY) / noeud.LARGEUR_NOEUD;
+		int[] r = new int[2];
+		r[0] = (noeud.x - deltaX) / noeud.LARGEUR_NOEUD;
+		r[1] = (noeud.y - deltaY) / noeud.LARGEUR_NOEUD;
 		return r;
-	}
-
-	/**
-	 * Retourne les coordonnées nodales d'un noeud passé en paramètre
-	 * 
-	 * @param noeud
-	 *            Le noeud à convertir
-	 * @return un tableau de deux éléments contenant les x et y.
-	 */
-	public static int[] coordonnee(Noeud noeud)
-	{
-		return coordonnee(noeud, 0, 0);
 	}
 
 	public String toString()
@@ -148,6 +124,11 @@ public class Noeud extends Point
 	}
 
 	/**
+	 * Compare le noeud courant à un noeud donné en paramêtre.
+	 * 
+	 * @param noeud
+	 *            Le noeud à comparer.
+	 * @return True si les deux noeuds sont égaux, false sinon.
 	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Noeud noeud)
