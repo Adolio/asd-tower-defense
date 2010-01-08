@@ -101,7 +101,7 @@ public class Maillage
 		testInt(largeurDuNoeud);
 		testInt(largeurPixels);
 		testInt(hauteurPixels);
-		
+
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
 
@@ -189,8 +189,8 @@ public class Maillage
 							- yOffset))).getPath();
 		} catch (IllegalArgumentException e)
 		{
-			// Mise à null du chemin en cas d'erreur
-			return null;
+			// Retour de null en cas de levée d'exception de la part du graphe.
+			throw new PathNotFoundException("Le chemin n'est pas valide.");
 		}
 		/*
 		 * S'il n'y a pas de chemin
