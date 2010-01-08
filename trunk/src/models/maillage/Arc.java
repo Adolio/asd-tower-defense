@@ -21,7 +21,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 public class Arc extends DefaultWeightedEdge
 {
 	// Les deux noeuds de départ et d'arrivée.
-	Noeud depart, arrivee;
+	private Noeud depart, arrivee;
 
 	/**
 	 * Construit un arc pondéré non orienté avec les noeuds de départs et

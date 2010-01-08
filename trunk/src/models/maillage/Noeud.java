@@ -35,17 +35,84 @@ public class Noeud extends Point
 	protected final int LARGEUR_NOEUD;
 
 	/**
+	 * Construit à noeud à partir des paramêtres donnés. Restriction des droits
+	 * au paquet seulement.
+	 * 
 	 * @param x
 	 *            La coordonnée x du centre du noeud, en pixel.
 	 * @param y
 	 *            La coordonnée y du centre du noeud, en pixel.
 	 * @param cote
 	 */
-	public Noeud(int x, int y, int cote)
+	Noeud(int x, int y, int cote)
 	{
 		this.x = centre(x, cote);
 		this.y = centre(y, cote);
 		this.LARGEUR_NOEUD = cote;
+	}
+
+	/**
+	 * Constructeur de copie. Restriction des droits au paquet seulement.
+	 * 
+	 * @param noeud
+	 *            Le noeud à copie.
+	 */
+	Noeud(Noeud noeud)
+	{
+		this.x = noeud.x;
+		this.y = noeud.y;
+		this.LARGEUR_NOEUD = noeud.LARGEUR_NOEUD;
+		this.actif = noeud.actif;
+	}
+
+	/**
+	 * Retourne True si le noeud est actif, False sinon.
+	 * 
+	 * @return True si le noeud est actif, False sinon.
+	 */
+	public boolean isActif()
+	{
+		return actif;
+	}
+
+	/**
+	 * Compare le noeud courant à un noeud donné en paramêtre.
+	 * 
+	 * @param noeud
+	 *            Le noeud à comparer.
+	 * @return True si les deux noeuds sont égaux, false sinon.
+	 * @see Object#equals(Object)
+	 */
+	public boolean equals(Noeud noeud)
+	{
+		/*
+		 * Test du paramêtre.
+		 */
+		if (noeud == null)
+			throw new IllegalArgumentException(
+					"Le noeud passé en paramêtre ne peut pas être null");
+		// Retour de la valeur boolean calculée.
+		return x == noeud.x && y == noeud.y
+				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
+	}
+
+	public String toString()
+	{
+		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "
+				+ actif;
+	}
+
+	/**
+	 * Défini le noeud comme actif, ou pas. Restriction au droit de package, il
+	 * ne faut pas que quelqu'un d'externe puisse désactiver un noeud sans
+	 * passer par le maillage.
+	 * 
+	 * @param actif
+	 *            True si le noeud est actif, False sinon.
+	 */
+	void setActif(boolean actif)
+	{
+		this.actif = actif;
 	}
 
 	/**
@@ -102,53 +169,5 @@ public class Noeud extends Point
 		r[0] = (noeud.x - deltaX) / noeud.LARGEUR_NOEUD;
 		r[1] = (noeud.y - deltaY) / noeud.LARGEUR_NOEUD;
 		return r;
-	}
-
-	public String toString()
-	{
-		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "
-				+ actif;
-	}
-
-	/**
-	 * Défini le noeud comme actif, ou pas.
-	 * 
-	 * @param actif
-	 *            True si le noeud est actif, False sinon.
-	 */
-	public void setActif(boolean actif)
-	{
-		this.actif = actif;
-	}
-
-	/**
-	 * Retourne True si le noeud est actif, False sinon.
-	 * 
-	 * @return True si le noeud est actif, False sinon.
-	 */
-	public boolean isActif()
-	{
-		return actif;
-	}
-
-	/**
-	 * Compare le noeud courant à un noeud donné en paramêtre.
-	 * 
-	 * @param noeud
-	 *            Le noeud à comparer.
-	 * @return True si les deux noeuds sont égaux, false sinon.
-	 * @see Object#equals(Object)
-	 */
-	public boolean equals(Noeud noeud)
-	{
-		/*
-		 * Test du paramêtre.
-		 */
-		if (noeud == null)
-			throw new IllegalArgumentException(
-					"Le noeud passé en paramêtre ne peut pas être null");
-		// Retour de la valeur boolean calculée.
-		return x == noeud.x && y == noeud.y
-				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
 	}
 }
