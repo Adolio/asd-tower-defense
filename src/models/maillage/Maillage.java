@@ -95,6 +95,13 @@ public class Maillage
 			final int largeurDuNoeud, int xOffset, int yOffset)
 			throws IllegalArgumentException
 	{
+		/*
+		 * Test des arguments.
+		 */
+		testInt(largeurDuNoeud);
+		testInt(largeurPixels);
+		testInt(hauteurPixels);
+		
 		// Assignation de la largeur du noeud (ou de la maille).
 		LARGEUR_NOEUD = largeurDuNoeud;
 
@@ -311,23 +318,30 @@ public class Maillage
 						noeud.y - DEMI_NOEUD, LARGEUR_NOEUD, LARGEUR_NOEUD)))
 					if (active)
 						activer(noeud);
-					else
+					else if (noeud.isActif())
 						desactiver(noeud);
 			}
 	}
 
 	/**
-	 * Active l'ensemble des arcs d'un noeud.
+	 * Active l'ensemble des arcs d'un noeud, marque le noeud comme actif, puis
+	 * ajoute le noeud dans le graphe.
 	 * 
 	 * @param noeud
 	 *            Le noeud dont on active les arcs.
+	 * @throws IllegalArgumentException
+	 *             Levé si le noeud est null ou s'il est déjà actif.
 	 */
-	private void activer(Noeud noeud)
+	private void activer(Noeud noeud) throws IllegalArgumentException
 	{
 		// Vérifie si le noeud n'est pas null
 		if (noeud == null)
 			throw new IllegalArgumentException(
 					"Le noeud passé en paramêtre est null");
+		// Vérifie si le noeud n'est pas déjà actif.
+		if (noeud.isActif())
+			throw new IllegalArgumentException(
+					"Impossible d'activer un noeud déjà actif.");
 		// Activation du noeud
 		noeud.setActif(true);
 		// Replanter le noeud dans le graphe, s'il n'est pas déjà présent
@@ -377,13 +391,24 @@ public class Maillage
 	}
 
 	/**
-	 * Désactive l'ensemble des arcs du noeud.
+	 * Désactive l'ensemble des arcs du noeud, le marque comme inactif et le
+	 * retire du graphe.
 	 * 
 	 * @param noeud
 	 *            Le noeud dont on désactive les arcs.
+	 * @throws IllegalArgumentException
+	 *             Levé si le noeud est null ou s'il est déjà inactif.
 	 */
-	private void desactiver(Noeud noeud)
+	private void desactiver(Noeud noeud) throws IllegalArgumentException
 	{
+		// Vérifie si le noeud n'est pas null
+		if (noeud == null)
+			throw new IllegalArgumentException(
+					"Le noeud passé en paramêtre est null");
+		// Vérifie si le noeud n'est pas déjà inactif.
+		if (!noeud.isActif())
+			throw new IllegalArgumentException(
+					"Impossible de désactiver un noeud déjà inactif.");
 		// Désactivation du noeud
 		noeud.setActif(false);
 		// Supprimer le noeud ainsi que tous les arcs relatifs
@@ -416,11 +441,23 @@ public class Maillage
 	 * @param p
 	 *            Le point à chercher
 	 * @return Le noeud correspondant.
+	 * @throws IllegalArgumentException
+	 *             Levé si le noeud demandé est hors champs.
 	 */
 	private Noeud noeudContenantLePoint(int x, int y)
 	{
-		return noeuds[Noeud.pixelANodale(x, LARGEUR_NOEUD)][Noeud.pixelANodale(
-				y, LARGEUR_NOEUD)];
+		// Calcul des coordonnées.
+		int x_nodale = Noeud.pixelANodale(x, LARGEUR_NOEUD);
+		int y_nodale = Noeud.pixelANodale(y, LARGEUR_NOEUD);
+		// Vérification de la plausibilité des coordonnées.
+		if (x_nodale < 0 || x_nodale > noeuds.length)
+			throw new IllegalArgumentException(
+					"Noeud hors champs. Coordonnée x invalide : " + x);
+		if (y_nodale < 0 || y_nodale > noeuds[x_nodale].length)
+			throw new IllegalArgumentException(
+					"Noeud hors champs. Coordonnée y invalide : " + y);
+		// Retour du noeud correspondant
+		return noeuds[x_nodale][y_nodale];
 	}
 
 	/**
@@ -435,9 +472,26 @@ public class Maillage
 	private void rectangleEstDansLeTerrain(Rectangle rectangle)
 			throws IllegalArgumentException
 	{
+		if (rectangle == null)
+			throw new IllegalArgumentException("Argument null");
 		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");
 		if (rectangle.getY() + rectangle.getHeight() > HAUTEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Hauteur hors cadre");
+	}
+
+	/**
+	 * Test si la valeur est valude.
+	 * 
+	 * @param valeur
+	 *            La valeur à tester
+	 * @throws IllegalArgumentException
+	 *             Levé si la valeur est négative.
+	 */
+	private void testInt(int valeur) throws IllegalArgumentException
+	{
+		if (valeur < 0)
+			throw new IllegalArgumentException("Valeur invalide (négative) : "
+					+ valeur);
 	}
 }
