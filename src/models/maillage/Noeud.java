@@ -28,14 +28,14 @@ public class Noeud extends Point
 	 * obligatoirement.
 	 */
 	private boolean actif = false;
-
+	
 	/**
 	 * Largeur du noeud
 	 */
 	protected final int LARGEUR_NOEUD;
 
 	/**
-	 * Construit à noeud à partir des paramêtres donnés. Restriction des droits
+	 * Construit à noeud à partir des paramètres donnés. Restriction des droits
 	 * au paquet seulement.
 	 * 
 	 * @param x
@@ -159,7 +159,7 @@ public class Noeud extends Point
 	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY)
 	{
 		/*
-		 * Test du paramêtre
+		 * Test du paramètre
 		 */
 		if (noeud == null)
 			throw new IllegalArgumentException(
