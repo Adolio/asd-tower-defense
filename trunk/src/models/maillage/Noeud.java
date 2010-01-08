@@ -91,6 +91,13 @@ public class Noeud extends Point
 	 */
 	public static int[] coordonnee(Noeud noeud, int deltaX, int deltaY)
 	{
+		/*
+		 * Test du paramêtre
+		 */
+		if (noeud == null)
+			throw new IllegalArgumentException(
+					"Le noeud passé en paramêtre ne peut pas être null");
+		// Calcul de la coordonnée
 		int[] r = new int[2];
 		r[0] = (noeud.x - deltaX) / noeud.LARGEUR_NOEUD;
 		r[1] = (noeud.y - deltaY) / noeud.LARGEUR_NOEUD;
@@ -99,7 +106,8 @@ public class Noeud extends Point
 
 	public String toString()
 	{
-		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "+actif;
+		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "
+				+ actif;
 	}
 
 	/**
@@ -133,6 +141,13 @@ public class Noeud extends Point
 	 */
 	public boolean equals(Noeud noeud)
 	{
+		/*
+		 * Test du paramêtre.
+		 */
+		if (noeud == null)
+			throw new IllegalArgumentException(
+					"Le noeud passé en paramêtre ne peut pas être null");
+		// Retour de la valeur boolean calculée.
 		return x == noeud.x && y == noeud.y
 				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
 	}
