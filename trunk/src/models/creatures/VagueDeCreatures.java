@@ -207,11 +207,11 @@ public class VagueDeCreatures implements Runnable
             } catch (IllegalArgumentException e1)
             {
                 // TODO Auto-generated catch block
-                e1.printStackTrace();
+                creature.setChemin(null);
             } catch (PathNotFoundException e1)
             {
                 // TODO Auto-generated catch block
-                e1.printStackTrace();
+                creature.setChemin(null);
             }
 
             terrain.ajouterCreature(creature);
@@ -377,5 +377,4 @@ public class VagueDeCreatures implements Runnable
     {
         return (int) (0.08 * santeCreature) + 30;
     }
-
 }

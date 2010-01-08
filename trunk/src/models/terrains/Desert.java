@@ -37,7 +37,7 @@ public class Desert extends Terrain
 	{
 		super(  500,      // largeur
                 500,      // hauteur
-                10000,    // nbPiecesOrInitiales
+                200,    // nbPiecesOrInitiales
                 20,       // nbViesInitiales
                 -10,      // positionMaillageX
                 0,        // positionMaillageY
