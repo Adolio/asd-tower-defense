@@ -27,7 +27,7 @@ public class TourCanon extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 4;
     private static final double RAYON_IMPACT = 30.0;
-    public static final int PRIX_ACHAT = 20;
+    public static final int PRIX_ACHAT = 15;
     private static final String DESCRIPTION = 
         "La tour canon est une tour avec de bons dégâts mais lente. " +
         "De plus, elle n'attaque que les créatures terrestres";
@@ -51,7 +51,7 @@ public class TourCanon extends Tour
 			  COULEUR,			// couleur de fond
 			  "Canon",	        // nom
 			  PRIX_ACHAT,		// prix achat
-			  15,				// degats
+			  18,				// degats
 			  40,				// rayon de portee
 			  1,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE, // type
@@ -69,7 +69,7 @@ public class TourCanon extends Tour
 		prixAchat 	*= 2;	// + 100%
 		degats    	*= 1.5; // + 50%
 		rayonPortee *= 1.2; // + 20%
-		cadenceTir	*= 1.2;
+		cadenceTir	*= 1.2; // + 20%
 		
 		niveau++;
 	}
