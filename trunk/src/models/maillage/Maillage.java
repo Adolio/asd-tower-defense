@@ -276,6 +276,7 @@ public class Maillage
 		ArrayList<Noeud> points = new ArrayList<Noeud>();
 		for (Noeud[] ligne : noeuds)
 			for (Noeud noeud : ligne)
+				// Ajout d'une copie.
 				points.add(new Noeud(noeud));
 		return points;
 	}
