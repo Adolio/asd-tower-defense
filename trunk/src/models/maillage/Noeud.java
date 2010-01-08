@@ -99,7 +99,7 @@ public class Noeud extends Point
 
 	public String toString()
 	{
-		return super.toString() + " coté : " + LARGEUR_NOEUD;
+		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "+actif;
 	}
 
 	/**
@@ -136,5 +136,4 @@ public class Noeud extends Point
 		return x == noeud.x && y == noeud.y
 				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
 	}
-
 }
