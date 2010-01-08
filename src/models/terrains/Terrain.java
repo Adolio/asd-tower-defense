@@ -597,14 +597,9 @@ public abstract class Terrain
                                 (int) ZONE_ARRIVEE.getCenterX(),
                                 (int) ZONE_ARRIVEE.getCenterY(), creature
                                         .getType()));
-                    } catch (IllegalArgumentException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (PathNotFoundException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    }
+                    catch (PathNotFoundException e){
+                        // s'il n'y a pas de chemin, on garde l'ancien...
                     }
             }
         }

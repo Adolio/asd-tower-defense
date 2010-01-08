@@ -1,7 +1,6 @@
 package models.creatures;
 
 import java.awt.Rectangle;
-
 import models.maillage.PathNotFoundException;
 import models.terrains.Terrain;
 
@@ -200,18 +199,15 @@ public class VagueDeCreatures implements Runnable
             creature.ajouterEcouteurDeCreature(edc);
 
             try
-            {
+            {    
                 creature.setChemin(terrain.getCheminLePlusCourt(xDepart,
                         yDepart, (int) ZONE_ARRIVEE.getCenterX(),
                         (int) ZONE_ARRIVEE.getCenterY(), creature.getType()));
-            } catch (IllegalArgumentException e1)
+                
+            }
+            catch (PathNotFoundException e1) 
             {
-                // TODO Auto-generated catch block
-                creature.setChemin(null);
-            } catch (PathNotFoundException e1)
-            {
-                // TODO Auto-generated catch block
-                creature.setChemin(null);
+                // le chemin reste nul.
             }
 
             terrain.ajouterCreature(creature);
