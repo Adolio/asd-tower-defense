@@ -128,6 +128,9 @@ public class Maillage
 
 		// Construction du graphe
 		construireGraphe();
+		
+		// Affichage d'un petit truc dans la console
+		System.out.println(this);
 	}
 
 	/**
@@ -241,7 +244,7 @@ public class Maillage
 				+ "Représentation      : 1 noeud = " + LARGEUR_NOEUD + "x"
 				+ LARGEUR_NOEUD + " pixels\n" + "Nombre de noeuds    : "
 				+ graphe.vertexSet().size() + "\n" + "Nombre d'arcs       : "
-				+ graphe.edgeSet().size() + "\nDécalage           : X="
+				+ graphe.edgeSet().size() + "\nDécalage            : X="
 				+ xOffset + " Y=" + yOffset;
 	}
 

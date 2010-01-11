@@ -1,4 +1,6 @@
 import javax.swing.UIManager;
+
+import models.maillage.Maillage;
 import vues.Fenetre_MenuPrincipal;
 
 /**
