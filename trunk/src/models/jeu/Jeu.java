@@ -414,7 +414,7 @@ public class Jeu
      */
     public void terminerLaPartie()
     {
-        terrain.arreterTout(); 
+        terrain.arreterTout();
     }
 
     /**

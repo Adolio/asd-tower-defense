@@ -10,6 +10,7 @@ import models.creatures.*;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
 import models.outils.Son;
+import models.tours.GestionnaireTours;
 import models.tours.Tour;
 
 /**
@@ -116,8 +117,10 @@ public abstract class Terrain
      * 
      * @see Tour
      */
-    private Vector<Tour> tours;
-
+    //private Vector<Tour> tours;
+    private GestionnaireTours gestionnaireTours = new GestionnaireTours();
+    
+    
     /**
      * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
      * d'arrivee.
@@ -186,7 +189,6 @@ public abstract class Terrain
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
 
         // creation des collections
-        tours = new Vector<Tour>();
         creatures = new Vector<Creature>();
     }
 
@@ -401,7 +403,7 @@ public abstract class Terrain
      */
     public Vector<Tour> getTours()
     {
-        return tours;
+        return gestionnaireTours.getTours();
     }
 
     /**
@@ -429,7 +431,7 @@ public abstract class Terrain
         desactiverZone(tour, true);
 
         // ajout de la tour
-        tours.add(tour);
+        gestionnaireTours.ajouterTour(tour);
         tour.setTerrain(this);
     }
 
@@ -448,7 +450,7 @@ public abstract class Terrain
         tour.arreter();
 
         // suppression de la tour
-        tours.remove(tour);
+        gestionnaireTours.supprimerTour(tour);
 
         // reactive la zone dans le maillage qui correspond a la tour
         activerZone(tour, true);
@@ -468,9 +470,9 @@ public abstract class Terrain
             return false;
 
         // il n'y a pas deja une tour
-        synchronized (tours)
+        synchronized (gestionnaireTours.getTours())
         {
-            for (Tour tourCourante : tours)
+            for (Tour tourCourante : gestionnaireTours.getTours())
                 if (tour.intersects(tourCourante))
                     return false;
         }
@@ -713,13 +715,7 @@ public abstract class Terrain
     public void arreterTout()
     {
         // arret de toutes les tours
-        synchronized (tours)
-        {
-            for (Tour tour : tours)
-                tour.arreter();
-
-            tours.clear();
-        }
+        gestionnaireTours.arreterTours();
 
         // arret de toutes les creatures
         synchronized (creatures)

@@ -7,7 +7,7 @@ import java.util.Vector;
 /**
  * Classe d'encapsulation des animations.
  * 
- * Permet de faire vivre toutes les animation sous le meme threads et ainsi 
+ * Permet de faire vivre toutes les animation sous le meme thread et ainsi 
  * aleger le processeur.
  * 
  * Toutes les animations tournent sous le meme clock.
@@ -36,7 +36,6 @@ public class GestionnaireAnimations implements Runnable
     public void ajouterAnimation(Animation animation)
     {
         animations.add(animation);
-        System.out.println(animations.size());
     }
     
     /**
@@ -44,13 +43,15 @@ public class GestionnaireAnimations implements Runnable
      */
     public void dessinerAnimations(Graphics2D g2)
     {
-        Enumeration<Animation> eAnimations = animations.elements();
-        
-        Animation animation;
-        while(eAnimations.hasMoreElements())
+        synchronized (animations)
         {
-            animation = eAnimations.nextElement();
-            animation.dessiner(g2);
+            Enumeration<Animation> eAnimations = animations.elements();
+            Animation animation;
+            while(eAnimations.hasMoreElements())
+            {
+                animation = eAnimations.nextElement();
+                animation.dessiner(g2);
+            }
         }
     }
 

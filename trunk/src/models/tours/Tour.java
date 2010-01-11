@@ -1,6 +1,8 @@
 package models.tours;
 
 import java.awt.*;
+import java.util.Date;
+
 import models.creatures.Creature;
 import models.terrains.Terrain;
 
@@ -25,7 +27,7 @@ import models.terrains.Terrain;
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public abstract class Tour extends Rectangle implements Runnable
+public abstract class Tour extends Rectangle
 {
 	private static final long serialVersionUID      = 1L;
 	public static final int TYPE_TERRESTRE_ET_AIR 	= 0;
@@ -37,7 +39,6 @@ public abstract class Tour extends Rectangle implements Runnable
 	 * de vente de la tour.
 	 */
 	private static final double COEFF_PRIX_VENTE = 0.6;
-    private static final long TEMPS_ATTENTE_CREATURE_A_PORTEE = 20;
 
 	/**
 	 * couleur de fond de la tour
@@ -59,9 +60,6 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	protected int degats;
 
-	
-	
-	
 	/**
 	 * niveau actuel de la tour
 	 */
@@ -109,18 +107,15 @@ public abstract class Tour extends Rectangle implements Runnable
 	protected Terrain terrain;
 
 	/**
-	 * la tour gere sont propre thread qui s'occupe de trouver une creature et
-	 * de lui tirer dessus.
-	 */
-	private Thread thread;
-
-	/**
-	 * Utilise pour savoir si la tour est en jeu. (thread active)
+	 * Utilise pour savoir si la tour est en jeu.
 	 */
 	protected boolean enJeu;
 
 	protected double cadenceTir; // par seconde
 
+	// initialisation pour que la tour puisse tirer directement
+    private long tempsDepuisDernierTir;
+	
 	/**
 	 * Constructeur de la tour.
 	 * 
@@ -357,11 +352,7 @@ public abstract class Tour extends Rectangle implements Runnable
 	 */
 	public void mettreEnJeu()
 	{
-		if(thread == null)
-	    {
-		    thread = new Thread(this);
-		    thread.start();
-	    }
+		enJeu = true;
 	}
 
 	/**
@@ -373,46 +364,68 @@ public abstract class Tour extends Rectangle implements Runnable
 	}
 
 	/**
-	 * Methode des gestion du thread de la tour.
+	 * Permet de savoir si la tour est en jeu
 	 * 
-	 * Cette methode est regie de l'implementation de l'interface Runnable.
+	 * @return true si la tour est en jeu, false sinon
 	 */
-	public void run()
+	public boolean estEnJeu()
 	{
-		enJeu = true;
-
-		while (enJeu)
-		{
-			// recuperation de la creature la plus proche et a portee de la tour
-			Creature creature = getCreatureLaPlusProcheEtAPortee();
-
-			// si elle existe
-			if (creature != null)
-			{
-		        tirer(creature);
-			    
-			    // on se reprepare pour le tir suivant
-				try {
-					Thread.sleep((long) (1000.0 / cadenceTir));
-				} 
-				catch (InterruptedException e){
-					e.printStackTrace();
-				}
-			} 
-			else
-			{
-			    // si pas de creature aux environs, 
-			    // on attend pas trop longtemps
-				try {
-					Thread.sleep(TEMPS_ATTENTE_CREATURE_A_PORTEE);
-				} 
-				catch (InterruptedException e){
-					e.printStackTrace();
-				}
-			}
-		}
+	    return enJeu;
 	}
+	
+	// TODO mettre en place
+	/*
+	public void setCadenceTir(double cadenceTir) 
+	{
+	    this.cadenceTir = cadenceTir;
+	    tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
+	}
+	*/
 
+	/**
+	 * Permet de faire des actions de la tour
+	 * 
+	 * Cette methode est normalement appelee par un thread commun a toutes les
+	 * tours et permet d'effectuer les actions de la tour, c-a-d tirer.
+	 */
+	public void action()
+	{ 
+	    if(enJeu)
+        {
+	        // TODO a stoquer dans un attribut
+	        long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
+	        
+	        // on calcul le temps depuis le dernier tir
+	        tempsDepuisDernierTir += getTempsAppel();
+
+	        // on a attendu assez pour pouvoir tirer
+	        if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)
+	        {
+    	        // recuperation de la creature la plus proche et a portee de la tour
+                Creature creature = getCreatureLaPlusProcheEtAPortee();
+    
+                // si elle existe
+                if (creature != null)
+                {
+                    // attaque la creature ciblee
+                    tirer(creature);
+                    
+                    /* 
+                     * on remet le temps a zero pour que la tour attende 
+                     * de pouvoir retirer
+                     */
+                    tempsDepuisDernierTir = 0;
+                }
+                else 
+                    /* 
+                     * on incremente pas plus le temps car ca se a rien 
+                     * et ca risquerai d'etre cyclique.
+                     */
+                    tempsDepuisDernierTir = tempsDAttenteEntreTirs;
+	        }
+        }
+	}
+	
 	/**
 	 * Permet de savoir si une creature peut etre blessee.
 	 * 
@@ -488,4 +501,30 @@ public abstract class Tour extends Rectangle implements Runnable
 	{
 		return Point.distance(x, y, creature.x, creature.y);
 	}
+	
+
+	/**
+	 * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
+	 * fonction
+	 * @return le temps en milliseconde entre chaque appel de cette fonction
+	 *         si c'est le premier appel, retourne 0.
+	 */
+	protected long getTempsAppel()
+	{
+	    date = new Date(); // initialisation du temps actuel
+	    
+	    // si c'est la premiere fois qu'on passe
+	    if(tempsDernierAppel == 0)
+        {
+            tempsDernierAppel = date.getTime();
+            return 0;
+        }
+        
+	    // temps passe depuis le dernier appel
+        long temps = date.getTime() - tempsDernierAppel;
+        tempsDernierAppel = date.getTime();
+        return temps;
+	}
+    private Date date;
+    private long tempsDernierAppel;
 }
