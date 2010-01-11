@@ -40,22 +40,9 @@ public class GainDePiecesOr extends Animation
 		this.nbPiecesOr = nbPiecesOr;
 	}
 
-	/**
-	 * Permet de dessiner l'animation
-	 */
+	@Override
 	public void dessiner(Graphics2D g2)
 	{
-	    // diminution de la transparence
-	    alpha -= ETAPE_ALPHA;
-	    
-	    // si invisible
-	    if (alpha <= .0f)
-        {
-            alpha       = .0f;
-            estTerminee = true;
-            return;
-        }
-	    
 	    // style
 	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 	    g2.setColor(COULEUR_GAIN_PIECES_OR);
@@ -63,10 +50,25 @@ public class GainDePiecesOr extends Animation
 	    // dessin
 		g2.drawString("+"+nbPiecesOr,x,y);
 		
-		// l'animation monte
-		y--;
-		
 		// retabli la transparence
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
 	}
+
+    @Override
+    public void animer()
+    {
+        // diminution de la transparence
+        alpha -= ETAPE_ALPHA;
+        
+        // si invisible
+        if (alpha <= .0f)
+        {
+            alpha       = .0f;
+            estTerminee = true;
+            return;
+        }
+        
+        // l'animation monte
+        y--;
+    }
 }

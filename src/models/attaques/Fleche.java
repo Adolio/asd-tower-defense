@@ -23,7 +23,7 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class Fleche extends Attaque implements Runnable
+public class Fleche extends Attaque
 {
     // constantes finales
     private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class Fleche extends Attaque implements Runnable
     /**
      * distance entre la tete de la fleche et la tour
      */
-    private int distanceTeteTour = 0;
+    private double distanceTeteTour;
     
     /**
      * position de la tete de la fleche
@@ -61,9 +61,6 @@ public class Fleche extends Attaque implements Runnable
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         
         this.degats = degats;
-        
-        Thread thread = new Thread(this);
-        thread.start();
        
         if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_ARC) < MAX_SONS_ARC)
         {
@@ -99,41 +96,29 @@ public class Fleche extends Attaque implements Runnable
     }
 
     @Override
-    public void run()
+    public void animer()
     {
-        enJeu = true;
-        
-       // si la creature meurt on arrete l'attaque
-       while(!cible.estMorte() || enJeu)
-       {    
-           // la fleche avance
-           distanceTeteTour += 5;
-           
-           // calcul de la distance max de parcours de la fleche
-           double diffX       = cible.getCenterX() - attaquant.getCenterX();
-           double diffY       = cible.getCenterY() - attaquant.getCenterY();  
-           double distanceMax = Math.sqrt(diffX * diffX + diffY * diffY);
-           
-           // si cette distance est atteinte ou depassee, l'attaque est terminee
-           if (distanceTeteTour >= distanceMax)
-           {
-               informerEcouteurAttaqueTerminee();
-               estTerminee = true;
-               
-               attaquerCibles();
-               
-               break;
-           }
-
-           // on endors le thread
-           try{
-                Thread.sleep(50);
-           } 
-           catch (InterruptedException e){
-                e.printStackTrace();
-           }
-       }
-       
-       estTerminee = true;
+        // si la creature meurt on arrete l'attaque
+        if(!cible.estMorte() && !estTerminee)
+        {    
+            // la fleche avance
+            distanceTeteTour += 5;
+            
+            // calcul de la distance max de parcours de la fleche
+            double diffX       = cible.getCenterX() - attaquant.getCenterX();
+            double diffY       = cible.getCenterY() - attaquant.getCenterY();  
+            double distanceMax = Math.sqrt(diffX * diffX + diffY * diffY);
+            
+            // si cette distance est atteinte ou depassee, l'attaque est terminee
+            if (distanceTeteTour >= distanceMax)
+            {
+                informerEcouteurAttaqueTerminee();
+                estTerminee = true;
+                
+                attaquerCibles();
+            }
+        }
+        else
+            estTerminee = true;
     }
 }

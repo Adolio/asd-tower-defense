@@ -41,6 +41,11 @@ public abstract class Animation extends Point
 	abstract public void dessiner(Graphics2D g2);
 
 	/**
+     * Permet d'animer l'animation
+     */
+    abstract public void animer();
+	
+	/**
 	 * Permet de savoir si l'animation est terminee
 	 * 
 	 * Lorsqu'une animation est terminee, elle sera detruite.
@@ -52,10 +57,11 @@ public abstract class Animation extends Point
         return estTerminee;
     }
     
-    // TODO
+    /**
+     * Permet d'arreter l'animation
+     */
     public void arreter()
     {
         enJeu = false;
     }
-    
 }

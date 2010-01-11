@@ -5,6 +5,7 @@ import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.*;
 import models.animations.Animation;
+import models.animations.GestionnaireAnimations;
 import models.creatures.*;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
@@ -135,10 +136,10 @@ public abstract class Terrain
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
 
     /**
-     * Liste des animations visible sur le terrain
+     * Outil de gestion des animations
      */
-    private Vector<Animation> animations = new Vector<Animation>();
-
+    private GestionnaireAnimations gestionnaireAnimations = new GestionnaireAnimations();
+    
     /**
      * Gestion des vagues de creatures. C'est le joueur que decident le moment
      * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
@@ -703,17 +704,7 @@ public abstract class Terrain
      */
     public void ajouterAnimation(Animation animation)
     {
-        animations.add(animation);
-    }
-
-    /**
-     * Permet de recuperer les animations
-     * 
-     * @return la collection d'animations
-     */
-    public Vector<Animation> getAnimations()
-    {
-        return animations;
+        gestionnaireAnimations.ajouterAnimation(animation);
     }
 
     /**
@@ -739,13 +730,17 @@ public abstract class Terrain
             creatures.clear();
         }
 
-        // arret de toutes les creatures
-        synchronized (animations)
-        {
-            for (Animation animation : animations)
-                animation.arreter();
+        // arret de toutes les animations
+        gestionnaireAnimations.arreterAnimations();
+    }
 
-            animations.clear();
-        }
+    /**
+     * Permet de recuperer le gestionnaire d'animations
+     * 
+     * @return le gestionnaire d'animations
+     */
+    public GestionnaireAnimations getGestionnaireAnimations()
+    {
+        return gestionnaireAnimations;
     }
 }

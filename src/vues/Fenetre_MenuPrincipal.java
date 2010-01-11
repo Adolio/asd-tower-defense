@@ -3,6 +3,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import models.jeu.Jeu;
 import models.outils.Outils;
 import models.terrains.*;
@@ -29,6 +30,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_SCORE      = new ImageIcon("img/icones/star.png");
+	private static final ImageIcon I_FENETRE    = new ImageIcon("img/icones/icone_pgm.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
     private static final Color COULEUR_DE_FOND  = new Color(0,110,0);
@@ -60,6 +62,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		//-- preferances de le fenetre --
 		//-------------------------------
 		super("Menu principal - Tower Defense");
+		setIconImage(I_FENETRE.getImage());
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		

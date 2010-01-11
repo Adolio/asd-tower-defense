@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
 import javax.swing.*;
+
 import models.outils.*;
 
 /**
@@ -20,6 +21,7 @@ public class Fenetre_MeilleursScores extends JDialog
     // constantes statiques
     private static final long serialVersionUID  = 1L;
     private static final Font POLICE_TITRE      = new Font("",Font.BOLD,14);
+    private static final ImageIcon I_FENETRE    = new ImageIcon("img/icones/star.png");
     private static String[] columnNames         = {
                                                     "Nom du joueur",
                                                     "Score",
@@ -67,6 +69,7 @@ public class Fenetre_MeilleursScores extends JDialog
      */
     private void contruire(String nomTerrain)
     {
+        setIconImage(I_FENETRE.getImage());
         setLayout(new BorderLayout());
         setResizable(false);
  

@@ -1,6 +1,7 @@
 package models.attaques;
 
 import java.awt.*;
+import java.util.Date;
 
 import models.creatures.Creature;
 import models.outils.MeilleursScores;
@@ -19,12 +20,16 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class Glacon extends Attaque implements Runnable
+public class Glacon extends Attaque
 {
     // constantes finales
     private static final long serialVersionUID  = 1L;
     private static final Image IMAGE;
     private long DUREE_RALENTISSEMENT;
+    private long tempsPasse;
+    private Date date = new Date();
+    private long tempsDernierPassage = date.getTime();
+    
     static
     {
         IMAGE   = Toolkit.getDefaultToolkit().getImage("img/attaques/glacon.png");
@@ -42,9 +47,6 @@ public class Glacon extends Attaque implements Runnable
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         
         DUREE_RALENTISSEMENT = dureeRalentissement;
-        
-        Thread thread = new Thread(this);
-        thread.start();
     }
 
     @Override
@@ -57,30 +59,25 @@ public class Glacon extends Attaque implements Runnable
                     (int) cible.getWidth(), 
                     (int) cible.getHeight(), null);
     }
-
+    
     @Override
-    public void run()
+    public void animer()
     {
-        enJeu = true;
+        // recuperation du temps passe depuis le dernier appel
+        date = new Date();
+        tempsPasse += date.getTime() - tempsDernierPassage;
+        tempsDernierPassage = date.getTime();
         
-        // on endors le thread
-        int etapeI = 100;
-        for(double i=0.0;i < DUREE_RALENTISSEMENT && enJeu;i += etapeI)
+        // le temps est passe
+        if(tempsPasse > DUREE_RALENTISSEMENT)
         {
-            if(cible.estMorte())
-                break;
-           
-            try{
-                 Thread.sleep(etapeI);
-            } 
-            catch (InterruptedException e){
-                 e.printStackTrace();
-            } 
+            if(!cible.estMorte())
+                // reinitialisation du ralentissemeent
+                cible.setCoeffRalentissement(0.0);
+            
+            estTerminee = true;
         }
-        
-        // reinitialisation du relentissemeent
-        cible.setCoeffRalentissement(0.0);
-        
-        estTerminee = true;
+        else if(cible.estMorte())
+            estTerminee = true;     
     }
 }
