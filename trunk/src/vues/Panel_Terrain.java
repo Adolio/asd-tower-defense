@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
-import models.animations.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.tours.Tour;
@@ -428,20 +427,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------
 		//-- affichage des animations --
 		//------------------------------
-		synchronized (jeu.getAnimations())
-        {
-		    Animation animation;
-		    Iterator<Animation> iAnimation = jeu.getAnimations().iterator();
-    		while(iAnimation.hasNext())
-    		{
-    		    animation = iAnimation.next();
-    	
-    		    if (!animation.estTerminee())   
-                    animation.dessiner(g2);
-                else
-                    iAnimation.remove();
-    		} 
-        }
+		jeu.getGestionnaireAnimations().dessinerAnimations(g2);
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --

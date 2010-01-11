@@ -19,7 +19,7 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class BouleDeGlace extends Attaque implements Runnable
+public class BouleDeGlace extends Attaque
 {
     // constantes finales
     private static final long serialVersionUID  = 1L;
@@ -59,9 +59,6 @@ public class BouleDeGlace extends Attaque implements Runnable
         
         this.degats                 = degats;
         this.coeffRalentissement    = coeffRalentissement;
-        
-        Thread thread = new Thread(this);
-        thread.start();
     }
 
     @Override
@@ -89,48 +86,36 @@ public class BouleDeGlace extends Attaque implements Runnable
     }
 
     @Override
-    public void run()
+    public void animer()
     {
-       enJeu = true;
-        
-       // si la creature meurt on arrete l'attaque
-       while(!cible.estMorte() || enJeu)
-       {    
-           // la fleche avance
-           distanceCentreBoule += 5;
-           
-           // calcul de la distance max de parcours de la fleche
-           double diffX       = cible.getCenterX() - attaquant.getCenterX();
-           double diffY       = cible.getCenterY() - attaquant.getCenterY();  
-           double distanceMax = Math.sqrt(diffX * diffX + diffY * diffY);
-           
-           // si cette distance est atteinte ou depassee, l'attaque est terminee
-           if (distanceCentreBoule >= distanceMax)
-           {
-               informerEcouteurAttaqueTerminee();
-               estTerminee = true;
+        // si la creature meurt on arrete l'attaque
+        if(!cible.estMorte())
+        {    
+            // la fleche avance
+            distanceCentreBoule += 5;
+            
+            // calcul de la distance max de parcours de la fleche
+            double diffX       = cible.getCenterX() - attaquant.getCenterX();
+            double diffY       = cible.getCenterY() - attaquant.getCenterY();  
+            double distanceMax = Math.sqrt(diffX * diffX + diffY * diffY);
+            
+            // si cette distance est atteinte ou depassee, l'attaque est terminee
+            if (distanceCentreBoule >= distanceMax)
+            {
+                informerEcouteurAttaqueTerminee();
+                estTerminee = true;
+                
+                attaquerCibles();
                
-               attaquerCibles();
-              
-               // ajout du ralentissement
-               if(cible.getCoeffRalentissement() == 0.0)
-               {
-                   cible.setCoeffRalentissement(coeffRalentissement);
-                   terrain.ajouterAnimation(new Glacon(terrain,attaquant,cible,DUREE_RALENTISSEMENT));
-               }
-               
-               break;
-           }
-
-           // on endors le thread
-           try{
-                Thread.sleep(50);
-           } 
-           catch (InterruptedException e){
-                e.printStackTrace();
-           }
-       }
-       
-       estTerminee = true;
+                // ajout du ralentissement
+                if(cible.getCoeffRalentissement() == 0.0)
+                {
+                    cible.setCoeffRalentissement(coeffRalentissement);
+                    terrain.ajouterAnimation(new Glacon(terrain,attaquant,cible,DUREE_RALENTISSEMENT));
+                }
+            }
+        }
+        else
+            estTerminee = true;
     }
 }

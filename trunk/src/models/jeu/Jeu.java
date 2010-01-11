@@ -398,17 +398,6 @@ public class Jeu
     {
         terrain.arreterMusiqueDAmbiance();
     }
-    
-    
-    /**
-     * Permet de recuperer les animations
-     * 
-     * @return la collection d'animations
-     */
-    public Vector<Animation> getAnimations()
-    {
-        return terrain.getAnimations();
-    }
 
     /**
      * Permet d'ajouter une animation
@@ -420,9 +409,21 @@ public class Jeu
         terrain.ajouterAnimation(animation);
     }
 
-    // TODO
+    /**
+     * Permet de terminer la partie en cours
+     */
     public void terminerLaPartie()
     {
         terrain.arreterTout(); 
+    }
+
+    /**
+     * Permet de recuperer le gestionnaire d'animations
+     * 
+     * @return le gestionnaire d'animations
+     */
+    public GestionnaireAnimations getGestionnaireAnimations()
+    {
+        return terrain.getGestionnaireAnimations();    
     }
 }

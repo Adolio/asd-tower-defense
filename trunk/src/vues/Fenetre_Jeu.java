@@ -37,6 +37,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
 	private static final ImageIcon I_INACTIF = null;
+	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
 	
 	//---------------------------
@@ -101,6 +102,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		//-- preferances de le fenetre --
 		//-------------------------------
 		super(FENETRE_TITRE);
+		setIconImage(I_FENETRE.getImage());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.jeu = jeu;
