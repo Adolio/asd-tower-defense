@@ -199,7 +199,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		
 		// retour au menu principal
 		else if(source == itemRetourMenu)
-            retourAuMenuPrincipal();  
+		    demanderRetourAuMenuPrincipal();  
 		    
 		// a propos
 		else if(source == itemAPropos)
@@ -244,22 +244,30 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	    }
     }
 
+	/**
+     * Permet de demander pour retourner au menu principal
+     */
+	private void demanderRetourAuMenuPrincipal()
+    {
+	    if(JOptionPane.showConfirmDialog(this, 
+	            "Etes-vous sûr de vouloir arrêter la partie ?", 
+	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+        {
+            retourAuMenuPrincipal();
+        }
+    }
+	
     /**
 	 * Permet de retourner au menu principal
 	 */
 	private void retourAuMenuPrincipal()
     {
-	    if(JOptionPane.showConfirmDialog(this, 
-	       "Etes-vous sûr de vouloir arrêter la partie ?", 
-	       "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
-	    {
-	        GestionnaireSons.arreterTousLesSons();
-	        jeu.terminerLaPartie();
-	        
-	        dispose(); // destruction de la fenetre
-	        System.gc(); // passage du remasse miette
-	        new Fenetre_MenuPrincipal();  
-	    }
+	    GestionnaireSons.arreterTousLesSons();
+        jeu.terminerLaPartie();
+        
+        dispose(); // destruction de la fenetre
+        System.gc(); // passage du remasse miette
+        new Fenetre_MenuPrincipal();  
     }
 
     /**
