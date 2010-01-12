@@ -41,7 +41,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
 	private static final ImageIcon I_SON_INACTIF = new ImageIcon("img/icones/sound_mute.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
-	private static final int VOLUME_PAR_DEFAUT = 25;
+	private static final int VOLUME_PAR_DEFAUT = 20;
 	
 	//---------------------------
 	//-- declaration des menus --
@@ -54,7 +54,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
 
 	private final JMenuItem itemActiverDesactiverSon 
-	    = new JMenuItem("Desactiver",I_SON_INACTIF); 
+	    = new JMenuItem("activer / desactiver",I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
 		= new JMenuItem("activer / desactiver elements de gestion invisibles");
 	private final JMenuItem itemAfficherRayonsPortee	    
@@ -134,18 +134,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		// menu Son
 		menuSon.add(itemActiverDesactiverSon);
 		menuPrincipal.add(menuSon);
-		
-		// initialisation du texte et de l'icone de la gestion du son
-		if (GestionnaireSons.isVolumeMute()) 
-        {
-		    itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
-            itemActiverDesactiverSon.setIcon(I_SON_ACTIF);
-        }
-        else
-        {
-            itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
-            itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
-        }
+
 		
 		// menu Aide
 		menuAide.add(itemAPropos);
@@ -226,16 +215,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		   {
 		      GestionnaireSons.setVolumeMute(false);
 		      GestionnaireSons.setVolumeSysteme(VOLUME_PAR_DEFAUT);
-		      
-		      itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
-              itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
 		   }
 		   else
 		   {
 		       GestionnaireSons.setVolumeMute(true); 
-		       
-		       itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
-	           itemActiverDesactiverSon.setIcon(I_SON_ACTIF); 
 		   }
 
 		// quitter
