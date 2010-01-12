@@ -38,6 +38,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
+	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
+	private static final ImageIcon I_SON_INACTIF = new ImageIcon("img/icones/sound_mute.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
 	private static final int VOLUME_PAR_DEFAUT = 25;
 	
@@ -47,11 +49,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
-	private final JMenu  menuSon    = new JMenu("Son");
+	private final JMenu     menuSon         = new JMenu("Son");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemActiverSon = new JMenuItem("activer");
-	private final JMenuItem itemDesactiverSon = new JMenuItem("desactiver");
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
+
+	private final JMenuItem itemActiverDesactiverSon = new JMenuItem("Desactiver",I_SON_INACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
 		= new JMenuItem("activer / desactiver elements de gestion invisibles");
 	private final JMenuItem itemAfficherRayonsPortee	    
@@ -85,6 +87,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 
 	
 	private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
+    private static final String TXT_SON_ACTIVER     = "Activer";
+    private static final String TXT_SON_DESACTIVER  = "Désactiver";
     private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE 
                                                        + " [niveau 1]");
     private JEditorPane taConsole  = new JEditorPane("text/html","");
@@ -125,8 +129,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		menuPrincipal.add(menuEdition);
 		
 		// menu Son
-		menuSon.add(itemActiverSon);
-		menuSon.add(itemDesactiverSon);
+		menuSon.add(itemActiverDesactiverSon);
 		menuPrincipal.add(menuSon);
 		
 		// menu Aide
@@ -138,8 +141,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		itemQuitter.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
-		itemActiverSon.addActionListener(this);
-		itemDesactiverSon.addActionListener(this);
+		itemActiverDesactiverSon.addActionListener(this);
 		itemAPropos.addActionListener(this);
 		
 		
@@ -204,17 +206,23 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{
 		Object source = ae.getSource();
 		
-		if (source == itemDesactiverSon) {
-		   GestionnaireSons.setVolumeMute(true);
-		}
-		
-		else if (source == itemActiverSon) {
-		   if (GestionnaireSons.isVolumeMute()) {
+		if (source == itemActiverDesactiverSon) 
+		   if (GestionnaireSons.isVolumeMute()) 
+		   {
 		      GestionnaireSons.setVolumeMute(false);
 		      GestionnaireSons.setVolumeSysteme(VOLUME_PAR_DEFAUT);
+		      
+		      itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
+              itemActiverDesactiverSon.setIcon(I_SON_ACTIF);
 		   }
-		}
-		
+		   else
+		   {
+		       GestionnaireSons.setVolumeMute(true); 
+		       
+		       itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
+	           itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
+		   }
+
 		// quitter
 		else if(source == itemQuitter)
 			quitter();
