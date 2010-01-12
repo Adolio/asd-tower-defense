@@ -32,13 +32,14 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
                                                     EcouteurDeVague
 {
 	// constantes statiques
-    private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
+	private static final int VOLUME_PAR_DEFAUT = 25;
 	
 	//---------------------------
 	//-- declaration des menus --
@@ -46,7 +47,10 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
+	private final JMenu  menuSon    = new JMenu("Son");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
+	private final JMenuItem itemActiverSon = new JMenuItem("activer");
+	private final JMenuItem itemDesactiverSon = new JMenuItem("desactiver");
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
 	private final JMenuItem itemAfficherMaillage	    
 		= new JMenuItem("activer / desactiver elements de gestion invisibles");
@@ -120,7 +124,12 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		menuEdition.add(itemAfficherRayonsPortee);
 		menuPrincipal.add(menuEdition);
 		
-		// menu A propos
+		// menu Son
+		menuSon.add(itemActiverSon);
+		menuSon.add(itemDesactiverSon);
+		menuPrincipal.add(menuSon);
+		
+		// menu Aide
 		menuAide.add(itemAPropos);
 		menuPrincipal.add(menuAide);
 		
@@ -129,6 +138,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		itemQuitter.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
+		itemActiverSon.addActionListener(this);
+		itemDesactiverSon.addActionListener(this);
 		itemAPropos.addActionListener(this);
 		
 		
@@ -193,8 +204,19 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{
 		Object source = ae.getSource();
 		
+		if (source == itemDesactiverSon) {
+		   GestionnaireSons.setVolumeMute(true);
+		}
+		
+		else if (source == itemActiverSon) {
+		   if (GestionnaireSons.isVolumeMute()) {
+		      GestionnaireSons.setVolumeMute(false);
+		      GestionnaireSons.setVolumeSysteme(VOLUME_PAR_DEFAUT);
+		   }
+		}
+		
 		// quitter
-		if(source == itemQuitter)
+		else if(source == itemQuitter)
 			quitter();
 		
 		// retour au menu principal
