@@ -52,7 +52,7 @@ public class BouleDeFeu extends Attaque
      * @param cible la creature visee
      */
     public BouleDeFeu(Terrain terrain, Tour attaquant, Creature cible, 
-                      int degats, double rayonImpact)
+                      long degats, double rayonImpact)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         

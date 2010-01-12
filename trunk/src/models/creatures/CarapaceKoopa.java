@@ -36,7 +36,7 @@ public class CarapaceKoopa extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public CarapaceKoopa(int santeMax, int nbPiecesDOr, double vitesse)
+	public CarapaceKoopa(long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -50,7 +50,7 @@ public class CarapaceKoopa extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public CarapaceKoopa(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public CarapaceKoopa(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
 		        Creature.TYPE_TERRIENNE ,IMAGES[0],"Carapace Koopa");

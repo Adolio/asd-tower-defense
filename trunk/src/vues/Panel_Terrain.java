@@ -659,6 +659,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * 
 	 * @see Runnable
 	 */
+	@Override
 	public void run()
 	{
 		// Tant que la partie est en cours...
@@ -683,6 +684,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param me l'evenement lie a cette action 
 	 * @see MouseListener
 	 */
+	@Override
 	public void mousePressed(MouseEvent me)
 	{
 		
@@ -767,6 +769,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * 
 	 * @param me l'evenement lie a cette action 
 	 */
+	@Override
 	public void mouseReleased(MouseEvent me)
 	{
 		// l'ajout se fait lors de la relache du clique
@@ -780,6 +783,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param me evenement lie a cette action
 	 * @see MouseMotionListener
 	 */
+	@Override
 	public void mouseMoved(MouseEvent me)
 	{
 		// mise a jour des coordonees de la souris
@@ -800,6 +804,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
      * @param me evenement lie a cette action
      * @see MouseMotionListener
      */
+	@Override
     public void mouseDragged(MouseEvent me)
     {
        // pour nous c'est comme si elle bougeait normalement
@@ -812,6 +817,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param me evenement lie a cette action
 	 * @see MouseMotionListener
 	 */
+    @Override
 	public void mouseEntered(MouseEvent me)
 	{
 		sourisSurTerrain = true;
@@ -827,6 +833,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param me evenement lie a cette action
 	 * @see MouseMotionListener
 	 */
+	@Override
 	public void mouseExited(MouseEvent me)
 	{
 		sourisSurTerrain = false;
@@ -838,6 +845,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Methode de gestion des evenements lors de la relache d'une touche
 	 */
+	@Override
 	public void keyReleased(KeyEvent ke)
 	{
 		// raccourcis des tours
@@ -854,9 +862,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		// raccourci lancer vague suivante
         if(Character.isSpaceChar(ke.getKeyChar()))  
             fenJeu.lancerVagueSuivante();
-     
 	}
 	
-	public void keyPressed(KeyEvent ke){}
+	@Override
+	public void keyPressed(KeyEvent ke)
+	{ 
+	    // TODO enlever pour version finale
+        // raccourci de gain d'argent (debug)
+        if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
+        {
+            jeu.ajouterPiecesDOr(1000);
+            fenJeu.miseAJourInfoJeu();
+        }
+	}
+	
+	@Override
 	public void keyTyped(KeyEvent ke){}
 }

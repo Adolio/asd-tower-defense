@@ -426,4 +426,15 @@ public class Jeu
     {
         return terrain.getGestionnaireAnimations();    
     }
+
+    // TODO effacer
+    /**
+     * (pour debug) Permet d'ajouter des pieces d'or
+     * 
+     * @param nbPiecesDOr le nombre de piece d'or a ajouter
+     */
+    public void ajouterPiecesDOr(int nbPiecesDOr)
+    {
+        this.nbPiecesOr += nbPiecesDOr;
+    }
 }

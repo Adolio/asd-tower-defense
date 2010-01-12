@@ -56,7 +56,7 @@ public class Fleche extends Attaque
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public Fleche(Terrain terrain, Tour attaquant, Creature cible, int degats)
+    public Fleche(Terrain terrain, Tour attaquant, Creature cible, long degats)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         

@@ -519,4 +519,14 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         bLancerVagueSuivante.setEnabled(true);
         vaguePeutEtreLancee = true;
     }
+ 
+    /**
+     * Permet de mettre a jour les infos du jeu
+     */
+    public void miseAJourInfoJeu()
+    {
+        panelMenuInteraction.miseAJourNbPiecesOr();
+        panelMenuInteraction.miseAJourNbViesRestantes();
+        panelMenuInteraction.miseAJourScore();
+    }
 }

@@ -29,7 +29,7 @@ public class Boo extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Boo(int santeMax, int nbPiecesDOr, double vitesse)
+	public Boo(long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -43,7 +43,7 @@ public class Boo extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Boo(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public Boo(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse, 
 		      Creature.TYPE_AERIENNE, IMAGE, "Boo");

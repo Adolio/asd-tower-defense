@@ -30,7 +30,7 @@ public class Smiley extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Smiley(int santeMax, int nbPiecesDOr, double vitesse)
+	public Smiley(long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -44,7 +44,7 @@ public class Smiley extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Smiley(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public Smiley(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 14, 14, santeMax, nbPiecesDOr, vitesse,
 		        Creature.TYPE_TERRIENNE, IMAGE, "Smiley");

@@ -30,7 +30,7 @@ public class Thwomp extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Thwomp(int santeMax, int nbPiecesDOr, double vitesse)
+	public Thwomp(long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
@@ -44,7 +44,7 @@ public class Thwomp extends Creature
 	 * @param nbPiecesDOr le nombre de pieces d'or de cette creature
 	 * @param vitesse vitesse de la creature
 	 */
-	public Thwomp(int x, int y, int santeMax, int nbPiecesDOr, double vitesse)
+	public Thwomp(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
 		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse,
 		        Creature.TYPE_TERRIENNE, IMAGE, "Thwomp");
