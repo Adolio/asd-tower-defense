@@ -53,13 +53,16 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenu 	menuAide 		= new JMenu("Aide");
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
 
-	private final JMenuItem itemActiverDesactiverSon = new JMenuItem("Desactiver",I_SON_INACTIF); 
+	private final JMenuItem itemActiverDesactiverSon 
+	    = new JMenuItem("Desactiver",I_SON_INACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
 		= new JMenuItem("activer / desactiver elements de gestion invisibles");
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem("activer / desactiver affichage des rayons de portee");
-	private final JMenuItem itemQuitter	    = new JMenuItem("Quitter",I_QUITTER);
-	private final JMenuItem itemRetourMenu  = new JMenuItem("Retour vers le menu",I_QUITTER);
+	private final JMenuItem itemQuitter	    
+	    = new JMenuItem("Quitter",I_QUITTER);
+	private final JMenuItem itemRetourMenu  
+	    = new JMenuItem("Retour vers le menu",I_QUITTER);
 	
 	//----------------------------
 	//-- declaration des panels --
@@ -131,6 +134,18 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		// menu Son
 		menuSon.add(itemActiverDesactiverSon);
 		menuPrincipal.add(menuSon);
+		
+		// initialisation du texte et de l'icone de la gestion du son
+		if (GestionnaireSons.isVolumeMute()) 
+        {
+		    itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
+            itemActiverDesactiverSon.setIcon(I_SON_ACTIF);
+        }
+        else
+        {
+            itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
+            itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
+        }
 		
 		// menu Aide
 		menuAide.add(itemAPropos);
@@ -212,15 +227,15 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		      GestionnaireSons.setVolumeMute(false);
 		      GestionnaireSons.setVolumeSysteme(VOLUME_PAR_DEFAUT);
 		      
-		      itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
-              itemActiverDesactiverSon.setIcon(I_SON_ACTIF);
+		      itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
+              itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
 		   }
 		   else
 		   {
 		       GestionnaireSons.setVolumeMute(true); 
 		       
-		       itemActiverDesactiverSon.setText(TXT_SON_DESACTIVER);
-	           itemActiverDesactiverSon.setIcon(I_SON_INACTIF);
+		       itemActiverDesactiverSon.setText(TXT_SON_ACTIVER);
+	           itemActiverDesactiverSon.setIcon(I_SON_ACTIF); 
 		   }
 
 		// quitter
@@ -502,6 +517,13 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	        
             // mise a jour des infos
 	        panelMenuInteraction.miseAJourNbViesRestantes();
+			
+	        // si c'est la creature selectionnee
+	        if(panelTerrain.getCreatureSelectionnee() == creature)
+	        {
+	            panelInfoCreature.setCreature(null);
+	            panelTerrain.setCreatureSelectionnee(null);
+	        }
 			
 			// le joueur n'a plus de vie
 			if(jeu.partieEstPerdu())
