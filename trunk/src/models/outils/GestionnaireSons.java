@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Port;
@@ -33,9 +34,47 @@ public class GestionnaireSons
     private static Control ctrlIn;
     // ecouteur de son de la classe
     private static EcouteurDeSon eds;
+    // Pour les ports de sortie audio.
+    private static Port lineOut;
     
     static
     {
+       /**
+        * On commence par initialiser une fois pour toutes les controles sonores.
+        */
+       try {
+          // Le systeme possede une sortie LINE_OUT.
+          if (AudioSystem.isLineSupported(Port.Info.LINE_OUT))
+          {
+              lineOut = (Port) AudioSystem.getLine(Port.Info.LINE_OUT);
+              // On ouvre ce port.
+              lineOut.open();
+          }
+          // Le systeme possede une sortie HEADPHONE.
+          else if (AudioSystem.isLineSupported(Port.Info.HEADPHONE))
+          {
+              lineOut = (Port) AudioSystem.getLine(Port.Info.HEADPHONE);
+              // On ouvre ce port.
+              lineOut.open();
+          }
+          // Le systeme possede une sortie SPEAKER.
+          else if (AudioSystem.isLineSupported(Port.Info.SPEAKER))
+          {
+              lineOut = (Port) AudioSystem.getLine(Port.Info.SPEAKER);
+              // On ouvre ce port.
+              lineOut.open();
+          }
+          // Le systeme ne possede pas de sortie audio (triste!).
+          else
+          {
+              System.out.println("Impossible d'avoir une sortie audio!");
+          }
+       }
+       catch (Exception erreur) // Une erreur liee au volume est survenue.
+       {
+           erreur.printStackTrace();
+       }
+       
         // une fois le son terminee, on le supprime de la collection des sons
         eds = new EcouteurDeSon(){
             @Override
@@ -147,8 +186,41 @@ public class GestionnaireSons
      */
     public static int getVolumeSysteme()
     {
-        return 100 * (int) (((FloatControl) ctrlIn).getValue() / ((FloatControl) ctrlIn)
-                .getMaximum());
+       if (lineOut != null) {
+          // On recupere le controle de l'intensite du volume.
+          ctrlIn = lineOut.getControl(FloatControl.Type.VOLUME);
+          return 100 * (int) (((FloatControl) ctrlIn).getValue() / ((FloatControl) ctrlIn)
+                   .getMaximum());
+       }
+       return 0;
+    }
+    
+    /**
+     * Permet de savoir si le volume est en mode muet.
+     * 
+     * @return True si le volume systeme est en mode muet.
+     */
+    public static boolean isVolumeMute() {
+       if (lineOut != null) {
+          // On recupere le controle mute du volume.
+          ctrlIn = lineOut.getControl(BooleanControl.Type.MUTE);
+          return ((BooleanControl) ctrlIn).getValue();
+       }
+       return true;
+    }
+    
+    /**
+     * Permet de mettre le volume systeme en mode muet.
+     * 
+     * @param volumeMute Indiquer si le volume systeme doit etre muet.
+     */
+    public static void setVolumeMute(boolean volumeMute) {
+       if (lineOut != null) {
+          // On recupere le controle mute du volume.
+          ctrlIn = lineOut.getControl(BooleanControl.Type.MUTE);
+          // On le met a mute.
+          ((BooleanControl) ctrlIn).setValue(volumeMute);
+       }
     }
 
     /**
@@ -159,46 +231,11 @@ public class GestionnaireSons
      */
     public static void setVolumeSysteme(int volumePourcent)
     {
-        // Pour les ports de sortie audio.
-        Port lineOut;
-
-        try
-        {
-            // Le systeme possede une sortie LINE_OUT.
-            if (AudioSystem.isLineSupported(Port.Info.LINE_OUT))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.LINE_OUT);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme possede une sortie HEADPHONE.
-            else if (AudioSystem.isLineSupported(Port.Info.HEADPHONE))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.HEADPHONE);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme possede une sortie SPEAKER.
-            else if (AudioSystem.isLineSupported(Port.Info.SPEAKER))
-            {
-                lineOut = (Port) AudioSystem.getLine(Port.Info.SPEAKER);
-                // On ouvre ce port.
-                lineOut.open();
-            }
-            // Le systeme ne possede pas de sortie audio (triste!).
-            else
-            {
-                System.out.println("Impossible d'avoir une sortie audio!");
-                return;
-            }
-
-            // On recupere le controle d'entree du volume.
-            ctrlIn = lineOut.getControl(FloatControl.Type.VOLUME);
-            // On change le volume du systeme avec celui donne en parametre.
-            ((FloatControl) ctrlIn).setValue(volumePourcent / 100.0f);
-        } catch (Exception erreur) // Une erreur liee au volume est survenue.
-        {
-            erreur.printStackTrace();
-        }
+       if (lineOut != null) {
+          // On recupere le controle de l'intensite du volume.
+          ctrlIn = lineOut.getControl(FloatControl.Type.VOLUME);
+          // On change le volume du systeme avec celui donne en parametre.
+          ((FloatControl) ctrlIn).setValue(volumePourcent / 100.0f);
+       }
     }
 }
