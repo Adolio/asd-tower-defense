@@ -58,7 +58,7 @@ public abstract class Tour extends Rectangle
 	/**
 	 * degats de la tour
 	 */
-	protected int degats;
+	protected long degats;
 
 	/**
 	 * niveau actuel de la tour
@@ -135,7 +135,7 @@ public abstract class Tour extends Rectangle
 	 *            le prix d'achat de la tour
 	 */
 	public Tour(int x, int y, int largeur, int hauteur, Color couleurDeFond,
-			String nom, int prixAchat, int degats, double rayonPortee, 
+			String nom, int prixAchat, long degats, double rayonPortee, 
 			double cadenceTir, int type, Image image, Image icone)
 	{
 	    this.x              = x;
@@ -325,7 +325,7 @@ public abstract class Tour extends Rectangle
      * 
      * @return les degats infliges par l'attaque de la tour
      */
-    public int getDegats()
+    public long getDegats()
     {
         return degats;
     }

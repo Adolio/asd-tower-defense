@@ -29,7 +29,7 @@ public class Panel_InfoCreature extends JPanel
 	private static final ImageIcon I_GAIN      = new ImageIcon("img/icones/coins_add.png");
 	private static final Dimension DIMENSION_PANEL = new Dimension(280, 120);
 	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature");
-    private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(140,50);
+    private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(110,50);
     private static final Font POLICE_NOM       = new Font("", Font.BOLD, 14);
     private static final Border BORDURE_IMAGE_ET_NOM = new EmptyBorder(-5,-5,-5,-5);
     private static final Font POLICE_DONNEES = new Font("Verdana", Font.BOLD, 12);
@@ -128,7 +128,8 @@ public class Panel_InfoCreature extends JPanel
     {
         if(creature != null)
         {
-            lSante.setText(" : "+creature.getSante()+" / "+creature.getSanteMax());
+            lSante.setText(" : "+formaterSante(creature.getSante())+" / "+
+                                 formaterSante(creature.getSanteMax()));
 
             // vitesse
             if(creature.getCoeffRalentissement() > 0.0)
@@ -143,5 +144,44 @@ public class Panel_InfoCreature extends JPanel
                 lVitesse.setText(" : "+String.format("%.1f",creature.getVitesseNormale()));
             }
         }
+    }
+    
+    static final long KILO  = 1000L;
+    static final long MEGA  = 1000000L;
+    static final long GIGA  = 1000000000L;
+    static final long TERRA = 1000000000000L;
+    
+    /**
+     * Permet de formatter la sante des creature afin de minimiser la place.
+     * 
+     * @param sante 
+     * 
+     * @return la sante sous la forme 5000 = 5M, 3000000 = 3G
+     */
+    private String formaterSante(long sante)
+    { 
+        long tmp;
+        if(sante >= KILO && sante < MEGA)
+        {    
+            tmp = sante / KILO;
+            return tmp + "." + ((sante % KILO) / (KILO / 10)) + "K"; // kilo
+        }
+        else if(sante >= MEGA && sante < GIGA)
+        {    
+            tmp = sante / MEGA;
+            return tmp + "." + ((sante % MEGA) / (MEGA / 10)) + "M"; // mega
+        }
+        else if(sante >= GIGA && sante < TERRA)
+        {
+            tmp = sante / GIGA;
+            return tmp + "." + ((sante % GIGA) / (GIGA / 10)) + "G"; // giga
+        }
+        else if(sante >= TERRA)
+        {
+            tmp = sante / TERRA;
+            return tmp + "." + ((sante % TERRA) / (TERRA / 10)) + "T"; // giga
+        }
+        else
+            return sante+"";
     }
 }

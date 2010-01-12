@@ -53,7 +53,7 @@ public class BouleDeGlace extends Attaque
      * @param cible la creature visee
      */
     public BouleDeGlace(Terrain terrain, Tour attaquant, Creature cible, 
-                      int degats, double coeffRalentissement)
+                      long degats, double coeffRalentissement)
     {
         super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
         

@@ -57,13 +57,13 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * sante de la creature, si la sante est <= 0, la creature est morte. 
 	 * A ce moment la, elle donne au joueur ses pieces d'or
 	 */
-	private int sante;
+	private long sante;
 	
 	/**
 	 * sante maximale de la creature. Utilise pour calculer le pourcentage de 
 	 * vie restante de la creature.
 	 */
-	private int santeMax;
+	private long santeMax;
 	
 	/**
 	 * le nombre de pieces d'or que la creature fourni au joueur apres ca mort
@@ -116,7 +116,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * @param nom nom de l'espece de creature
 	 */
 	public Creature(int x, int y, int largeur, int hauteur, 
-					int santeMax, int nbPiecesDOr, double vitesse, 
+					long santeMax, int nbPiecesDOr, double vitesse, 
 					int type, Image image, String nom)
 	{
 		super(x,y,largeur,hauteur);
@@ -167,7 +167,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * 
 	 * @return la sante de la creature
 	 */
-	public int getSante()
+	public long getSante()
 	{
 		return sante;
 	}
@@ -177,7 +177,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * 
 	 * @return la sante maximale de la creature
 	 */
-	public int getSanteMax()
+	public long getSanteMax()
 	{
 		return santeMax;
 	}
@@ -398,7 +398,7 @@ public abstract class Creature extends Rectangle implements Runnable
 	 * 
 	 * @param degats les degats recus
 	 */
-	synchronized public void blesser(int degats)
+	synchronized public void blesser(long degats)
 	{
 		// deja morte ?
 		if(!estMorte())

@@ -25,7 +25,7 @@ abstract public class Attaque extends Animation
     protected Creature cible;
     protected Tour attaquant;
 
-    protected int degats;
+    protected long degats;
     protected double rayonImpact;
     protected double coeffRalentissement;
     
@@ -80,7 +80,7 @@ abstract public class Attaque extends Animation
         ArrayList<Creature> a = new ArrayList<Creature>();
         
         Point impact = new Point((int) cible.getCenterX(), (int) cible.getCenterY());
-        int degatsFinal;
+        long degatsFinal;
         double distanceImpact;
         
         Enumeration<Creature> eCreatures = terrain.getCreatures().elements();
@@ -98,14 +98,10 @@ abstract public class Attaque extends Animation
             if(distanceImpact <= rayonImpact)
             {
                 // calcul des degats en fonction de la distance de l'impact
-                degatsFinal = (int) (degats - (distanceImpact / rayonImpact * degats));
+                degatsFinal = (long) (degats - (distanceImpact / rayonImpact * degats));
                 tmpCreature.blesser(degatsFinal);
                 
                 a.add(tmpCreature);
-                
-                // si l'attaque ralenti
-                //if(coeffRalentissement > 0.0)
-                    
             }
         }
         

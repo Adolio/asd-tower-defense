@@ -267,30 +267,30 @@ public class VagueDeCreatures implements Runnable
         int noVague = indiceVagueCourante + 1;
         int uniteVague = noVague % 10;
 
-        final int SANTE_CREATURE_NORMALE = fSante(noVague);
-        final int GAIN_VAGUE_COURANTE = fGainVague(SANTE_CREATURE_NORMALE);
+        final long SANTE_CREATURE_NORMALE = fSante(noVague);
+        final long GAIN_VAGUE_COURANTE = fGainVague(SANTE_CREATURE_NORMALE);
 
         switch (uniteVague)
         {
 
         case 1: // 5 normales
             return new VagueDeCreatures(5, new Smiley(SANTE_CREATURE_NORMALE,
-                    GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_NORMALE),
+                    (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
         case 2: // 10 normales
             return new VagueDeCreatures(10, new Pokey(SANTE_CREATURE_NORMALE,
-                    GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                    (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
         case 3: // 10 volantes
             return new VagueDeCreatures(
                     10,
-                    new Boo(
+                    new Nuage(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
-                            GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
@@ -299,7 +299,7 @@ public class VagueDeCreatures implements Runnable
                     10,
                     new CarapaceKoopa(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
-                            GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_LENTE),
+                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_LENTE),
                     TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
 
         case 5: // 10 rapides
@@ -307,13 +307,13 @@ public class VagueDeCreatures implements Runnable
                     10,
                     new Smiley(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
-                            GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_RAPIDE),
+                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_RAPIDE),
                     TEMPS_APPARITION_CREATURE_RAPIDE,
                     DEPART_ALEATOIRE_CREATURES);
 
         case 6: // 15 normales
             return new VagueDeCreatures(15, new Smiley(SANTE_CREATURE_NORMALE,
-                    GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_NORMALE),
+                    (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
@@ -322,7 +322,7 @@ public class VagueDeCreatures implements Runnable
                     15,
                     new Thwomp(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
-                            GAIN_VAGUE_COURANTE / 15, VITESSE_CREATURE_LENTE),
+                            (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_LENTE),
                     TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
 
         case 8: // 10 volantes
@@ -330,20 +330,20 @@ public class VagueDeCreatures implements Runnable
                     10,
                     new Boo(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
-                            GAIN_VAGUE_COURANTE / 10, VITESSE_CREATURE_NORMALE),
+                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
                     TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
         case 9: // 3 pre-boss
             return new VagueDeCreatures(3, new PetiteFlame(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_PRE_BOSS),
-                    GAIN_VAGUE_COURANTE / 3, VITESSE_CREATURE_LENTE),
+                    (int) (GAIN_VAGUE_COURANTE / 3), VITESSE_CREATURE_LENTE),
                     TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
 
         default: // boss
             return new VagueDeCreatures(1, new GrandeFlame(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_BOSS),
-                    GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
+                    (int) GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
                     TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
         }
     }
@@ -356,9 +356,9 @@ public class VagueDeCreatures implements Runnable
      * 
      * @return la valeur de la sante
      */
-    private static int fSante(int noVague)
+    private static long fSante(int noVague)
     {
-        return (int) (0.01 * noVague * noVague * noVague * noVague + 0.25
+        return (long) (0.01 * noVague * noVague * noVague * noVague + 0.25
                 * noVague + 100);
     }
 
@@ -369,8 +369,8 @@ public class VagueDeCreatures implements Runnable
      * 
      * @return la valeur de gain de la vague entiere
      */
-    private static int fGainVague(int santeCreature)
+    private static long fGainVague(long santeCreature)
     {
-        return (int) (0.08 * santeCreature) + 30;
+        return (long) (0.08 * santeCreature) + 30;
     }
 }
