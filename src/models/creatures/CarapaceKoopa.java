@@ -60,10 +60,9 @@ public class CarapaceKoopa extends Creature
             public void run()
             {
                 int i = 1;
-                enJeu = true;
                 
                 // tant que la creature est en jeu et vivante
-                while(enJeu && !estMorte())
+                while(!aDetruire() && !estMorte())
                 {
                     // image suivante
                     i %= (IMAGES.length);

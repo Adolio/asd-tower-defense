@@ -85,11 +85,6 @@ public abstract class Creature extends Rectangle
 	protected Image image;
 	
 	/**
-	 * la creature est-elle en eu ?
-	 */
-	protected boolean enJeu;
-	
-	/**
 	 * vitesse de deplacement de la creature sur le terrain en pixel(s) par seconde
 	 */
 	protected double vitesseNormale; // en pixel(s) / seconde
@@ -104,6 +99,11 @@ public abstract class Creature extends Rectangle
 	 * subie des modifications.
 	 */
 	private ArrayList<EcouteurDeCreature> ecouteursDeCreature;
+	
+	/**
+	 * Permet de savoir s'il faut detruire l'animation
+	 */
+	private boolean aDetruire;
 	
 	/**
 	 * Constructeur de la creature.
@@ -325,7 +325,20 @@ public abstract class Creature extends Rectangle
 	 */
 	public void action()
 	{
+	    // avance la creature
 	    avancerSurChemin(getTempsAppel());
+	    
+	    // la creature est arrivee a destination !
+        if(chemin != null && indiceCourantChemin == chemin.size() 
+           && !aDetruire && !estMorte())
+        {
+            aDetruire = true;
+            
+            // informe les ecouteurs que la creature est arrivee 
+            // a la fin du parcours
+            for(EcouteurDeCreature edc : ecouteursDeCreature)
+                edc.estArriveeEnZoneArrivee(this);
+        }
 	}
 	
 	/**
@@ -347,7 +360,6 @@ public abstract class Creature extends Rectangle
             // recuperation des noeuds
             Point pPrecedent = chemin.get(indiceCourantChemin-1);
             Point pSuivant   = chemin.get(indiceCourantChemin);
-            
             
             // TODO [OPTIMISATION] faire des constantes LARGEUR_MOITIE et HAUTEUR_MOITIE
             // calcul du centre de la creature
@@ -404,27 +416,8 @@ public abstract class Creature extends Rectangle
             x = (int) Math.round(xReel);
             y = (int) Math.round(yReel);
         }
-        
-        // la creature est arrivee a destination !
-        if(chemin != null && indiceCourantChemin == chemin.size())
-        {
-            enJeu = false;
-            
-            // informe les ecouteurs que la creature est arrivee 
-            // a la fin du parcours
-            for(EcouteurDeCreature edc : ecouteursDeCreature)
-                edc.estArriveeEnZoneArrivee(this);
-        }
     }
 	
-    /**
-     * Permet d'arreter la creature, de la sortir du jeu
-     */
-    public void arreter()
-    {
-        enJeu = false;
-    }
-    
 	/**
 	 * Permet de faire subir des degats sur la creature
 	 * 
@@ -505,4 +498,14 @@ public abstract class Creature extends Rectangle
         return tempsEcoule;
     }
     private long tempsDernierAppel;
+
+    /**
+     * Permet d'informer un instance superieure qu'il faut detruire la creature
+     * 
+     * @return true s'il faut la detruire, false sinon
+     */
+    public boolean aDetruire()
+    {
+        return aDetruire;
+    }
 }
