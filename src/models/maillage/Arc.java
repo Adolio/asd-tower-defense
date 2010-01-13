@@ -62,7 +62,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public Point2D getP1()
 			{
-				return depart;
+				return getDepart();
 			}
 
 			/*
@@ -73,7 +73,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public Point2D getP2()
 			{
-				return arrivee;
+				return getArrivee();
 			}
 
 			/*
@@ -84,7 +84,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public double getX1()
 			{
-				return depart.x;
+				return getDepart().x;
 			}
 
 			/*
@@ -95,7 +95,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public double getX2()
 			{
-				return arrivee.x;
+				return getArrivee().x;
 			}
 
 			/*
@@ -106,7 +106,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public double getY1()
 			{
-				return depart.y;
+				return getDepart().y;
 			}
 
 			/*
@@ -117,7 +117,7 @@ public class Arc extends DefaultWeightedEdge
 			@Override
 			public double getY2()
 			{
-				return arrivee.y;
+				return getArrivee().y;
 			}
 
 			/*
