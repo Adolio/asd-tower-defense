@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.*;
+
 import models.animations.Animation;
 import models.animations.GestionnaireAnimations;
 import models.creatures.*;
@@ -601,8 +602,41 @@ public abstract class Terrain
                                 (int) ZONE_ARRIVEE.getCenterY(), creature
                                         .getType()));
                     }
-                    catch (PathNotFoundException e){
-                        // s'il n'y a pas de chemin, on garde l'ancien...
+                    catch (PathNotFoundException e)
+                    {
+                        /*
+                         *  s'il n'y a pas de chemin, 
+                         *  on essaye depuis le noeud precedent
+                         */
+                        try
+                        {
+                            ArrayList<Point> chemin = creature.getChemin();
+                            
+                            if(chemin != null)
+                            {
+                                // recuperation du noeud precedent sur le chemin
+                                Point noeudPrecedent;
+                                
+                                if(creature.getIndiceCourantChemin() > 0) // pas au depart
+                                    noeudPrecedent = chemin.get(creature.getIndiceCourantChemin()-1);
+                                else
+                                    noeudPrecedent = new Point(ZONE_DEPART.x, ZONE_DEPART.y);
+             
+                                // calcul du nouveau chemin
+                                creature.setChemin(getCheminLePlusCourt(
+                                        (int) noeudPrecedent.x, 
+                                        (int) noeudPrecedent.y,
+                                        (int) ZONE_ARRIVEE.getCenterX(),
+                                        (int) ZONE_ARRIVEE.getCenterY(), 
+                                        creature.getType())); 
+                            }
+                            
+                            
+                        }
+                        catch (PathNotFoundException e2)
+                        {
+                            // s'il n'y a toujours pas de chemin, on garde l'ancien.
+                        }
                     }
             }
         }
