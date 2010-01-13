@@ -342,13 +342,9 @@ public abstract class Terrain
                     (int) ZONE_ARRIVEE.getCenterX(), (int) ZONE_ARRIVEE
                             .getCenterY());
 
-        } catch (IllegalArgumentException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (PathNotFoundException e)
         {
-            // TODO Auto-generated catch block
+            // ne peut pas arriver, au pire on l'affiche
             e.printStackTrace();
         }
     }

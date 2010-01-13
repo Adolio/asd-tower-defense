@@ -360,8 +360,6 @@ public class Jeu
 	 */
 	public void creatureTuee(Creature creature)
 	{
-		terrain.supprimerCreature(creature);
-		
 		// gain de pieces d'or
 		nbPiecesOr 	+= creature.getNbPiecesDOr();
 		
@@ -378,9 +376,6 @@ public class Jeu
     {
         // perd une vie
         viesRestantes--;
-        
-        // efface la creature
-        terrain.supprimerCreature(creature);
     }
     
     /**
@@ -427,7 +422,7 @@ public class Jeu
         return terrain.getGestionnaireAnimations();    
     }
 
-    // TODO effacer
+    // TODO [DEBUG] a effacer
     /**
      * (pour debug) Permet d'ajouter des pieces d'or
      * 

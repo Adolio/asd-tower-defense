@@ -1,8 +1,6 @@
 package models.tours;
 
 import java.awt.*;
-import java.util.Date;
-
 import models.creatures.Creature;
 import models.terrains.Terrain;
 
@@ -377,7 +375,7 @@ public abstract class Tour extends Rectangle
 	    return enJeu;
 	}
 	
-	// TODO mettre en place pour eviter de recalculer le tempsDAttenteEntreTirs
+	// TODO [OPTIMISATION] mettre en place pour eviter de recalculer le tempsDAttenteEntreTirs
 	/*
 	public void setCadenceTir(double cadenceTir) 
 	{
@@ -396,7 +394,7 @@ public abstract class Tour extends Rectangle
 	{ 
 	    if(enJeu)
         {
-	        // TODO a stoquer dans un attribut
+	        // TODO [OPTIMISATION] a stoquer dans un attribut
 	        long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
 	        
 	        // on calcul le temps depuis le dernier tir
@@ -506,29 +504,28 @@ public abstract class Tour extends Rectangle
 		return Point.distance(x, y, creature.x, creature.y);
 	}
 	
-	// TODO use System.currentTimeMillis()
-	/**
-	 * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
-	 * fonction
-	 * @return le temps en milliseconde entre chaque appel de cette fonction
-	 *         si c'est le premier appel, retourne 0.
-	 */
-	protected long getTempsAppel()
-	{
-	    date = new Date(); // initialisation du temps actuel
-	    
-	    // si c'est la premiere fois qu'on passe
-	    if(tempsDernierAppel == 0)
+    /**
+     * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
+     * fonction
+     * @return le temps en milliseconde entre chaque appel de cette fonction
+     *         si c'est le premier appel, retourne 0.
+     */
+    protected long getTempsAppel()
+    {
+        // initialisation du temps actuel
+        long maintenant = System.currentTimeMillis(); 
+        
+        // si c'est la premiere fois qu'on passe
+        if(tempsDernierAppel == 0)
         {
-            tempsDernierAppel = date.getTime();
+            tempsDernierAppel = maintenant;
             return 0;
         }
         
-	    // temps passe depuis le dernier appel
-        long temps = date.getTime() - tempsDernierAppel;
-        tempsDernierAppel = date.getTime();
-        return temps;
-	}
-    private Date date;
+        // temps passe depuis le dernier appel
+        long tempsEcoule = maintenant - tempsDernierAppel;
+        tempsDernierAppel = maintenant;
+        return tempsEcoule;
+    }
     private long tempsDernierAppel;
 }

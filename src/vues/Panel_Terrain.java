@@ -470,8 +470,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{  
 	    if(creature.getImage() != null)
 	    {
-	        // TODO
-	        // comment faire une rotation ?
+	        // TODO [INFO] comment faire une rotation ?
 	        //AffineTransform tx = new AffineTransform();
 	        //double radians = -Math.PI/4;
 	        //tx.rotate(radians);
@@ -863,7 +862,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void keyPressed(KeyEvent ke)
 	{ 
-	    // TODO enlever pour version finale
+	    // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {

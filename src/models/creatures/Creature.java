@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Classe de gestion d'une creature.
@@ -352,9 +351,11 @@ public abstract class Creature extends Rectangle
             Point pPrecedent = chemin.get(indiceCourantChemin-1);
             Point pSuivant   = chemin.get(indiceCourantChemin);
             
+            
+            // TODO [OPTIMISATION] faire des constantes LARGEUR_MOITIE et HAUTEUR_MOITIE
             // calcul du centre de la creature
-            double centreX = xReel + getWidth() / 2.0 ;
-            double centreY = yReel + getHeight() / 2.0;
+            double centreX = xReel + width / 2.0 ;
+            double centreY = yReel + height / 2.0;
   
             //---------------------------------------------
             //-- calcul de la position apres deplacement --
@@ -483,9 +484,6 @@ public abstract class Creature extends Rectangle
 		ecouteursDeCreature.add(edc);
 	}
 	
-	
-	
-	// TODO use System.currentTimeMillis()
 	/**
      * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
      * fonction
@@ -494,20 +492,20 @@ public abstract class Creature extends Rectangle
      */
     protected long getTempsAppel()
     {
-        date = new Date(); // initialisation du temps actuel
+        // initialisation du temps actuel
+        long maintenant = System.currentTimeMillis(); 
         
         // si c'est la premiere fois qu'on passe
         if(tempsDernierAppel == 0)
         {
-            tempsDernierAppel = date.getTime();
+            tempsDernierAppel = maintenant;
             return 0;
         }
         
         // temps passe depuis le dernier appel
-        long temps = date.getTime() - tempsDernierAppel;
-        tempsDernierAppel = date.getTime();
-        return temps;
+        long tempsEcoule = maintenant - tempsDernierAppel;
+        tempsDernierAppel = maintenant;
+        return tempsEcoule;
     }
-    private Date date;
     private long tempsDernierAppel;
 }
