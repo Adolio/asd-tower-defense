@@ -59,7 +59,7 @@ public class GestionnaireCreatures implements Runnable
                     creature = creatures.get(i);
                     
                     // efface les creatures mortes
-                    if(creature.estMorte())
+                    if(creature.estMorte() || creature.aDetruire())
                         creatures.remove(i--);
                     else
                         // anime la creature
