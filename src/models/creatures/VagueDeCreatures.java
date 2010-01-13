@@ -211,7 +211,6 @@ public class VagueDeCreatures implements Runnable
             }
 
             terrain.ajouterCreature(creature);
-            creature.demarrer();
 
             // temps d'attente entre chaque creature
             try

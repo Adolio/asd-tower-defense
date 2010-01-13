@@ -128,8 +128,9 @@ public abstract class Terrain
      * 
      * @see Creature
      */
-    private Vector<Creature> creatures;
-
+    //private Vector<Creature> creatures;
+    private GestionnaireCreatures gestionnaireCreatures = new GestionnaireCreatures();
+    
     /**
      * Les murs sont utilises pour empecher le joueur de construire des tours
      * dans certaines zones. Les creatures ne peuvent egalement pas si rendre.
@@ -188,9 +189,6 @@ public abstract class Terrain
         // creation des deux maillages
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
-
-        // creation des collections
-        creatures = new Vector<Creature>();
     }
 
     /**
@@ -366,7 +364,7 @@ public abstract class Terrain
      */
     public Vector<Creature> getCreatures()
     {
-        return creatures;
+        return gestionnaireCreatures.getCreatures();
     }
 
     /**
@@ -379,7 +377,7 @@ public abstract class Terrain
         if (creature == null)
             throw new IllegalArgumentException("Creature nulle");
 
-        creatures.add(creature);
+        gestionnaireCreatures.ajouterCreature(creature);
     }
 
     /**
@@ -390,7 +388,7 @@ public abstract class Terrain
     synchronized public void supprimerCreature(Creature creature)
     {
         if (creature != null)
-            creatures.remove(creature);
+            gestionnaireCreatures.supprimerCreature(creature);
     }
 
     // ----------------------------------------------------------
@@ -487,9 +485,9 @@ public abstract class Terrain
         }
 
         // il n'y a pas deja une creature
-        synchronized (creatures)
+        synchronized (gestionnaireCreatures.getCreatures())
         {
-            for (Rectangle creature : creatures)
+            for (Rectangle creature : gestionnaireCreatures.getCreatures())
                 if (tour.intersects(creature))
                     return false;
         }
@@ -587,10 +585,10 @@ public abstract class Terrain
     {
         // Il ne doit pas y avoir de modifications sur la collection
         // durant le parcours.
-        synchronized (creatures)
+        synchronized (gestionnaireCreatures.getCreatures())
         {
             // mise a jour de tous les chemins
-            for (Creature creature : creatures)
+            for (Creature creature : gestionnaireCreatures.getCreatures())
             {
                 // les tours n'affecte que le chemin des creatures terriennes
                 if (creature.getType() == Creature.TYPE_TERRIENNE)
@@ -750,13 +748,7 @@ public abstract class Terrain
         gestionnaireTours.arreterTours();
 
         // arret de toutes les creatures
-        synchronized (creatures)
-        {
-            for (Creature creature : creatures)
-                creature.arreter();
-
-            creatures.clear();
-        }
+        gestionnaireCreatures.arreterCreatures();
 
         // arret de toutes les animations
         gestionnaireAnimations.arreterAnimations();

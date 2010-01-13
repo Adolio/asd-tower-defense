@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Classe de gestion d'une creature.
@@ -23,9 +24,18 @@ import java.util.ArrayList;
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public abstract class Creature extends Rectangle implements Runnable
+public abstract class Creature extends Rectangle
 {
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Permet de stocker sous la forme reelle la position de la creature pour rendre 
+	 * fluide les mouvements
+	 * 
+	 * Notons que Rectangle nous fourni egalement des positions 
+	 * mais elles sont entieres
+	 */
+	private double xReel, yReel;
 	
 	/**
 	 * definition des deux types de creature
@@ -76,19 +86,14 @@ public abstract class Creature extends Rectangle implements Runnable
 	protected Image image;
 	
 	/**
-	 * La creature gere sont propre thread pour ce deplacer sur le terrain
-	 */
-	private Thread thread;
-	
-	/**
 	 * la creature est-elle en eu ?
 	 */
 	protected boolean enJeu;
 	
 	/**
-	 * vitesse de deplacement de la creature sur le terrain
+	 * vitesse de deplacement de la creature sur le terrain en pixel(s) par seconde
 	 */
-	protected double vitesseNormale;
+	protected double vitesseNormale; // en pixel(s) / seconde
 	
 	/**
      * ralentissement de deplacement de la creature sur le terrain
@@ -121,10 +126,13 @@ public abstract class Creature extends Rectangle implements Runnable
 	{
 		super(x,y,largeur,hauteur);
 		
+		xReel = x;
+		yReel = y;
+		
 		this.nbPiecesDOr 	= nbPiecesDOr;
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
-		this.vitesseNormale		= vitesse;
+		this.vitesseNormale = vitesse;
 		ecouteursDeCreature = new ArrayList<EcouteurDeCreature>();
 		this.image 			= image;
 		TYPE                = type;
@@ -313,41 +321,15 @@ public abstract class Creature extends Rectangle implements Runnable
 	    return indiceCourantChemin;
 	}
 	
-	
 	/**
-	 * Permet de mettre la creature en jeu.
-	 * Cette methode demarre le thread de la creature.
+	 * Cette methode est appelee pour dire a la creature d'effectuee des actions
 	 */
-	public void demarrer()
+	public void action()
 	{
-	    thread = new Thread(this);
-		thread.start();
-	}
-	
-	/**
-	 * Methode de gestion du thread.
-	 * 
-	 * Cette methode est appeller par la methode demarrer.
-	 */
-	public void run()
-	{
-	    enJeu = true;
 	    
-	    // tant que la creature est en jeu et vivante
-		while(enJeu && !estMorte())
-		{
-			// elle avance sur son chemin en direction de la zone d'arrivee
-			avancerSurChemin();
-			
-			// TODO a ameliorer, on peut faire mieux
-			// le repos du thread defini la vitesse de deplacement de la creature
-			try{
-				Thread.sleep((long) (1.0/getVitesseReelle() * 1000.0));
-			} 
-			catch (InterruptedException e){
-				e.printStackTrace();
-			}
-		}
+	    
+	    
+	    avancerSurChemin(getTempsAppel());
 	}
 	
 	/**
@@ -355,29 +337,74 @@ public abstract class Creature extends Rectangle implements Runnable
      * 
      * Celle-ci avance d'un pixel jusqu'au point suivant du chemin puis 
      * increment alors l'indice courant du chemin.
+     * 
+     * @param tempsEcoule le temps ecoule depuis le dernier appel
      */
-    protected void avancerSurChemin()
+    protected void avancerSurChemin(long tempsEcoule)
     {
         ArrayList<Point> chemin = getChemin();
         
-        // on avance...
+        // si la creature a un chemin et que le chemin n'est pas terminee, 
+        // elle avance...
         if(chemin != null && indiceCourantChemin < chemin.size())
         {
-            Point p = chemin.get(indiceCourantChemin);
+            // recuperation des noeuds
+            Point pPrecedent = chemin.get(indiceCourantChemin-1);
+            Point pSuivant   = chemin.get(indiceCourantChemin);
             
-            int centreX = (int) getCenterX();
-            int centreY = (int) getCenterY();
+            // calcul du centre de la creature
+            double centreX = xReel + getWidth() / 2.0 ;
+            double centreY = yReel + getHeight() / 2.0;
+  
+            //---------------------------------------------
+            //-- calcul de la position apres deplacement --
+            //---------------------------------------------
             
-            // avance sur le chemin
-            if(centreX > p.getX())       x--;
-            else if(centreX < p.getX())  x++;
+            // calcul de l'angle entre la creature et le noeud suivant
+            // /!\ Math.atan2(y,x) /!\
+            double angle = Math.atan2(centreY - pSuivant.y,centreX - pSuivant.x);
+
+            // calcul de la distance effectuee
+            double distance = getVitesseReelle() * ((double) tempsEcoule / 1000.0);
             
-            if(centreY > p.getY())       y--;
-            else if(centreY < p.getY())  y++;
+            // calcul la position apres mouvement de la creature
+            xReel -= Math.cos(angle)*distance; // x
+            yReel -= Math.sin(angle)*distance; // y
+
+            // calcul du nouveau centre de la creature
+            centreX = xReel + width / 2.0;
+            centreY = yReel + height / 2.0;
             
-            // on a atteint un nouveau noeud du chemin
-            if(getCenterX() == p.getX() && getCenterY() == p.getY())
+            //--------------------------
+            //-- calcul des distances --
+            //--------------------------
+            // pour savoir si la creature a depasser le point suivant du chemin
+            
+            // calcul de la distance entre le noeud precedent et suivant
+            double distanceEntre2Noeuds = Point.distance(pSuivant.x, pSuivant.y,
+                                                   pPrecedent.x, pPrecedent.y);
+            
+            // calcul de la distance entre la creature et le noeud precedent
+            double distanceDuNoeudPrecedent = Point.distance(pPrecedent.x, pPrecedent.y,
+                                                             centreX, centreY);
+              
+            //---------------------
+            //-- noeud atteint ? --
+            //---------------------
+            // si la creature a depassee le noeud suivant
+            if(distanceDuNoeudPrecedent >= distanceEntre2Noeuds)
+            { 
+                // il prend la position du noeud suivant
+                xReel = pSuivant.x - width / 2.0;
+                yReel = pSuivant.y - height / 2.0;
+                
+                // on change de noeud suivant
                 indiceCourantChemin++;
+            }
+            
+            // mise a jour des coordonnees entieres
+            x = (int) Math.round(xReel);
+            y = (int) Math.round(yReel);
         }
         
         // la creature est arrivee a destination !
@@ -391,7 +418,7 @@ public abstract class Creature extends Rectangle implements Runnable
                 edc.estArriveeEnZoneArrivee(this);
         }
     }
-
+	
     /**
      * Permet d'arreter la creature, de la sortir du jeu
      */
@@ -399,7 +426,6 @@ public abstract class Creature extends Rectangle implements Runnable
     {
         enJeu = false;
     }
-    
     
 	/**
 	 * Permet de faire subir des degats sur la creature
@@ -456,4 +482,29 @@ public abstract class Creature extends Rectangle implements Runnable
 	{
 		ecouteursDeCreature.add(edc);
 	}
+	
+	/**
+     * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
+     * fonction
+     * @return le temps en milliseconde entre chaque appel de cette fonction
+     *         si c'est le premier appel, retourne 0.
+     */
+    protected long getTempsAppel()
+    {
+        date = new Date(); // initialisation du temps actuel
+        
+        // si c'est la premiere fois qu'on passe
+        if(tempsDernierAppel == 0)
+        {
+            tempsDernierAppel = date.getTime();
+            return 0;
+        }
+        
+        // temps passe depuis le dernier appel
+        long temps = date.getTime() - tempsDernierAppel;
+        tempsDernierAppel = date.getTime();
+        return temps;
+    }
+    private Date date;
+    private long tempsDernierAppel;
 }
