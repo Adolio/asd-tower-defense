@@ -608,9 +608,6 @@ public abstract class Terrain
                          *  s'il n'y a pas de chemin, 
                          *  on essaye depuis le noeud precedent
                          */
-                        // TODO effacer les messages debugs
-                        System.out.println("DEBUG : CHEMIN IMPOSSIBLE DEPUIS POSITION ACTUELLE DE LA CREATURE !");
-                        
                         try
                         {
                             ArrayList<Point> chemin = creature.getChemin();
@@ -632,14 +629,11 @@ public abstract class Terrain
                                         (int) ZONE_ARRIVEE.getCenterX(),
                                         (int) ZONE_ARRIVEE.getCenterY(), 
                                         creature.getType())); 
-                                
-                                System.out.println("...CHEMIN SUR NOEUD PRECEDENT EFFECTUE CORRECTEMENT !");
                             } 
                         }
                         catch (PathNotFoundException e2)
                         {
                             // s'il n'y a toujours pas de chemin, on garde l'ancien.
-                            System.out.println("...CHEMIN INTROUVE, ON GARDE L'ANCIEN !");
                         }
                     }
             }
