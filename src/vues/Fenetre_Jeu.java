@@ -39,7 +39,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
-	private static final ImageIcon I_SON_INACTIF = new ImageIcon("img/icones/sound_mute.png");
+	//private static final ImageIcon I_SON_INACTIF = new ImageIcon("img/icones/sound_mute.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
 	private static final int VOLUME_PAR_DEFAUT = 20;
 	
@@ -90,8 +90,6 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 
 	
 	private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
-    private static final String TXT_SON_ACTIVER     = "Activer";
-    private static final String TXT_SON_DESACTIVER  = "Désactiver";
     private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE 
                                                        + " [niveau 1]");
     private JEditorPane taConsole  = new JEditorPane("text/html","");
@@ -148,11 +146,8 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		itemActiverDesactiverSon.addActionListener(this);
 		itemAPropos.addActionListener(this);
 		
-		
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
-		
-	
 		
 		//--------------------
         //-- vague suivante --

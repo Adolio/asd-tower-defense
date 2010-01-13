@@ -304,6 +304,17 @@ public abstract class Creature extends Rectangle implements Runnable
 	}
 	
 	/**
+	 * Permet de recuperer l'indice du point courant sur le chemin
+	 * 
+	 * @return l'indice du point courant sur le chemin
+	 */
+	public int getIndiceCourantChemin()
+	{
+	    return indiceCourantChemin;
+	}
+	
+	
+	/**
 	 * Permet de mettre la creature en jeu.
 	 * Cette methode demarre le thread de la creature.
 	 */
