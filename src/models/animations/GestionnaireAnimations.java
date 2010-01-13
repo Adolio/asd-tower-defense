@@ -95,7 +95,5 @@ public class GestionnaireAnimations implements Runnable
     public void arreterAnimations()
     {
         gestionEnCours = false;
-        
-        animations.clear();
     }
 }

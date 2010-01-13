@@ -96,8 +96,6 @@ public class GestionnaireTours implements Runnable
     public void arreterTours()
     {
         gestionEnCours = false;
-        
-        tours.clear();
     }
     
     // TODO [PAS PROPRE] faire mieux, perd l'encapsulation
