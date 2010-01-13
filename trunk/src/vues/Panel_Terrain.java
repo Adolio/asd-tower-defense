@@ -869,6 +869,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
             jeu.ajouterPiecesDOr(1000);
             fenJeu.miseAJourInfoJeu();
         }
+        // TODO [DEBUG] enlever pour version finale
+        // raccourci de gain d'argent (debug)
+        else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
+        {
+            jeu.lancerVagueSuivante(fenJeu, fenJeu);
+            fenJeu.ajouterInfoVagueSuivanteDansConsole();
+        }
 	}
 	
 	@Override

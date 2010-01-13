@@ -82,8 +82,6 @@ public class GestionnaireCreatures implements Runnable
     public void arreterCreatures()
     {
         gestionEnCours = false;
-        
-        creatures.clear();
     }
     
     // TODO [PAS PROPRE] faire mieux, perd l'encapsulation

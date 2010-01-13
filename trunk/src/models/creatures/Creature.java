@@ -325,9 +325,6 @@ public abstract class Creature extends Rectangle
 	 */
 	public void action()
 	{
-	    
-	    
-	    
 	    avancerSurChemin(getTempsAppel());
 	}
 	
