@@ -86,7 +86,7 @@ public class GestionnaireCreatures implements Runnable
         creatures.clear();
     }
     
-    // TODO faire mieux, perd l'encapsulation
+    // TODO [PAS PROPRE] faire mieux, perd l'encapsulation
     /**
      * Permet de recuperer la collection des creatures
      */

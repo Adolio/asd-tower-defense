@@ -44,10 +44,10 @@ public class GestionnaireTours implements Runnable
         tours.remove(tour);
     }
 
+    // TODO [ORGANISATION] mettre en place
     /**
      * Permet de dessiner toutes les tours
      */
-    // TODO mettre en place
     /*
     public void dessinerTours(Graphics2D g2)
     {
@@ -58,7 +58,6 @@ public class GestionnaireTours implements Runnable
         {
             tour = eTours.nextElement();
             
-            // TODO
             //tour.dessiner(g2);
         }
     }*/
@@ -101,7 +100,7 @@ public class GestionnaireTours implements Runnable
         tours.clear();
     }
     
-    // TODO faire mieux
+    // TODO [PAS PROPRE] faire mieux, perd l'encapsulation
     /**
      * Permet de recuperer la collection des tours
      */
