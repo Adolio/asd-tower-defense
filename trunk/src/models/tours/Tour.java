@@ -111,7 +111,11 @@ public abstract class Tour extends Rectangle
 	 */
 	protected boolean enJeu;
 
-	protected double cadenceTir; // par seconde
+	/**
+	 * Cadence de tir de la tour. C'est-a-dire le nombre de fois que peut tirer
+	 * la tour pendant 1 seconde.
+	 */
+	protected double cadenceTir; // tir(s) / seconde
 
 	// initialisation pour que la tour puisse tirer directement
     private long tempsDepuisDernierTir;
@@ -373,7 +377,7 @@ public abstract class Tour extends Rectangle
 	    return enJeu;
 	}
 	
-	// TODO mettre en place
+	// TODO mettre en place pour eviter de recalculer le tempsDAttenteEntreTirs
 	/*
 	public void setCadenceTir(double cadenceTir) 
 	{
@@ -502,7 +506,6 @@ public abstract class Tour extends Rectangle
 		return Point.distance(x, y, creature.x, creature.y);
 	}
 	
-
 	/**
 	 * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
 	 * fonction
