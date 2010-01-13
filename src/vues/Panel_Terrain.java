@@ -76,6 +76,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final float ALPHA_MAILLAGE   	  = .4f;
 	private static final float ALPHA_SURFACE_ZONE_DA  = .5f;
 	private static final float ALPHA_TOUR_A_AJOUTER   = .7f;
+	private static final float ALPHA_CHEMIN_CREATURE  = .5f;
 	
 	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
 	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
@@ -99,7 +100,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Temps de repose dans la boucle d'affichage
 	 */
 	private static final int TEMPS_REPOS_THREAD = 40;
-	
+
 	/**
 	 * Position exacte de la souris sur le terrain
 	 */
@@ -350,19 +351,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             while(iCreatures.hasNext())
             {
                 creature = iCreatures.next();
-                
-                /* efface les creatures mortes
-                 * 
-                 * TODO on peut faire mieux mais ca résout 
-                 * les problèmes de créatures fantomes
-                 */
-                if(creature.estMorte())
-                {
-                    iCreatures.remove();
-                    System.out.println("Panel_Terrain effacement d'une creature mal tuee");
-                    continue;
-                }
-                  
+                 
                 // affichage des creatures terriennes uniquement
                 if(creature.getType() == Creature.TYPE_TERRIENNE)
                     dessinerCreature(creature,g2);
@@ -402,6 +391,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
 					(int) (tourSelectionnee.getWidth()),
 					(int) (tourSelectionnee.getHeight()));
+			
+			
+			
 		}
 		
 		//-------------------------------------
@@ -415,6 +407,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 						(int) (creatureSelectionnee.getY()),
 						(int) creatureSelectionnee.getWidth(),
 						(int) creatureSelectionnee.getHeight());
+			
+			// dessine son chemin
+			setTransparence(ALPHA_CHEMIN_CREATURE,g2);
+			dessinerCheminCreature(creatureSelectionnee,g2);
+			
 		}
 		
 		//------------------------------------
@@ -497,12 +494,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
                         (int) creature.getHeight());
         }
 	    
-	    // affichage des barres de sante
-        // dessinerBarreDeSante(creature,g2);
-        
         // affichage du chemin des creatures
         if(afficherMaillage)
+        {
+            g2.setColor(COULEUR_CHEMIN);
             dessinerCheminCreature(creature,g2);
+        }
 	}
 	
 	
@@ -548,14 +545,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
         if(chemin != null && chemin.size() > 0)
         {
             // initialisation du point precedent
-            Point PointPrecedent = chemin.get(0);
+            Point PointPrecedent = chemin.get(creature.getIndiceCourantChemin()-1);
             
             // bloque la reference du chemin
             synchronized(chemin)
             {
                 // pour chaque point du chemin
                 Point point;
-                for(int i=1;i<chemin.size();i++)
+                for(int i=creature.getIndiceCourantChemin();i<chemin.size();i++)
                 {
                     /* 
                      * affichage du segment de parcours 
@@ -563,7 +560,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
                      */
                     point = chemin.get(i);
                     
-                    g2.setColor(COULEUR_CHEMIN);
                     g2.drawLine(PointPrecedent.x, PointPrecedent.y, 
                                 point.x, point.y);
                     PointPrecedent = point;

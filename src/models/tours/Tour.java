@@ -506,6 +506,7 @@ public abstract class Tour extends Rectangle
 		return Point.distance(x, y, creature.x, creature.y);
 	}
 	
+	// TODO use System.currentTimeMillis()
 	/**
 	 * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
 	 * fonction
