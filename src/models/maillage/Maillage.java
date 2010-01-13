@@ -65,7 +65,7 @@ public class Maillage
 	 * Le graphe
 	 */
 	private SimpleWeightedGraph<Noeud, Arc> graphe = new SimpleWeightedGraph<Noeud, Arc>(
-			new GenerateurDArcs());;
+			new GenerateurDArcs());
 	/**
 	 * Le tableau des noeuds : Noeud[x][y]
 	 */
@@ -245,7 +245,8 @@ public class Maillage
 				+ LARGEUR_NOEUD + " pixels\n" + "Nombre de noeuds    : "
 				+ graphe.vertexSet().size() + "\n" + "Nombre d'arcs       : "
 				+ graphe.edgeSet().size() + "\nDécalage            : X="
-				+ xOffset + " Y=" + yOffset;
+				+ xOffset + " Y=" + yOffset
+				+"\n";
 	}
 
 	/**

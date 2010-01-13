@@ -8,7 +8,8 @@ import org.jgrapht.*;
  * <p>
  * But : Permet de générer les arcs du graphique à partir de deux noeuds.
  * <p>
- * Remarques : -
+ * Remarques : Nécessaire au fonctionnement relatif à JGrapht, voir
+ * {@link EdgeFactory}.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -18,7 +19,6 @@ import org.jgrapht.*;
  */
 public class GenerateurDArcs implements EdgeFactory<Noeud, Arc>
 {
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,5 +30,4 @@ public class GenerateurDArcs implements EdgeFactory<Noeud, Arc>
 	{
 		return new Arc(sourceVertex, targetVertex);
 	}
-
 }

@@ -20,7 +20,14 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  */
 public class Arc extends DefaultWeightedEdge
 {
-	// Les deux noeuds de départ et d'arrivée.
+	/**
+	 * ID de serialisation.
+	 */
+	private static final long serialVersionUID = -3342545915708624018L;
+	
+	/**
+	 * Les deux noeuds de départ et d'arrivée.
+	 */
 	private Noeud depart, arrivee;
 
 	/**
@@ -150,6 +157,7 @@ public class Arc extends DefaultWeightedEdge
 
 	/**
 	 * Retourne le noeud d'arrivée.
+	 * 
 	 * @return le noeud d'arrivée.
 	 */
 	public Noeud getArrivee()

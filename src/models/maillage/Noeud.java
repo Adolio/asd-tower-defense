@@ -6,13 +6,12 @@ import java.awt.Point;
  * Fichier : Noeud.java
  * <p>
  * Encodage : UTF-8
- * 
  * <p>
  * Cette classe modélise un noeud du graphe. Elle étend la classe Point pour
  * permettre un dessin plus facile et une encapsulation des coordonnées x et y
  * en pixel.
  * <p>
- * Remarques :
+ * Remarques : -
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
@@ -22,6 +21,11 @@ import java.awt.Point;
  */
 public class Noeud extends Point
 {
+
+	/**
+	 * ID de serialisation.
+	 */
+	private static final long serialVersionUID = 8628318929701303111L;
 
 	/**
 	 * Fanion pour savoir si le noeud est actif ou pas. Inactif par défaut,
@@ -76,7 +80,7 @@ public class Noeud extends Point
 	}
 
 	/**
-	 * Compare le noeud courant à un noeud donné en paramêtre.
+	 * Compare le noeud courant à un noeud donné en paramètre.
 	 * 
 	 * @param noeud
 	 *            Le noeud à comparer.
@@ -86,7 +90,7 @@ public class Noeud extends Point
 	public boolean equals(Noeud noeud)
 	{
 		/*
-		 * Test du paramêtre.
+		 * Test du paramètre.
 		 */
 		if (noeud == null)
 			throw new IllegalArgumentException(
@@ -96,6 +100,7 @@ public class Noeud extends Point
 				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
 	}
 
+	@Override
 	public String toString()
 	{
 		return super.toString() + " coté : " + LARGEUR_NOEUD + "actif : "
@@ -116,7 +121,7 @@ public class Noeud extends Point
 	}
 
 	/**
-	 * Calcul le centre du noeud contenant la coordonnée passée en paramêtre.
+	 * Calcul le centre du noeud contenant la coordonnée passée en paramètre.
 	 * 
 	 * @param i
 	 *            La coordonnée quelconque en pixel
@@ -131,7 +136,7 @@ public class Noeud extends Point
 
 	/**
 	 * Converti un point quelconque en pixel en la coordonnée modale du noeud
-	 * correspondant
+	 * correspondant.
 	 * 
 	 * @param x
 	 *            Le point quelconque en pixel
@@ -146,7 +151,7 @@ public class Noeud extends Point
 
 	/**
 	 * Retourne les coordonnées nodales d'un noeud passé en paramètre, avec des
-	 * deltas x et y
+	 * deltas x et y.
 	 * 
 	 * @param noeud
 	 *            Le noeud à convertir
