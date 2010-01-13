@@ -36,7 +36,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Prix total";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
-    private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour");
+    private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour  sélectionnée");
     private static final Font POLICE_DONNEES   = new Font("Verdana", Font.BOLD, 12);
     private static final Font POLICE_NOM       = new Font("Arial",Font.BOLD,14);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(250,80);

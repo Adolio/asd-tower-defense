@@ -28,7 +28,7 @@ public class Panel_InfoCreature extends JPanel
 	private static final ImageIcon I_VITESSE   = new ImageIcon("img/icones/running_man.gif");
 	private static final ImageIcon I_GAIN      = new ImageIcon("img/icones/coins_add.png");
 	private static final Dimension DIMENSION_PANEL = new Dimension(280, 120);
-	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature");
+	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature sélectionnée");
     private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(110,50);
     private static final Font POLICE_NOM       = new Font("", Font.BOLD, 14);
     private static final Border BORDURE_IMAGE_ET_NOM = new EmptyBorder(-5,-5,-5,-5);

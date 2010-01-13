@@ -58,8 +58,12 @@ public class GestionnaireCreatures implements Runnable
                 {
                     creature = creatures.get(i);
                     
-                    // anime la creature
-                    creature.action();
+                    // efface les creatures mortes
+                    if(creature.estMorte())
+                        creatures.remove(i--);
+                    else
+                        // anime la creature
+                        creature.action();
                 }
             }
             

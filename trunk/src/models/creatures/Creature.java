@@ -59,7 +59,7 @@ public abstract class Creature extends Rectangle
 	private ArrayList<Point> chemin;
 	
 	/**
-     * position actuelle sur le chemin
+     * position actuelle sur le chemin (toujours > 0)
      */
 	private int indiceCourantChemin;
 	
@@ -304,11 +304,11 @@ public abstract class Creature extends Rectangle
 	 */
 	public void setChemin(ArrayList<Point> chemin)
 	{
-		this.chemin = chemin;
-		
-		// on est deja au point 0, on ne vas donc pas y aller...
-		// (i) corrige un petit bug de retour en arriere.
-		indiceCourantChemin = 1; 
+	    // on est deja au point 0, on ne vas donc pas y aller...
+        // (i) corrige un petit bug de retour en arriere.
+        indiceCourantChemin = 1; 
+	    
+	    this.chemin = chemin;
 	}
 	
 	/**
@@ -483,6 +483,9 @@ public abstract class Creature extends Rectangle
 		ecouteursDeCreature.add(edc);
 	}
 	
+	
+	
+	// TODO use System.currentTimeMillis()
 	/**
      * Permet de recuperer le temps ecouler depuis le dernier appel de cette meme 
      * fonction
