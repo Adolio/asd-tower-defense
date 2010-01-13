@@ -271,11 +271,11 @@ public class VagueDeCreatures implements Runnable
 
         switch (uniteVague)
         {
-
+        
         case 1: // 5 normales
-            return new VagueDeCreatures(20, new Smiley(SANTE_CREATURE_NORMALE,
-                    (int) (GAIN_VAGUE_COURANTE / 15), 100),
-                    10,
+            return new VagueDeCreatures(5, new Smiley(SANTE_CREATURE_NORMALE,
+                    (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
+                    TEMPS_APPARITION_CREATURE_NORMALE,
                     DEPART_ALEATOIRE_CREATURES);
 
         case 2: // 10 normales
