@@ -18,6 +18,11 @@ package models.maillage;
 public class PathNotFoundException extends Exception
 {
 	/**
+	 * ID de serialisation.
+	 */
+	private static final long serialVersionUID = 733621750580911443L;
+
+	/**
 	 * Une exception pour un chemin non trouvé.
 	 * 
 	 * @param message
