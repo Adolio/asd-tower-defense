@@ -759,4 +759,14 @@ public abstract class Terrain
     {
         return gestionnaireAnimations;
     }
+    
+    /**
+     * Permet de recuperer les murs du terrain
+     * 
+     * @return les murs du terrain
+     */
+    public ArrayList<Rectangle> getMurs()
+    {
+        return murs;
+    }
 }
