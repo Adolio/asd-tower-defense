@@ -77,9 +77,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final float ALPHA_SURFACE_ZONE_DA  = .5f;
 	private static final float ALPHA_TOUR_A_AJOUTER   = .7f;
 	private static final float ALPHA_CHEMIN_CREATURE  = .5f;
+	private static final float ALPHA_SURFACE_MUR      = .8f;
 	
 	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
 	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
+	private static final Color COULEUR_MUR          = Color.BLACK;
 	private static final Color COULEUR_MAILLAGE 	= Color.WHITE;
 	private static final Color COULEUR_SANTE 		= Color.GREEN;
 	private static final Color COULEUR_CHEMIN 		= Color.BLUE;
@@ -291,7 +293,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		if(afficherMaillage)
 		{
-			// modification de la transparence
+		    
+		    // modification de la transparence
 		    setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
 			
 			// dessin de la zone de depart
@@ -301,6 +304,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			// dessin de la zone d'arrivee
 			g2.setColor(COULEUR_ZONE_ARRIVEE);
 			dessinerZone(jeu.getZoneArrivee(),g2);
+			
+			ArrayList<Rectangle> murs = jeu.getMurs();
+			setTransparence(ALPHA_SURFACE_MUR, g2);
+			g2.setColor(COULEUR_MUR);
+			for(Rectangle mur : murs)
+			    dessinerZone(mur,g2);
+			
 		}
 		
 		//------------------------------------

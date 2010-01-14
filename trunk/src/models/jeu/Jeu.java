@@ -432,4 +432,14 @@ public class Jeu
     {
         this.nbPiecesOr += nbPiecesDOr;
     }
+
+    /**
+     * Permet de recuperer les murs du terrain
+     * 
+     * @return les murs du terrain
+     */
+    public ArrayList<Rectangle> getMurs()
+    {
+        return terrain.getMurs();
+    }
 }
