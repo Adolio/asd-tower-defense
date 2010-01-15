@@ -55,7 +55,8 @@ public class CarapaceKoopa extends Creature
 		super(x, y, 14, 14, santeMax,nbPiecesDOr,vitesse,
 		        Creature.TYPE_TERRIENNE ,IMAGES[0],"Carapace Koopa");
 		
-		Thread animation = new Thread( new Runnable()
+		// TODO mieux gerer l'animation
+		/*Thread animation = new Thread( new Runnable()
         {
             public void run()
             {
@@ -77,7 +78,7 @@ public class CarapaceKoopa extends Creature
                 }
             }
         });
-		animation.start();
+		animation.start();*/
 	}
 
 	/**
