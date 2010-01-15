@@ -94,7 +94,7 @@ public class Noeud extends Point
 		 */
 		if (noeud == null)
 			throw new IllegalArgumentException(
-					"Le noeud passé en paramêtre ne peut pas être null");
+					"Le noeud passé en paramètre ne peut pas être null");
 		// Retour de la valeur boolean calculée.
 		return x == noeud.x && y == noeud.y
 				&& LARGEUR_NOEUD == noeud.LARGEUR_NOEUD;
