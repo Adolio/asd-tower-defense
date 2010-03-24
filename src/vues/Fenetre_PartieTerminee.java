@@ -25,7 +25,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     private static final long serialVersionUID      = 1L;
     private static final Dimension TAILLE_FENETRE   = new Dimension(300,170);
     private static final String TITRE_FORM          = "Partie terminée !";
-    private static final Font POLICE_TITRE          = new Font("",Font.BOLD,14);
     
     // membrea graphiques
     private JButton bOk             = new JButton("OK");
@@ -69,7 +68,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         
         JPanel conteneurTitre = new JPanel(new FlowLayout());
         JLabel lTitreForm = new JLabel(TITRE_FORM);
-        lTitreForm.setFont(POLICE_TITRE);
+        lTitreForm.setFont(GestionnaireDesPolices.POLICE_TITRE);
         conteneurTitre.add(lTitreForm);
         
         getContentPane().add(conteneurTitre,BorderLayout.NORTH);

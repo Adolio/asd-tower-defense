@@ -20,7 +20,6 @@ public class Fenetre_MeilleursScores extends JDialog
 {
     // constantes statiques
     private static final long serialVersionUID  = 1L;
-    private static final Font POLICE_TITRE      = new Font("",Font.BOLD,14);
     private static final ImageIcon I_FENETRE    = new ImageIcon("img/icones/star.png");
     private static String[] columnNames         = {
                                                     "Nom du joueur",
@@ -97,7 +96,7 @@ public class Fenetre_MeilleursScores extends JDialog
         
         
         JLabel lTitreForm = new JLabel("Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores [Terrain : "+nomTerrain+"]");
-        lTitreForm.setFont(POLICE_TITRE);
+        lTitreForm.setFont(GestionnaireDesPolices.POLICE_TITRE);
         getContentPane().add(lTitreForm,BorderLayout.NORTH);
         getContentPane().add(tableScore,BorderLayout.CENTER);
         getContentPane().add(bFermer,BorderLayout.SOUTH);

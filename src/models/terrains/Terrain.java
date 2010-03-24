@@ -53,7 +53,6 @@ import models.tours.Tour;
  */
 public abstract class Terrain
 {
-
     /**
      * nom de la zone de jeu
      */
@@ -113,6 +112,12 @@ public abstract class Terrain
      */
     private final Image IMAGE_DE_FOND;
 
+    /**
+     * Pour le mode debug
+     */
+    private final Color COULEUR_MURS;
+    private final Color COULEUR_DE_FOND;
+    
     /**
      * Les tours sont posees sur le terrain et permettent de tuer les creatures.
      * 
@@ -174,7 +179,8 @@ public abstract class Terrain
      */
     public Terrain(int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
-            int largeurMaillage, int hauteurMaillage, Image imageDeFond,
+            int largeurMaillage, int hauteurMaillage, Color couleurDeFond, 
+            Color couleurMurs, Image imageDeFond,
             String nom, Rectangle zoneDepart, Rectangle zoneArrivee)
     {
         LARGEUR = largeur;
@@ -185,7 +191,9 @@ public abstract class Terrain
         NB_VIES_INITIALES = nbViesInitiales;
         IMAGE_DE_FOND = imageDeFond;
         NOM = nom;
-
+        COULEUR_DE_FOND = couleurDeFond;
+        COULEUR_MURS    = couleurMurs;
+        
         // creation des deux maillages
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
@@ -768,5 +776,15 @@ public abstract class Terrain
     public ArrayList<Rectangle> getMurs()
     {
         return murs;
+    }
+
+    public Color getCouleurDeFond()
+    {
+        return COULEUR_DE_FOND;
+    }
+
+    public Color getCouleurMurs()
+    {
+        return COULEUR_MURS;
     }
 }

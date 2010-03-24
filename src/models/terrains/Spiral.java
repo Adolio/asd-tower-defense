@@ -1,5 +1,6 @@
 package models.terrains;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -43,6 +44,8 @@ public class Spiral extends Terrain
                 0,    // positionMaillageY
                 540,  // largeurMaillage
                 500,  // hauteurMaillage
+                new Color(150,150,150), // couleur de fond
+                new Color(140,120,75),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
                 NOM,  // nom
                 new Rectangle(500,40,20,80),   // zoneDepart

@@ -156,7 +156,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         ajouterInfoVagueSuivanteDansConsole();
 
         // style du champ de description de la vague suivante
-        taConsole.setFont(new Font("",Font.TRUETYPE_FONT,10));
+        taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
         taConsole.setEditable(false);
         JScrollPane scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(jeu.getLargeurTerrain(),50));

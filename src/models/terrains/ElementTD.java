@@ -1,4 +1,5 @@
 package models.terrains;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -47,6 +48,8 @@ public class ElementTD extends Terrain
                 0,    // positionMaillageY
                 480,  // largeurMaillage
                 540,  // hauteurMaillage
+                new Color(197,148,90), // couleur de fond
+                new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
                 NOM,  // nom
                 new Rectangle(110, 0, 80, 20),  // zoneDepart

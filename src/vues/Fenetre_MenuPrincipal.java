@@ -2,6 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import models.jeu.Jeu;
@@ -23,7 +24,7 @@ import models.terrains.*;
  * @version 1.0 | 15 decembre 2009
  * @since jdk1.6.0_16
  */
-public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
+public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Runnable
 {
 	// constantes statiques
     private static final long serialVersionUID 	= 1L;
@@ -50,9 +51,16 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
     private final JMenuItem itemMSDesert        = new JMenuItem(Desert.NOM);
     private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
 	
-	
+	JPanel pChargementTerrain = new JPanel();
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
 
+	// TODO
+	private JProgressBar chargementTerrain;
+	private Thread thread;
+    private boolean chargementTermine;
+	
+	
+	
 	/**
 	 * Constructeur de la fenetre du menu principal
 	 */
@@ -143,7 +151,12 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		getContentPane().add(pBoutonsTerrains,BorderLayout.CENTER);
 		JLabel version = new JLabel(Jeu.getVersion());
 		version.setForeground(COULEUR_TEXTE_VERSION);
-		getContentPane().add(version,BorderLayout.SOUTH);
+		
+		
+		//getContentPane().add(version,BorderLayout.SOUTH);
+		chargementTerrain = new JProgressBar();
+		getContentPane().add(chargementTerrain,BorderLayout.SOUTH);
+		
 		
 		// dernieres proprietes
 		pack();
@@ -174,22 +187,38 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		// les terrains
 		else if(source == boutonsTerrains[0])
 		{
+		    actionnerBarreDeChargement();
+		    
 			new Fenetre_Jeu(new Jeu(new ElementTD()));
+			
+			chargementTermine = true;
 			dispose();
 		}
 		else if(source == boutonsTerrains[1])
 		{
-			new Fenetre_Jeu(new Jeu(new Spiral()));
+		    actionnerBarreDeChargement();
+
+		    new Fenetre_Jeu(new Jeu(new Spiral()));
+		    
+		    chargementTermine = true;
 			dispose();
 		}
 		else if(source == boutonsTerrains[2])
 		{
-			new Fenetre_Jeu(new Jeu(new Desert()));
+		    actionnerBarreDeChargement();
+		     
+		    new Fenetre_Jeu(new Jeu(new Desert()));
+
+		    chargementTermine = true;
 			dispose();
 		}
 		else if(source == boutonsTerrains[3])
 		{
-			new Fenetre_Jeu(new Jeu(new WaterWorld()));
+		    actionnerBarreDeChargement();
+		    
+		    new Fenetre_Jeu(new Jeu(new WaterWorld()));
+		    
+		    chargementTermine = true;
 			dispose();
 		}
 		else if(source == itemMSElementTD)
@@ -201,4 +230,33 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 		else if(source == itemMSWaterWorld)
             new Fenetre_MeilleursScores(WaterWorld.NOM, this);
 	}
+
+    synchronized private void actionnerBarreDeChargement()
+    { 
+        thread = new Thread(this);
+        thread.start();
+        
+        
+    }
+
+    @Override
+    public void run()
+    {
+        int pourcent = 0;
+        
+        while(!chargementTermine)
+        {
+            pourcent = (pourcent+2)%100;
+     
+            chargementTerrain.setValue(pourcent);
+            chargementTerrain.paintImmediately(0,0,1000,200);
+            
+            try{
+                Thread.sleep(10);
+            } 
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }
