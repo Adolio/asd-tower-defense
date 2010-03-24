@@ -165,7 +165,7 @@ public abstract class Tour extends Rectangle
 	/**
 	 * methode qui prend les decision concernant les attaques de la tour.
 	 */
-	public abstract void tirer(Creature creature);
+	protected abstract void tirer(Creature creature);
 
 	/**
      * Permet de recuperer une copie de l'originale de la tour actuelle
@@ -392,41 +392,38 @@ public abstract class Tour extends Rectangle
 	 */
 	public void action()
 	{ 
-	    if(enJeu)
-        {
-	        // TODO [OPTIMISATION] a stoquer dans un attribut
-	        long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
-	        
-	        // on calcul le temps depuis le dernier tir
-	        tempsDepuisDernierTir += getTempsAppel();
+        // TODO [OPTIMISATION] a stoquer dans un attribut
+        long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
+        
+        // on calcul le temps depuis le dernier tir
+        tempsDepuisDernierTir += getTempsAppel();
 
-	        // on a attendu assez pour pouvoir tirer
-	        if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)
-	        {
-    	        // recuperation de la creature la plus proche et a portee de la tour
-                Creature creature = getCreatureLaPlusProcheEtAPortee();
-    
-                // si elle existe
-                if (creature != null)
-                {
-                    // attaque la creature ciblee
-                    tirer(creature);
-                    
-                    /* 
-                     * on remet le temps a zero pour que la tour attende 
-                     * de pouvoir retirer
-                     */
-                    tempsDepuisDernierTir = 0;
-                }
-                else 
-                    /* 
-                     * on incremente pas plus le temps car ca se a rien 
-                     * et ca risquerai d'etre cyclique.
-                     */
-                    tempsDepuisDernierTir = tempsDAttenteEntreTirs;
-	        }
+        // on a attendu assez pour pouvoir tirer
+        if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)
+        {
+	        // recuperation de la creature la plus proche et a portee de la tour
+            Creature creature = getCreatureLaPlusProcheEtAPortee();
+
+            // si elle existe
+            if (creature != null)
+            {
+                // attaque la creature ciblee
+                tirer(creature);
+                
+                /* 
+                 * on soustrait le tempsDAttenteEntreTirs pour
+                 * garder le temps supplementaire
+                 */
+                tempsDepuisDernierTir -= tempsDAttenteEntreTirs;
+            }
+            else 
+                /* 
+                 * on incremente pas plus le temps car ca se a rien 
+                 * et ca risquerai d'etre cyclique.
+                 */
+                tempsDepuisDernierTir = tempsDAttenteEntreTirs;
         }
-	}
+    }
 	
 	/**
 	 * Permet de savoir si une creature peut etre blessee.

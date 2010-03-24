@@ -51,14 +51,12 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
     private final JMenuItem itemMSDesert        = new JMenuItem(Desert.NOM);
     private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
 	
-	JPanel pChargementTerrain = new JPanel();
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
 
-	// TODO
 	private JProgressBar chargementTerrain;
 	private Thread thread;
     private boolean chargementTermine;
-	
+	private JLabel version;
 	
 	
 	/**
@@ -149,15 +147,10 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 		getContentPane().setBackground(COULEUR_DE_FOND);
 		getContentPane().add(new JLabel(IMAGE_MENU),BorderLayout.NORTH);
 		getContentPane().add(pBoutonsTerrains,BorderLayout.CENTER);
-		JLabel version = new JLabel(Jeu.getVersion());
+		version = new JLabel(Jeu.getVersion());
 		version.setForeground(COULEUR_TEXTE_VERSION);
-		
-		
-		//getContentPane().add(version,BorderLayout.SOUTH);
-		chargementTerrain = new JProgressBar();
-		getContentPane().add(chargementTerrain,BorderLayout.SOUTH);
-		
-		
+		getContentPane().add(version,BorderLayout.SOUTH);
+
 		// dernieres proprietes
 		pack();
 		setLocationRelativeTo(null);
@@ -232,16 +225,20 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 	}
 
     synchronized private void actionnerBarreDeChargement()
-    { 
+    {  
         thread = new Thread(this);
-        thread.start();
-        
-        
+        thread.start();   
     }
 
     @Override
     public void run()
     {
+        version.setText("   CHARGEMENT DE LA CARTE");
+        version.setForeground(Color.BLACK);
+        chargementTerrain = new JProgressBar();
+        getContentPane().add(chargementTerrain,BorderLayout.SOUTH);
+        getContentPane().validate();
+        
         int pourcent = 0;
         
         while(!chargementTermine)
