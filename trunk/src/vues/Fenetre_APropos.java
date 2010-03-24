@@ -55,7 +55,7 @@ public class Fenetre_APropos extends JDialog
 		
 		// ajout de la version
 		JLabel lversion = new JLabel(Jeu.getVersion());
-		lversion.setFont(new Font("", Font.BOLD, 14));
+		lversion.setFont(GestionnaireDesPolices.POLICE_TITRE);
 		getContentPane().add(lversion,BorderLayout.NORTH);
 		
 		// ajout du bouton

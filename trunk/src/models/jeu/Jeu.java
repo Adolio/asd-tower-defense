@@ -1,5 +1,6 @@
 package models.jeu;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
@@ -441,5 +442,23 @@ public class Jeu
     public ArrayList<Rectangle> getMurs()
     {
         return terrain.getMurs();
+    }
+
+    /**
+     * Permet de recuperer la couleur du sol du terrain
+     * @return la couleur du sol du terrain
+     */
+    public Color getCouleurDeFondTerrain()
+    {
+        return terrain.getCouleurDeFond();
+    }
+
+    /**
+     * Permet de recuper la couleur des murs du terrain
+     * @return la couleur des murs du terrain
+     */
+    public Color getCouleurMursTerrain()
+    {
+        return terrain.getCouleurMurs();
     }
 }

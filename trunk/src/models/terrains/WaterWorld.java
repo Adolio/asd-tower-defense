@@ -1,4 +1,5 @@
 package models.terrains;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -46,6 +47,8 @@ public class WaterWorld extends Terrain
               0,    // positionMaillageY
               540,  // largeurMaillage
               500,  // hauteurMaillage
+              new Color(150,150,150), // couleur de fond
+              new Color(63,131,140), // couleur des murs
               IMAGE_DE_FOND, // imageDeFond
               NOM,  // nom
               new Rectangle(0, 30, 20, 80),     // zoneDepart

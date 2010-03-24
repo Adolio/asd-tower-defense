@@ -37,8 +37,6 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_PRIX_TOTAL = "Prix total";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
     private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour  sélectionnée");
-    private static final Font POLICE_DONNEES   = new Font("Verdana", Font.BOLD, 12);
-    private static final Font POLICE_NOM       = new Font("Arial",Font.BOLD,14);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(250,80);
     private static final Color COULEUR_FOND_DESCRIPTION = new Color(200,200,200);
     private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
@@ -82,32 +80,32 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		int nbChamp = 0;
 		
 		// champ nom
-		lNom.setFont(POLICE_NOM);
+		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
 		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 2);
 		
 		// champ prix
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
-		lPrix.setFont(POLICE_DONNEES);
+		lPrix.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp++, 1);
 		
 		// champ degats
 		ajouterChamp(pCaracteristiques, new JLabel("Degats"), 0, nbChamp, 1);
-		lDegats.setFont(POLICE_DONNEES);
+		lDegats.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp++, 1);
 	
 		// champ rayon de portee
 		ajouterChamp(pCaracteristiques, new JLabel("Rayon de portee"), 0, nbChamp, 1);
-		lRayonPortee.setFont(POLICE_DONNEES);
+		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp++, 1);
 		
 		// champ cadence de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Cadence de tir"), 0, nbChamp, 1);
-		lCadenceTir.setFont(POLICE_DONNEES);
+		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp++, 1);
 
 		// champ type de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Type de tir"), 0, nbChamp, 1);
-		lType.setFont(POLICE_DONNEES);
+		lType.setFont(GestionnaireDesPolices.POLICE_DONNEES);
         ajouterChamp(pCaracteristiques, lType, 1, nbChamp++, 1);
 
 		// champ description

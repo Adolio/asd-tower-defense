@@ -1,5 +1,6 @@
 package models.terrains;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -43,6 +44,8 @@ public class Desert extends Terrain
                 0,        // positionMaillageY
                 560,      // largeurMaillage
                 500,      // hauteurMaillage
+                new Color(161,72,0), // couleur de fond
+                new Color(150,150,150), // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
                 NOM,  // nom
                 new Rectangle(520,40,20,60), // zoneDepart

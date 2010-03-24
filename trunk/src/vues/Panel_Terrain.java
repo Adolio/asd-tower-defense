@@ -293,6 +293,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		if(afficherMaillage)
 		{
+		    // couleur de fond
+            g2.setColor(jeu.getCouleurDeFondTerrain());
+            g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		    
 		    // modification de la transparence
 		    setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
@@ -307,7 +310,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 			ArrayList<Rectangle> murs = jeu.getMurs();
 			setTransparence(ALPHA_SURFACE_MUR, g2);
-			g2.setColor(COULEUR_MUR);
+			g2.setColor(jeu.getCouleurMursTerrain());
 			for(Rectangle mur : murs)
 			    dessinerZone(mur,g2);
 			

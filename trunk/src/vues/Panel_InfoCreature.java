@@ -30,9 +30,8 @@ public class Panel_InfoCreature extends JPanel
 	private static final Dimension DIMENSION_PANEL = new Dimension(280, 120);
 	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature sélectionnée");
     private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(110,50);
-    private static final Font POLICE_NOM       = new Font("", Font.BOLD, 14);
     private static final Border BORDURE_IMAGE_ET_NOM = new EmptyBorder(-5,-5,-5,-5);
-    private static final Font POLICE_DONNEES = new Font("Verdana", Font.BOLD, 12);
+
     
 	// attributs
 	private JLabel lTitreType       = new JLabel("Type");
@@ -57,7 +56,7 @@ public class Panel_InfoCreature extends JPanel
 		setBorder(BORDURE);
 		setPreferredSize(DIMENSION_PANEL);
 		
-		lNom.setFont(POLICE_NOM);
+		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.setPreferredSize(DIMENSION_IMAGE_ET_NOM);
 		p.setBorder(BORDURE_IMAGE_ET_NOM);
@@ -65,9 +64,9 @@ public class Panel_InfoCreature extends JPanel
 		p.add(lNom);
 		
 		
-		lSante.setFont(POLICE_DONNEES);
-		lVitesse.setFont(POLICE_DONNEES);
-		lGain.setFont(POLICE_DONNEES);
+		lSante.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lVitesse.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lGain.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		
 		pConteneur = new JPanel(new GridLayout(0,2));
 		pConteneur.add(p);
