@@ -14,7 +14,6 @@ public class GestionnaireTours implements Runnable
 {
     private static final long TEMPS_ATTENTE = 50;
     private Vector<Tour> tours = new Vector<Tour>();
-    private Thread thread;
     private boolean gestionEnCours;
     
     /**
@@ -22,7 +21,7 @@ public class GestionnaireTours implements Runnable
      */
     public GestionnaireTours()
     {
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
     }
     
@@ -77,7 +76,8 @@ public class GestionnaireTours implements Runnable
                     tour = tours.get(i);
                     
                     // anime l'animation
-                    tour.action(); 
+                    if(tour.estEnJeu())
+                        tour.action(); 
                 }
             }
             

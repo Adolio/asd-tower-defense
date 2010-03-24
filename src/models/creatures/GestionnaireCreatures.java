@@ -2,6 +2,8 @@ package models.creatures;
 
 import java.util.Vector;
 
+import models.jeu.Jeu;
+
 /**
  * Classe d'encapsulation des tours.
  * 
@@ -14,7 +16,6 @@ public class GestionnaireCreatures implements Runnable
 {
     private static final long TEMPS_ATTENTE = 50;
     private Vector<Creature> creatures = new Vector<Creature>();
-    private Thread thread;
     private boolean gestionEnCours;
     
     /**
@@ -22,7 +23,7 @@ public class GestionnaireCreatures implements Runnable
      */
     public GestionnaireCreatures()
     {
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
     }
     

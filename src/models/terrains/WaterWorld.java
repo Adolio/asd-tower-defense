@@ -81,7 +81,7 @@ public class WaterWorld extends Terrain
      * Permet de recuperer la vague suivante
      * @return la vague suivante
      */
-    VagueDeCreatures getVagueDeCreaturesSuivante()
+    public VagueDeCreatures getVagueDeCreaturesSuivante()
 	{
         return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
