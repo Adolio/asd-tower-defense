@@ -30,7 +30,8 @@ import models.tours.Tour;
 public class Panel_Terrain extends JPanel implements Runnable, 
 													 MouseListener,
 													 MouseMotionListener,
-													 KeyListener
+													 KeyListener,
+													 MouseWheelListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -56,6 +57,22 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * largeur d'un case du maillage pour le positionnement des tours
 	 */
 	private static final int CADRILLAGE    = 10; // unite du cadriallage en pixel
+	
+	/**
+	 * TODO
+	 */
+	private double coeffTaille = 1;
+	
+	/**
+	 * TODO
+	 */
+	private final int MARGES_DEPLACEMENT = 20;
+	
+	/**
+     * TODO
+     */
+	private int decaleX = 0;
+	private int decaleY = 0;
 	
 	//---------------------------
 	//-- preferences de dessin --
@@ -107,7 +124,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Position exacte de la souris sur le terrain
 	 */
 	private int sourisX, sourisY;
-				
+		
+	
+	// TODO
+	private int sourisGrabX, sourisGrabY;
+	private int decaleGrabX, decaleGrabY;
+	
 	/**
 	 * Position de la souris sur le cadriallage virtuel
 	 */
@@ -160,6 +182,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	private boolean afficherRayonsDePortee;
 	
+	
+	// TODO
+	private static Cursor redimentionnementDroite  = new Cursor(Cursor.E_RESIZE_CURSOR);
+	private static Cursor redimentionnementGauche  = new Cursor(Cursor.W_RESIZE_CURSOR);
+	private static Cursor redimentionnementHaut    = new Cursor(Cursor.N_RESIZE_CURSOR);
+	private static Cursor redimentionnementBas     = new Cursor(Cursor.S_RESIZE_CURSOR);
+	private static Cursor curseurNormal            = new Cursor(Cursor.DEFAULT_CURSOR);
+	
+	
+	
 	/**
 	 * Constructeur du panel du terrain
 	 * 
@@ -181,7 +213,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
-
+		addMouseWheelListener(this);
+		
 		// demarrage du thread de rafraichissement de l'affichage
 		thread = new Thread(this);
 		thread.start();
@@ -204,8 +237,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	public void setTourAAjouter(Tour tour)
 	{
-		// mise a jour de la position de la tour
-	    tour.setLocation(sourisCaseX, sourisCaseY);
+		
+	    Point p = getCoordoneeSurTerrainOriginal(sourisCaseX, sourisCaseY);
+	    
+	    // mise a jour de la position de la tour
+	    tour.setLocation(p.x, p.y);
 		
 	    // la tour devient la tour a ajouter
 		tourAAjouter = tour;
@@ -275,6 +311,19 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 	    Graphics2D g2 = (Graphics2D) g;
 
+	    if(coeffTaille < 1)
+	    {
+	        decaleX = (int) (getSize().width/2.0 - jeu.getLargeurTerrain()*coeffTaille/2.0);
+	        decaleY = (int) (getSize().height/2.0 - jeu.getHauteurTerrain()*coeffTaille/2.0);
+	    }
+	    g2.scale(coeffTaille, coeffTaille);
+	    g2.translate(decaleX, decaleY);
+	    
+	    
+	    g2.setColor(Color.BLACK);
+	    g2.fillRect(-1000, -1000, 2000, 2000);
+	    
+	    
 		//--------------------------
 		//-- affichage du terrain --
 		//--------------------------
@@ -457,6 +506,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				// affichage du rayon de portee
 				dessinerPortee(tourAAjouter,g2,COULEUR_RAYON_PORTEE);
 		}
+		
+		
+		
 	}
 
 	/**
@@ -695,17 +747,27 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void mousePressed(MouseEvent me)
 	{
-		
 	    // clique gauche
 	    if (me.getButton() == MouseEvent.BUTTON1)
 		{
-			//--------------------------
+	        
+	        sourisGrabX = me.getX();
+	        sourisGrabY = me.getY();
+	        
+	        decaleGrabX = decaleX;
+	        decaleGrabY = decaleY;
+	        
+	        
+	        Point positionSurTerrain = getCoordoneeSurTerrainOriginal(sourisX,sourisY);
+	        
+	        
+	        //--------------------------
 	        //-- selection d'une tour --
 	        //--------------------------
 	        
 	        // la selection se fait lors du clique
 			for(Tour tour : jeu.getTours()) // pour chaque tour... 
-				if (tour.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
+				if (tour.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
 				{	
 					// si le joueur clique sur une tour deja selectionnee
 				    if (tourSelectionnee == tour)
@@ -741,7 +803,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			for(int i = creatures.size()-1; i >= 0 ;i--)
 			{
 			    creature = creatures.get(i);
-			    if (creature.intersects(sourisX,sourisY,1,1)) // la souris est dedans ?
+
+			    if (creature.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
 				{	
 			        // si le joueur clique sur une creature deja selectionnee
 			        if (creatureSelectionnee == creature)
@@ -799,11 +862,75 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		sourisY = me.getY();
 		
 		// mise a jour de la position de la souris sur le grillage vituel
-		sourisCaseX = Math.round(me.getX()/CADRILLAGE)*CADRILLAGE;
-		sourisCaseY = Math.round(me.getY()/CADRILLAGE)*CADRILLAGE;
+        sourisCaseX = getPositionSurQuadrillage(sourisX);
+        sourisCaseY = getPositionSurQuadrillage(sourisY);
 		
+        
+        //---------------------------
+        //-- gestion des decalages --
+        //---------------------------
+        // TODO
+		
+        setCursor(curseurNormal);
+		
+		if(sourisX > 0 
+		&& sourisX < MARGES_DEPLACEMENT
+		&& decaleX < 0)
+		{
+            setCursor(redimentionnementGauche);
+		    decaleX++;
+		}
+		
+		if(sourisX > jeu.getLargeurTerrain()-MARGES_DEPLACEMENT 
+		&& sourisX < jeu.getLargeurTerrain() 
+		&& getCoordoneeSurTerrainOriginal(jeu.getLargeurTerrain(),0).x < jeu.getLargeurTerrain())
+		{
+		    setCursor(redimentionnementDroite);
+		    decaleX--;
+		} 
+		
+		if(sourisY > 0 
+        && sourisY < MARGES_DEPLACEMENT
+        && decaleY < 0) 
+		{
+            setCursor(redimentionnementBas);
+            decaleY++;
+		}
+		
+		if(sourisY > jeu.getHauteurTerrain()-MARGES_DEPLACEMENT 
+        && sourisY < jeu.getHauteurTerrain() 
+        && getCoordoneeSurTerrainOriginal(0,jeu.getHauteurTerrain()).y < jeu.getHauteurTerrain())
+		{
+            setCursor(redimentionnementHaut);    
+            decaleY--;
+		}
+            
 		if(tourAAjouter != null)
-			tourAAjouter.setLocation(sourisCaseX, sourisCaseY);
+		{
+		    Point p = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+		    
+		    tourAAjouter.setLocation(
+		        getPositionSurQuadrillage(p.x), 
+		        getPositionSurQuadrillage(p.y)
+		        );
+		}
+	}
+	
+	public int getPositionSurQuadrillage(int position)
+	{
+	    return  Math.round(position/CADRILLAGE)*CADRILLAGE;
+	}
+	
+	
+	
+	/**
+	 * Permet de faire correspondre une coordonnée donnée sur la position normale
+	 * du terrain (sans zoom et décalage)
+	 */
+	private Point getCoordoneeSurTerrainOriginal(int x, int y)
+	{
+	    return new Point((int)(x / coeffTaille - decaleX), 
+	                     (int)(y / coeffTaille - decaleY));
 	}
 	
 	/**
@@ -815,8 +942,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
     public void mouseDragged(MouseEvent me)
     {
-       // pour nous c'est comme si elle bougeait normalement
-       mouseMoved(me);
+	   // si il n'y a pas de tour a ajouter, c'est comme si elle bougeait normalement 
+	   if(tourAAjouter != null)
+	       mouseMoved(me); 
+	   
+	   // si rien n'est selectionner, on autorise le grab
+	   else
+	   {
+	       setCursor(new Cursor(Cursor.MOVE_CURSOR));
+	      
+    	   decaleX = decaleGrabX - (sourisGrabX - me.getX())/ 2;
+    	   decaleY = decaleGrabY - (sourisGrabY - me.getY())/ 2; 
+	   }
     }
 
 	/**
@@ -893,4 +1030,24 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	@Override
 	public void keyTyped(KeyEvent ke){}
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e)
+    {
+        if(e.getWheelRotation() < 0) // zoom
+            coeffTaille -= e.getWheelRotation()/10.0;
+        else if(coeffTaille > 1.0) // dézoom
+            coeffTaille -= e.getWheelRotation()/10.0;
+
+        //Point p = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+        //centrerSur(p.x,p.y);
+    }
+    
+    // TODO
+    private void centrerSur(int x, int y)
+    {
+        decaleX = (int) (x * coeffTaille - jeu.getLargeurTerrain() / 2);
+        decaleY = (int) (y * coeffTaille - jeu.getHauteurTerrain() / 2);
+    }
+    
 }
