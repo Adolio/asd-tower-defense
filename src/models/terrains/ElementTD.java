@@ -47,7 +47,7 @@ public class ElementTD extends Terrain
                 0,    // positionMaillageX
                 0,    // positionMaillageY
                 480,  // largeurMaillage
-                540,  // hauteurMaillage
+                500,  // hauteurMaillage
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond

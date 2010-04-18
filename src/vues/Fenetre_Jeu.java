@@ -3,7 +3,10 @@ package vues;
 import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
+import sun.awt.WindowClosingListener;
 
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -17,7 +20,7 @@ import models.jeu.Jeu;
  * Fenetre princiale du jeu. 
  * 
  * Elle permet voir le jeu et d'interagir avec en posant des tours sur le terrain 
- * et de les gerer. Elle fournie aussi de quoi gerer les vagues d'ennemis.
+ * et de les gerer. Elle fournit aussi de quoi gerer les vagues d'ennemis.
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
@@ -29,7 +32,8 @@ import models.jeu.Jeu;
  */
 public class Fenetre_Jeu extends JFrame implements ActionListener, 
                                                     EcouteurDeCreature, 
-                                                    EcouteurDeVague
+                                                    EcouteurDeVague,
+                                                    WindowListener
 {
 	// constantes statiques
    private static final long serialVersionUID = 1L;
@@ -56,7 +60,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private final JMenuItem itemActiverDesactiverSon 
 	    = new JMenuItem("activer / desactiver",I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem("activer / desactiver elements de gestion invisibles");
+		= new JMenuItem("activer / desactiver le mode debug");
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem("activer / desactiver affichage des rayons de portee");
 	private final JMenuItem itemQuitter	    
@@ -113,8 +117,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		super(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.jeu = jeu;
+		addWindowListener(this);
 		
 		//--------------------
 		//-- menu principal --
@@ -537,4 +542,30 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         panelMenuInteraction.miseAJourNbViesRestantes();
         panelMenuInteraction.miseAJourScore();
     }
+
+    @Override
+    public void windowActivated(WindowEvent e)
+    {}
+
+    @Override
+    public void windowClosed(WindowEvent e)
+    {}
+
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+       quitter(); 
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e){}
+
+    @Override
+    public void windowDeiconified(WindowEvent e){}
+
+    @Override
+    public void windowIconified(WindowEvent e){}
+
+    @Override
+    public void windowOpened(WindowEvent e){}
 }
