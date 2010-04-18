@@ -368,9 +368,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//--------------------------
 		//-- affichage du terrain --
 		//--------------------------
-		if(jeu.getImageDeFondTerrain() != null)
+		if(jeu.getTerrain().getImageDeFond() != null)
 			// image de fond
-			g2.drawImage(jeu.getImageDeFondTerrain(), 0, 0, null);
+			g2.drawImage(jeu.getTerrain().getImageDeFond(), 0, 0, null);
 		else
 		{
 			// couleur de fond
@@ -448,9 +448,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
 		Creature creature;
-		synchronized (jeu.getCreatures())
+		Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
+		synchronized (creatures)
         {
-    		Iterator<Creature> iCreatures = jeu.getCreatures().iterator();
+    		Iterator<Creature> iCreatures = creatures.iterator();
             while(iCreatures.hasNext())
             {
                 creature = iCreatures.next();
@@ -470,7 +471,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //--------------------------------------
         //-- affichage des creatures aerienne --
         //--------------------------------------
-		Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
+		Enumeration<Creature> eCreatures = creatures.elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();
@@ -837,7 +838,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             //------------------------------
 
 			Creature creature;
-			Vector<Creature> creatures = jeu.getCreatures();
+			Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
 			
 			// parcours a l'envers car il faut traiter les creatures les plus
             // devant en premier (les derniers affiches)
