@@ -1,9 +1,10 @@
 package models.tours;
 
 import java.awt.*;
+import java.util.Vector;
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.joueurs.Joueur;
-import models.terrains.Terrain;
 
 /**
  * Classe de gestion d'une tour
@@ -101,9 +102,9 @@ public abstract class Tour extends Rectangle
 	protected final Image ICONE;
 
 	/**
-	 * le terrain pour recuperer des informations sur les creatures
+	 * le jeu
 	 */
-	protected Terrain terrain;
+	protected Jeu jeu;
 
 	/**
 	 * Utilise pour savoir si la tour est en jeu.
@@ -178,14 +179,14 @@ public abstract class Tour extends Rectangle
      * 
      * @return une tour ayant comme parent la classe Tour
      */
-    abstract public Tour getCopieOriginale();
+    public abstract Tour getCopieOriginale();
 
     /**
      * Permet de savoir si la tour peut encore etre ameliorer
      * 
      * @return true si elle peut encore l'etre, false sinon
      */
-    abstract public boolean peutEncoreEtreAmelioree();
+    public abstract boolean peutEncoreEtreAmelioree();
 	
     /**
      * permet de recuperer le temps de preparation d'un tir
@@ -197,14 +198,13 @@ public abstract class Tour extends Rectangle
     }
     
 	/**
-	 * Permet de modifier le terrain
+	 * Permet de modifier le jeu
 	 * 
-	 * @param terrain
-	 *            le terrain sur lequel la tour est posee
+	 * @param jeu le jeu
 	 */
-	public void setTerrain(Terrain terrain)
+	public void setJeu(Jeu jeu)
 	{
-		this.terrain = terrain;
+		this.jeu = jeu;
 	}
 
 	/**
@@ -398,7 +398,7 @@ public abstract class Tour extends Rectangle
 	 */
 	public void action()
 	{ 
-        // TODO [OPTIMISATION] a stoquer dans un attribut
+	    // TODO [OPTIMISATION] a stoquer dans un attribut
         long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
         
         // on calcul le temps depuis le dernier tir
@@ -409,7 +409,7 @@ public abstract class Tour extends Rectangle
         {
 	        // recuperation de la creature la plus proche et a portee de la tour
             Creature creature = getCreatureLaPlusProcheEtAPortee();
-
+            
             // si elle existe
             if (creature != null)
             {
@@ -455,19 +455,23 @@ public abstract class Tour extends Rectangle
 	private Creature getCreatureLaPlusProcheEtAPortee()
 	{
 		// le terrain a bien ete setter ?
-		if (terrain == null)
+		if (jeu == null)
 			return null;
 
+		
+		
 		// variables temporaires pour calcul
 		Creature creatureLaPlusProche = null;
 		double distanceLaPlusProche   = 0;
 		double distance               = 0;
 
 		// bloque la reference vers la collection des creatures
-		synchronized (terrain.getCreatures())
+		Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
+		
+		synchronized (creatures)
         {
     		// pour chaque creature sur le terrain
-    		for(Creature creature : terrain.getCreatures())
+    		for(Creature creature : creatures)
     		{
 				// si la creature est accessible
     		    if (estBlessable(creature))
@@ -531,4 +535,21 @@ public abstract class Tour extends Rectangle
         return tempsEcoule;
     }
     private long tempsDernierAppel;
+
+    /**
+     * TODO
+     * @return
+     */
+    public Joueur getPrioprietaire()
+    {
+        return proprietaire;
+    }
+    
+    /**
+     * TODO
+     */
+    public void setProprietaire(Joueur proprietaire)
+    {
+        this.proprietaire = proprietaire;
+    }
 }

@@ -3,10 +3,10 @@ package models.attaques;
 import java.awt.*;
 import java.io.File;
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
 import models.outils.Son;
-import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -55,10 +55,10 @@ public class BouletDeCanon extends Attaque
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public BouletDeCanon(Terrain terrain, Tour attaquant, Creature cible, 
+    public BouletDeCanon(Jeu jeu, Tour attaquant, Creature cible, 
                         long degats, double rayonImpact)
     {
-        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), jeu, attaquant, cible);
         
         this.degats         = degats;
         this.rayonImpact    = rayonImpact;

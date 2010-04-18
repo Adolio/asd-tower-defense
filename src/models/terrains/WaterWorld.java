@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import models.creatures.*;
+import models.jeu.Jeu;
 
 /**
  * Classe de gestion du terrain WaterWorld.
@@ -38,8 +39,9 @@ public class WaterWorld extends Terrain
     /**
      * Constructeur d'un terrain TerrainEau.
      */
-    public WaterWorld () {
-        super(500,  // largeur
+    public WaterWorld (Jeu jeu) {
+        super(jeu,
+              500,  // largeur
               500,  // hauteur
               150,  // nbPiecesOrInitiales
               20,   // nbViesInitiales

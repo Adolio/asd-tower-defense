@@ -2,8 +2,6 @@ package models.creatures;
 
 import java.util.Vector;
 
-import models.jeu.Jeu;
-
 /**
  * Classe d'encapsulation des tours.
  * 
@@ -34,6 +32,9 @@ public class GestionnaireCreatures implements Runnable
      */
     public void ajouterCreature(Creature creature)
     {
+        if (creature == null)
+            throw new IllegalArgumentException("Creature nulle");
+        
         creatures.add(creature);
     }
     
@@ -42,7 +43,8 @@ public class GestionnaireCreatures implements Runnable
      */
     public void supprimerCreature(Creature creature)
     {
-        creatures.remove(creature);
+        if (creature != null)
+            creatures.remove(creature);
     }
 
     @Override

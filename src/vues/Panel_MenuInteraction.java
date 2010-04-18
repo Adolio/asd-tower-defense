@@ -4,9 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import models.creatures.*;
-import models.jeu.*;
+import models.joueurs.Joueur;
 import models.tours.*;
 
 /**
@@ -51,8 +50,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 	// autres membres
 	private Fenetre_Jeu fenJeu;
-	private Jeu jeu;
-
+	private Joueur joueur;
+	
 	// panels internes
 	private Panel_InfoTour panelInfoTour;
 	private Panel_InfoCreature panelInfoCreature = new Panel_InfoCreature();
@@ -63,13 +62,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 * @param jeu le jeu avec lequel on interagit (le model)
 	 * @param fenJeu la fenetre de jeu
 	 */
-	public Panel_MenuInteraction(Jeu jeu, Fenetre_Jeu fenJeu)
+	public Panel_MenuInteraction(Fenetre_Jeu fenJeu, Joueur joueur)
 	{
 		super(new BorderLayout());
         
 		// sauvegarde des attributs membres
 		this.fenJeu   = fenJeu;
-		this.jeu      = jeu;
+		this.joueur   = joueur;
 		
 		//---------------------
 		//-- panel des tours --
@@ -173,28 +172,34 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent ae)
 	{
 		Object source = ae.getSource();
+		Tour tour = null;
 		
 		if(source == bTourArcher)
-			fenJeu.setTourAAcheter(new TourArcher());
+		    tour = new TourArcher();
 		else if(source == bTourCanon)
-			fenJeu.setTourAAcheter(new TourCanon());
+		    tour = new TourCanon();
 		else if(source == bTourAntiAerienne)
-			fenJeu.setTourAAcheter(new TourAntiAerienne());
+		    tour = new TourAntiAerienne();
 		else if(source == bTourDeGlace)
-		    fenJeu.setTourAAcheter(new TourDeGlace());
+		    tour = new TourDeGlace();
 		else if(source == bTourDeFeu)
-		    fenJeu.setTourAAcheter(new TourDeFeu());
+		    tour = new TourDeFeu();
 		else if(source == bTourDeTerre)
-            fenJeu.setTourAAcheter(new TourDeTerre());
+		    tour = new TourDeTerre();
+		else
+		    return;
 		
+		tour.setProprietaire(joueur);
+        fenJeu.setTourAAcheter(tour);
 	}
+	
 	
 	/**
 	 * Permet de demander une mise a jour du nombre de pieces du joueur
 	 */
 	public void miseAJourNbPiecesOr()
 	{
-		int nbPiecesOr = jeu.getNbPiecesOr();
+		int nbPiecesOr = joueur.getNbPiecesDOr();
 	    
 		bTourArcher.setEnabled(nbPiecesOr >= TourArcher.PRIX_ACHAT);
 	    bTourCanon.setEnabled(nbPiecesOr >= TourCanon.PRIX_ACHAT);
@@ -211,7 +216,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	public void miseAJourNbViesRestantes()
 	{
-		lVies.setText(jeu.getNbViesRestantes()+"");
+		lVies.setText(joueur.getEquipe().getNbViesRestantes()+"");
 	}
 	
 	/**
@@ -219,10 +224,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	public void miseAJourScore()
     {
-        lScore.setText(jeu.getScore()+"");
+        lScore.setText(joueur.getScore()+"");
     }
-
-
 
     /**
      * Permet d'informer le panel que la partie est terminee

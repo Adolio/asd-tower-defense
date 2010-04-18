@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.File;
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
 import models.outils.Son;
-import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -56,9 +56,9 @@ public class Fleche extends Attaque
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public Fleche(Terrain terrain, Tour attaquant, Creature cible, long degats)
+    public Fleche(Jeu jeu, Tour attaquant, Creature cible, long degats)
     {
-        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), jeu, attaquant, cible);
         
         this.degats = degats;
        
