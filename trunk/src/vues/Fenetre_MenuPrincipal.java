@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
+import models.joueurs.Joueur;
 import models.outils.Outils;
 import models.terrains.*;
 
@@ -182,7 +184,14 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 		{
 		    actionnerBarreDeChargement();
 		    
-			new Fenetre_Jeu(new Jeu(new ElementTD()));
+		    Jeu jeu = new Jeu();
+		    jeu.setTerrain(new ElementTD(jeu));
+		    Equipe equipe = new Equipe();
+            Joueur joueur = new Joueur(equipe);
+            equipe.ajouterJoueur(joueur);
+            jeu.ajouterEquipe(equipe);
+            jeu.initialiser();
+            new Fenetre_Jeu(jeu,joueur);
 			
 			chargementTermine = true;
 			dispose();
@@ -191,7 +200,14 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 		{
 		    actionnerBarreDeChargement();
 
-		    new Fenetre_Jeu(new Jeu(new Spiral()));
+		    Jeu jeu = new Jeu();
+            jeu.setTerrain(new Spiral(jeu));
+            Equipe equipe = new Equipe();
+            Joueur joueur = new Joueur(equipe);
+            equipe.ajouterJoueur(joueur);
+            jeu.ajouterEquipe(equipe);
+            jeu.initialiser();
+            new Fenetre_Jeu(jeu,joueur);
 		    
 		    chargementTermine = true;
 			dispose();
@@ -200,7 +216,14 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 		{
 		    actionnerBarreDeChargement();
 		     
-		    new Fenetre_Jeu(new Jeu(new Desert()));
+		    Jeu jeu = new Jeu();
+            jeu.setTerrain(new Desert(jeu));
+            Equipe equipe = new Equipe();
+            Joueur joueur = new Joueur(equipe);
+            equipe.ajouterJoueur(joueur);
+            jeu.ajouterEquipe(equipe);
+            jeu.initialiser();
+            new Fenetre_Jeu(jeu,joueur);
 
 		    chargementTermine = true;
 			dispose();
@@ -209,7 +232,14 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener, Run
 		{
 		    actionnerBarreDeChargement();
 		    
-		    new Fenetre_Jeu(new Jeu(new WaterWorld()));
+		    Jeu jeu = new Jeu();
+            jeu.setTerrain(new WaterWorld(jeu));
+            Equipe equipe = new Equipe();
+            Joueur joueur = new Joueur(equipe);
+            equipe.ajouterJoueur(joueur);
+            jeu.ajouterEquipe(equipe);
+            jeu.initialiser();
+            new Fenetre_Jeu(jeu,joueur);
 		    
 		    chargementTermine = true;
 			dispose();

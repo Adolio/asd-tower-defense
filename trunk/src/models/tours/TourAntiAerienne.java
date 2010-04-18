@@ -86,7 +86,8 @@ public class TourAntiAerienne extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    terrain.ajouterAnimation(new Fleche(terrain,this,creature,degats));
+	    jeu.getGestionnaireAnimations().ajouterAnimation(
+	            new Fleche(jeu,this,creature,degats));
 	}
 
 	public Tour getCopieOriginale()

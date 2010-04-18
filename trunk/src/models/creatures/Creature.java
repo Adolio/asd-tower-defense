@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import models.joueurs.Joueur;
+
 /**
  * Classe de gestion d'une creature.
  * <p>
@@ -426,7 +428,7 @@ public abstract class Creature extends Rectangle
 	 * 
 	 * @param degats les degats recus
 	 */
-	synchronized public void blesser(long degats)
+	synchronized public void blesser(long degats, Joueur joueur)
 	{
 		// deja morte ?
 		if(!estMorte())

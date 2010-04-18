@@ -4,14 +4,11 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.*;
-
-import models.animations.Animation;
-import models.animations.GestionnaireAnimations;
 import models.creatures.*;
+import models.jeu.Jeu;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
 import models.outils.Son;
-import models.tours.GestionnaireTours;
 import models.tours.Tour;
 
 /**
@@ -119,24 +116,6 @@ public abstract class Terrain
     private final Color COULEUR_DE_FOND;
     
     /**
-     * Les tours sont posees sur le terrain et permettent de tuer les creatures.
-     * 
-     * @see Tour
-     */
-    //private Vector<Tour> tours;
-    private GestionnaireTours gestionnaireTours = new GestionnaireTours();
-    
-    
-    /**
-     * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
-     * d'arrivee.
-     * 
-     * @see Creature
-     */
-    //private Vector<Creature> creatures;
-    private GestionnaireCreatures gestionnaireCreatures = new GestionnaireCreatures();
-    
-    /**
      * Les murs sont utilises pour empecher le joueur de construire des tours
      * dans certaines zones. Les creatures ne peuvent egalement pas si rendre.
      * En fait, les murs reflettent les zones de la carte non accessible. Les
@@ -144,12 +123,7 @@ public abstract class Terrain
      * d'acces de la carte.
      */
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
-
-    /**
-     * Outil de gestion des animations
-     */
-    private GestionnaireAnimations gestionnaireAnimations = new GestionnaireAnimations();
-    
+  
     /**
      * Gestion des vagues de creatures. C'est le joueur que decident le moment
      * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
@@ -162,6 +136,10 @@ public abstract class Terrain
      */
     protected File fichierMusiqueDAmbiance;
 
+    
+    private Jeu jeu;
+    
+    
     /**
      * Constructeur du terrain.
      * 
@@ -177,12 +155,13 @@ public abstract class Terrain
      * @param zoneDepart la zone de depart des creatures
      * @param zoneArrivee la zone d'arrivee des creatures
      */
-    public Terrain(int largeur, int hauteur, int nbPiecesOrInitiales,
+    public Terrain(Jeu jeu, int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
             int largeurMaillage, int hauteurMaillage, Color couleurDeFond, 
             Color couleurMurs, Image imageDeFond,
             String nom, Rectangle zoneDepart, Rectangle zoneArrivee)
     {
+        this.jeu = jeu; 
         LARGEUR = largeur;
         HAUTEUR = hauteur;
         ZONE_DEPART = zoneDepart;
@@ -357,107 +336,9 @@ public abstract class Terrain
         }
     }
 
-    // ---------------------------
-    // -- GESTION DES CREATURES --
-    // ---------------------------
-
-    /**
-     * Permet de recuperer la liste des creatures sur le terrain.
-     * 
-     * @return la liste des creatures
-     */
-    public Vector<Creature> getCreatures()
-    {
-        return gestionnaireCreatures.getCreatures();
-    }
-
-    /**
-     * Permet d'ajouter une creature.
-     * 
-     * @param creature la creature a ajouter
-     */
-    synchronized public void ajouterCreature(Creature creature)
-    {
-        if (creature == null)
-            throw new IllegalArgumentException("Creature nulle");
-
-        gestionnaireCreatures.ajouterCreature(creature);
-    }
-
-    /**
-     * Permet de supprimer une creature
-     * 
-     * @param creature la creature a supprimer
-     */
-    synchronized public void supprimerCreature(Creature creature)
-    {
-        if (creature != null)
-            gestionnaireCreatures.supprimerCreature(creature);
-    }
-
     // ----------------------------------------------------------
     // -- GESTION DES TOURS --
     // ----------------------------------------------------------
-
-    /**
-     * Permet de recuperer la liste des tours.
-     * 
-     * @return la liste des tours
-     */
-    public Vector<Tour> getTours()
-    {
-        return gestionnaireTours.getTours();
-    }
-
-    /**
-     * Permet d'ajouter une tour sur le terrain.
-     * 
-     * @param tour la tour a ajouter
-     * @throws Exception si la zone n'est pas accessible (occupee)
-     * @throws Exception si la tour bloque empeche tous chemins
-     */
-    public void ajouterTour(Tour tour) throws Exception
-    {
-        // c'est bien une tour valide ?
-        if (tour == null)
-            throw new IllegalArgumentException("Tour nulle");
-
-        // si elle peut pas etre posee
-        if (!laTourPeutEtrePosee(tour))
-            throw new Exception("Pose impossible : Zone non accessible");
-
-        // si elle bloque le chemin de A vers B
-        if (laTourBloqueraLeChemin(tour))
-            throw new Exception("Pose impossible : Chemin bloqué");
-
-        // desactive la zone dans le maillage qui correspond a la tour
-        desactiverZone(tour, true);
-
-        // ajout de la tour
-        gestionnaireTours.ajouterTour(tour);
-        tour.setTerrain(this);
-    }
-
-    /**
-     * Permet de supprimer une tour du terrain.
-     * 
-     * @param tour la tour a supprimer
-     */
-    public void supprimerTour(Tour tour)
-    {
-        // c'est bien une tour valide ?
-        if (tour == null)
-            throw new IllegalArgumentException("Tour nulle");
-
-        // arret du thread
-        tour.arreter();
-
-        // suppression de la tour
-        gestionnaireTours.supprimerTour(tour);
-
-        // reactive la zone dans le maillage qui correspond a la tour
-        activerZone(tour, true);
-    }
 
     /**
      * Permet de savoir si une tour peut etre posee a un certain endroit sur le
@@ -472,27 +353,11 @@ public abstract class Terrain
         if (tour == null)
             return false;
 
-        // il n'y a pas deja une tour
-        synchronized (gestionnaireTours.getTours())
-        {
-            for (Tour tourCourante : gestionnaireTours.getTours())
-                if (tour.intersects(tourCourante))
-                    return false;
-        }
-
         // il n'y a pas un mur
         synchronized (murs)
         {
             for (Rectangle mur : murs)
                 if (tour.intersects(mur))
-                    return false;
-        }
-
-        // il n'y a pas deja une creature
-        synchronized (gestionnaireCreatures.getCreatures())
-        {
-            for (Rectangle creature : gestionnaireCreatures.getCreatures())
-                if (tour.intersects(creature))
                     return false;
         }
 
@@ -552,7 +417,7 @@ public abstract class Terrain
      * @param miseAJourDesCheminsDesCreatures faut-il mettre a jour les chemins
      *            des creatures ?
      */
-    private void activerZone(Rectangle zone,
+    public void activerZone(Rectangle zone,
             boolean miseAJourDesCheminsDesCreatures)
     {
         // activation de la zone
@@ -570,12 +435,12 @@ public abstract class Terrain
      * @param miseAJourDesCheminsDesCreatures faut-il mettre a jour les chemins
      *            des creatures ?
      */
-    private void desactiverZone(Rectangle zone,
+    public void desactiverZone(Rectangle zone,
             boolean miseAJourDesCheminsDesCreatures)
     {
         // desactivation de la zone
         MAILLAGE_TERRESTRE.desactiverZone(zone);
-
+        
         // mise a jour des chemins si necessaire
         if (miseAJourDesCheminsDesCreatures)
             miseAJourDesCheminsDesCreatures();
@@ -589,10 +454,11 @@ public abstract class Terrain
     {
         // Il ne doit pas y avoir de modifications sur la collection
         // durant le parcours.
-        synchronized (gestionnaireCreatures.getCreatures())
+        Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
+        synchronized (creatures)
         {
             // mise a jour de tous les chemins
-            for (Creature creature : gestionnaireCreatures.getCreatures())
+            for (Creature creature : creatures)
             {
                 // les tours n'affecte que le chemin des creatures terriennes
                 if (creature.getType() == Creature.TYPE_TERRIENNE)
@@ -650,7 +516,7 @@ public abstract class Terrain
     public void lancerVagueSuivante(EcouteurDeVague edv, EcouteurDeCreature edc)
     {
         // lancement de la vague
-        getVagueDeCreaturesSuivante().lancerVague(this, edv, edc);
+        getVagueDeCreaturesSuivante().lancerVague(jeu, edv, edc);
         indiceVagueCourante++;
     }
 
@@ -733,41 +599,6 @@ public abstract class Terrain
     // ----------------
     // -- ANIMATIONS --
     // ----------------
-    /**
-     * Permet d'ajouter une animation
-     * 
-     * @param animation l'aniatio a ajouter
-     */
-    public void ajouterAnimation(Animation animation)
-    {
-        gestionnaireAnimations.ajouterAnimation(animation);
-    }
-
-    /**
-     * Permet de stope tous les threads des elements du terrain
-     */
-    public void arreterTout()
-    {
-        // arret de toutes les tours
-        gestionnaireTours.arreterTours();
-
-        // arret de toutes les creatures
-        gestionnaireCreatures.arreterCreatures();
-
-        // arret de toutes les animations
-        gestionnaireAnimations.arreterAnimations();
-    }
-
-    /**
-     * Permet de recuperer le gestionnaire d'animations
-     * 
-     * @return le gestionnaire d'animations
-     */
-    public GestionnaireAnimations getGestionnaireAnimations()
-    {
-        return gestionnaireAnimations;
-    }
-    
     /**
      * Permet de recuperer les murs du terrain
      * 

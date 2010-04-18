@@ -88,7 +88,7 @@ public class TourDeGlace extends Tour
     public void tirer(Creature creature)
     {
         
-        terrain.ajouterAnimation(new BouleDeGlace(terrain,this,creature,degats,
+        jeu.getGestionnaireAnimations().ajouterAnimation(new BouleDeGlace(jeu,this,creature,degats,
                                                   COEFF_RALENTISSMENT));
     }
 

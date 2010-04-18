@@ -87,7 +87,7 @@ public class TourDeFeu extends Tour
 
     public void tirer(Creature creature)
     {
-        terrain.ajouterAnimation(new BouleDeFeu(terrain,this,creature,degats,RAYON_IMPACT));
+        jeu.getGestionnaireAnimations().ajouterAnimation(new BouleDeFeu(jeu,this,creature,degats,RAYON_IMPACT));
     }
 
     public Tour getCopieOriginale()

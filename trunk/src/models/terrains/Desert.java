@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import models.creatures.VagueDeCreatures;
+import models.jeu.Jeu;
 
 /**
  * Classe de gestion d'un terrain dans le desert.
@@ -34,9 +35,10 @@ public class Desert extends Terrain
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
-	public Desert()
+	public Desert(Jeu jeu)
 	{
-		super(  500,      // largeur
+		super(  jeu,
+		        500,      // largeur
                 500,      // hauteur
                 140,    // nbPiecesOrInitiales
                 20,       // nbViesInitiales

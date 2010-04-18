@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import models.animations.*;
 import models.creatures.Creature;
-import models.terrains.Terrain;
+import models.jeu.Jeu;
 import models.tours.Tour;
 
 /**
@@ -29,7 +29,7 @@ abstract public class Attaque extends Animation
     protected double rayonImpact;
     protected double coeffRalentissement;
     
-    protected Terrain terrain;
+    protected Jeu jeu;
     private ArrayList<EcouteurDAttaque> ecouteursDAttaque = new ArrayList<EcouteurDAttaque>();
     
     /**
@@ -41,12 +41,12 @@ abstract public class Attaque extends Animation
      * @param attaquant la tour attaquante
      * @param cible la creature attaquee
      */
-    public Attaque(int x, int y, Terrain terrain, Tour attaquant, Creature cible)
+    public Attaque(int x, int y, Jeu jeu, Tour attaquant, Creature cible)
     {
         super(x, y);
         this.attaquant  = attaquant;
         this.cible      = cible;
-        this.terrain    = terrain;
+        this.jeu        = jeu;
     }
     
     /**
@@ -60,7 +60,7 @@ abstract public class Attaque extends Animation
             return blesserCreaturesDansZoneImpact();
         else
         {
-            cible.blesser(degats);
+            cible.blesser(degats,attaquant.getPrioprietaire());
             
             ArrayList<Creature> a = new ArrayList<Creature>();
             a.add(cible); 
@@ -83,7 +83,7 @@ abstract public class Attaque extends Animation
         long degatsFinal;
         double distanceImpact;
         
-        Enumeration<Creature> eCreatures = terrain.getCreatures().elements();
+        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
         Creature tmpCreature;
         while(eCreatures.hasMoreElements())
         {
@@ -99,7 +99,7 @@ abstract public class Attaque extends Animation
             {
                 // calcul des degats en fonction de la distance de l'impact
                 degatsFinal = (long) (degats - (distanceImpact / rayonImpact * degats));
-                tmpCreature.blesser(degatsFinal);
+                tmpCreature.blesser(degatsFinal, attaquant.getPrioprietaire());
                 
                 a.add(tmpCreature);
             }

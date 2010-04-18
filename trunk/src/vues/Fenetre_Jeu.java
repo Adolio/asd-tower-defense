@@ -3,18 +3,12 @@ package vues;
 import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
-import sun.awt.WindowClosingListener;
-
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
-import models.creatures.Creature;
-import models.creatures.EcouteurDeCreature;
-import models.creatures.EcouteurDeVague;
-import models.creatures.VagueDeCreatures;
+import models.creatures.*;
 import models.jeu.Jeu;
+import models.joueurs.Joueur;
 
 /**
  * Fenetre princiale du jeu. 
@@ -100,7 +94,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
     
     
 	// autre attribut
+    // TODO
 	private Jeu jeu;
+	private Joueur joueur;
     private boolean vaguePeutEtreLancee = true;
 
 	
@@ -109,16 +105,18 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_Jeu(Jeu jeu)
+	public Fenetre_Jeu(Jeu jeu, Joueur joueur)
 	{
-		//-------------------------------
+	    this.jeu = jeu;
+        this.joueur = joueur;
+	    
+	    //-------------------------------
 		//-- preferances de le fenetre --
 		//-------------------------------
-		super(FENETRE_TITRE);
+		setTitle(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.jeu = jeu;
 		addWindowListener(this);
 		
 		//--------------------
@@ -164,7 +162,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
         taConsole.setEditable(false);
         JScrollPane scrollConsole = new JScrollPane(taConsole);
-        scrollConsole.setPreferredSize(new Dimension(jeu.getLargeurTerrain(),50));
+        scrollConsole.setPreferredSize(new Dimension(jeu.getTerrain().getLargeur(),50));
         pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
         
         // bouton
@@ -179,9 +177,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		//----------------------------------------
 		// creation des panels
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
-		panelTerrain = new Panel_Terrain(jeu, this);
+		panelTerrain = new Panel_Terrain(jeu, this, joueur);
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(jeu,this);
+		panelMenuInteraction = new Panel_MenuInteraction(this,joueur);
 		
 		// ajout des panels
 		add(conteneurTerrain,BorderLayout.WEST);
@@ -249,7 +247,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		
 		else if(source == bLancerVagueSuivante)
 		{
-		    if(!jeu.partieEstPerdu())
+		    if(!joueur.aPerdu())
 		    {
     		    lancerVagueSuivante();
     		    bLancerVagueSuivante.setEnabled(false);
@@ -307,12 +305,14 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{
 	    try
 	    {
-	        jeu.poserTour(tour);
+	        jeu.getGestionnaireTours().poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
             panelMenuInteraction.miseAJourNbPiecesOr();
             
-            setTourAAcheter(tour.getCopieOriginale());
+            Tour nouvelleTour = tour.getCopieOriginale();
+            nouvelleTour.setProprietaire(tour.getPrioprietaire());
+            setTourAAcheter(nouvelleTour);
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
 	    }
 	    catch(Exception e)
@@ -331,7 +331,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{
 	    try
         {
-	        jeu.ameliorerTour(tour);
+	        jeu.getGestionnaireTours().ameliorerTour(tour);
 	        
 	        panelMenuInteraction.miseAJourNbPiecesOr();
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
@@ -350,7 +350,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
      */
     public void vendreTour(Tour tour)
     {
-        jeu.vendreTour(tour);
+        jeu.getGestionnaireTours().vendreTour(tour);
         panelInfoTour.effacerTour();
         panelMenuInteraction.miseAJourNbPiecesOr();
         panelTerrain.setTourSelectionnee(null);
@@ -444,9 +444,9 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
      */
     public void ajouterInfoVagueSuivanteDansConsole()
     {
-        ajouterTexteHTMLDansConsole("["+(jeu.getNumVagueCourante()+1)+"] Vague suivante : "+jeu.getDescriptionVagueSuivante()+"<br />");
+        ajouterTexteHTMLDansConsole("["+(jeu.getTerrain().getNumVagueCourante()+1)+"] Vague suivante : "+jeu.getTerrain().getDescriptionVagueSuivante()+"<br />");
         
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getNumVagueCourante()+1)+"]");
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getTerrain().getNumVagueCourante()+1)+"]");
     }
 	
 	/**
@@ -467,7 +467,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	 */
 	public void creatureTuee(Creature creature)
 	{
-		jeu.creatureTuee(creature);
+		// gain de pieces d'or
+		joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
+		
+		// augmentation du score
+		joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
 		
 		// on efface la creature des panels d'information
 		if(creature == panelTerrain.getCreatureSelectionnee())
@@ -479,7 +483,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		panelMenuInteraction.miseAJourNbPiecesOr();
 		panelMenuInteraction.miseAJourScore();
 
-		jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
+		jeu.getGestionnaireAnimations().ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
                 creature.getNbPiecesDOr()));
 				
@@ -493,11 +497,11 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	public void estArriveeEnZoneArrivee(Creature creature)
 	{
 		// si pas encore perdu
-	    if(!jeu.partieEstPerdu())
+	    if(!joueur.aPerdu())
 		{
-	        // indication au jeu
-            jeu.creatureArriveeEnZoneArrivee(creature);
 	        
+            joueur.getEquipe().perdreUneVie();
+            
             // mise a jour des infos
 	        panelMenuInteraction.miseAJourNbViesRestantes();
 			
@@ -509,7 +513,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	        }
 			
 			// le joueur n'a plus de vie
-			if(jeu.partieEstPerdu())
+			if(joueur.aPerdu())
 			{
 			    jeu.terminerLaPartie();
 			    
@@ -521,7 +525,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		        bLancerVagueSuivante.setText("Retour au menu");
 		        bLancerVagueSuivante.setIcon(I_QUITTER);
 		        
-			    new Fenetre_PartieTerminee(this, jeu.getScore(), jeu.getNomTerrain());
+			    new Fenetre_PartieTerminee(this, joueur.getScore(), jeu.getTerrain().getNom());
 			}
 		}
 	}
@@ -568,4 +572,15 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 
     @Override
     public void windowOpened(WindowEvent e){}
+
+    // TODO [DEBUG] a effacer
+    /**
+     * (pour debug) Permet d'ajouter des pieces d'or
+     * 
+     * @param nbPiecesDOr le nombre de piece d'or a ajouter
+     */
+    public void ajouterPiecesDOr(int nbPiecesDOr)
+    {
+        joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + nbPiecesDOr); 
+    }
 }

@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import models.creatures.*;
+import models.jeu.Jeu;
 
 /**
  * Classe de gestion du fameux terrain Element TD repris de chez Blizzard.
@@ -38,9 +39,10 @@ public class ElementTD extends Terrain
     /**
      * Constructeur d'un terrain ElementTD selon la celebre map de Blizzard.
      */
-    public ElementTD () 
+    public ElementTD (Jeu jeu) 
     {
-        super(  480,  // largeur
+        super(  jeu,
+                480,  // largeur
                 500,  // hauteur
                 100,  // nbPiecesOrInitiales
                 20,   // nbViesInitiales

@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import models.creatures.VagueDeCreatures;
+import models.jeu.Jeu;
 
 /**
  * Classe de gestion d'un terrain en spiral.
@@ -34,9 +35,10 @@ public class Spiral extends Terrain
 	/**
 	 * Constructeur du terrain dans le desert
 	 */
-	public Spiral()
+	public Spiral(Jeu jeu)
 	{
-		super(  480,  // largeur
+		super(  jeu,
+		        480,  // largeur
                 500,  // hauteur
                 100,  // nbPiecesOrInitiales
                 20,   // nbViesInitiales

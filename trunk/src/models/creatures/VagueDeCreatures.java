@@ -1,8 +1,8 @@
 package models.creatures;
 
 import java.awt.Rectangle;
+import models.jeu.Jeu;
 import models.maillage.PathNotFoundException;
-import models.terrains.Terrain;
 
 /**
  * Structure permettant de stoquer des informations et lancer une vague de
@@ -56,7 +56,7 @@ public class VagueDeCreatures implements Runnable
     /**
      * le terrain su lequel lancer les creatures
      */
-    private Terrain terrain;
+    private Jeu jeu;
 
     /**
      * l'ecouteur de creature a fournir a chaque creature lors du lancement
@@ -159,10 +159,10 @@ public class VagueDeCreatures implements Runnable
      * @param terrain le terrain en question
      * @param edc l'ecouteur de creature fourni a chaque creature creee
      */
-    public void lancerVague(Terrain terrain, EcouteurDeVague edv,
+    public void lancerVague(Jeu jeu, EcouteurDeVague edv,
             EcouteurDeCreature edc)
     {
-        this.terrain = terrain;
+        this.jeu = jeu;
         this.edc = edc;
         this.edv = edv;
         thread = new Thread(this);
@@ -172,8 +172,8 @@ public class VagueDeCreatures implements Runnable
     public void run()
     {
         // recuperation des zones
-        final Rectangle ZONE_DEPART = terrain.getZoneDepart();
-        final Rectangle ZONE_ARRIVEE = terrain.getZoneArrivee();
+        final Rectangle ZONE_DEPART = jeu.getTerrain().getZoneDepart();
+        final Rectangle ZONE_ARRIVEE = jeu.getTerrain().getZoneArrivee();
 
         int xDepart = (int) ZONE_DEPART.getCenterX();
         int yDepart = (int) ZONE_DEPART.getCenterY();
@@ -200,7 +200,7 @@ public class VagueDeCreatures implements Runnable
 
             try
             {    
-                creature.setChemin(terrain.getCheminLePlusCourt(xDepart,
+                creature.setChemin(jeu.getTerrain().getCheminLePlusCourt(xDepart,
                         yDepart, (int) ZONE_ARRIVEE.getCenterX(),
                         (int) ZONE_ARRIVEE.getCenterY(), creature.getType()));
                 
@@ -210,7 +210,7 @@ public class VagueDeCreatures implements Runnable
                 // le chemin reste nul.
             }
 
-            terrain.ajouterCreature(creature);
+            jeu.getGestionnaireCreatures().ajouterCreature(creature);
 
             // temps d'attente entre chaque creature
             try

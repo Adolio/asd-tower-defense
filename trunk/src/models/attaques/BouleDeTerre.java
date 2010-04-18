@@ -1,10 +1,9 @@
 package models.attaques;
 
 import java.awt.*;
-
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.outils.MeilleursScores;
-import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -51,10 +50,10 @@ public class BouleDeTerre extends Attaque
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public BouleDeTerre(Terrain terrain, Tour attaquant, Creature cible, 
+    public BouleDeTerre(Jeu jeu, Tour attaquant, Creature cible, 
                       long degats, double rayonImpact)
     {
-        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), jeu, attaquant, cible);
         
         this.degats         = degats;
         this.rayonImpact    = rayonImpact;

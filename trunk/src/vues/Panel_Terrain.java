@@ -3,11 +3,11 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
-import java.awt.image.MemoryImageSource;
 import java.util.*;
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
+import models.joueurs.Joueur;
 import models.tours.Tour;
 
 /**
@@ -100,7 +100,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
 	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
-	private static final Color COULEUR_MUR          = Color.BLACK;
 	private static final Color COULEUR_MAILLAGE 	= Color.WHITE;
 	private static final Color COULEUR_SANTE 		= Color.GREEN;
 	private static final Color COULEUR_CHEMIN 		= Color.BLUE;
@@ -179,6 +178,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private Jeu jeu;
 	
 	/**
+     * Reference vers le joueur à gerer
+     */
+	private Joueur joueur;
+	
+	/**
 	 * Reference vers la fenetre parent
 	 */
 	private Fenetre_Jeu fenJeu;
@@ -205,24 +209,22 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static Cursor curRedimHaut     = new Cursor(Cursor.N_RESIZE_CURSOR);
 	private static Cursor curRedimBas      = new Cursor(Cursor.S_RESIZE_CURSOR);
 	private static Cursor curNormal        = new Cursor(Cursor.DEFAULT_CURSOR);
-	private static Cursor curTransparent;
 	private static Cursor curMainAgripper;
 	
 	static
 	{
-	    
-	   
+	    /*
+	    TODO curseur transparent
 	    int[] pixels = new int[16 * 16];
 	    Image image = Toolkit.getDefaultToolkit().createImage(
 	            new MemoryImageSource(16, 16, pixels, 0, 16));
 	    curTransparent = Toolkit.getDefaultToolkit().createCustomCursor
 	                 (image, new Point(0, 0), "curseurInvisible");
+	    */
 	    
 	    Image imagee = Toolkit.getDefaultToolkit().getImage("img/icones/hand_grab2.png");
 	    curMainAgripper = Toolkit.getDefaultToolkit().createCustomCursor
-        (imagee,  new Point(0, 0), "curseurInvisible");
-
-	    
+        (imagee,  new Point(0, 0), "curseurInvisible"); 
 	}
 	
 	
@@ -231,15 +233,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * 
 	 * @param jeu Le jeu a gerer
 	 */
-	public Panel_Terrain(Jeu jeu,Fenetre_Jeu fenJeu)
+	public Panel_Terrain(Jeu jeu,Fenetre_Jeu fenJeu, Joueur joueur)
 	{
 		// sauvegarde du jeu
 		this.jeu 	= jeu;
 		this.fenJeu = fenJeu;
+		this.joueur = joueur;
 		
 		// proprietes du panel
-		LARGEUR = jeu.getLargeurTerrain();
-		HAUTEUR = jeu.getHauteurTerrain();
+		LARGEUR = jeu.getTerrain().getLargeur();
+		HAUTEUR = jeu.getTerrain().getHauteur();
 		setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
 		setFocusable(true);
 		
@@ -347,8 +350,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 
 	    if(coeffTaille < 1)
 	    {
-	        decaleX = (int) (getSize().width/2.0 - jeu.getLargeurTerrain()*coeffTaille/2.0);
-	        decaleY = (int) (getSize().height/2.0 - jeu.getHauteurTerrain()*coeffTaille/2.0);
+	        decaleX = (int) (getSize().width/2.0 - LARGEUR*coeffTaille/2.0);
+	        decaleY = (int) (getSize().height/2.0 - HAUTEUR*coeffTaille/2.0);
 	    }
 	    
 	    g2.scale(coeffTaille, coeffTaille);
@@ -381,7 +384,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(afficherMaillage)
 		{
 		    // couleur de fond
-            g2.setColor(jeu.getCouleurDeFondTerrain());
+            g2.setColor(jeu.getTerrain().getCouleurDeFond());
             g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		    
 		    // modification de la transparence
@@ -389,15 +392,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 			// dessin de la zone de depart
 			g2.setColor(COULEUR_ZONE_DEPART);
-			dessinerZone(jeu.getZoneDepart(),g2);
+			dessinerZone(jeu.getTerrain().getZoneDepart(),g2);
 			
 			// dessin de la zone d'arrivee
 			g2.setColor(COULEUR_ZONE_ARRIVEE);
-			dessinerZone(jeu.getZoneArrivee(),g2);
+			dessinerZone(jeu.getTerrain().getZoneArrivee(),g2);
 			
-			ArrayList<Rectangle> murs = jeu.getMurs();
+			ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
 			setTransparence(ALPHA_SURFACE_MUR, g2);
-			g2.setColor(jeu.getCouleurMursTerrain());
+			g2.setColor(jeu.getTerrain().getCouleurMurs());
 			for(Rectangle mur : murs)
 			    dessinerZone(mur,g2);
 			
@@ -412,7 +415,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    setTransparence(ALPHA_MAILLAGE, g2);
 			
 		    // recuperation de la liste des arcs actifs
-			ArrayList<Line2D> arcsActifs = jeu.getArcsActifs();
+			ArrayList<Line2D> arcsActifs = jeu.getTerrain().getArcsActifs();
 			
 			if(arcsActifs != null)
 			{
@@ -461,7 +464,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------
 		//-- affichage des tours --
 		//-------------------------
-		for(Tour tour : jeu.getTours())
+		for(Tour tour : jeu.getGestionnaireTours().getTours())
 			dessinerTour(tour,g2,false);
 		
 	    //--------------------------------------
@@ -521,7 +524,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des rayons de portee --
 		//------------------------------------
 		if(afficherRayonsDePortee)
-			for(Tour tour : jeu.getTours())
+			for(Tour tour : jeu.getGestionnaireTours().getTours())
 				dessinerPortee(tour,g2,COULEUR_RAYON_PORTEE);
 		
 		//------------------------------
@@ -541,15 +544,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			dessinerTour(tourAAjouter,g2,false);
 			
 			// positionnnable ou non
-			if(!jeu.laTourPeutEtrePosee(tourAAjouter))
+			if(!jeu.getGestionnaireTours().laTourPeutEtrePosee(tourAAjouter))
 				dessinerPortee(tourAAjouter,g2,COULEUR_POSE_IMPOSSIBLE);
 			else
 				// affichage du rayon de portee
 				dessinerPortee(tourAAjouter,g2,COULEUR_RAYON_PORTEE);
 		}
-		
-		
-		
 	}
 
 	/**
@@ -764,7 +764,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void run()
 	{
 		// Tant que la partie est en cours...
-		while(!jeu.partieEstPerdu())
+		while(!joueur.aPerdu())
 		{
 			// Raffraichissement du panel
 			repaint(); // -> appel paint
@@ -807,7 +807,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        //--------------------------
 	        
 	        // la selection se fait lors du clique
-			for(Tour tour : jeu.getTours()) // pour chaque tour... 
+			for(Tour tour : jeu.getGestionnaireTours().getTours()) // pour chaque tour... 
 				if (tour.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
 				{	
 					// si le joueur clique sur une tour deja selectionnee
@@ -924,9 +924,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    decaleX++;
 		}
 		
-		if(sourisX > jeu.getLargeurTerrain()-MARGES_DEPLACEMENT 
-		&& sourisX < jeu.getLargeurTerrain() 
-		&& getCoordoneeSurTerrainOriginal(jeu.getLargeurTerrain(),0).x < jeu.getLargeurTerrain())
+		if(sourisX > LARGEUR-MARGES_DEPLACEMENT 
+		&& sourisX < LARGEUR 
+		&& getCoordoneeSurTerrainOriginal(LARGEUR,0).x < LARGEUR)
 		{
 		    setCursor(curRedimDroite);
 		    decaleX--;
@@ -940,9 +940,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
             decaleY++;
 		}
 		
-		if(sourisY > jeu.getHauteurTerrain()-MARGES_DEPLACEMENT 
-        && sourisY < jeu.getHauteurTerrain() 
-        && getCoordoneeSurTerrainOriginal(0,jeu.getHauteurTerrain()).y < jeu.getHauteurTerrain())
+		if(sourisY > HAUTEUR-MARGES_DEPLACEMENT 
+        && sourisY < HAUTEUR 
+        && getCoordoneeSurTerrainOriginal(0,HAUTEUR).y < HAUTEUR)
 		{
             setCursor(curRedimHaut);    
             decaleY--;
@@ -1075,7 +1075,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
         // raccourci de gain d'argent (debug)
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
-            jeu.ajouterPiecesDOr(1000);
+            fenJeu.ajouterPiecesDOr(1000);
+            
             fenJeu.miseAJourInfoJeu();
         }
         // TODO [DEBUG] enlever pour version finale

@@ -76,7 +76,7 @@ public class TourCanon extends Tour
 	
 	public void tirer(Creature creature)
 	{
-	    terrain.ajouterAnimation(new BouletDeCanon(terrain,this,creature,degats,RAYON_IMPACT));
+	    jeu.getGestionnaireAnimations().ajouterAnimation(new BouletDeCanon(jeu,this,creature,degats,RAYON_IMPACT));
 	}
 
 

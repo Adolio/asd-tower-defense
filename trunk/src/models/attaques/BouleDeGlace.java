@@ -2,8 +2,8 @@ package models.attaques;
 
 import java.awt.*;
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.outils.MeilleursScores;
-import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
@@ -52,10 +52,10 @@ public class BouleDeGlace extends Attaque
      * @param attaquant la tour attaquante
      * @param cible la creature visee
      */
-    public BouleDeGlace(Terrain terrain, Tour attaquant, Creature cible, 
+    public BouleDeGlace(Jeu jeu, Tour attaquant, Creature cible, 
                       long degats, double coeffRalentissement)
     {
-        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), terrain, attaquant, cible);
+        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), jeu, attaquant, cible);
         
         this.degats                 = degats;
         this.coeffRalentissement    = coeffRalentissement;
@@ -111,7 +111,7 @@ public class BouleDeGlace extends Attaque
                 if(cible.getCoeffRalentissement() == 0.0)
                 {
                     cible.setCoeffRalentissement(coeffRalentissement);
-                    terrain.ajouterAnimation(new Glacon(terrain,attaquant,cible,DUREE_RALENTISSEMENT));
+                    jeu.getGestionnaireAnimations().ajouterAnimation(new Glacon(jeu,attaquant,cible,DUREE_RALENTISSEMENT));
                 }
             }
         }
