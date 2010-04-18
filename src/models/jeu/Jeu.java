@@ -103,25 +103,6 @@ public class Jeu
         return VERSION;
     }
 
-    /**
-     * Permet de recuperer l'image de fond du terrain.
-     * @return l'image de fond du terrain
-     */
-    public Image getImageDeFondTerrain()
-    {
-        return terrain.getImageDeFond();
-    }
-    
-    /**
-     * Permet de recuperer les creatures sur le terrain.
-     * 
-     * @return les creatures du terrain.
-     */
-    public Vector<Creature> getCreatures()
-    {
-        return gestionnaireCreatures.getCreatures();
-    }
-	
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
@@ -129,23 +110,6 @@ public class Jeu
 	{
 		terrain.lancerVagueSuivante(edv, edc);
 	}
-
-    /**
-     * Permet de demarrer la lecture de la musique d'ambiance du terrain
-     */
-    public void demarrerMusiqueDAmbianceDuTerrain()
-    {
-        terrain.demarrerMusiqueDAmbiance();
-    }
-
-    /**
-     * Permet d'arreter la lecture de la musique d'ambiance du terrain
-     */
-    public void arreterMusiqueDAmbianceDuTerrain()
-    {
-        terrain.arreterMusiqueDAmbiance();
-    }
-
 
     /**
      * Permet de terminer la partie en cours
