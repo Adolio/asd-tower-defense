@@ -3,6 +3,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
+import java.awt.image.MemoryImageSource;
 import java.util.*;
 import javax.swing.*;
 import models.creatures.Creature;
@@ -56,23 +57,23 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * largeur d'un case du maillage pour le positionnement des tours
 	 */
-	private static final int CADRILLAGE    = 10; // unite du cadriallage en pixel
+	private static final int CADRILLAGE = 10; // unite du cadriallage en pixel
 	
 	/**
-	 * TODO
+	 * Coefficient de taille du rendu final du terrain
 	 */
-	private double coeffTaille = 1;
+	private double coeffTaille = 1.0;
 	
 	/**
-	 * TODO
+	 * Taille des marges pour le scrolling automatique sur les bords du panel
 	 */
 	private final int MARGES_DEPLACEMENT = 20;
 	
 	/**
-     * TODO
+     * Décalages du rendu par rapport à la position 0 du panel (scale)
      */
-	private int decaleX = 0;
-	private int decaleY = 0;
+	private int decaleX = 0,
+	            decaleY = 0;
 	
 	//---------------------------
 	//-- preferences de dessin --
@@ -86,6 +87,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	            1.0f,BasicStroke.CAP_ROUND, 
 	            BasicStroke.JOIN_MITER, 
 	            10.0F, DASHES, 0.F);
+	Stroke traitTmp;
 	
 	// 0.0f = 100% transparent et 1.0f vaut 100% opaque.
 	private static final float ALPHA_PERIMETRE_PORTEE = .6f;
@@ -109,6 +111,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_RAYON_PORTEE = Color.WHITE;
 	private static final Color COULEUR_NIVEAU 		= Color.WHITE;
 	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
+	private static final Color COULEUR_UNIVERS      = Color.BLACK;
+	
 	
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
@@ -126,8 +130,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private int sourisX, sourisY;
 		
 	
-	// TODO
+	/**
+	 * Permet de stocker l'endroit du debut de l'agrippage
+	 */
 	private int sourisGrabX, sourisGrabY;
+	
+	/**
+	 * Permet de savoir le decalage effectuer depuis le position
+	 * du debut de l'agrippage
+	 */
 	private int decaleGrabX, decaleGrabY;
 	
 	/**
@@ -182,14 +193,37 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	private boolean afficherRayonsDePortee;
 	
+	/**
+	 * TODO
+	 */
+	private final double ETAPE_ZOOM = 0.2;
 	
-	// TODO
-	private static Cursor redimentionnementDroite  = new Cursor(Cursor.E_RESIZE_CURSOR);
-	private static Cursor redimentionnementGauche  = new Cursor(Cursor.W_RESIZE_CURSOR);
-	private static Cursor redimentionnementHaut    = new Cursor(Cursor.N_RESIZE_CURSOR);
-	private static Cursor redimentionnementBas     = new Cursor(Cursor.S_RESIZE_CURSOR);
-	private static Cursor curseurNormal            = new Cursor(Cursor.DEFAULT_CURSOR);
 	
+	// curseurs
+	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
+	private static Cursor curRedimGauche   = new Cursor(Cursor.W_RESIZE_CURSOR);
+	private static Cursor curRedimHaut     = new Cursor(Cursor.N_RESIZE_CURSOR);
+	private static Cursor curRedimBas      = new Cursor(Cursor.S_RESIZE_CURSOR);
+	private static Cursor curNormal        = new Cursor(Cursor.DEFAULT_CURSOR);
+	private static Cursor curTransparent;
+	private static Cursor curMainAgripper;
+	
+	static
+	{
+	    
+	   
+	    int[] pixels = new int[16 * 16];
+	    Image image = Toolkit.getDefaultToolkit().createImage(
+	            new MemoryImageSource(16, 16, pixels, 0, 16));
+	    curTransparent = Toolkit.getDefaultToolkit().createCustomCursor
+	                 (image, new Point(0, 0), "curseurInvisible");
+	    
+	    Image imagee = Toolkit.getDefaultToolkit().getImage("img/icones/hand_grab2.png");
+	    curMainAgripper = Toolkit.getDefaultToolkit().createCustomCursor
+        (imagee,  new Point(0, 0), "curseurInvisible");
+
+	    
+	}
 	
 	
 	/**
@@ -316,11 +350,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        decaleX = (int) (getSize().width/2.0 - jeu.getLargeurTerrain()*coeffTaille/2.0);
 	        decaleY = (int) (getSize().height/2.0 - jeu.getHauteurTerrain()*coeffTaille/2.0);
 	    }
+	    
 	    g2.scale(coeffTaille, coeffTaille);
 	    g2.translate(decaleX, decaleY);
 	    
 	    
-	    g2.setColor(Color.BLACK);
+	    //---------------------------
+        //-- affichage de l'espace --
+        //---------------------------
+	    g2.setColor(COULEUR_UNIVERS);
 	    g2.fillRect(-1000, -1000, 2000, 2000);
 	    
 	    
@@ -452,10 +490,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.setStroke(TRAIT_TILLE);
 			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
 					(int) (tourSelectionnee.getWidth()),
-					(int) (tourSelectionnee.getHeight()));
-			
-			
-			
+					(int) (tourSelectionnee.getHeight()));	
 		}
 		
 		//-------------------------------------
@@ -464,6 +499,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(creatureSelectionnee != null)
 		{
 			g2.setColor(COULEUR_SELECTION);
+			
+			traitTmp = g2.getStroke();
 			g2.setStroke(TRAIT_TILLE);
 			g2.drawOval((int) (creatureSelectionnee.getX()), 
 						(int) (creatureSelectionnee.getY()),
@@ -473,6 +510,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			// dessine son chemin
 			setTransparence(ALPHA_CHEMIN_CREATURE,g2);
 			dessinerCheminCreature(creatureSelectionnee,g2);
+			g2.setStroke(traitTmp);
+			
+			centrerSur((int) creatureSelectionnee.getX(),
+			           (int) creatureSelectionnee.getY());
 			
 		}
 		
@@ -845,7 +886,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		// l'ajout se fait lors de la relache du clique
 		if(tourAAjouter != null)
+		{
 			fenJeu.acheterTour(tourAAjouter);
+			setCursor(curNormal);
+		}
 	}
 	
 	/**
@@ -869,15 +913,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
         //---------------------------
         //-- gestion des decalages --
         //---------------------------
-        // TODO
-		
-        setCursor(curseurNormal);
+        // TODO gestion des decalages
+        setCursor(curNormal);
 		
 		if(sourisX > 0 
 		&& sourisX < MARGES_DEPLACEMENT
 		&& decaleX < 0)
 		{
-            setCursor(redimentionnementGauche);
+            setCursor(curRedimGauche);
 		    decaleX++;
 		}
 		
@@ -885,7 +928,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		&& sourisX < jeu.getLargeurTerrain() 
 		&& getCoordoneeSurTerrainOriginal(jeu.getLargeurTerrain(),0).x < jeu.getLargeurTerrain())
 		{
-		    setCursor(redimentionnementDroite);
+		    setCursor(curRedimDroite);
 		    decaleX--;
 		} 
 		
@@ -893,7 +936,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         && sourisY < MARGES_DEPLACEMENT
         && decaleY < 0) 
 		{
-            setCursor(redimentionnementBas);
+            setCursor(curRedimBas);
             decaleY++;
 		}
 		
@@ -901,14 +944,19 @@ public class Panel_Terrain extends JPanel implements Runnable,
         && sourisY < jeu.getHauteurTerrain() 
         && getCoordoneeSurTerrainOriginal(0,jeu.getHauteurTerrain()).y < jeu.getHauteurTerrain())
 		{
-            setCursor(redimentionnementHaut);    
+            setCursor(curRedimHaut);    
             decaleY--;
 		}
             
+		
+		// mise a jour de la position de la tour à ajoutée
 		if(tourAAjouter != null)
 		{
+		    // pour eviter des pertes de précision,on récupère d'abord 
+		    // la position sur le terrain de taille normal...
 		    Point p = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
 		    
+		    // ... puis on calcul la position sur le quadrillage
 		    tourAAjouter.setLocation(
 		        getPositionSurQuadrillage(p.x), 
 		        getPositionSurQuadrillage(p.y)
@@ -916,16 +964,24 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		}
 	}
 	
+	/**
+	 * Permet de recupérer la case sur le quadrillage d'une position.
+	 * 
+	 * @param position une position X ou Y
+	 * @return la case sur le quadrillage carré
+	 */
 	public int getPositionSurQuadrillage(int position)
 	{
-	    return  Math.round(position/CADRILLAGE)*CADRILLAGE;
+	    return Math.round(position/CADRILLAGE)*CADRILLAGE;
 	}
 	
-	
-	
 	/**
-	 * Permet de faire correspondre une coordonnée donnée sur la position normale
-	 * du terrain (sans zoom et décalage)
+     * Permet de faire correspondre une coordonnée donnée sur la position normale
+     * du terrain (sans zoom et décalage)
+     * 
+	 * @param x la position x du point
+	 * @param y la position y du point
+	 * @return le point correspondant sur le terrain de taille normal
 	 */
 	private Point getCoordoneeSurTerrainOriginal(int x, int y)
 	{
@@ -949,7 +1005,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	   // si rien n'est selectionner, on autorise le grab
 	   else
 	   {
-	       setCursor(new Cursor(Cursor.MOVE_CURSOR));
+	       setCursor(curMainAgripper);
 	      
     	   decaleX = decaleGrabX - (sourisGrabX - me.getX())/ 2;
     	   decaleY = decaleGrabY - (sourisGrabY - me.getY())/ 2; 
@@ -967,6 +1023,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		sourisSurTerrain = true;
 		
+		//if(tourAAjouter != null)
+		//    setCursor(curseurTransparent);
+
 		// recuperation du focus. 
 		// /!\ Important pour la gestion des touches clavier /!\
 		requestFocusInWindow(true); 
@@ -1031,23 +1090,39 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void keyTyped(KeyEvent ke){}
 
-    @Override
+	@Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        if(e.getWheelRotation() < 0) // zoom
-            coeffTaille -= e.getWheelRotation()/10.0;
-        else if(coeffTaille > 1.0) // dézoom
-            coeffTaille -= e.getWheelRotation()/10.0;
+        // recupère le point avant le changement d'echelle
+        Point pAvant = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+        
+        // adaptation de l'echelle
+        if(e.getWheelRotation() < 0 || coeffTaille > 1.0) // zoom
+            coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
+        //else if() // dézoom
+        //    coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
 
-        //Point p = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
-        //centrerSur(p.x,p.y);
+        // recupère le point après le changement d'echelle
+        Point pAprès = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+        
+        // adapte le décalage pour que le point ciblé reste au même
+        // endroit en proportion de du panel
+        decaleX +=  pAprès.x - pAvant.x;
+        decaleY +=  pAprès.y - pAvant.y;
     }
     
-    // TODO
+    /**
+     * Permet de centrer le terrain sur une coordonnée du terrain de taille
+     * normale.
+     * 
+     * @param x la position sur le terrain normal
+     * @param y la position sur le terrain normal
+     */
     private void centrerSur(int x, int y)
     {
-        decaleX = (int) (x * coeffTaille - jeu.getLargeurTerrain() / 2);
-        decaleY = (int) (y * coeffTaille - jeu.getHauteurTerrain() / 2);
+        // TODO marche pas vraiment avec les zooms
+        decaleX = (int) (getSize().width/2.0 - x * coeffTaille);
+        decaleY = (int) (getSize().height/2.0 - y * coeffTaille);
     }
     
 }

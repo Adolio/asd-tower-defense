@@ -2,6 +2,7 @@ package models.tours;
 
 import java.awt.*;
 import models.creatures.Creature;
+import models.joueurs.Joueur;
 import models.terrains.Terrain;
 
 /**
@@ -108,6 +109,11 @@ public abstract class Tour extends Rectangle
 	 * Utilise pour savoir si la tour est en jeu.
 	 */
 	protected boolean enJeu;
+	
+	/**
+	 * Propriétaire de la tour
+	 */
+	protected Joueur proprietaire;
 
 	/**
 	 * Cadence de tir de la tour. C'est-a-dire le nombre de fois que peut tirer
