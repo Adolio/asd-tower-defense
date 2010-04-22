@@ -94,7 +94,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
     
     
 	// autre attribut
-    // TODO
+    // TODO commenter
 	private Jeu jeu;
 	private Joueur joueur;
     private boolean vaguePeutEtreLancee = true;
