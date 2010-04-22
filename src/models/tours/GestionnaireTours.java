@@ -198,10 +198,9 @@ public class GestionnaireTours implements Runnable
         // supprime la tour
         supprimerTour(tour);
         
-        // TODO
-        // credit des pieces d'or
-        //jeu.setNbPiecesOr(jeu.getNbPiecesOr() + tour.getPrixDeVente());
-        //nbPiecesOr += tour.getPrixDeVente();
+        // debit des pieces d'or
+        tour.getPrioprietaire().setNbPiecesDOr(
+                tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
     }
 
     // TODO [ORGANISATION] mettre en place

@@ -198,10 +198,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private boolean afficherRayonsDePortee;
 	
 	/**
-	 * TODO
+	 * Etape d'une echelle de zoom
 	 */
 	private final double ETAPE_ZOOM = 0.2;
-	
+
+	/**
+	 * Stockage du bouton lors d'un aggripement
+	 */
+    private int boutonDragg;
 	
 	// curseurs
 	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
@@ -214,7 +218,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	static
 	{
 	    /*
-	    TODO curseur transparent
+	    TODO [INFO] curseur transparent
 	    int[] pixels = new int[16 * 16];
 	    Image image = Toolkit.getDefaultToolkit().createImage(
 	            new MemoryImageSource(16, 16, pixels, 0, 16));
@@ -516,9 +520,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			dessinerCheminCreature(creatureSelectionnee,g2);
 			g2.setStroke(traitTmp);
 			
+			
+			
+			// TODO implémenter
+			/*
 			centrerSur((int) creatureSelectionnee.getX(),
 			           (int) creatureSelectionnee.getY());
-			
+			*/
 		}
 		
 		//------------------------------------
@@ -789,10 +797,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void mousePressed(MouseEvent me)
 	{
+	    boutonDragg = me.getButton();
+	    
 	    // clique gauche
 	    if (me.getButton() == MouseEvent.BUTTON1)
 		{
 	        
+	            
 	        sourisGrabX = me.getX();
 	        sourisGrabY = me.getY();
 	        
@@ -914,7 +925,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
         //---------------------------
         //-- gestion des decalages --
         //---------------------------
-        // TODO gestion des decalages
         setCursor(curNormal);
 		
 		if(sourisX > 0 
@@ -999,18 +1009,21 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
     public void mouseDragged(MouseEvent me)
     {
-	   // si il n'y a pas de tour a ajouter, c'est comme si elle bougeait normalement 
-	   if(tourAAjouter != null)
-	       mouseMoved(me); 
+	    if(boutonDragg == MouseEvent.BUTTON1)
+	    {
+	        // si il n'y a pas de tour a ajouter, c'est comme si elle bougeait normalement 
+	        if(tourAAjouter != null)
+	            mouseMoved(me);
 	   
-	   // si rien n'est selectionner, on autorise le grab
-	   else
-	   {
-	       setCursor(curMainAgripper);
-	      
-    	   decaleX = decaleGrabX - (sourisGrabX - me.getX())/ 2;
-    	   decaleY = decaleGrabY - (sourisGrabY - me.getY())/ 2; 
-	   }
+            // si rien n'est selectionner, on autorise le grab
+            else
+            {
+                setCursor(curMainAgripper);
+                
+                decaleX = decaleGrabX - (sourisGrabX - me.getX()) / 2;
+                decaleY = decaleGrabY - (sourisGrabY - me.getY()) / 2;
+            }
+        }
     }
 
 	/**

@@ -537,8 +537,9 @@ public abstract class Tour extends Rectangle
     private long tempsDernierAppel;
 
     /**
-     * TODO
-     * @return
+     * Permet de recuperer le propriétaire de la tour
+     * 
+     * @return le propriétaire de la tour
      */
     public Joueur getPrioprietaire()
     {
@@ -546,7 +547,9 @@ public abstract class Tour extends Rectangle
     }
     
     /**
-     * TODO
+     * Permet de modifier le propriétaire de la tour
+     * 
+     * @param Joueur le propriétaire de la tour
      */
     public void setProprietaire(Joueur proprietaire)
     {
