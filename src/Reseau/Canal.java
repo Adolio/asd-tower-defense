@@ -40,17 +40,17 @@ public class Canal {
       try {
          if (afficherMessagesDebug) {
             System.out
-                  .print("     Canal: en attente de connexion sur le port "
-                        + port.getNumeroPort() + " à l'adresse ");
+                  .print("     Canal: en attente de connexion sur le port <"
+                        + port.getNumeroPort() + "> à l'adresse ");
             for (NetworkInterface netint : Collections.list(NetworkInterface.getNetworkInterfaces())) {
                for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
                   if (!inetAddress.toString().contains(":") && !inetAddress.toString().contains("127.0.0.1"))
                   {
-                     System.out.print(inetAddress.toString().substring(1));
+                     System.out.print("[" + inetAddress.toString().substring(1) + "] ou ");
                   }
                }
             }
-            System.out.println(" (127.0.0.1 en local)");
+            System.out.println("[127.0.0.1]");
          }
          
          // Accepter une connexion, c'est-à-dire soit prendre une connexion en attente ou

@@ -11,7 +11,7 @@ import Reseau.*;
  */
 public class SEInscription {
    
-   private ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
+   private static ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
    private Port port;
    private boolean avecLog;
    private Canal canal;
@@ -33,7 +33,7 @@ public class SEInscription {
       port.reserver();
       while (true) {
          creerCanal();
-         (new Thread(new SEConnexion(canal, this))).start();
+         (new Thread(new SEConnexion(canal))).start();
       }
    }
    
@@ -54,7 +54,7 @@ public class SEInscription {
     * @param e
     * @return
     */
-   public boolean ajouterEnregistrement(Enregistrement e) {
+   public static synchronized boolean ajouterEnregistrement(Enregistrement e) {
       if (!jeuxEnregistres.contains(e)) {
          jeuxEnregistres.add(e);
          return true;
@@ -66,7 +66,7 @@ public class SEInscription {
     * 
     * @param e
     */
-   public void enleverEnregistrement(Enregistrement e) {
+   public static synchronized void enleverEnregistrement(Enregistrement e) {
       jeuxEnregistres.remove(e);
    }
    
@@ -74,7 +74,7 @@ public class SEInscription {
     * 
     * @return
     */
-   public int getNombreEnregistrements() {
+   public static synchronized int getNombreEnregistrements() {
       return jeuxEnregistres.size();
    }
    
@@ -82,7 +82,7 @@ public class SEInscription {
     * 
     * @return
     */
-   public ArrayList<Enregistrement> getJeuxEnregistres() {
+   public static synchronized ArrayList<Enregistrement> getJeuxEnregistres() {
       return jeuxEnregistres;
    }
 }

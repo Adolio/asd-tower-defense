@@ -1,6 +1,7 @@
 package ServeurEnregistrement;
 
 import Reseau.*;
+import org.json.*;
 
 
 /**
@@ -8,24 +9,23 @@ import Reseau.*;
  * @author lazhar
  *
  */
-public class SEConnexion implements Runnable {
+public class SEConnexion implements Runnable, CodeEnregistrement {
    
    private Canal canal;
-   private SEInscription seInscription;
-   private String messageRecu;
-   private String nomPartieCourante;
-   private boolean helloOk = false;
    private Enregistrement enregisrementCourant;
+   private JSONObject messageJsonRecu;
+   private JSONObject contenu;
+   private int code;
+   private String jsonString;
    
    /**
     * 
     * @param canal
-    * @param seInscription
+    * @param SEInscription
     */
-   public SEConnexion(Canal canal, SEInscription seInscription)
+   public SEConnexion(Canal canal)
    {
       this.canal = canal;
-      this.seInscription = seInscription;
    }
    
    /**
@@ -36,84 +36,109 @@ public class SEConnexion implements Runnable {
       bouclePrincipale:
       while (true)
       {
-         messageRecu = canal.recevoirString();
-         
-         if (messageRecu.equals("BREAK"))
-         {
-            canal.fermer();
-            break bouclePrincipale;
-         }
-         
-         if (!messageRecu.equals("HELLO") && !helloOk)
-         {
-            canal.envoyerString("NACK");
-            miseAJourEnregistrements();
-            continue bouclePrincipale;
-         }
-         
-         if (messageRecu.equals("HELLO"))
-         {
-            nomPartieCourante = canal.recevoirString();
-            canal.envoyerString("ACK");
-            helloOk = true;
-            miseAJourEnregistrements();
-            continue bouclePrincipale;
-         }
-         
-         if (messageRecu.equals("REGISTER")) {
-            enregisrementCourant = new Enregistrement(
-               nomPartieCourante,
-               canal.recevoirString(),
-               new Port(canal.recevoirString())
-            );
+         try {
+            messageJsonRecu = new JSONObject(canal.recevoirString());
+            code = messageJsonRecu.getJSONObject("donnees").getInt("code");
             
-            if (seInscription.ajouterEnregistrement(enregisrementCourant))
+            switch(code)
             {
-               canal.envoyerString("ACK");
+               case STOP :
+                  canal.fermer();
+                  break bouclePrincipale;
+                  
+               case TEST :
+                  canal.envoyerString("{\"status\" : \"OK\"}");
+                  break;
+                  
+               case ENREGISTRER :
+                  contenu = messageJsonRecu.getJSONObject("donnees")
+                                           .getJSONObject("contenu");
+                  enregisrementCourant = new Enregistrement(
+                              contenu.getString("nomPartie"),
+                              contenu.getString("adresseIp"),
+                              new Port(contenu.getInt("numeroPort")),
+                              contenu.getInt("capacite"));
+                  
+                  if (SEInscription.ajouterEnregistrement(enregisrementCourant))
+                  {
+                     canal.envoyerString("{\"status\" : \"OK\"}");
+                  }
+                  else
+                  {
+                     canal.envoyerString("{\"status\" : \"ERROR\"," +
+                                         "\"message\" : \"Cette partie existe deja!\"}");
+                  }
+                  break;
+                  
+               case DESENREGISTRER :
+                  if (enregisrementCourant != null)
+                  {
+                     SEInscription.enleverEnregistrement(enregisrementCourant);
+                     canal.envoyerString("{\"status\" : \"OK\"}");
+                     canal.fermer();
+                     break bouclePrincipale;
+                  }
+                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                                      "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
+                  break;
+                  
+               case NOMBRE_PARTIES :
+                  canal.envoyerString("{\"status\" : \"OK\"," +
+                                      "\"nombreParties\" : " + 
+                                          SEInscription.getNombreEnregistrements() + "}");
+                  break;
+                  
+               case INFOS_PARTIES :
+                  if (enregisrementCourant != null)
+                  {
+                     jsonString = "{\"status\" : \"OK\", \"parties\" : [";
+                     for (Enregistrement e : SEInscription.getJeuxEnregistres())
+                     {
+                        jsonString.concat("{");
+                        jsonString.concat("\"nomPartie\" : \"");
+                        jsonString.concat(e.getNomPartie());
+                        jsonString.concat("\",");
+                        jsonString.concat("\"adresseIp\" : \"");
+                        jsonString.concat(e.getAdresseIp());
+                        jsonString.concat("\",");
+                        jsonString.concat("\"numeroPort\" : " + e.getPort().getNumeroPort() + ",");
+                        jsonString.concat("\"capacite\" : " + e.getCapacite() + ",");
+                        jsonString.concat("\"placesRestantes\" : " + e.getPlacesRestantes());
+                        jsonString.concat("},");
+                     }
+                     jsonString = jsonString.substring(0, jsonString.length() - 2);
+                     jsonString.concat("]}");
+                     
+                     canal.envoyerString(jsonString);
+                     break;
+                  }
+                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                                      "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
+                  break;
+                  
+               case AJOUTER_JOUEUR :
+                  if (enregisrementCourant != null)
+                  {
+                     canal.envoyerString("{\"status\" : \"OK\"}");
+                     enregisrementCourant.setPlacesRestantes(enregisrementCourant.getPlacesRestantes() - 1);
+                     break;
+                  }
+                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                                      "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
+                  break;
+                  
+               default :
+                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                                      "\"message\" : \"Code errone!\"}");
+                  break;
             }
-            else
-            {
-               canal.envoyerString("NACK");
-               System.out.println("Partie déjà existante!");
-            }
-            miseAJourEnregistrements();
-            continue bouclePrincipale;
+         }
+         catch (JSONException e1) {
+            // JSON exception
+            e1.printStackTrace();
          }
          
-         if (messageRecu.equals("UNREGISTER")) {
-            seInscription.enleverEnregistrement(enregisrementCourant);
-            canal.envoyerString("ACK");
-            canal.fermer();
-            break bouclePrincipale;
-         }
-         
-         if (messageRecu.equals("GAMESNUMBER"))
-         {
-            canal.envoyerString("ACK");
-            canal.envoyerInt(seInscription.getNombreEnregistrements());
-            miseAJourEnregistrements();
-            continue bouclePrincipale;
-         }
-         
-         if (messageRecu.equals("GAMESLOCATIONS"))
-         {
-            if (seInscription.getNombreEnregistrements() == 0)
-            {
-               canal.envoyerString("NACK");
-            }
-            else
-            {
-               canal.envoyerString("ACK");
-               for (Enregistrement e : seInscription.getJeuxEnregistres())
-               {
-                  canal.envoyerString(e.getNom());
-                  canal.envoyerString(e.getAdresseIp());
-                  canal.envoyerInt(e.getPort().getNumeroPort());
-               }
-            }
-            miseAJourEnregistrements();
-            continue bouclePrincipale;
-         }
+         miseAJourEnregistrements();
       }
    }
    
@@ -122,7 +147,7 @@ public class SEConnexion implements Runnable {
     */
    private void miseAJourEnregistrements()
    {
-      for (Enregistrement e : seInscription.getJeuxEnregistres())
+      for (Enregistrement e : SEInscription.getJeuxEnregistres())
       {
          try {
             Canal c = new Canal(e.getAdresseIp(), e.getPort().getNumeroPort(), true);
@@ -131,7 +156,7 @@ public class SEConnexion implements Runnable {
          }
          catch (Exception exc)
          {
-            seInscription.enleverEnregistrement(e);
+            SEInscription.enleverEnregistrement(e);
          }
       }
    }
