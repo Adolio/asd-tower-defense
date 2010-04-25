@@ -15,6 +15,9 @@ public class GestionnaireCreatures implements Runnable
     private static final long TEMPS_ATTENTE = 50;
     private Vector<Creature> creatures = new Vector<Creature>();
     private boolean gestionEnCours;
+    private boolean enPause = false;
+    private Object pause = new Object();
+    
     
     /**
      * Constructeur du gestionnaire des creatures
@@ -54,6 +57,7 @@ public class GestionnaireCreatures implements Runnable
         
         while(gestionEnCours)
         {
+          
             synchronized (creatures)
             { 
                 Creature creature;
@@ -66,8 +70,22 @@ public class GestionnaireCreatures implements Runnable
                         creatures.remove(i--);
                     else
                         // anime la creature
-                        creature.action();
+                        creature.action(TEMPS_ATTENTE);
                 }
+            }
+            
+            // gestion de la pause
+            try
+            {
+                synchronized (pause)
+                {
+                    if(enPause)
+                        pause.wait();
+                } 
+            } 
+            catch (InterruptedException e1)
+            {
+                e1.printStackTrace();
             }
             
             try{
@@ -94,5 +112,25 @@ public class GestionnaireCreatures implements Runnable
     public Vector<Creature> getCreatures()
     {
         return creatures;
+    }
+
+    /**
+     * Permet de mettre les créatures en pause.
+     */
+    public void mettreEnPause()
+    {
+        enPause = true;
+    }
+    
+    /**
+     * Permet de sortir les créatures de la pause.
+     */
+    public void sortirDeLaPause()
+    { 
+        synchronized (pause)
+        {
+            enPause = false;
+            pause.notify(); 
+        }
     }
 }

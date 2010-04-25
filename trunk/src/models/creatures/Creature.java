@@ -324,11 +324,14 @@ public abstract class Creature extends Rectangle
 	
 	/**
 	 * Cette methode est appelee pour dire a la creature d'effectuee des actions
+	 * 
+	 * TODO j'ai du adapter les temps passe lors de l'implémentation des pauses
 	 */
-	public void action()
+	public void action(long tempsPasse)
 	{
 	    // avance la creature
-	    avancerSurChemin(getTempsAppel());
+	    //avancerSurChemin(getTempsAppel());
+	    avancerSurChemin(tempsPasse);
 	    
 	    // la creature est arrivee a destination !
         if(chemin != null && indiceCourantChemin == chemin.size() 
@@ -496,6 +499,7 @@ public abstract class Creature extends Rectangle
         
         // temps passe depuis le dernier appel
         long tempsEcoule = maintenant - tempsDernierAppel;
+        
         tempsDernierAppel = maintenant;
         return tempsEcoule;
     }

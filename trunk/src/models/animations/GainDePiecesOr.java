@@ -55,7 +55,7 @@ public class GainDePiecesOr extends Animation
 	}
 
     @Override
-    public void animer()
+    public void animer(long tempsPasse)
     {
         // diminution de la transparence
         alpha -= ETAPE_ALPHA;

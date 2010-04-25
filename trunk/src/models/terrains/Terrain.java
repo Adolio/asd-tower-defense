@@ -138,6 +138,8 @@ public abstract class Terrain
 
     
     private Jeu jeu;
+
+    private VagueDeCreatures vagueCourante;
     
     
     /**
@@ -516,7 +518,9 @@ public abstract class Terrain
     public void lancerVagueSuivante(EcouteurDeVague edv, EcouteurDeCreature edc)
     {
         // lancement de la vague
-        getVagueDeCreaturesSuivante().lancerVague(jeu, edv, edc);
+        vagueCourante = getVagueDeCreaturesSuivante();
+        
+        vagueCourante.lancerVague(jeu, edv, edc);
         indiceVagueCourante++;
     }
 
@@ -617,5 +621,23 @@ public abstract class Terrain
     public Color getCouleurMurs()
     {
         return COULEUR_MURS;
+    }
+    
+    /**
+     * Permet de mettre les créatures en pause.
+     */
+    public void mettreEnPause()
+    {
+        if(vagueCourante != null)
+            vagueCourante.mettreEnPause();
+    }
+    
+    /**
+     * Permet de sortir les créatures de la pause.
+     */
+    public void sortirDeLaPause()
+    { 
+        if(vagueCourante != null)
+            vagueCourante.sortirDeLaPause();
     }
 }

@@ -3,6 +3,7 @@ package vues;
 import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -27,7 +28,9 @@ import models.joueurs.Joueur;
 public class Fenetre_Jeu extends JFrame implements ActionListener, 
                                                     EcouteurDeCreature, 
                                                     EcouteurDeVague,
-                                                    WindowListener
+                                                    EcouteurDePanelTerrain,
+                                                    WindowListener,
+                                                    KeyListener
 {
 	// constantes statiques
    private static final long serialVersionUID = 1L;
@@ -109,7 +112,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{
 	    this.jeu = jeu;
         this.joueur = joueur;
-	    
+        
 	    //-------------------------------
 		//-- preferances de le fenetre --
 		//-------------------------------
@@ -178,8 +181,14 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 		// creation des panels
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		panelTerrain = new Panel_Terrain(jeu, this, joueur);
+		panelTerrain.addKeyListener(this);
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
 		panelMenuInteraction = new Panel_MenuInteraction(this,joueur);
+		
+		panelInfoTour = panelMenuInteraction.getPanelInfoTour();
+		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
+		
+		
 		
 		// ajout des panels
 		add(conteneurTerrain,BorderLayout.WEST);
@@ -582,5 +591,42 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
         joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + nbPiecesDOr); 
+        
+        miseAJourInfoJeu();
     }
+
+    @Override
+    public void keyPressed(KeyEvent ke)
+    {
+        // TODO [DEBUG] enlever pour version finale
+        // raccourci de gain d'argent (debug)
+        if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
+        {
+            ajouterPiecesDOr(1000);
+        }
+        // TODO [DEBUG] enlever pour version finale
+        // raccourci de gain d'argent (debug)
+        else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
+        {
+            jeu.lancerVagueSuivante(this, this);
+            ajouterInfoVagueSuivanteDansConsole();
+        }
+        // PAUSE
+        else if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
+        {
+            boolean enPause = jeu.togglePause();
+            
+            // inhibation
+            panelInfoTour.setPause(enPause); 
+            bLancerVagueSuivante.setEnabled(!enPause);
+        } 
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e)
+    {}
+
+    @Override
+    public void keyTyped(KeyEvent e)
+    {}
 }

@@ -49,7 +49,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
 		
 	// autres membres
-	private Fenetre_Jeu fenJeu;
+	private EcouteurDePanelTerrain edpt;
 	private Joueur joueur;
 	
 	// panels internes
@@ -62,12 +62,11 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 * @param jeu le jeu avec lequel on interagit (le model)
 	 * @param fenJeu la fenetre de jeu
 	 */
-	public Panel_MenuInteraction(Fenetre_Jeu fenJeu, Joueur joueur)
+	public Panel_MenuInteraction(EcouteurDePanelTerrain edpt,Joueur joueur)
 	{
 		super(new BorderLayout());
         
-		// sauvegarde des attributs membres
-		this.fenJeu   = fenJeu;
+		this.edpt     = edpt;
 		this.joueur   = joueur;
 		
 		//---------------------
@@ -132,9 +131,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         //---------------------------
 	    JPanel pInfos = new JPanel(new BorderLayout());
 	    
-		panelInfoTour = new Panel_InfoTour(fenJeu);
-		fenJeu.setPanelInfoTour(panelInfoTour);
-		fenJeu.setPanelInfoCreature(panelInfoCreature);
+		panelInfoTour = new Panel_InfoTour(edpt);
 		
         pInfos.add(panelInfoTour,BorderLayout.NORTH);
         pInfos.add(panelInfoCreature,BorderLayout.CENTER);
@@ -190,7 +187,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		    return;
 		
 		tour.setProprietaire(joueur);
-        fenJeu.setTourAAcheter(tour);
+		edpt.setTourAAcheter(tour);
 	}
 	
 	
@@ -242,5 +239,23 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bTourDeGlace.setEnabled(false);
         bTourDeFeu.setEnabled(false);
         bTourDeTerre.setEnabled(false);
+    }
+
+    /**
+     * Permet de recuperer le panel d'info tour
+     * @return le panel d'info tour
+     */
+    public Panel_InfoTour getPanelInfoTour()
+    {
+        return panelInfoTour;
+    }
+    
+    /**
+     * Permet de recuperer le panel d'info créature
+     * @return le panel d'info créature
+     */
+    public Panel_InfoCreature getPanelInfoCreature()
+    {
+        return panelInfoCreature;
     }
 }

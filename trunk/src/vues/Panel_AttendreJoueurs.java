@@ -84,7 +84,11 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         
         if(src == bDemarrerMaintenant)
         {
+            parent.getContentPane().removeAll();
             
+            
+            //parent.getContentPane().add(new Panel_JeuMulti(parent, new Jeu(),new Joueur(new Equipe()), BorderLayout.CENTER); 
+            parent.getContentPane().validate();
         }
         else if(src == bDeconnecter)
         {

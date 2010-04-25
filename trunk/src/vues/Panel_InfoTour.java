@@ -58,24 +58,24 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	
     // autres membres
 	private Tour tour;
-	private Fenetre_Jeu fenJeu;
+	private EcouteurDePanelTerrain edpt;
     private boolean partieTerminee;
+    private boolean enPause;
 	
 	/**
 	 * Constructeur du panel
 	 * 
 	 * @param la fenetre de jeu parent
 	 */
-	public Panel_InfoTour(Fenetre_Jeu fenJeu)
+	public Panel_InfoTour(EcouteurDePanelTerrain edpt)
 	{
 		// construction du panel
 		super(new BorderLayout());
 		setPreferredSize(DIMENSION_PANEL);
 		setBorder(BORDURE);
 
-		this.fenJeu = fenJeu;
+		this.edpt = edpt;
 
-		
 		JPanel pConteneurCaract = new JPanel();
 		int nbChamp = 0;
 		
@@ -207,8 +207,13 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 
 				if(!partieTerminee)
 				{
-    				// adaptation des boutons
-    				if(tour.peutEncoreEtreAmelioree())
+    				if(enPause)
+    				{
+    				    bAmeliorer.setEnabled(false);
+    				    bVendre.setEnabled(false);
+    				}
+				    // adaptation des boutons
+    				else if(tour.peutEncoreEtreAmelioree())
     				{
     					bAmeliorer.setEnabled(true);
     					bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
@@ -260,9 +265,17 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		Object source = ae.getSource();
 		
 		if(source == bAmeliorer)
-			fenJeu.ameliorerTour(tour);
+			edpt.ameliorerTour(tour);
 		
 		else if(source == bVendre)
-			fenJeu.vendreTour(tour);
+			edpt.vendreTour(tour);
 	}
+
+    public void setPause(boolean enPause)
+    {
+        this.enPause = enPause;
+        
+        bAmeliorer.setEnabled(!enPause);
+        bVendre.setEnabled(!enPause);
+    }
 }

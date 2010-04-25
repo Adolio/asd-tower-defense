@@ -96,7 +96,7 @@ public class BouletDeCanon extends Attaque
     }
 
     @Override
-    public void animer()
+    public void animer(long tempsPasse)
     {
         // si la creature meurt on arrete l'attaque
         if(!cible.estMorte() && !estTerminee)

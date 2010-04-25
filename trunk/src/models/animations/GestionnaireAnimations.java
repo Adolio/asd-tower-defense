@@ -18,6 +18,8 @@ public class GestionnaireAnimations implements Runnable
     private Vector<Animation> animations = new Vector<Animation>();
     private Thread thread;
     private boolean gestionEnCours;
+    private boolean enPause = false;
+    private Object pause = new Object();
     
     /**
      * Constructeur du gestionnaire des animations
@@ -75,10 +77,25 @@ public class GestionnaireAnimations implements Runnable
                    else
                    {
                        // anime l'animation
-                       animation.animer();
+                       animation.animer(TEMPS_ATTENTE);
                    }
                }
            }
+           
+           // gestion de la pause
+           try
+           {
+               synchronized (pause)
+               {
+                   if(enPause)
+                       pause.wait();
+               } 
+           } 
+           catch (InterruptedException e1)
+           {
+               e1.printStackTrace();
+           }
+           
            
            try{
                 Thread.sleep(TEMPS_ATTENTE);
@@ -95,5 +112,25 @@ public class GestionnaireAnimations implements Runnable
     public void arreterAnimations()
     {
         gestionEnCours = false;
+    }
+
+    /**
+     * Permet de mettre les animations en pause.
+     */
+    public void mettreEnPause()
+    {
+        enPause = true;
+    }
+    
+    /**
+     * Permet de sortir les animations de la pause.
+     */
+    public void sortirDeLaPause()
+    { 
+        synchronized (pause)
+        {
+            enPause = false;
+            pause.notify(); 
+        }
     }
 }

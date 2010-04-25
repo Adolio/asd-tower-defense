@@ -43,7 +43,7 @@ public abstract class Animation extends Point
 	/**
      * Permet d'animer l'animation
      */
-    abstract public void animer();
+    abstract public void animer(long tempsPasse);
 	
 	/**
 	 * Permet de savoir si l'animation est terminee
