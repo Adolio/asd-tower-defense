@@ -8,10 +8,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.ConnectException;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
+import Reseau.Canal;
+import Reseau.CanalException;
+import ServeurEnregistrement.SEConnexion;
+import ServeurEnregistrement.SEInscription;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
@@ -192,13 +199,37 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         if (src == bCreer)
         {
             // TODO test des champs...
-
+            
+            
+            
+            
             // TODO connexion au serveur, demande de création de la partie...
-
+            try
+            {
+                Canal canal = new Canal("127.0.0.1",1234,true);
+                
+                
+                canal.envoyerString("{HELLO}");
+                String str = canal.recevoirString();
+                
+                if(str.equals("ACK"))
+                
+                System.out.println(str);
+                
+            } 
+            catch (ConnectException e1)
+            {
+                e1.printStackTrace();
+            } catch (CanalException e1)
+            {
+                e1.printStackTrace();
+            }
+            
+            
             // connexion réussie
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, false),
+                    new Panel_AttendreJoueurs(parent, true),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
 

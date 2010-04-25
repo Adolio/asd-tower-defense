@@ -19,7 +19,8 @@ public class GestionnaireTours implements Runnable
     private Vector<Tour> tours = new Vector<Tour>();
     private boolean gestionEnCours;
     private Jeu jeu;
-    
+    private boolean enPause = false;
+    private Object pause = new Object();
     
     /**
      * Constructeur du gestionnaire des animations
@@ -237,9 +238,24 @@ public class GestionnaireTours implements Runnable
                     
                     // anime l'animation
                     if(tour.estEnJeu())
-                        tour.action(); 
+                        tour.action(TEMPS_ATTENTE); 
                 }
             }
+            
+            // gestion de la pause
+            try
+            {
+                synchronized (pause)
+                {
+                    if(enPause)
+                        pause.wait();
+                } 
+            } 
+            catch (InterruptedException e1)
+            {
+                e1.printStackTrace();
+            }
+            
             
             try{
                  Thread.sleep(TEMPS_ATTENTE);
@@ -265,5 +281,25 @@ public class GestionnaireTours implements Runnable
     public Vector<Tour> getTours()
     {
         return tours;
+    }
+
+    /**
+     * Permet de mettre les tours en pause.
+     */
+    public void mettreEnPause()
+    {
+        enPause = true;
+    }
+    
+    /**
+     * Permet de sortir les tours de la pause.
+     */
+    public void sortirDeLaPause()
+    { 
+        synchronized (pause)
+        {
+            enPause = false;
+            pause.notify(); 
+        }
     }
 }

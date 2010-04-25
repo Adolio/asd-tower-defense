@@ -396,13 +396,14 @@ public abstract class Tour extends Rectangle
 	 * Cette methode est normalement appelee par un thread commun a toutes les
 	 * tours et permet d'effectuer les actions de la tour, c-a-d tirer.
 	 */
-	public void action()
+	public void action(long tempsPasse)
 	{ 
 	    // TODO [OPTIMISATION] a stoquer dans un attribut
         long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
         
         // on calcul le temps depuis le dernier tir
-        tempsDepuisDernierTir += getTempsAppel();
+        tempsDepuisDernierTir += tempsPasse;
+        //tempsDepuisDernierTir += getTempsAppel();
 
         // on a attendu assez pour pouvoir tirer
         if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)

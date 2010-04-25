@@ -185,7 +185,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Reference vers la fenetre parent
 	 */
-	private Fenetre_Jeu fenJeu;
+	private EcouteurDePanelTerrain edpt;
 	
 	/**
 	 * Permet d'afficher ou non les elements invisible (maillage, chemins, etc.)
@@ -237,12 +237,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * 
 	 * @param jeu Le jeu a gerer
 	 */
-	public Panel_Terrain(Jeu jeu,Fenetre_Jeu fenJeu, Joueur joueur)
+	public Panel_Terrain(Jeu jeu, EcouteurDePanelTerrain edpt, Joueur joueur)
 	{
 		// sauvegarde du jeu
-		this.jeu 	= jeu;
-		this.fenJeu = fenJeu;
-		this.joueur = joueur;
+		this.jeu 	  = jeu;
+		this.edpt     = edpt;
+		this.joueur   = joueur;
 		
 		// proprietes du panel
 		LARGEUR = jeu.getTerrain().getLargeur();
@@ -381,7 +381,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.setColor(COULEUR_FOND);
 			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		}
-			
+
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
@@ -559,6 +559,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				// affichage du rayon de portee
 				dessinerPortee(tourAAjouter,g2,COULEUR_RAYON_PORTEE);
 		}
+		
+		//-----------------------------
+        //-- affichage du mode pause --
+        //-----------------------------
+		if(jeu.estEnPause())
+	    {
+            setTransparence(0.3f, g2);
+            g2.setColor(Color.DARK_GRAY);
+            g2.fillRect(0, 0, LARGEUR, HAUTEUR);
+            setTransparence(1.0f, g2);
+            g2.setColor(Color.WHITE);
+            g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
+            g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 50, HAUTEUR / 2 - 50);
+	    }
 	}
 
 	/**
@@ -613,7 +627,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         {
             g2.setColor(COULEUR_CHEMIN);
             dessinerCheminCreature(creature,g2);
-        }
+        }  
 	}
 	
 	
@@ -833,7 +847,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					}
 					
 				    // informe la fenetre qu'une tour a ete selectionnee
-					fenJeu.tourSelectionnee(tourSelectionnee,
+					edpt.tourSelectionnee(tourSelectionnee,
 											Panel_InfoTour.MODE_SELECTION);
 					return;
 				}
@@ -841,7 +855,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        // aucun tour trouvee => clique dans le vide.
             tourSelectionnee = null;
             
-            fenJeu.tourSelectionnee(tourSelectionnee,
+            edpt.tourSelectionnee(tourSelectionnee,
                     Panel_InfoTour.MODE_SELECTION);
 			
             //------------------------------
@@ -865,7 +879,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					else
 						creatureSelectionnee = creature; // la creature est selectionnee
 					
-					fenJeu.creatureSelectionnee(creatureSelectionnee);
+					edpt.creatureSelectionnee(creatureSelectionnee);
 					
 					return;
 				}
@@ -873,7 +887,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 			// aucun creature trouvee => clique dans le vide.
 			creatureSelectionnee = null;
-			fenJeu.creatureSelectionnee(creatureSelectionnee);
+			edpt.creatureSelectionnee(creatureSelectionnee);
 		}
 		else // clique droit ou autre
 		{
@@ -882,9 +896,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			tourAAjouter 		 = null;
 			creatureSelectionnee = null;
 			
-			fenJeu.tourSelectionnee(tourSelectionnee,
+			edpt.tourSelectionnee(tourSelectionnee,
                     Panel_InfoTour.MODE_SELECTION);
-			fenJeu.creatureSelectionnee(creatureSelectionnee);
+			edpt.creatureSelectionnee(creatureSelectionnee);
 		}
 	}
 	
@@ -896,12 +910,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void mouseReleased(MouseEvent me)
 	{
-		// l'ajout se fait lors de la relache du clique
-		if(tourAAjouter != null)
-		{
-			fenJeu.acheterTour(tourAAjouter);
-			setCursor(curNormal);
-		}
+	    if(!jeu.estEnPause())
+        {
+    	    // l'ajout se fait lors de la relache du clique
+    		if(tourAAjouter != null)
+    		{
+    			edpt.acheterTour(tourAAjouter);
+    			setCursor(curNormal);
+    		}
+        }
 	}
 	
 	/**
@@ -1066,41 +1083,28 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void keyReleased(KeyEvent ke)
 	{
-		// raccourcis des tours
-	    if(tourSelectionnee != null)
+		if(!jeu.estEnPause())
 		{
-			// raccourci de vente
-			if(ke.getKeyChar() == 'v' || ke.getKeyChar() == 'V')
-				fenJeu.vendreTour(tourSelectionnee);
-			// raccourci d'amelioration
-			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
-				fenJeu.ameliorerTour(tourSelectionnee);
+    	    // raccourcis des tours
+    	    if(tourSelectionnee != null)
+    		{
+    	        // raccourci de vente
+    			if(ke.getKeyChar() == 'v' || ke.getKeyChar() == 'V')
+    				edpt.vendreTour(tourSelectionnee);
+    			// raccourci d'amelioration
+    			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
+    				edpt.ameliorerTour(tourSelectionnee);
+    		}
+    		
+    		// raccourci lancer vague suivante
+            if(Character.isSpaceChar(ke.getKeyChar()))  
+                edpt.lancerVagueSuivante();
 		}
-		
-		// raccourci lancer vague suivante
-        if(Character.isSpaceChar(ke.getKeyChar()))  
-            fenJeu.lancerVagueSuivante();
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent ke)
-	{ 
-	    // TODO [DEBUG] enlever pour version finale
-        // raccourci de gain d'argent (debug)
-        if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
-        {
-            fenJeu.ajouterPiecesDOr(1000);
-            
-            fenJeu.miseAJourInfoJeu();
-        }
-        // TODO [DEBUG] enlever pour version finale
-        // raccourci de gain d'argent (debug)
-        else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
-        {
-            jeu.lancerVagueSuivante(fenJeu, fenJeu);
-            fenJeu.ajouterInfoVagueSuivanteDansConsole();
-        }
-	}
+	{}
 	
 	@Override
 	public void keyTyped(KeyEvent ke){}

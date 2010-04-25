@@ -69,6 +69,13 @@ public class VagueDeCreatures implements Runnable
     private EcouteurDeVague edv;
 
     /**
+     * gestion de la pause lors du lancement d'une vague
+     */
+    private boolean enPause = false;
+    private Object pause = new Object();
+    
+    
+    /**
      * Constructeur de la vague de creatures
      * 
      * @param nbCreatures le nombre de copie de la creature a envoyer
@@ -181,6 +188,20 @@ public class VagueDeCreatures implements Runnable
         // creation des creatures de la vague
         for (int i = 0; i < NB_CREATURES; i++)
         {
+            // gestion de la pause
+            try
+            {
+                synchronized (pause)
+                {
+                    if(enPause)
+                        pause.wait();
+                } 
+            } 
+            catch (InterruptedException e1)
+            {
+                e1.printStackTrace();
+            }
+              
             // calcul d'une position aleatoire de la creature dans la zone de
             // depart
             if (POSITION_DEPART_ALEATOIRE)
@@ -372,4 +393,25 @@ public class VagueDeCreatures implements Runnable
     {
         return (long) (0.08 * santeCreature) + 30;
     }
+    
+    /**
+     * Permet de mettre le lancement des créatures en pause.
+     */
+    public void mettreEnPause()
+    {
+        enPause = true;
+    }
+    
+    /**
+     * Permet de sortir le lancement des créatures de la pause.
+     */
+    public void sortirDeLaPause()
+    { 
+        synchronized (pause)
+        {
+            enPause = false;
+            pause.notify(); 
+        }
+    }
+    
 }

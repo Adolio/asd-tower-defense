@@ -1,13 +1,14 @@
 package models.jeu;
 
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Vector;
+
+import vues.GestionnaireDesPolices;
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
 import models.creatures.EcouteurDeVague;
 import models.creatures.GestionnaireCreatures;
+import models.creatures.VagueDeCreatures;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.terrains.Terrain;
@@ -82,6 +83,11 @@ public class Jeu
      * Outil de gestion des animations
      */
     private GestionnaireAnimations gestionnaireAnimations;
+
+    /**
+     * Variable d'etat de la pause
+     */
+    private boolean enPause;
   
     
     public Jeu()
@@ -228,5 +234,40 @@ public class Jeu
             for(Joueur joueur : equipe.getJoueurs())
                 joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
         }     
+    }
+
+    /**
+     * Permet de mettre en pause le jeu.
+     * 
+     * @return true si le jeu est en pause après l'appel false sinon
+     */
+    public boolean togglePause()
+    {
+        if(enPause)
+        {
+            gestionnaireTours.sortirDeLaPause();
+            gestionnaireCreatures.sortirDeLaPause();
+            gestionnaireAnimations.sortirDeLaPause();
+            terrain.sortirDeLaPause();
+        }
+        else
+        {
+            gestionnaireTours.mettreEnPause();
+            gestionnaireCreatures.mettreEnPause();
+            gestionnaireAnimations.mettreEnPause();
+            terrain.mettreEnPause();
+        }
+        
+        return enPause = !enPause;  
+    }
+
+    /**
+     * Permet de savoir si le jeu est en pause
+     * 
+     * @return true s'il l'est false sinon
+     */
+    public boolean estEnPause()
+    {
+        return enPause;
     }
 }

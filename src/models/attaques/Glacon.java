@@ -60,15 +60,20 @@ public class Glacon extends Attaque
     }
     
     @Override
-    public void animer()
+    public void animer(long tempsPasse)
     {
         // recuperation du temps passe depuis le dernier appel
         date = new Date();
-        tempsPasse += date.getTime() - tempsDernierPassage;
+        
+        this.tempsPasse += tempsPasse;
+        
+        // TODO j'ai du adapater pour la mise en place de la pause
+        
+        //tempsPasse += date.getTime() - tempsDernierPassage;
         tempsDernierPassage = date.getTime();
         
         // le temps est passe
-        if(tempsPasse > DUREE_RALENTISSEMENT)
+        if(this.tempsPasse > DUREE_RALENTISSEMENT)
         {
             if(!cible.estMorte())
                 // reinitialisation du ralentissemeent
