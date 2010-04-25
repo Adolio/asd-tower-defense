@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
@@ -106,6 +107,11 @@ public abstract class Creature extends Rectangle
 	 * Permet de savoir s'il faut detruire l'animation
 	 */
 	private boolean aDetruire;
+	
+	/**
+	 * Il s'agit de la cible a attaquer
+	 */
+	private Equipe equipeCiblee;
 	
 	/**
 	 * Constructeur de la creature.
@@ -513,5 +519,25 @@ public abstract class Creature extends Rectangle
     public boolean aDetruire()
     {
         return aDetruire;
+    }
+
+    /**
+     * Permet de récupérer l'équipe ennemie ciblée
+     * 
+     * @return l'équipe ennemie ciblée
+     */
+    public Equipe getEquipeCiblee()
+    {
+        return equipeCiblee;
+    }
+
+    /**
+     * Permet de modifier l'equipe ciblée par la créature
+     * 
+     * @param equipeCiblee le nouvelle équipe ciblée
+     */
+    public void setEquipeCiblee(Equipe equipeCiblee)
+    {
+        this.equipeCiblee = equipeCiblee;
     }
 }

@@ -2,6 +2,7 @@ package models.creatures;
 
 import java.awt.Rectangle;
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
 import models.maillage.PathNotFoundException;
 
 /**
@@ -73,6 +74,11 @@ public class VagueDeCreatures implements Runnable
      */
     private boolean enPause = false;
     private Object pause = new Object();
+
+    /**
+     * Cible de la vague
+     */
+    private Equipe equipeCiblee;
     
     
     /**
@@ -166,12 +172,13 @@ public class VagueDeCreatures implements Runnable
      * @param terrain le terrain en question
      * @param edc l'ecouteur de creature fourni a chaque creature creee
      */
-    public void lancerVague(Jeu jeu, EcouteurDeVague edv,
+    public void lancerVague(Jeu jeu, Equipe equipeCiblee, EcouteurDeVague edv,
             EcouteurDeCreature edc)
     {
         this.jeu = jeu;
         this.edc = edc;
         this.edv = edv;
+        this.equipeCiblee = equipeCiblee;
         thread = new Thread(this);
         thread.start();
     }
@@ -179,8 +186,11 @@ public class VagueDeCreatures implements Runnable
     public void run()
     {
         // recuperation des zones
-        final Rectangle ZONE_DEPART = jeu.getTerrain().getZoneDepart();
-        final Rectangle ZONE_ARRIVEE = jeu.getTerrain().getZoneArrivee();
+        //final Rectangle ZONE_DEPART = jeu.getTerrain().getZoneDepart();
+        //final Rectangle ZONE_ARRIVEE = jeu.getTerrain().getZoneArrivee();
+        // TODO pour chaque zone de depart, lancer la vague...
+        final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
+        final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
 
         int xDepart = (int) ZONE_DEPART.getCenterX();
         int yDepart = (int) ZONE_DEPART.getCenterY();
@@ -217,6 +227,7 @@ public class VagueDeCreatures implements Runnable
             Creature creature = getNouvelleCreature();
             creature.setX(xDepart);
             creature.setY(yDepart);
+            creature.setEquipeCiblee(equipeCiblee);
             creature.ajouterEcouteurDeCreature(edc);
 
             try
