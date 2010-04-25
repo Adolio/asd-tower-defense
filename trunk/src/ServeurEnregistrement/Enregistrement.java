@@ -9,9 +9,11 @@ import Reseau.*;
  */
 public class Enregistrement {
    
-   private String nom;
+   private String nomPartie;
    private String adresseIp;
    private Port port;
+   private int capacite;
+   private int placesRestantes;
    
    /**
     * 
@@ -19,25 +21,48 @@ public class Enregistrement {
     * @param adresseIp
     * @param port
     */
-   public Enregistrement(String nom, String adresseIp, Port port)
+   public Enregistrement(String nom, String adresseIp, Port port, int capacite)
    {
-      this.nom = nom;
+      this.nomPartie = nom;
       this.adresseIp = adresseIp;
       this.port = port;
+      this.capacite = capacite;
+      this.placesRestantes = this.capacite - 1;
    }
 
    /**
-    * @return the nom
+    * @return the placesRestantes
     */
-   public String getNom() {
-      return nom;
+   public int getPlacesRestantes() {
+      return placesRestantes;
    }
 
    /**
-    * @param nom the nom to set
+    * @param placesRestantes the placesRestantes to set
     */
-   public void setNom(String nom) {
-      this.nom = nom;
+   public void setPlacesRestantes(int placesRestantes) {
+      this.placesRestantes = placesRestantes;
+   }
+
+   /**
+    * @return the nomPartie
+    */
+   public String getNomPartie() {
+      return nomPartie;
+   }
+
+   /**
+    * @param nomPartie the nomPartie to set
+    */
+   public void setNomPartie(String nomPartie) {
+      this.nomPartie = nomPartie;
+   }
+
+   /**
+    * @return the capacite
+    */
+   public int getCapacite() {
+      return capacite;
    }
 
    /**
@@ -73,7 +98,7 @@ public class Enregistrement {
     */
    @Override
    public String toString() {
-      return "Enregistrement [adresseIp=" + adresseIp + ", nom=" + nom
+      return "Enregistrement [adresseIp=" + adresseIp + ", nom=" + nomPartie
             + ", port=" + port + "]";
    }
    
