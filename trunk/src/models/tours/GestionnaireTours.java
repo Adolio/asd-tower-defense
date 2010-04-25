@@ -104,7 +104,7 @@ public class GestionnaireTours implements Runnable
                     return false;
         }
         
-        // il n'y a pas un mur
+        // il n'y a pas un mur et elle est bien dans le terrain
         if(!jeu.getTerrain().laTourPeutEtrePosee(tour))
             return false;
 

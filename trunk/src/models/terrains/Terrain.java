@@ -355,6 +355,11 @@ public abstract class Terrain
         if (tour == null)
             return false;
 
+        // elle est bien dans le terrain
+        if (tour.getX() < 0 || tour.getX() > LARGEUR-tour.width
+         || tour.getY() < 0 || tour.getY() > HAUTEUR-tour.height)
+            return false;
+            
         // il n'y a pas un mur
         synchronized (murs)
         {
