@@ -17,6 +17,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
    private JSONObject contenu;
    private int code;
    private String jsonString;
+   private String messageRecu;
    
    /**
     * 
@@ -37,12 +38,14 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
       while (true)
       {
          try {
-            messageJsonRecu = new JSONObject(canal.recevoirString());
+            messageRecu = canal.recevoirString();
+            messageJsonRecu = new JSONObject(messageRecu);
             code = messageJsonRecu.getJSONObject("donnees").getInt("code");
             
             switch(code)
             {
                case STOP :
+                  canal.envoyerString("{\"status\" : \"OK\"}");
                   canal.fermer();
                   break bouclePrincipale;
                   

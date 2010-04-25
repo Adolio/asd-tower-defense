@@ -32,6 +32,7 @@ public class SEInscription {
    public void lancer() {
       port.reserver();
       while (true) {
+         System.out.println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
          creerCanal();
          (new Thread(new SEConnexion(canal))).start();
       }
@@ -42,10 +43,9 @@ public class SEInscription {
     */
    private void creerCanal() {
       try {
-         System.out.println("Serveur d'enregistrement démarré.");
          canal = new Canal(port, avecLog);
       } catch (CanalException ce) {
-         System.out.println("\tProblème de connexion : " + ce.getMessage());
+         System.out.println("\tProbleme de connexion : " + ce.getMessage());
       }
    }
    
