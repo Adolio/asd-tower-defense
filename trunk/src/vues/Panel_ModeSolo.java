@@ -188,12 +188,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    
 		    Jeu jeu = new Jeu();
 		    jeu.setTerrain(new ElementTD(jeu));
-		    Equipe equipe = new Equipe();
+		    Equipe equipe = jeu.getEquipe(0); // les equipes sont créer par le terrain
             Joueur joueur = new Joueur(equipe);
             equipe.ajouterJoueur(joueur);
-            jeu.ajouterEquipe(equipe);
             jeu.initialiser();
-            new Fenetre_Jeu(jeu,joueur);
+            new Fenetre_JeuSolo(jeu,joueur);
 			
 			chargementTermine = true;
 			parent.dispose();
@@ -204,12 +203,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 
 		    Jeu jeu = new Jeu();
             jeu.setTerrain(new Spiral(jeu));
-            Equipe equipe = new Equipe();
+            Equipe equipe = jeu.getEquipe(0); // les equipes sont créer par le terrain
             Joueur joueur = new Joueur(equipe);
             equipe.ajouterJoueur(joueur);
-            jeu.ajouterEquipe(equipe);
             jeu.initialiser();
-            new Fenetre_Jeu(jeu,joueur);
+            new Fenetre_JeuSolo(jeu,joueur);
 		    
 		    chargementTermine = true;
 		    parent.dispose();
@@ -220,12 +218,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		     
 		    Jeu jeu = new Jeu();
             jeu.setTerrain(new Desert(jeu));
-            Equipe equipe = new Equipe();
+            Equipe equipe = jeu.getEquipe(0); // les equipes sont créer par le terrain
             Joueur joueur = new Joueur(equipe);
             equipe.ajouterJoueur(joueur);
-            jeu.ajouterEquipe(equipe);
             jeu.initialiser();
-            new Fenetre_Jeu(jeu,joueur);
+            new Fenetre_JeuSolo(jeu,joueur);
 
 		    chargementTermine = true;
 		    parent.dispose();
@@ -236,12 +233,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    
 		    Jeu jeu = new Jeu();
             jeu.setTerrain(new WaterWorld(jeu));
-            Equipe equipe = new Equipe();
+            Equipe equipe = jeu.getEquipe(0); // les equipes sont créer par le terrain
             Joueur joueur = new Joueur(equipe);
             equipe.ajouterJoueur(joueur);
-            jeu.ajouterEquipe(equipe);
             jeu.initialiser();
-            new Fenetre_Jeu(jeu,joueur);
+            new Fenetre_JeuSolo(jeu,joueur);
 		    
 		    chargementTermine = true;
 		    parent.dispose();

@@ -1,8 +1,6 @@
 package models.jeu;
 
 import java.util.ArrayList;
-
-import vues.GestionnaireDesPolices;
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -49,6 +47,7 @@ public class Jeu
 	 * Note : Lorsque un ennemi atteint la zone d'arrive, le nombre de vies est
 	 * decremente.
 	 */
+    // TODO effacer
 	//private int viesRestantes 	= 20;
 	
 	/**
@@ -89,15 +88,20 @@ public class Jeu
      */
     private boolean enPause;
   
+    /**
+     * TODO commenter
+     */
+    VagueDeCreatures vagueCourante;
     
+    /**
+     * Constructeur
+     */
     public Jeu()
     {
         gestionnaireTours     = new GestionnaireTours(this);
         gestionnaireCreatures = new GestionnaireCreatures();
         gestionnaireAnimations = new GestionnaireAnimations();  
     }
-    
-    
     
     /**
      * Permet de recuperer la version du jeu.
@@ -112,9 +116,14 @@ public class Jeu
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
-	public void lancerVagueSuivante(EcouteurDeVague edv,EcouteurDeCreature edc)
+	public void lancerVagueSuivante(Equipe cible, EcouteurDeVague edv,EcouteurDeCreature edc)
 	{
-		terrain.lancerVagueSuivante(edv, edc);
+	    // lancement de la vague
+	    VagueDeCreatures vagueCourante = terrain.getVagueDeCreaturesSuivante();
+        
+	    terrain.passerALaProchaineVague();
+	    
+        vagueCourante.lancerVague(this, cible, edv, edc);
 	}
 
     /**
@@ -269,5 +278,15 @@ public class Jeu
     public boolean estEnPause()
     {
         return enPause;
+    }
+
+    public Equipe getEquipe(int i)
+    {
+        return equipes.get(0);
+    }
+
+    public ArrayList<Equipe> getEquipes()
+    {
+        return equipes;
     }
 }

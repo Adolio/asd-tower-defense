@@ -4,8 +4,9 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
-import models.creatures.*;
 import models.jeu.Jeu;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 
 /**
  * Classe de gestion du terrain WaterWorld.
@@ -52,11 +53,17 @@ public class WaterWorld extends Terrain
               new Color(150,150,150), // couleur de fond
               new Color(63,131,140), // couleur des murs
               IMAGE_DE_FOND, // imageDeFond
-              NOM,  // nom
-              new Rectangle(0, 30, 20, 80),     // zoneDepart
-              new Rectangle(480, 390, 20, 80)   // zoneArrivee
+              NOM   // nom
         );
 
+        // Création des équipes
+        Equipe e = new Equipe();
+        e.ajouterZoneDepartCreatures(new Rectangle(0, 30, 20, 80));
+        e.setZoneArriveeCreatures(new Rectangle(480, 390, 20, 80));
+        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
+        jeu.ajouterEquipe(e);
+        
+        
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
         /*
@@ -78,13 +85,4 @@ public class WaterWorld extends Terrain
         ajouterMur(new Rectangle(220, 130, 60, 90));
         ajouterMur(new Rectangle(220, 280, 60, 90));
     }
-    
-    /**
-     * Permet de recuperer la vague suivante
-     * @return la vague suivante
-     */
-    public VagueDeCreatures getVagueDeCreaturesSuivante()
-	{
-        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
-	}
 }

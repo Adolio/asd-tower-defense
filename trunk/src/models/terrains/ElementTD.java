@@ -4,8 +4,9 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
-import models.creatures.*;
 import models.jeu.Jeu;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 
 /**
  * Classe de gestion du fameux terrain Element TD repris de chez Blizzard.
@@ -53,11 +54,17 @@ public class ElementTD extends Terrain
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
-                NOM,  // nom
-                new Rectangle(110, 0, 80, 20),  // zoneDepart
-                new Rectangle(230, 0, 80, 20)   // zoneArrivee
+                NOM  // nom
           );
  
+        // Création des équipes
+        Equipe e = new Equipe();
+        e.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        jeu.ajouterEquipe(e);
+        
+        
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
         /*
@@ -78,13 +85,4 @@ public class ElementTD extends Terrain
         ajouterMur(new Rectangle(20, 240, 220, 20));
         ajouterMur(new Rectangle(220, 220, 20, 20)); 
     }
-
-    /**
-     * Permet de recuperer la vague suivante
-     * @return la vague suivante
-     */
-    public VagueDeCreatures getVagueDeCreaturesSuivante()
-	{
-        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
-	}
 }

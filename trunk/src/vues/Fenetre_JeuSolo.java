@@ -3,7 +3,6 @@ package vues;
 import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -12,7 +11,7 @@ import models.jeu.Jeu;
 import models.joueurs.Joueur;
 
 /**
- * Fenetre princiale du jeu. 
+ * Fenetre princiale du jeu 1 joueur. 
  * 
  * Elle permet voir le jeu et d'interagir avec en posant des tours sur le terrain 
  * et de les gerer. Elle fournit aussi de quoi gerer les vagues d'ennemis.
@@ -25,7 +24,7 @@ import models.joueurs.Joueur;
  * @see JFrame
  * @see ActionListener
  */
-public class Fenetre_Jeu extends JFrame implements ActionListener, 
+public class Fenetre_JeuSolo extends JFrame implements ActionListener, 
                                                     EcouteurDeCreature, 
                                                     EcouteurDeVague,
                                                     EcouteurDePanelTerrain,
@@ -102,13 +101,12 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	private Joueur joueur;
     private boolean vaguePeutEtreLancee = true;
 
-	
 	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_Jeu(Jeu jeu, Joueur joueur)
+	public Fenetre_JeuSolo(Jeu jeu, Joueur joueur)
 	{
 	    this.jeu = jeu;
         this.joueur = joueur;
@@ -441,7 +439,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
 	{ 
 	    if(vaguePeutEtreLancee)
 	    {
-	        jeu.lancerVagueSuivante(this,this);
+	        jeu.lancerVagueSuivante(joueur.getEquipe(),this,this);
 	        ajouterInfoVagueSuivanteDansConsole();
 	        bLancerVagueSuivante.setEnabled(false);
 	        vaguePeutEtreLancee = false;
@@ -608,7 +606,7 @@ public class Fenetre_Jeu extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
         {
-            jeu.lancerVagueSuivante(this, this);
+            jeu.lancerVagueSuivante(joueur.getEquipe(),this, this);
             ajouterInfoVagueSuivanteDansConsole();
         }
         // PAUSE

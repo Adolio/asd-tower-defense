@@ -45,6 +45,21 @@ public class Equipe
     * Zones de construction
     */
    private Rectangle[] zonesDeConstruction;
+  
+   /**
+    * Zone de départ des créatures ennemies
+    */
+   private ArrayList<Rectangle> zonesDepartCreatures = new ArrayList<Rectangle>();
+   
+   /**
+    * Zone d'arrivée des créatures ennemies
+    */
+   private Rectangle zoneArriveeCreatures;
+
+   /**
+    * TODO
+    */
+   private ArrayList<EmplacementJoueur> emplacementsJoueur = new ArrayList<EmplacementJoueur>();
    
    /**
     * Permet d'ajouter un joueur
@@ -112,5 +127,52 @@ public class Equipe
     public void setNbViesRestantes(int nbViesRestantes)
     {
         this.nbViesRestantes = nbViesRestantes;
+    }
+
+    /**
+     * Permet d'ajouter une zone de départ des créatures ennemies
+     * 
+     * @param zone la zone
+     */
+    public void ajouterZoneDepartCreatures(Rectangle zone)
+    {
+        zonesDepartCreatures.add(zone);
+    }
+    
+    /**
+     * TODO
+     */
+    public Rectangle getZoneDepartCreatures(int index)
+    {
+        return zonesDepartCreatures.get(index);
+    }
+    
+    /**
+     * Permet d'ajouter une zone d'arrivée des créatures ennemies
+     * 
+     * @param zone la zone
+     */
+    public void setZoneArriveeCreatures(Rectangle zone)
+    {
+        zoneArriveeCreatures = zone;
+    }
+    
+    /**
+     * TODO
+     * @return la zone d'arrivee des créatures
+     */
+    public Rectangle getZoneArriveeCreatures()
+    {
+        return zoneArriveeCreatures;
+    }
+  
+    /**
+     * TODO
+     * 
+     * @param emplacementJoueur
+     */
+    public void ajouterEmplacementJoueur(EmplacementJoueur emplacementJoueur)
+    {
+        emplacementsJoueur.add(emplacementJoueur);
     }
 }

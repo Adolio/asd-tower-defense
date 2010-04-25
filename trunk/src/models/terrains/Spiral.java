@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import models.creatures.VagueDeCreatures;
 import models.jeu.Jeu;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 
 /**
  * Classe de gestion d'un terrain en spiral.
@@ -49,10 +50,16 @@ public class Spiral extends Terrain
                 new Color(150,150,150), // couleur de fond
                 new Color(140,120,75),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
-                NOM,  // nom
-                new Rectangle(500,40,20,80),   // zoneDepart
-                new Rectangle(320,280,20,60)   // zoneArrivee
+                NOM  // nom
           );
+		
+		// Création des équipes
+		Equipe e = new Equipe();
+        e.ajouterZoneDepartCreatures(new Rectangle(500,40,20,80));
+        e.setZoneArriveeCreatures(new Rectangle(320,280,20,60));
+        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        jeu.ajouterEquipe(e);
+		
 		
 		/* definition des murs du labyrinthe :
 		 
@@ -79,14 +86,5 @@ public class Spiral extends Terrain
 		ajouterMur(new Rectangle(140,360,200,20));	// 7
 		ajouterMur(new Rectangle(340,240,20,140));	// 8
 		ajouterMur(new Rectangle(240,240,100,20));	// 9
-	}
-	
-    /**
-     * Permet de recuperer la vague suivante
-     * @return la vague suivante
-     */
-    public VagueDeCreatures getVagueDeCreaturesSuivante()
-	{
-        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
 }

@@ -161,6 +161,9 @@ public abstract class Tour extends Rectangle
 		this.type		 	= type;
 		this.image 			= image;
 		ICONE               = icone;
+		
+		// pour que la tour tire directement après sa création
+		tempsDepuisDernierTir = (long) (1000.0 / cadenceTir);	
 	}
 	
 	/**

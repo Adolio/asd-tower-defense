@@ -396,11 +396,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 			// dessin de la zone de depart
 			g2.setColor(COULEUR_ZONE_DEPART);
-			dessinerZone(jeu.getTerrain().getZoneDepart(),g2);
+			dessinerZone(joueur.getEquipe().getZoneDepartCreatures(0),g2);
 			
 			// dessin de la zone d'arrivee
 			g2.setColor(COULEUR_ZONE_ARRIVEE);
-			dessinerZone(jeu.getTerrain().getZoneArrivee(),g2);
+			dessinerZone(joueur.getEquipe().getZoneArriveeCreatures(),g2);
 			
 			ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
 			setTransparence(ALPHA_SURFACE_MUR, g2);
@@ -487,6 +487,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
                 dessinerCreature(creature,g2);
         }
 		
+        
+        traitTmp = g2.getStroke();
+        
 		//---------------------------------
 		//-- entour la tour selectionnee --
 		//---------------------------------
@@ -498,7 +501,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.setStroke(TRAIT_TILLE);
 			g2.drawRect(tourSelectionnee.getXi(), tourSelectionnee.getYi(),
 					(int) (tourSelectionnee.getWidth()),
-					(int) (tourSelectionnee.getHeight()));	
+					(int) (tourSelectionnee.getHeight()));
 		}
 		
 		//-------------------------------------
@@ -507,8 +510,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		if(creatureSelectionnee != null)
 		{
 			g2.setColor(COULEUR_SELECTION);
-			
-			traitTmp = g2.getStroke();
 			g2.setStroke(TRAIT_TILLE);
 			g2.drawOval((int) (creatureSelectionnee.getX()), 
 						(int) (creatureSelectionnee.getY()),
@@ -518,9 +519,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			// dessine son chemin
 			setTransparence(ALPHA_CHEMIN_CREATURE,g2);
 			dessinerCheminCreature(creatureSelectionnee,g2);
-			g2.setStroke(traitTmp);
-			
-			
 			
 			// TODO implémenter
 			/*
@@ -528,6 +526,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			           (int) creatureSelectionnee.getY());
 			*/
 		}
+		
+		g2.setStroke(traitTmp);
 		
 		//------------------------------------
 		//-- affichage des rayons de portee --

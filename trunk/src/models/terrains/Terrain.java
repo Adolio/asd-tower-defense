@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.*;
 import models.creatures.*;
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
 import models.outils.Son;
@@ -92,18 +93,6 @@ public abstract class Terrain
     ArrayList<Point> cheminAerien;
 
     /**
-     * Les creatures sont implentees aleatoirement dans la zone de depart
-     * lorsqu'une vague des creatures est sollicitee par le joueur.
-     */
-    private final Rectangle ZONE_DEPART;
-
-    /**
-     * Les creatures doivent ce rendre dans la zone d'arrivee en utilisant le
-     * chemin le plus cours fourni par le maillage.
-     */
-    private final Rectangle ZONE_ARRIVEE;
-
-    /**
      * Image de fond du terrain. <br>
      * Note : les murs du terrain sont normalement lies a cette image
      */
@@ -154,20 +143,15 @@ public abstract class Terrain
      * @param hauteurMaillage hauteur du maillage en pixel
      * @param imageDeFond le chemin jusqu'a l'image de fond
      * @param nom nom de la zone de jeu
-     * @param zoneDepart la zone de depart des creatures
-     * @param zoneArrivee la zone d'arrivee des creatures
      */
     public Terrain(Jeu jeu, int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
             int largeurMaillage, int hauteurMaillage, Color couleurDeFond, 
-            Color couleurMurs, Image imageDeFond,
-            String nom, Rectangle zoneDepart, Rectangle zoneArrivee)
+            Color couleurMurs, Image imageDeFond, String nom)
     {
         this.jeu = jeu; 
         LARGEUR = largeur;
         HAUTEUR = hauteur;
-        ZONE_DEPART = zoneDepart;
-        ZONE_ARRIVEE = zoneArrivee;
         NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
         NB_VIES_INITIALES = nbViesInitiales;
         IMAGE_DE_FOND = imageDeFond;
@@ -179,13 +163,6 @@ public abstract class Terrain
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
     }
-
-    /**
-     * Methode qui permet de recuperer la vague de creatures suivantes
-     * 
-     * @return la vague de creatures suivante
-     */
-    abstract VagueDeCreatures getVagueDeCreaturesSuivante();
 
     // ------------------------------
     // -- GETTER / SETTER BASIQUES --
@@ -219,26 +196,6 @@ public abstract class Terrain
     public Image getImageDeFond()
     {
         return IMAGE_DE_FOND;
-    }
-
-    /**
-     * Permet de recuperer la zone de depart des creatures.
-     * 
-     * @return la zone de depart des creatures
-     */
-    public Rectangle getZoneDepart()
-    {
-        return ZONE_DEPART;
-    }
-
-    /**
-     * Permet de recuperer la zone d'arrivee des creatures.
-     * 
-     * @return la zone d'arrivee des creatures
-     */
-    public Rectangle getZoneArrivee()
-    {
-        return ZONE_ARRIVEE;
     }
 
     /**
@@ -281,24 +238,6 @@ public abstract class Terrain
         return NOM;
     }
 
-    /**
-     * Permet de recuperer la description vague suivante
-     * 
-     * @return la description de la vague suivante
-     */
-    public String getDescriptionVagueSuivante()
-    {
-        String descriptionVague = getVagueDeCreaturesSuivante()
-                .getDescription();
-
-        // s'il y a une description, on la retourne
-        if (!descriptionVague.isEmpty())
-            return descriptionVague;
-
-        // sinon on genere une description
-        return getVagueDeCreaturesSuivante().toString();
-    }
-
     // ----------------------
     // -- GESTION DES MURS --
     // ----------------------
@@ -324,6 +263,8 @@ public abstract class Terrain
         /*
          * Recalculation du chemin des créatures volantes
          */
+        // TODO adapter pour chemin aérien
+        /*
         try
         {
             cheminAerien = MAILLAGE_TERRESTRE.plusCourtChemin((int) ZONE_DEPART
@@ -335,12 +276,41 @@ public abstract class Terrain
         {
             // ne peut pas arriver, au pire on l'affiche
             e.printStackTrace();
-        }
+        }*/
     }
 
-    // ----------------------------------------------------------
+    /**
+     * Permet de recuperer les murs du terrain
+     * 
+     * @return les murs du terrain
+     */
+    public ArrayList<Rectangle> getMurs()
+    {
+        return murs;
+    }
+
+    /**
+     * Permet de récupérer la couleur de fond (mode debug)
+     * @return la couleur de fond
+     */
+    public Color getCouleurDeFond()
+    {
+        return COULEUR_DE_FOND;
+    }
+
+    /**
+     * Permet de récupérer la couleur des murs (mode debug)
+     * @return la couleur des murs
+     */
+    public Color getCouleurMurs()
+    {
+        return COULEUR_MURS;
+    }
+    
+
+    // -----------------------
     // -- GESTION DES TOURS --
-    // ----------------------------------------------------------
+    // -----------------------
 
     /**
      * Permet de savoir si une tour peut etre posee a un certain endroit sur le
@@ -368,9 +338,11 @@ public abstract class Terrain
                     return false;
         }
 
-        // il n'y a pas la zone de depart ou d'arrivee
-        if (tour.intersects(ZONE_DEPART) || tour.intersects(ZONE_ARRIVEE))
-            return false;
+        // il n'y a pas les zones de depart ou d'arrivee
+        for(Equipe e : jeu.getEquipes())
+            // TODO gérer plusieurs zone de depart
+            if (tour.intersects(e.getZoneDepartCreatures(0)) || tour.intersects(e.getZoneArriveeCreatures()))
+                return false;
 
         // rien empeche la tour d'etre posee
         return true;
@@ -394,11 +366,20 @@ public abstract class Terrain
 
         try
         {
+            Equipe e = tour.getPrioprietaire().getEquipe();
+            
+            // on part du principe que le joueur ne peu blocker que son chemin
+            // car il contruit sur son troncon... A VOIR!
+            
+            // TODO gérer plusieurs zone de depart
+            Rectangle zoneDepart = e.getZoneDepartCreatures(0);
+            Rectangle zoneArrivee = e.getZoneArriveeCreatures();
+            
             // calcul du chemin et attente une exception
             // PathNotFoundException s'il y a un probleme
-            getCheminLePlusCourt((int) ZONE_DEPART.getCenterX(),
-                    (int) ZONE_DEPART.getCenterY(), (int) ZONE_ARRIVEE
-                            .getCenterX(), (int) ZONE_ARRIVEE.getCenterY(),
+            getCheminLePlusCourt((int) zoneDepart.getCenterX(),
+                    (int) zoneDepart.getCenterY(), (int) zoneArrivee
+                            .getCenterX(), (int) zoneArrivee.getCenterY(),
                     Creature.TYPE_TERRIENNE);
 
             // il existe un chemin, donc elle ne bloque pas.
@@ -412,7 +393,51 @@ public abstract class Terrain
             return true;
         }
     }
+    
+    // ---------------------------
+    // -- GESTION DES CREATURES --
+    // ---------------------------
+    
+    /**
+     * Methode qui permet de recuperer la vague de creatures suivantes
+     * 
+     * Note : cette méthode peut etre redéfinie par les fils de Terrain
+     * 
+     * @return la vague de creatures suivante
+     */
+    public VagueDeCreatures getVagueDeCreaturesSuivante()
+    {
+        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
+    }
+    
+    /**
+     * Permet de passer à la prochaine vague
+     */
+    public void passerALaProchaineVague()
+    {
+        indiceVagueCourante++;
+    }
+    
+    /**
+     * Permet de recuperer la description vague suivante
+     * 
+     * @return la description de la vague suivante
+     */
+    public String getDescriptionVagueSuivante()
+    {   
+        // récupération de la vague suivante
+        VagueDeCreatures vagueSuivante = getVagueDeCreaturesSuivante();
+        
+        // s'il y a une description, on la retourne
+        String descriptionVague = vagueSuivante.getDescription();
+        if (!descriptionVague.isEmpty())
+            return descriptionVague;
 
+        // sinon on genere une description
+        return vagueSuivante.toString();
+    }
+    
+    
     // -------------------------
     // -- GESTION DU MAILLAGE --
     // -------------------------
@@ -468,13 +493,16 @@ public abstract class Terrain
             for (Creature creature : creatures)
             {
                 // les tours n'affecte que le chemin des creatures terriennes
-                if (creature.getType() == Creature.TYPE_TERRIENNE)
+                if (creature.getType() == Creature.TYPE_TERRIENNE)   
+                {
+                    Rectangle zoneArrivee = creature.getEquipeCiblee().getZoneArriveeCreatures();
+                    
                     try
-                    {
+                    { 
                         creature.setChemin(getCheminLePlusCourt((int) creature
                                 .getCenterX(), (int) creature.getCenterY(),
-                                (int) ZONE_ARRIVEE.getCenterX(),
-                                (int) ZONE_ARRIVEE.getCenterY(), creature
+                                (int) zoneArrivee.getCenterX(),
+                                (int) zoneArrivee.getCenterY(), creature
                                         .getType()));
                     }
                     catch (PathNotFoundException e)
@@ -495,14 +523,14 @@ public abstract class Terrain
                                 if(creature.getIndiceCourantChemin() > 0) // pas au depart
                                     noeudPrecedent = chemin.get(creature.getIndiceCourantChemin()-1);
                                 else
-                                    noeudPrecedent = new Point(ZONE_DEPART.x, ZONE_DEPART.y);
+                                    noeudPrecedent = new Point(zoneArrivee.x, zoneArrivee.y);
              
                                 // calcul du nouveau chemin
                                 creature.setChemin(getCheminLePlusCourt(
                                         (int) noeudPrecedent.x, 
                                         (int) noeudPrecedent.y,
-                                        (int) ZONE_ARRIVEE.getCenterX(),
-                                        (int) ZONE_ARRIVEE.getCenterY(), 
+                                        (int) zoneArrivee.getCenterX(),
+                                        (int) zoneArrivee.getCenterY(), 
                                         creature.getType())); 
                             } 
                         }
@@ -511,22 +539,9 @@ public abstract class Terrain
                             // s'il n'y a toujours pas de chemin, on garde l'ancien.
                         }
                     }
+                }
             }
         }
-    }
-
-    /**
-     * Permet de lancer la vague de creatures suivantes
-     * 
-     * @param edc ecouteur de creature fourni a chacune des creatures
-     */
-    public void lancerVagueSuivante(EcouteurDeVague edv, EcouteurDeCreature edc)
-    {
-        // lancement de la vague
-        vagueCourante = getVagueDeCreaturesSuivante();
-        
-        vagueCourante.lancerVague(jeu, edv, edc);
-        indiceVagueCourante++;
     }
 
     /**
@@ -549,12 +564,12 @@ public abstract class Terrain
             int xArrivee, int yArrivee, int typeCreature)
             throws IllegalArgumentException, PathNotFoundException
     {
-
-        if (typeCreature == Creature.TYPE_TERRIENNE)
+        // TODO adapter pour chemin aérien
+        //if (typeCreature == Creature.TYPE_TERRIENNE)
             return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart,
                     xArrivee, yArrivee);
 
-        return cheminAerien;
+        //return cheminAerien;
     }
 
     /**
@@ -605,28 +620,9 @@ public abstract class Terrain
             GestionnaireSons.arreterTousLesSons(fichierMusiqueDAmbiance);
     }
 
-    // ----------------
-    // -- ANIMATIONS --
-    // ----------------
-    /**
-     * Permet de recuperer les murs du terrain
-     * 
-     * @return les murs du terrain
-     */
-    public ArrayList<Rectangle> getMurs()
-    {
-        return murs;
-    }
-
-    public Color getCouleurDeFond()
-    {
-        return COULEUR_DE_FOND;
-    }
-
-    public Color getCouleurMurs()
-    {
-        return COULEUR_MURS;
-    }
+    // -----------
+    // -- PAUSE --
+    // -----------
     
     /**
      * Permet de mettre les créatures en pause.
@@ -644,5 +640,5 @@ public abstract class Terrain
     { 
         if(vagueCourante != null)
             vagueCourante.sortirDeLaPause();
-    }
+    } 
 }

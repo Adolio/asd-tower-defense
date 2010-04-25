@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import models.creatures.VagueDeCreatures;
 import models.jeu.Jeu;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 
 /**
  * Classe de gestion d'un terrain dans le desert.
@@ -42,19 +43,25 @@ public class Desert extends Terrain
                 500,      // hauteur
                 140,    // nbPiecesOrInitiales
                 20,       // nbViesInitiales
-                -10,      // positionMaillageX
+                0,      // positionMaillageX
                 0,        // positionMaillageY
-                560,      // largeurMaillage
+                540,      // largeurMaillage
                 500,      // hauteurMaillage
                 new Color(161,72,0), // couleur de fond
                 new Color(150,150,150), // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
-                NOM,  // nom
-                new Rectangle(520,40,20,60), // zoneDepart
-                new Rectangle(0,400,20,60)   // zoneArrivee
+                NOM       // nom
           );
 		
 		
+		// Création des équipes
+		Equipe e = new Equipe();
+        e.ajouterZoneDepartCreatures(new Rectangle(510,40,20,60));
+        e.setZoneArriveeCreatures(new Rectangle(0,400,20,60));
+        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
+        jeu.ajouterEquipe(e);
+		
+
 		// murs entourant le terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
 		ajouterMur(new Rectangle(0,0,500,20)); 		// haut
@@ -77,14 +84,5 @@ public class Desert extends Terrain
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
 		ajouterMur(new Rectangle(320,360,60,20));
-	}
-	
-    /**
-     * Permet de recuperer la vague suivante
-     * @return la vague suivante
-     */
-	public VagueDeCreatures getVagueDeCreaturesSuivante()
-	{
-        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
 	}
 }
