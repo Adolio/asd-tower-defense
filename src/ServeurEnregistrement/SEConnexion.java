@@ -45,12 +45,12 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
             switch(code)
             {
                case STOP :
-                  canal.envoyerString("{\"status\" : \"OK\"}");
+                  canal.envoyerString("{\"status\" :" + OK + "}");
                   canal.fermer();
                   break bouclePrincipale;
                   
                case TEST :
-                  canal.envoyerString("{\"status\" : \"OK\"}");
+                  canal.envoyerString("{\"status\" :" + OK + "}");
                   break;
                   
                case ENREGISTRER :
@@ -64,11 +64,11 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   
                   if (SEInscription.ajouterEnregistrement(enregisrementCourant))
                   {
-                     canal.envoyerString("{\"status\" : \"OK\"}");
+                     canal.envoyerString("{\"status\" :" + OK + "}");
                   }
                   else
                   {
-                     canal.envoyerString("{\"status\" : \"ERROR\"," +
+                     canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                          "\"message\" : \"Cette partie existe deja!\"}");
                   }
                   break;
@@ -77,16 +77,16 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   if (enregisrementCourant != null)
                   {
                      SEInscription.enleverEnregistrement(enregisrementCourant);
-                     canal.envoyerString("{\"status\" : \"OK\"}");
+                     canal.envoyerString("{\"status\" :" + OK + "}");
                      canal.fermer();
                      break bouclePrincipale;
                   }
-                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                  canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
                   break;
                   
                case NOMBRE_PARTIES :
-                  canal.envoyerString("{\"status\" : \"OK\"," +
+                  canal.envoyerString("{\"status\" : " + OK + "," +
                                       "\"nombreParties\" : " + 
                                           SEInscription.getNombreEnregistrements() + "}");
                   break;
@@ -94,7 +94,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                case INFOS_PARTIES :
                   if (enregisrementCourant != null)
                   {
-                     jsonString = "{\"status\" : \"OK\", \"parties\" : [";
+                     jsonString = "{\"status\" : " + OK + ", \"parties\" : [";
                      for (Enregistrement e : SEInscription.getJeuxEnregistres())
                      {
                         jsonString.concat("{");
@@ -115,23 +115,23 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                      canal.envoyerString(jsonString);
                      break;
                   }
-                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                  canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
                   break;
                   
                case AJOUTER_JOUEUR :
                   if (enregisrementCourant != null)
                   {
-                     canal.envoyerString("{\"status\" : \"OK\"}");
+                     canal.envoyerString("{\"status\" :" + OK + "}");
                      enregisrementCourant.setPlacesRestantes(enregisrementCourant.getPlacesRestantes() - 1);
                      break;
                   }
-                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                  canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
                   break;
                   
                default :
-                  canal.envoyerString("{\"status\" : \"ERROR\"," +
+                  canal.envoyerString("{\"status\" : " + ERREUR +"," +
                                       "\"message\" : \"Code errone!\"}");
                   break;
             }
