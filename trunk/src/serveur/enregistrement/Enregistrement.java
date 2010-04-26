@@ -14,6 +14,8 @@ public class Enregistrement {
    private Port port;
    private int capacite;
    private int placesRestantes;
+   private String nomTerrain;
+   private String mode;
    
    /**
     * 
@@ -21,13 +23,44 @@ public class Enregistrement {
     * @param adresseIp
     * @param port
     */
-   public Enregistrement(String nom, String adresseIp, Port port, int capacite)
+   public Enregistrement(String nom, String adresseIp, Port port, int capacite,
+                         String nomTerrain, String mode)
    {
       this.nomPartie = nom;
       this.adresseIp = adresseIp;
       this.port = port;
       this.capacite = capacite;
       this.placesRestantes = this.capacite - 1;
+      this.nomTerrain = nomTerrain;
+      this.mode = mode;
+   }
+
+   /**
+    * @return the nomTerrain
+    */
+   public String getNomTerrain() {
+      return nomTerrain;
+   }
+
+   /**
+    * @param nomTerrain the nomTerrain to set
+    */
+   public void setNomTerrain(String nomTerrain) {
+      this.nomTerrain = nomTerrain;
+   }
+
+   /**
+    * @return the mode
+    */
+   public String getMode() {
+      return mode;
+   }
+
+   /**
+    * @param mode the mode to set
+    */
+   public void setMode(String mode) {
+      this.mode = mode;
    }
 
    /**

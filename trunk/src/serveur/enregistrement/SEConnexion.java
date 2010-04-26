@@ -61,7 +61,9 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                               contenu.getString("nomPartie"),
                               contenu.getString("adresseIp"),
                               new Port(contenu.getInt("numeroPort")),
-                              contenu.getInt("capacite"));
+                              contenu.getInt("capacite"),
+                              contenu.getString("nomTerrain"),
+                              contenu.getString("mode"));
                   
                   if (SEInscription.ajouterEnregistrement(enregisrementCourant))
                   {
@@ -98,20 +100,20 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                      jsonString = "{\"status\" : " + OK + ", \"parties\" : [";
                      for (Enregistrement e : SEInscription.getJeuxEnregistres())
                      {
-                        jsonString.concat("{");
-                        jsonString.concat("\"nomPartie\" : \"");
-                        jsonString.concat(e.getNomPartie());
-                        jsonString.concat("\",");
-                        jsonString.concat("\"adresseIp\" : \"");
-                        jsonString.concat(e.getAdresseIp());
-                        jsonString.concat("\",");
-                        jsonString.concat("\"numeroPort\" : " + e.getPort().getNumeroPort() + ",");
-                        jsonString.concat("\"capacite\" : " + e.getCapacite() + ",");
-                        jsonString.concat("\"placesRestantes\" : " + e.getPlacesRestantes());
-                        jsonString.concat("},");
+                        jsonString = jsonString.concat("{");
+                        jsonString = jsonString.concat("\"nomPartie\" : \"" + e.getNomPartie() + "\",");
+                        jsonString = jsonString.concat("\"adresseIp\" : \"" + e.getAdresseIp() + "\",");
+                        jsonString = jsonString.concat("\"numeroPort\" : " + e.getPort().getNumeroPort() + ",");
+                        jsonString = jsonString.concat("\"capacite\" : " + e.getCapacite() + ",");
+                        jsonString = jsonString.concat("\"placesRestantes\" : " + e.getPlacesRestantes() + ",");
+                        jsonString = jsonString.concat("\"nomTerrain\" : \"" + e.getNomTerrain() + "\",");
+                        jsonString = jsonString.concat("\"mode\" : \"" + e.getMode() + "\"");
+                        jsonString = jsonString.concat("},");
                      }
-                     jsonString = jsonString.substring(0, jsonString.length() - 2);
-                     jsonString.concat("]}");
+                     
+                     jsonString = jsonString.concat("]}");
+                     
+                     System.out.println("\n\n\n" + jsonString + "\n\n\n");
                      
                      canal.envoyerString(jsonString);
                      break;
@@ -120,11 +122,13 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
                   break;
                   
-               case AJOUTER_JOUEUR :
+               case MISE_A_JOUR :
                   if (enregisrementCourant != null)
                   {
                      canal.envoyerString("{\"status\" :" + OK + "}");
-                     enregisrementCourant.setPlacesRestantes(enregisrementCourant.getPlacesRestantes() - 1);
+                     contenu = messageJsonRecu.getJSONObject("donnees")
+                                              .getJSONObject("contenu");
+                     enregisrementCourant.setPlacesRestantes(contenu.getInt("placesRestantes"));
                      break;
                   }
                   canal.envoyerString("{\"status\" : " + ERREUR + "," +
@@ -142,7 +146,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
             e1.printStackTrace();
          }
          
-         miseAJourEnregistrements();
+         //miseAJourEnregistrements();
       }
    }
    
@@ -155,7 +159,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
       {
          try {
             Canal c = new Canal(e.getAdresseIp(), e.getPort().getNumeroPort(), true);
-            c.envoyerString("TEST");
+            //c.envoyerString("TEST");
             c.fermer();
          }
          catch (Exception exc)
