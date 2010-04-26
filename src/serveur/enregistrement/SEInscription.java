@@ -56,8 +56,10 @@ public class SEInscription {
     * @return
     */
    public static synchronized boolean ajouterEnregistrement(Enregistrement e) {
+      // TODO : surcharger les contains() pour pas que ce soit les réf. qui sont comparées
       if (!jeuxEnregistres.contains(e)) {
          jeuxEnregistres.add(e);
+         System.out.println("Nb d'enreg. : " + jeuxEnregistres.size());
          return true;
       }
       return false;

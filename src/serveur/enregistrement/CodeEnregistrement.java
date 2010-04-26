@@ -9,7 +9,7 @@ public interface CodeEnregistrement
    public final int DESENREGISTRER = 103;
    public final int NOMBRE_PARTIES = 104;
    public final int INFOS_PARTIES  = 105;
-   public final int AJOUTER_JOUEUR = 106;
+   public final int MISE_A_JOUR    = 106;
    
    // Codes de réponse du serveur
    public final int OK             = 200;
