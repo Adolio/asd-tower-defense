@@ -1,6 +1,6 @@
-package ServeurEnregistrement;
+package serveur.enregistrement;
 
-import Reseau.*;
+import reseau.*;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package Reseau;
+package reseau;
 
 /**
  * Cette classe dérivée de la classe RuntimeException représente une exception

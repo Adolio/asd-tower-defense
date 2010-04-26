@@ -1,4 +1,4 @@
-package ServeurEnregistrement;
+package serveur.enregistrement;
 
 public interface CodeEnregistrement
 {

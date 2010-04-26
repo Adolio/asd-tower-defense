@@ -1,7 +1,8 @@
-package ServeurEnregistrement;
+package serveur.enregistrement;
 
-import Reseau.*;
 import org.json.*;
+
+import reseau.*;
 
 
 /**

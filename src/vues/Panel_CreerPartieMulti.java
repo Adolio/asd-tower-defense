@@ -15,10 +15,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import Reseau.Canal;
-import Reseau.CanalException;
-import ServeurEnregistrement.SEConnexion;
-import ServeurEnregistrement.SEInscription;
+import reseau.Canal;
+import reseau.CanalException;
+import serveur.enregistrement.SEConnexion;
+import serveur.enregistrement.SEInscription;
+
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
