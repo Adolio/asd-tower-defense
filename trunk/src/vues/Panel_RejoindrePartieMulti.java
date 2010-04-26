@@ -10,15 +10,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import reseau.Canal;
+import reseau.CanalException;
+import serveur.enregistrement.CodeEnregistrement;
+
 @SuppressWarnings("serial")
 public class Panel_RejoindrePartieMulti extends JPanel implements
         ActionListener, KeyListener, MouseListener
 {
+    private static final int NUMERO_PORT = 1234;
+    private static final String IP_SE = "127.0.0.1";
+    
     private final int MARGES_PANEL = 40;
     private JFrame parent;
 
@@ -27,7 +39,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private ArrayList<ServeurInfo> serveurs = new ArrayList<ServeurInfo>();
 
     private String filtre = "";
-    private JTextField tfFiltre = new JTextField("Recherche");
+    private static final String FILTRE_DEFAUT = "Recherche";
+    private JTextField tfFiltre = new JTextField(FILTRE_DEFAUT);
 
     private JLabel lblConnexionParIP = new JLabel("Connexion par IP : ");
     private JTextField tfConnexionParIP = new JTextField(10);
@@ -41,6 +54,9 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
     private JButton bAnnuler = new JButton("Annuler");
 
+    private Canal canalServeurEnregistrement;
+    
+    
     /**
      * Classe interne pour stocker les informations d'un serveur
      */
@@ -164,22 +180,20 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         model.addColumn("Terrain");
         model.addColumn("Places dispo.");
 
+        // Création du canal avec le serveur d'enregistrement
+        try
+        {
+            canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
+            
+            mettreAJourListeDesServeurs();
+        } 
+        catch (ConnectException e){
+            e.printStackTrace();
+        } 
+        catch (CanalException e) {
+            e.printStackTrace();
+        }
         
-        // TODO demande de la liste des serveurs au server d'enregistrement
-        
-        
-        
-        
-        // TODO [DEBUG]a effacer
-        ajouterServeur("[CH] ComeOn!", "192.168.1.13", "Versus", "Altair TD",
-                2, 1);
-        ajouterServeur("[heig-vd] TPDM", "192.168.1.56", "Versus",
-                "Castle Defense", 4, 3);
-        ajouterServeur("[FR] Truite!", "153.18.56.98", "Versus",
-                "ElementNet TD", 6, 2);
-        ajouterServeur("[heig-vd] Holy", "192.168.1.33", "Coopération",
-                "Ezio TD", 8, 3);
-
         // ajout dans le panel
         JScrollPane scrollPane = new JScrollPane(tableDesServeurs);
         add(scrollPane, BorderLayout.CENTER);
@@ -213,10 +227,82 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         pBottom.add(bRejoindre, BorderLayout.EAST);
         bRejoindre.addActionListener(this);
 
-        lblEtat.setForeground(Color.RED);
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
         add(pBottom, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Permet de demander la liste des serveurs au serveur d'enregistrement
+     * et de mettre a jour la liste des serveurs
+     */
+    private void mettreAJourListeDesServeurs()
+    {
+        if(canalServeurEnregistrement != null)
+        {
+            // création de la requete d'enregistrement
+            String requete = "{\"donnees\" :{\"code\" : "+
+                CodeEnregistrement.INFOS_PARTIES+"}}";
+            
+            // envoie de la requete
+            canalServeurEnregistrement.envoyerString(requete);
+            
+            // attente du résultat
+            String resultat = canalServeurEnregistrement.recevoirString();
+    
+            // mise à jour de la liste des serveurs
+            mettreAJourListeDepuisJSON(resultat);
+        }
+    }
+
+    /**
+     * Permet de mettre a jour la liste des serveurs avec une réponse JSON
+     * 
+     * @param resultatJSON le résultat du serveur d'enregistrement
+     */
+    private void mettreAJourListeDepuisJSON(String resultatJSON)
+    {
+        try
+        {
+            // Analyse de la réponse du serveur d'enregistrement
+            JSONObject jsonResultat = new JSONObject(resultatJSON);
+            
+            // on vide la liste des serveurs
+            serveurs.clear();
+            
+            if(jsonResultat.getInt("status") == CodeEnregistrement.OK)
+            {
+                // sélection des serveurs de jeu
+                JSONArray jsonArray = jsonResultat.getJSONArray("parties");
+                
+                // ajout des serveurs de jeu
+                for(int i=0;i < jsonArray.length(); i++)
+                {
+                    JSONObject serveur = jsonArray.getJSONObject(i);
+                    
+                    ajouterServeur(serveur.getString("nomPartie"), 
+                                   serveur.getString("adresseIp"), 
+                                   serveur.getString("mode"), 
+                                   serveur.getString("nomTerrain"),
+                                   serveur.getInt("capacite"), 
+                                   serveur.getInt("placesRestantes"));
+  
+                }
+                
+                lblEtat.setForeground(Color.GREEN);
+                lblEtat.setText("Connexion au serveur central établie!");
+            }
+            else
+            {
+                lblEtat.setForeground(Color.RED);
+                lblEtat.setText("Connexion au serveur central échouée!");
+            }
+        } 
+        catch (JSONException e1)
+        {
+            lblEtat.setForeground(Color.RED);
+            lblEtat.setText("Connexion au serveur central échouée!");
+        }
     }
 
     /**
@@ -260,7 +346,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         // ajout des serveurs dans la table s'il respect le filtre
         for (ServeurInfo srvInfo : serveurs)
-            if (srvInfo.contientLaChaine(filtre))
+            if (filtre.equals(FILTRE_DEFAUT) || srvInfo.contientLaChaine(filtre))
                 model.addRow(srvInfo.toStringArray());
     }
 
@@ -276,8 +362,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             try
             {
                 connexion(recupererIP());
-            } catch (Exception exception)
+            } 
+            catch (Exception exception)
             {
+                lblEtat.setForeground(Color.RED);
                 lblEtat.setText(exception.getMessage());
             }
         } else if (src == bAnnuler)
@@ -286,6 +374,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
+            
+            // fermeture du canal s'il est ouvert
+            if(canalServeurEnregistrement != null)
+                canalServeurEnregistrement.fermer();
         }
     }
 
@@ -353,7 +445,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         if (src == tfFiltre)
         {
-            if (tfFiltre.getText().equals("Recherche"))
+            if (tfFiltre.getText().equals(FILTRE_DEFAUT))
                 tfFiltre.setText("");
         } else if (src == tfConnexionParIP)
         {

@@ -19,6 +19,7 @@ import serveur.enregistrement.SEInscription;
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
     private static final int NUMERO_PORT = 1234;
+    private static final String IP_SE = "127.0.0.1";
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
@@ -42,6 +43,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
     private JButton bAnnuler = new JButton("Annuler");
 
+    private Canal canalServeurEnregistrement;
+    
+    
     /**
      * Constructeur
      * 
@@ -200,52 +204,61 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             
             // TODO connexion au serveur, demande de création de la partie...
+            //---------------------------------------------------------------
+            //-- Enregistrement du serveur sur le serveur d'enregistrement --
+            //---------------------------------------------------------------
             try
             {
-               
-                java.net.InetAddress adresse = java.net.InetAddress.getLocalHost();
-                String adresseIP = adresse.getHostAddress();
+                // Information
+                lblEtat.setForeground(Color.BLACK);
+                lblEtat.setText("Enregistrement au serveur central...");
+
+                // recupération du l'adresse IP locale
+                InetAddress hote = InetAddress.getLocalHost();
+                String adresseIP = hote.getHostAddress();
                 
-                Canal canal = new Canal("127.0.0.1",NUMERO_PORT,true);
+                // Création du canal avec le serveur d'enregistrement
+                canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
                 
-                
+                // Création de la requete d'enregistrement
                 String requete = "{\"donnees\" :{\"code\" : "+
                     CodeEnregistrement.ENREGISTRER+",\"contenu\" : "+
                     "{" +
-                    "\"nomPartie\" :\""+tfNomServeur.getText()+"\","+
-                    "\"adresseIp\" :\""+adresseIP+"\","+
+                    "\"nomPartie\"  :\""+tfNomServeur.getText()+"\","+
+                    "\"adresseIp\"  :\""+adresseIP+"\","+
                     "\"numeroPort\" :"+NUMERO_PORT+","+
-                    "\"capacite\" :"+Integer.parseInt((String) cbNbJoueurs.getSelectedItem())+
+                    "\"capacite\"   :"+Integer.parseInt((String) 
+                                      cbNbJoueurs.getSelectedItem())+","+
+                    "\"nomTerrain\" :\"TruiteTD\","+
+                    "\"mode\"       :\""+cbMode.getSelectedItem()+"\""+
                     "}}}"; 
                 
-                canal.envoyerString(requete);
-                System.out.println("requete envoyee : "+requete);
+                // Envoie de la requete
+                canalServeurEnregistrement.envoyerString(requete);
                 
-
-                String resultat = canal.recevoirString();
-                System.out.println("requete recue : "+resultat);
+                // Attente du résultat
+                String resultat = canalServeurEnregistrement.recevoirString();
                 
-                /*
                 try
                 {
-                    JSONObject jo = new JSONObject(str);
-                    
-                    int code = jo.getJSONObject("status").getInt("code");
-                    
-                    System.out.println("code : "+code);
-                    
-                    // connexion réussie
-                    parent.getContentPane().removeAll();
-                    parent.getContentPane().add(
-                            new Panel_AttendreJoueurs(parent, true),
-                            BorderLayout.CENTER);
-                    parent.getContentPane().validate();
+                    // Analyse de la réponse du serveur d'enregistrement
+                    JSONObject jsonResultat = new JSONObject(resultat);
+                    if(jsonResultat.getInt("status") == CodeEnregistrement.OK)
+                    {
+                        lblEtat.setForeground(Color.GREEN);
+                        lblEtat.setText("Enregistrement au serveur central réussi!");
+                    }
+                    else
+                    {
+                        lblEtat.setForeground(Color.RED);
+                        lblEtat.setText("Enregistrement au serveur central échoué!");
+                    }
                 } 
                 catch (JSONException e1)
                 {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }*/
+                    lblEtat.setForeground(Color.RED);
+                    lblEtat.setText("Enregistrement au serveur central échoué!");
+                }
             } 
             catch (ConnectException e1)
             {
@@ -259,6 +272,19 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             {
                 e1.printStackTrace();
             }
+            
+            
+            // connexion réussie
+            /*
+            parent.getContentPane().removeAll();
+            parent.getContentPane().add(
+                    new Panel_AttendreJoueurs(parent, true),
+                    BorderLayout.CENTER);
+            parent.getContentPane().validate();
+            */
+            
+            
+            
         } 
         else if (src == bAnnuler)
         {
@@ -266,6 +292,10 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
+            
+            // fermeture du canal s'il est ouvert
+            if(canalServeurEnregistrement != null)
+                canalServeurEnregistrement.fermer();
         }
     }
 }
