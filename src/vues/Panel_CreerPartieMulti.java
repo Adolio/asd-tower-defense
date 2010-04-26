@@ -1,29 +1,24 @@
 package vues;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.ConnectException;
-
+import java.awt.*;
+import java.awt.event.*;
+import java.net.*;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-
+import javax.swing.border.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 import reseau.Canal;
 import reseau.CanalException;
+import reseau.Canal;
+import reseau.CanalException;
+import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.SEConnexion;
 import serveur.enregistrement.SEInscription;
-
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
+    private static final int NUMERO_PORT = 1234;
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
@@ -40,7 +35,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private JComboBox cbMode = new JComboBox();
 
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
-    private JTextField tfNomServeur = new JTextField();
+    private JTextField tfNomServeur = new JTextField("Serveur de test");
 
     private JLabel lblEquipeAleatoire = new JLabel("Equipe aléatoire :");
     private JCheckBox cbEquipeAleatoire = new JCheckBox();
@@ -207,34 +202,65 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             // TODO connexion au serveur, demande de création de la partie...
             try
             {
-                Canal canal = new Canal("127.0.0.1",1234,true);
+               
+                java.net.InetAddress adresse = java.net.InetAddress.getLocalHost();
+                String adresseIP = adresse.getHostAddress();
+                
+                Canal canal = new Canal("127.0.0.1",NUMERO_PORT,true);
                 
                 
-                canal.envoyerString("{HELLO}");
-                String str = canal.recevoirString();
+                String requete = "{\"donnees\" :{\"code\" : "+
+                    CodeEnregistrement.ENREGISTRER+",\"contenu\" : "+
+                    "{" +
+                    "\"nomPartie\" :\""+tfNomServeur.getText()+"\","+
+                    "\"adresseIp\" :\""+adresseIP+"\","+
+                    "\"numeroPort\" :"+NUMERO_PORT+","+
+                    "\"capacite\" :"+Integer.parseInt((String) cbNbJoueurs.getSelectedItem())+
+                    "}}}"; 
                 
-                if(str.equals("ACK"))
+                canal.envoyerString(requete);
+                System.out.println("requete envoyee : "+requete);
                 
-                System.out.println(str);
+
+                String resultat = canal.recevoirString();
+                System.out.println("requete recue : "+resultat);
                 
+                /*
+                try
+                {
+                    JSONObject jo = new JSONObject(str);
+                    
+                    int code = jo.getJSONObject("status").getInt("code");
+                    
+                    System.out.println("code : "+code);
+                    
+                    // connexion réussie
+                    parent.getContentPane().removeAll();
+                    parent.getContentPane().add(
+                            new Panel_AttendreJoueurs(parent, true),
+                            BorderLayout.CENTER);
+                    parent.getContentPane().validate();
+                } 
+                catch (JSONException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }*/
             } 
             catch (ConnectException e1)
             {
                 e1.printStackTrace();
-            } catch (CanalException e1)
+            } 
+            catch (CanalException e1)
             {
                 e1.printStackTrace();
             }
-            
-            
-            // connexion réussie
-            parent.getContentPane().removeAll();
-            parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, true),
-                    BorderLayout.CENTER);
-            parent.getContentPane().validate();
-
-        } else if (src == bAnnuler)
+            catch (UnknownHostException e1)
+            {
+                e1.printStackTrace();
+            }
+        } 
+        else if (src == bAnnuler)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
