@@ -1,8 +1,9 @@
-package ServeurEnregistrement;
+package serveur.enregistrement;
 
 import java.util.ArrayList;
 
-import Reseau.*;
+import reseau.*;
+
 
 /**
  * 

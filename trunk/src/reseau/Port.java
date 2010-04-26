@@ -1,4 +1,4 @@
-package Reseau;
+package reseau;
 
 import java.net.ServerSocket;
 import java.io.IOException;

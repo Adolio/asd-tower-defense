@@ -1,4 +1,4 @@
-package Reseau;
+package reseau;
 
 /**
  * Cette classe représente un paquet qui peut être envoyé sur un canal de
