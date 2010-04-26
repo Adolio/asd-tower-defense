@@ -12,7 +12,7 @@ public interface CodeEnregistrement
    public final int AJOUTER_JOUEUR = 106;
    
    // Codes de réponse du serveur
-   public final int OK     = 200;
-   public final int ERREUR = 201;
+   public final int OK             = 200;
+   public final int ERREUR         = 201;
    
 }
