@@ -95,7 +95,10 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   break;
                   
                case INFOS_PARTIES :
-                  if (enregisrementCourant != null)
+                  
+                  // TODO arrete la drogue!
+                  //if (enregisrementCourant != null)
+                  if (SEInscription.getNombreEnregistrements() > 0) 
                   {
                      jsonString = "{\"status\" : " + OK + ", \"parties\" : [";
                      for (Enregistrement e : SEInscription.getJeuxEnregistres())
