@@ -81,10 +81,6 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   {
                      SEInscription.enleverEnregistrement(enregisrementCourant);
                      canal.envoyerString("{\"status\" :" + OK + "}");
-                     
-                     // TODO aurélien : je me desenregistre mais je ne quitte pas... sinon je peux pas faire mon stop...
-                     //canal.fermer();
-                     
                      break bouclePrincipale;
                   }
                   canal.envoyerString("{\"status\" : " + ERREUR + "," +
@@ -99,8 +95,6 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   
                case INFOS_PARTIES :
                   
-                  // TODO aurélien : arrete la drogue!
-                  //if (enregisrementCourant != null)
                   if (SEInscription.getNombreEnregistrements() > 0) 
                   {
                      jsonString = "{\"status\" : " + OK + ", \"parties\" : [";
@@ -151,8 +145,6 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
             // JSON exception
             e1.printStackTrace();
          }
-         
-         //miseAJourEnregistrements();
       }
    }
    
