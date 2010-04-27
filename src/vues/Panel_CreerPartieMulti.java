@@ -9,11 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import reseau.Canal;
 import reseau.CanalException;
-import reseau.Canal;
-import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
-import serveur.enregistrement.SEConnexion;
-import serveur.enregistrement.SEInscription;
+import serveur.enregistrement.RequeteEnregistrement;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
@@ -221,18 +218,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
                 
                 // Création de la requete d'enregistrement
-                String requete = "{\"donnees\" :{\"code\" : "+
-                    CodeEnregistrement.ENREGISTRER+",\"contenu\" : "+
-                    "{" +
-                    "\"nomPartie\"  :\""+tfNomServeur.getText()+"\","+
-                    "\"adresseIp\"  :\""+adresseIP+"\","+
-                    "\"numeroPort\" :"+NUMERO_PORT+","+
-                    "\"capacite\"   :"+Integer.parseInt((String) 
-                                      cbNbJoueurs.getSelectedItem())+","+
-                    "\"nomTerrain\" :\"TruiteTD\","+
-                    "\"mode\"       :\""+cbMode.getSelectedItem()+"\""+
-                    "}}}"; 
-                
+                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(),adresseIP, NUMERO_PORT, Integer.parseInt((String) 
+                        cbNbJoueurs.getSelectedItem()),"TruiteTD",(String) cbMode.getSelectedItem());
+
                 // Envoie de la requete
                 canalServeurEnregistrement.envoyerString(requete);
                 
@@ -251,18 +239,19 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     else
                     {
                         lblEtat.setForeground(Color.RED);
-                        lblEtat.setText("Enregistrement au serveur central échoué!");
+                        lblEtat.setText("Réponse du serveur central invalide!");
                     }
                 } 
                 catch (JSONException e1)
                 {
                     lblEtat.setForeground(Color.RED);
-                    lblEtat.setText("Enregistrement au serveur central échoué!");
+                    lblEtat.setText("Réponse du serveur central invalide!");
                 }
             } 
             catch (ConnectException e1)
             {
-                e1.printStackTrace();
+                lblEtat.setForeground(Color.RED);
+                lblEtat.setText("Enregistrement au serveur central échoué!");
             } 
             catch (CanalException e1)
             {
@@ -281,10 +270,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     new Panel_AttendreJoueurs(parent, true),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-            */
-            
-            
-            
+            */   
         } 
         else if (src == bAnnuler)
         {
@@ -295,7 +281,22 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             // fermeture du canal s'il est ouvert
             if(canalServeurEnregistrement != null)
+            {
+                try
+                {
+                    // désenregistrement du serveur
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.DESENREGISTRER);
+                    canalServeurEnregistrement.recevoirString();
+                    
+                    // fermeture propre du canal
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
+                    canalServeurEnregistrement.recevoirString();
+                }
+                // il y a eu une erreur... on quitte tout de même
+                catch(CanalException ce){}
+                
                 canalServeurEnregistrement.fermer();
-        }
+            }
+        }        
     }
 }
