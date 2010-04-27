@@ -58,6 +58,7 @@ public class Canal {
          // est bloquante jusqu'à ce qu'une connexion soit disponible.
          socket = port.getServerSocket().accept();
          
+         // TODO a effacer
          System.out.println(socket.getInetAddress());
          
          
@@ -107,6 +108,7 @@ public class Canal {
          // attend qu'il y ait une réponse.
          socket = new Socket(adresseIp, numeroPort);
          
+         // TODO a effacer
          System.out.println(socket.getInetAddress());
          
          
