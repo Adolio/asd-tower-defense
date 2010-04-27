@@ -29,7 +29,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
     private JFrame parent;
     private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField(10);
+    private JTextField tfPseudo = new JTextField("Joueur",10);
     private JButton bCreer = new JButton("Créer");
     private JLabel lblEtat = new JLabel();
 
