@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import outils.fichierDeConfiguration;
 import reseau.Canal;
 import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
@@ -29,10 +28,9 @@ import serveur.enregistrement.RequeteEnregistrement;
 public class Panel_RejoindrePartieMulti extends JPanel implements
         ActionListener, KeyListener, MouseListener
 {
-    private static final int NUMERO_PORT = 1234;
-    // IP idael : "188.165.41.224";
-    // IP lazahr : "10.192.51.161";
-    private static final String IP_SE = "127.0.0.1";
+    private static int PORT_SE;
+    private static int PORT_SJ;
+    private static String IP_SE;
     
     private final int MARGES_PANEL = 40;
     private JFrame parent;
@@ -42,7 +40,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private ArrayList<ServeurInfo> serveurs = new ArrayList<ServeurInfo>();
 
     private String filtre = "";
-    private static final String FILTRE_DEFAUT = "Recherche";
+    private static final String FILTRE_DEFAUT = "Filtre";
     private JTextField tfFiltre = new JTextField(FILTRE_DEFAUT);
 
     private JLabel lblConnexionParIP = new JLabel("Connexion par IP : ");
@@ -59,6 +57,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private JButton bAnnuler = new JButton("Annuler");
 
     private Canal canalServeurEnregistrement;
+    
+    private fichierDeConfiguration config;
     
     
     /**
@@ -124,7 +124,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
          */
         String[] toStringArray()
         {
-            return new String[] { nom, IP, Mode, nomTerrain,
+            return new String[] { nom, IP, port+"", Mode, nomTerrain,
                     placesLibres + " / " + nbPlaces };
         }
     }
@@ -143,11 +143,21 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
+        // recuperation des configurations
+        config  = new fichierDeConfiguration("cfg/config.cfg");
+        IP_SE   = config.getProprety("IP_SE");
+        PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
+        PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
+            
+            
         // ---------
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
-        pTop.add(new JLabel("REJOINDRE UN PARTIE"), BorderLayout.NORTH);
+        JLabel titre = new JLabel("REJOINDRE UNE PARTIE");
+        titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
+        pTop.add(titre, BorderLayout.NORTH);
+        
 
         // filtre
         JPanel pADroite = new JPanel(new BorderLayout());
@@ -184,6 +194,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // nom de colonnes
         model.addColumn("Nom");
         model.addColumn("IP");
+        model.addColumn("Port");
         model.addColumn("Mode");
         model.addColumn("Terrain");
         model.addColumn("Places dispo.");
@@ -191,15 +202,21 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // Création du canal avec le serveur d'enregistrement
         try
         {
-            canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
+            canalServeurEnregistrement = new Canal(IP_SE,PORT_SE,true);
             
             mettreAJourListeDesServeurs();
         } 
-        catch (ConnectException e){
-            e.printStackTrace();
+        catch (ConnectException e)
+        {
+            tableDesServeurs.setEnabled(false);
+            lblEtat.setForeground(Color.RED);
+            lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
         } 
-        catch (CanalException e) {
-            e.printStackTrace();
+        catch (CanalException e) 
+        {
+            tableDesServeurs.setEnabled(false);
+            lblEtat.setForeground(Color.RED);
+            lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
         }
         
         // ajout dans le panel
@@ -288,7 +305,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                     JSONObject serveur = jsonArray.getJSONObject(i);
                     
                     ajouterServeur(serveur.getString("nomPartie"), 
-                                   serveur.getString("adresseIp"), 
+                                   serveur.getString("adresseIp"),
+                                   serveur.getInt("numeroPort"), 
                                    serveur.getString("mode"), 
                                    serveur.getString("nomTerrain"),
                                    serveur.getInt("capacite"), 
@@ -308,7 +326,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         catch (JSONException e1)
         {
             lblEtat.setForeground(Color.RED);
-            lblEtat.setText("Connexion au serveur central échouée!");
+            lblEtat.setText("Format de réponse du serveur incorrect!");
         }
     }
 
@@ -323,11 +341,11 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
      * @param nbPlaces le nombre de joueurs
      * @param placesLibres les places restantes
      */
-    public void ajouterServeur(String nom, String IP, String Mode,
+    public void ajouterServeur(String nom, String IP, int port, String Mode,
             String nomTerrain, int nbPlaces, int placesLibres)
     {
 
-        ServeurInfo srvInfo = new ServeurInfo(nom, IP, 1234, Mode, nomTerrain,
+        ServeurInfo srvInfo = new ServeurInfo(nom, IP, port, Mode, nomTerrain,
                 nbPlaces, placesLibres);
 
         // ajout à la liste des serveurs
@@ -379,10 +397,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
             try
             {
-                connexion(recupererIP());
+                connexion(recupererIP(),recupererPort());
             } 
             catch (Exception exception)
             {
+                
+                exception.printStackTrace();
                 lblEtat.setForeground(Color.RED);
                 lblEtat.setText(exception.getMessage());
             }
@@ -436,25 +456,64 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         else
             return tfConnexionParIP.getText();
     }
+    
+    /**
+     * Permet de recupérer le port en fonction de l'état des champs du formulaire
+     * 
+     * @return le port du serveur selectionné par l'utilisateur
+     * @throws Exception s'il y des erreurs de saisie
+     */
+    private int recupererPort() throws Exception
+    {
+        if (tfPseudo.getText().isEmpty())
+            throw new Exception("Erreur : Pseudo vide.");
+
+        if (tableDesServeurs.getSelectedRow() != -1)
+            return Integer.parseInt((String) model.getValueAt(tableDesServeurs.getSelectedRow(),
+                    2));
+        else
+            return PORT_SJ;
+    } 
+    
+    
 
     /**
      * Etablisssement d'une connexion avec le serveur
      * 
      * @param IP l'adresse ip du serveur
      */
-    private void connexion(String IP)
+    private void connexion(String IP, int port)
     {
         bRejoindre.setText("Connexion...");
         bRejoindre.setEnabled(false);
 
         // TODO connexion au serveur, demande d'acceptation dans la partie...
-        
-        
-        // connexion réussie
-        parent.getContentPane().removeAll();
-        parent.getContentPane().add(new Panel_AttendreJoueurs(parent),
-                BorderLayout.CENTER);
-        parent.getContentPane().validate();
+        try
+        {
+            Canal canalServeurJeu = new Canal(IP,port,true);
+            
+            // connexion réussie
+            parent.getContentPane().removeAll();
+            parent.getContentPane().add(new Panel_AttendreJoueurs(parent,canalServeurJeu, false),
+                    BorderLayout.CENTER);
+            parent.getContentPane().validate();
+        } 
+        catch (ConnectException e)
+        {
+            bRejoindre.setText("Rejoindre");
+            bRejoindre.setEnabled(true);
+            
+            lblEtat.setForeground(Color.RED);
+            lblEtat.setText("Connection au serveur de jeu impossible");
+        } 
+        catch (CanalException e)
+        {
+            bRejoindre.setText("Rejoindre");
+            bRejoindre.setEnabled(true);
+            
+            lblEtat.setForeground(Color.RED);
+            lblEtat.setText("Connection au serveur de jeu impossible");
+        }
     }
 
     @Override

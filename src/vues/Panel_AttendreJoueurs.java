@@ -23,20 +23,23 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     private final int MARGES_PANEL = 40;
     private final boolean ADMIN;
     private JFrame parent;
-    private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField(10);
     private JButton bDemarrerMaintenant = new JButton("Démarrer maintenant");
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
+    
     private Canal canalServeurEnregistrement;
-
+    private Canal canalServeurJeu;
     
     @SuppressWarnings("serial")
-    public Panel_AttendreJoueurs(JFrame parent, Canal canalServeurEnregistrement)
+    public Panel_AttendreJoueurs(JFrame parent, Canal canal, boolean admin)
     {
         this.parent = parent;
-        this.canalServeurEnregistrement = canalServeurEnregistrement;
-        this.ADMIN  = true;
+        this.ADMIN  = admin;
+        
+        if(admin)
+            this.canalServeurEnregistrement = canal;
+        else
+            this.canalServeurJeu = canal;
         
         initialiserForm();
     }
@@ -95,13 +98,15 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             if(canalServeurEnregistrement == null)
             {
                 lblEtat.setForeground(Color.RED);
-                lblEtat.setText("La connexion avec le serveur central à échouée");
+                lblEtat.setText("La connexion avec le serveur central à échouée, " +
+                		"votre serveur n'apparaitra pas dans la liste des serveurs");
             }
             else
             {
                 lblEtat.setForeground(Color.GREEN);
                 lblEtat.setText("La connexion avec le serveur central à réussie");
             }
+        
         pBottom.add(lblEtat,BorderLayout.SOUTH);
         
         
