@@ -23,16 +23,14 @@ public class RequeteEnregistrement
      * @return la requete
      */
     public static String getRequeteEnregistrer(String nomServeur,
-            String adresseIP, int numeroPort, int nbJoueurs, String nomTerrain,
-            String mode)
+            int numeroPort, int nbJoueurs, String nomTerrain, String mode)
     {
         // Création de la requete d'enregistrement
         return "{\"donnees\" :{\"code\" : " + CodeEnregistrement.ENREGISTRER
                 + ",\"contenu\" : " + "{" + "\"nomPartie\" :\"" + nomServeur
-                + "\"," + "\"adresseIp\" :\"" + adresseIP + "\","
-                + "\"numeroPort\" :" + numeroPort + "," + "\"capacite\" :"
-                + nbJoueurs + "," + "\"nomTerrain\" :\"" + nomTerrain + "\","
-                + "\"mode\" :\"" + mode + "\"" + "}}}";
+                + "\"," + "\"numeroPort\" :" + numeroPort + ","
+                + "\"capacite\" :" + nbJoueurs + "," + "\"nomTerrain\" :\""
+                + nomTerrain + "\"," + "\"mode\" :\"" + mode + "\"" + "}}}";
     }
 
 }

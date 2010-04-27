@@ -30,6 +30,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         ActionListener, KeyListener, MouseListener
 {
     private static final int NUMERO_PORT = 1234;
+    // IP idael : "188.165.41.224";
+    // IP lazahr : "10.192.51.161";
     private static final String IP_SE = "127.0.0.1";
     
     private final int MARGES_PANEL = 40;
