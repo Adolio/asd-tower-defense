@@ -262,15 +262,13 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 e1.printStackTrace();
             }
             
-            
             // connexion réussie
-            /*
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, true),
+                    new Panel_AttendreJoueurs(parent, canalServeurEnregistrement),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-            */   
+            
         } 
         else if (src == bAnnuler)
         {
