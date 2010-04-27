@@ -16,7 +16,7 @@ import serveur.enregistrement.RequeteEnregistrement;
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
     private static final int NUMERO_PORT = 1234;
-    private static final String IP_SE = "127.0.0.1";
+    private static final String IP_SE = "188.165.41.224";
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
