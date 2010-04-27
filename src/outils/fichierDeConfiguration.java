@@ -27,7 +27,12 @@ public class fichierDeConfiguration
         {
             fichier = new File(cheminFichier);
             
-            chargement();
+            if(fichier.exists())
+                chargement();
+            else
+                creerFichier();
+       
+                
         } 
         catch (IOException e)
         {
@@ -35,6 +40,27 @@ public class fichierDeConfiguration
         }
     }
     
+    /**
+     * Permet de creer le fichier de conf avec des valeur par defauts
+     */
+    private void creerFichier()
+    {
+        try
+        {
+            fichier.createNewFile();
+            
+            chargement();
+            
+            config.setProperty("IP_SE", "127.0.0.1");
+            config.setProperty("PORT_SE", "1234");
+            config.setProperty("PORT_SJ", "2345");
+        } 
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }  
+    }
+
     /*************************************************************************
      * Chargement du fichier de configuration.
      * @throws IOException 
