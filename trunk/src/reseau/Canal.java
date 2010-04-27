@@ -58,6 +58,9 @@ public class Canal {
          // est bloquante jusqu'à ce qu'une connexion soit disponible.
          socket = port.getServerSocket().accept();
          
+         System.out.println(socket.getInetAddress());
+         
+         
          if (afficherMessagesDebug) {
             System.out.println("     Canal: connexion établie");
          }
