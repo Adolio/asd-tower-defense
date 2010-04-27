@@ -2,11 +2,13 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.net.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+import outils.fichierDeConfiguration;
 import reseau.Canal;
 import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
@@ -15,10 +17,13 @@ import serveur.enregistrement.RequeteEnregistrement;
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
-    private static final int NUMERO_PORT = 1234;
+    private static int PORT_SE;
+    private static int PORT_SJ;
     // IP idael : "188.165.41.224";
-    // IP lazahr : "10.192.51.161";
-    private static final String IP_SE = "127.0.0.1";
+    // IP lazhar : "10.192.51.161";
+    private static String IP_SE;
+    
+    
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
@@ -45,6 +50,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private Canal canalServeurEnregistrement;
     
     
+    private fichierDeConfiguration config;
+    
+    
     /**
      * Constructeur
      * 
@@ -59,11 +67,20 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
+        // recuperation des configurations
+        config  = new fichierDeConfiguration("cfg/config.cfg");
+        IP_SE   = config.getProprety("IP_SE");
+        PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
+        PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
+        
         // ---------
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
-        pTop.add(new JLabel("CREER UN PARTIE"), BorderLayout.NORTH);
+        
+        JLabel titre = new JLabel("CREER UNE PARTIE");
+        titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
+        pTop.add(titre, BorderLayout.NORTH);
 
         add(pTop, BorderLayout.NORTH);
 
@@ -213,10 +230,10 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 lblEtat.setText("Enregistrement au serveur central...");
 
                 // Création du canal avec le serveur d'enregistrement
-                canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
+                canalServeurEnregistrement = new Canal(IP_SE,PORT_SE,true);
                 
                 // Création de la requete d'enregistrement
-                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(), NUMERO_PORT, Integer.parseInt((String) 
+                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(), PORT_SJ, Integer.parseInt((String) 
                         cbNbJoueurs.getSelectedItem()),"TruiteTD",(String) cbMode.getSelectedItem());
 
                 // Envoie de la requete
@@ -259,7 +276,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             // connexion réussie
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, canalServeurEnregistrement),
+                    new Panel_AttendreJoueurs(parent, canalServeurEnregistrement,true),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
             
