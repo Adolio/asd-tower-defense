@@ -59,7 +59,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                                            .getJSONObject("contenu");
                   enregisrementCourant = new Enregistrement(
                               contenu.getString("nomPartie"),
-                              contenu.getString("adresseIp"),
+                              canal.getIpClient(),
                               new Port(contenu.getInt("numeroPort")),
                               contenu.getInt("capacite"),
                               contenu.getString("nomTerrain"),

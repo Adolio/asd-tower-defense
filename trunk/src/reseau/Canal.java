@@ -53,17 +53,10 @@ public class Canal {
             System.out.println("[127.0.0.1]\n");
          }
          
-         // TODO a effacer
-         System.out.println("AHAHAHAHAHA :");
-         
          // Accepter une connexion, c'est-à-dire soit prendre une connexion en attente ou
          // alors attendre jusqu'à ce que quelqu'un se connecte. Attention, cette ligne
          // est bloquante jusqu'à ce qu'une connexion soit disponible.
          socket = port.getServerSocket().accept();
-         
-         // TODO a effacer
-         System.out.println("AHAHAHAHAHA :"+socket.getInetAddress());
-         
          
          if (afficherMessagesDebug) {
             System.out.println("     Canal: connexion établie");
@@ -110,9 +103,6 @@ public class Canal {
          // Créée une connexion, c'est-à-dire une socket vers l'IP et le port donnés et
          // attend qu'il y ait une réponse.
          socket = new Socket(adresseIp, numeroPort);
-         
-         // TODO a effacer
-         System.out.println("AHAHAHAHAHA :"+socket.getInetAddress());
          
          
          if (afficherMessagesDebug) {
@@ -436,7 +426,10 @@ public class Canal {
    }
    
    
-   
+   public String getIpClient()
+   {
+      return socket.getInetAddress().toString();
+   }
    
    
    
