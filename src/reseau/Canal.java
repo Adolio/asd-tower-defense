@@ -53,6 +53,9 @@ public class Canal {
             System.out.println("[127.0.0.1]\n");
          }
          
+         // TODO a effacer
+         System.out.println("AHAHAHAHAHA :");
+         
          // Accepter une connexion, c'est-à-dire soit prendre une connexion en attente ou
          // alors attendre jusqu'à ce que quelqu'un se connecte. Attention, cette ligne
          // est bloquante jusqu'à ce qu'une connexion soit disponible.
