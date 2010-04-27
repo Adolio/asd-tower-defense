@@ -15,25 +15,46 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import reseau.Canal;
+
 @SuppressWarnings("serial")
 public class Panel_AttendreJoueurs extends JPanel implements ActionListener
 {
     private final int MARGES_PANEL = 40;
+    private final boolean ADMIN;
     private JFrame parent;
-    private final boolean admin;
     private JLabel lblPseudo = new JLabel("Pseudo : ");
     private JTextField tfPseudo = new JTextField(10);
     private JButton bDemarrerMaintenant = new JButton("Démarrer maintenant");
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
+    private Canal canalServeurEnregistrement;
 
+    
     @SuppressWarnings("serial")
-    public Panel_AttendreJoueurs(JFrame parent,boolean admin)
+    public Panel_AttendreJoueurs(JFrame parent, Canal canalServeurEnregistrement)
+    {
+        this.parent = parent;
+        this.canalServeurEnregistrement = canalServeurEnregistrement;
+        this.ADMIN  = true;
+        
+        initialiserForm();
+    }
+    
+    @SuppressWarnings("serial")
+    public Panel_AttendreJoueurs(JFrame parent)
+    {
+        this.parent = parent;
+        this.ADMIN  = false;
+        
+        initialiserForm();
+    }
+
+    private void initialiserForm()
     {
         // initialisation
-        super(new BorderLayout());
-        this.parent = parent;
-        this.admin  = admin;
+        setLayout(new BorderLayout());
+        
         parent.setTitle("Attendre des joueurs");
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
@@ -51,17 +72,15 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         //------------
         //-- CENTER --
         //------------
-      
         
         
-
         //------------
         //-- BOTTOM --
         //------------
         JPanel pBottom = new JPanel(new BorderLayout());
         
         // bouton démarrer
-        if(admin)
+        if(ADMIN)
         {
             bDemarrerMaintenant.setPreferredSize(new Dimension(100,50));
             pBottom.add(bDemarrerMaintenant,BorderLayout.EAST);
@@ -71,8 +90,20 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         bDeconnecter.addActionListener(this);
         pBottom.add(bDeconnecter,BorderLayout.WEST);
         
-        lblEtat.setForeground(Color.RED);
+         
+        if(ADMIN)
+            if(canalServeurEnregistrement == null)
+            {
+                lblEtat.setForeground(Color.RED);
+                lblEtat.setText("La connexion avec le serveur central à échouée");
+            }
+            else
+            {
+                lblEtat.setForeground(Color.GREEN);
+                lblEtat.setText("La connexion avec le serveur central à réussie");
+            }
         pBottom.add(lblEtat,BorderLayout.SOUTH);
+        
         
         add(pBottom, BorderLayout.SOUTH);
     }
@@ -84,11 +115,9 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         
         if(src == bDemarrerMaintenant)
         {
-            parent.getContentPane().removeAll();
-            
-            
+            //parent.getContentPane().removeAll();
             //parent.getContentPane().add(new Panel_JeuMulti(parent, new Jeu(),new Joueur(new Equipe()), BorderLayout.CENTER); 
-            parent.getContentPane().validate();
+            //parent.getContentPane().validate();
         }
         else if(src == bDeconnecter)
         {

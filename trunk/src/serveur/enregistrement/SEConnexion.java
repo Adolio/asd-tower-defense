@@ -35,7 +35,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
     */
    @Override
    public void run() {
-      bouclePrincipale:
+      bouclePrincipale: 
       while (true)
       {
          try {
@@ -67,7 +67,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   
                   if (SEInscription.ajouterEnregistrement(enregisrementCourant))
                   {
-                     canal.envoyerString("{\"status\" :" + OK + "}");
+                      canal.envoyerString("{\"status\" :" + OK + "}");
                   }
                   else
                   {
@@ -85,7 +85,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                      // TODO aurélien : je me desenregistre mais je ne quitte pas... sinon je peux pas faire mon stop...
                      //canal.fermer();
                      
-                     continue;
+                     break bouclePrincipale;
                   }
                   canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");

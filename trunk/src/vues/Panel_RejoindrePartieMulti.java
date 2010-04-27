@@ -446,10 +446,11 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRejoindre.setEnabled(false);
 
         // TODO connexion au serveur, demande d'acceptation dans la partie...
-
+        
+        
         // connexion réussie
         parent.getContentPane().removeAll();
-        parent.getContentPane().add(new Panel_AttendreJoueurs(parent, false),
+        parent.getContentPane().add(new Panel_AttendreJoueurs(parent),
                 BorderLayout.CENTER);
         parent.getContentPane().validate();
     }

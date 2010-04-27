@@ -104,6 +104,9 @@ public class Canal {
          // attend qu'il y ait une réponse.
          socket = new Socket(adresseIp, numeroPort);
          
+         System.out.println(socket.getInetAddress());
+         
+         
          if (afficherMessagesDebug) {
             System.out.println("     Canal: connexion établie");
          }
