@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import reseau.Canal;
 import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
+import serveur.enregistrement.RequeteEnregistrement;
 
 @SuppressWarnings("serial")
 public class Panel_RejoindrePartieMulti extends JPanel implements
@@ -49,7 +50,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private JTextField tfPseudo = new JTextField(10);
 
     private JButton bRejoindre = new JButton("Rejoindre");
-
+    private JButton bRafraichir = new JButton("Rafraichir");
+    
     private JLabel lblEtat = new JLabel();
 
     private JButton bAnnuler = new JButton("Annuler");
@@ -154,7 +156,11 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         pADroite.add(tfFiltre, BorderLayout.WEST);
         pTop.add(pADroite, BorderLayout.CENTER);
-
+        pTop.add(bRafraichir, BorderLayout.EAST);
+        bRafraichir.addActionListener(this);
+        
+        
+        
         add(pTop, BorderLayout.NORTH);
 
         // ------------
@@ -240,12 +246,11 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     {
         if(canalServeurEnregistrement != null)
         {
-            // création de la requete d'enregistrement
-            String requete = "{\"donnees\" :{\"code\" : "+
-                CodeEnregistrement.INFOS_PARTIES+"}}";
+            // vidage de la table
+            viderTable();
             
-            // envoie de la requete
-            canalServeurEnregistrement.envoyerString(requete);
+            // envoie de la requete d'enregistrement
+            canalServeurEnregistrement.envoyerString(RequeteEnregistrement.INFOS_PARTIES);
             
             // attente du résultat
             String resultat = canalServeurEnregistrement.recevoirString();
@@ -338,8 +343,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private void miseAJourListe()
     {
         // nettoyage de la table
-        while (model.getRowCount() != 0)
-            model.removeRow(0);
+        viderTable();
 
         // recuperation du filtre
         filtre = tfFiltre.getText();
@@ -350,6 +354,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 model.addRow(srvInfo.toStringArray());
     }
 
+    /**
+     * Permet de vider la table des serveurs
+     */
+    private void viderTable()
+    {
+        // nettoyage de la table
+        while (model.getRowCount() != 0)
+            model.removeRow(0);
+    }
+    
+    
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -368,7 +384,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 lblEtat.setForeground(Color.RED);
                 lblEtat.setText(exception.getMessage());
             }
-        } else if (src == bAnnuler)
+        } 
+        else if(src == bRafraichir)
+        {
+            mettreAJourListeDesServeurs();  
+        }
+        else if (src == bAnnuler)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
@@ -377,7 +398,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             
             // fermeture du canal s'il est ouvert
             if(canalServeurEnregistrement != null)
+            {
+                try
+                {
+                    // fermeture propre du canal
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
+                    canalServeurEnregistrement.recevoirString();
+                }
+                // il y a eu une erreur... on quitte tout de même
+                catch(CanalException ce){}
+                
                 canalServeurEnregistrement.fermer();
+            }
         }
     }
 

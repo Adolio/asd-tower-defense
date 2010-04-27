@@ -81,8 +81,11 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   {
                      SEInscription.enleverEnregistrement(enregisrementCourant);
                      canal.envoyerString("{\"status\" :" + OK + "}");
-                     canal.fermer();
-                     break bouclePrincipale;
+                     
+                     // TODO aurélien : je me desenregistre mais je ne quitte pas... sinon je peux pas faire mon stop...
+                     //canal.fermer();
+                     
+                     continue;
                   }
                   canal.envoyerString("{\"status\" : " + ERREUR + "," +
                                       "\"message\" : \"Aucun enregistrement n'a ete fait!\"}");
@@ -96,7 +99,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   
                case INFOS_PARTIES :
                   
-                  // TODO arrete la drogue!
+                  // TODO aurélien : arrete la drogue!
                   //if (enregisrementCourant != null)
                   if (SEInscription.getNombreEnregistrements() > 0) 
                   {
