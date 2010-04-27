@@ -59,7 +59,7 @@ public class Canal {
          socket = port.getServerSocket().accept();
          
          // TODO a effacer
-         System.out.println(socket.getInetAddress());
+         System.out.println("AHAHAHAHAHA :"+socket.getInetAddress());
          
          
          if (afficherMessagesDebug) {
@@ -109,7 +109,7 @@ public class Canal {
          socket = new Socket(adresseIp, numeroPort);
          
          // TODO a effacer
-         System.out.println(socket.getInetAddress());
+         System.out.println("AHAHAHAHAHA :"+socket.getInetAddress());
          
          
          if (afficherMessagesDebug) {
