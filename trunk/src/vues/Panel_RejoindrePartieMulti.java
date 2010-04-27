@@ -36,7 +36,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private JFrame parent;
 
     private DefaultTableModel model = new DefaultTableModel();
-    private JTable tableDesServeurs;
+    private JTable tbServeurs;
     private ArrayList<ServeurInfo> serveurs = new ArrayList<ServeurInfo>();
 
     private String filtre = "";
@@ -47,7 +47,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private JTextField tfConnexionParIP = new JTextField(10);
 
     private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField(10);
+    private JTextField tfPseudo = new JTextField("Joueur",10);
 
     private JButton bRejoindre = new JButton("Rejoindre");
     private JButton bRafraichir = new JButton("Rafraichir");
@@ -180,7 +180,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // ------------
 
         // création de la table avec boquage des editions
-        tableDesServeurs = new JTable(model)
+        tbServeurs = new JTable(model)
         {
             public boolean isCellEditable(int rowIndex, int colIndex)
             {
@@ -189,7 +189,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         };
 
         // Simple selection
-        tableDesServeurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbServeurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // nom de colonnes
         model.addColumn("Nom");
@@ -208,20 +208,15 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         } 
         catch (ConnectException e)
         {
-            tableDesServeurs.setEnabled(false);
-            lblEtat.setForeground(Color.RED);
-            lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
+            connexionSEImpossible();          
         } 
         catch (CanalException e) 
         {
-            tableDesServeurs.setEnabled(false);
-            lblEtat.setForeground(Color.RED);
-            lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
+            connexionSEImpossible();   
         }
         
         // ajout dans le panel
-        JScrollPane scrollPane = new JScrollPane(tableDesServeurs);
-        add(scrollPane, BorderLayout.CENTER);
+        add(new JScrollPane(tbServeurs), BorderLayout.CENTER);
 
         // ------------
         // -- BOTTOM --
@@ -255,6 +250,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
         add(pBottom, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Permet d'informer l'utilisateur que la connexion n'a pas été établie
+     */
+    private void connexionSEImpossible()
+    {
+        tbServeurs.setEnabled(false);
+        bRafraichir.setEnabled(false);
+        tfFiltre.setEnabled(false);
+        lblEtat.setForeground(Color.RED);
+        lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
     }
 
     /**
@@ -319,8 +326,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             }
             else
             {
-                lblEtat.setForeground(Color.RED);
-                lblEtat.setText("Connexion au serveur central échouée!");
+                lblEtat.setForeground(Color.GREEN);
+                lblEtat.setText("Connexion au serveur central établie! [ Aucun serveur disponible pour le moment ]");
             }
         } 
         catch (JSONException e1)
@@ -397,12 +404,13 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
             try
             {
+                if (tfPseudo.getText().isEmpty())
+                    throw new Exception("Erreur : Pseudo vide.");
+                
                 connexion(recupererIP(),recupererPort());
             } 
             catch (Exception exception)
             {
-                
-                exception.printStackTrace();
                 lblEtat.setForeground(Color.RED);
                 lblEtat.setText(exception.getMessage());
             }
@@ -443,20 +451,42 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
      */
     private String recupererIP() throws Exception
     {
-        if (tfPseudo.getText().isEmpty())
-            throw new Exception("Erreur : Pseudo vide.");
-
-        if (tableDesServeurs.getSelectedRow() != -1)
-            return (String) model.getValueAt(tableDesServeurs.getSelectedRow(),
-                    1);
-
+        if (tbServeurs.getSelectedRow() != -1)
+            return (String) model.getValueAt(tbServeurs.getSelectedRow(), 1);
+        
         if (tfConnexionParIP.getText().isEmpty())
             throw new Exception("Erreur : Selectionnez un serveur "
                     + "ou entrez directement l'IP du serveur.");
+        
+        else if(!checkIp(tfConnexionParIP.getText()))
+            throw new Exception("Erreur : Format IP incorrect");
         else
             return tfConnexionParIP.getText();
     }
     
+    /**
+     * Permet de controler si une ip est valide
+     * 
+     * @param ip
+     * @return true si elle est correcte false sinon
+     */
+    public static boolean checkIp (String ip)
+    {
+        String [] parts = ip.split("\\.");
+        
+        if(parts.length != 4)
+            return false;
+        
+        for (String s : parts)
+        {
+            int i = Integer.parseInt (s);
+
+            if (i < 0 || i > 255)
+                return false;
+        }
+        return true;
+    }
+
     /**
      * Permet de recupérer le port en fonction de l'état des champs du formulaire
      * 
@@ -465,12 +495,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
      */
     private int recupererPort() throws Exception
     {
-        if (tfPseudo.getText().isEmpty())
-            throw new Exception("Erreur : Pseudo vide.");
-
-        if (tableDesServeurs.getSelectedRow() != -1)
-            return Integer.parseInt((String) model.getValueAt(tableDesServeurs.getSelectedRow(),
-                    2));
+        if (tbServeurs.getSelectedRow() != -1)
+            return Integer.parseInt((String) model.getValueAt(tbServeurs.getSelectedRow(),2));  
         else
             return PORT_SJ;
     } 
@@ -543,7 +569,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 tfFiltre.setText("");
         } else if (src == tfConnexionParIP)
         {
-            tableDesServeurs.clearSelection();
+            tbServeurs.clearSelection();
         }
     }
 

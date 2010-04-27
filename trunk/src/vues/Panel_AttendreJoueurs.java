@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import reseau.Canal;
+import serveur.enregistrement.RequeteEnregistrement;
 
 @SuppressWarnings("serial")
 public class Panel_AttendreJoueurs extends JPanel implements ActionListener
@@ -120,12 +121,34 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         
         if(src == bDemarrerMaintenant)
         {
+            if(ADMIN)
+            {
+                if(canalServeurEnregistrement != null)
+                {
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.DESENREGISTRER);
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP); 
+                }
+            }
+
             //parent.getContentPane().removeAll();
             //parent.getContentPane().add(new Panel_JeuMulti(parent, new Jeu(),new Joueur(new Equipe()), BorderLayout.CENTER); 
             //parent.getContentPane().validate();
         }
         else if(src == bDeconnecter)
         {
+            if(ADMIN)
+            {
+                if(canalServeurEnregistrement != null)
+                {
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.DESENREGISTRER);
+                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP); 
+                }
+            }
+            else if(canalServeurJeu != null)
+            {   
+                canalServeurJeu.envoyerString(RequeteEnregistrement.STOP);         
+            }
+            
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent), BorderLayout.CENTER); 
             parent.getContentPane().validate();
