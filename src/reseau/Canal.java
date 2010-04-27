@@ -428,7 +428,7 @@ public class Canal {
    
    public String getIpClient()
    {
-      return socket.getInetAddress().toString();
+      return socket.getInetAddress().toString().substring(1);
    }
    
    
