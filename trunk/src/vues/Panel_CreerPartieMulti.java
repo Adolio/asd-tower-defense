@@ -16,7 +16,9 @@ import serveur.enregistrement.RequeteEnregistrement;
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
     private static final int NUMERO_PORT = 1234;
-    private static final String IP_SE = "188.165.41.224";
+    // IP idael : "188.165.41.224";
+    // IP lazahr : "10.192.51.161";
+    private static final String IP_SE = "127.0.0.1";
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
@@ -210,15 +212,11 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 lblEtat.setForeground(Color.BLACK);
                 lblEtat.setText("Enregistrement au serveur central...");
 
-                // recupération du l'adresse IP locale
-                InetAddress hote = InetAddress.getLocalHost();
-                String adresseIP = hote.getHostAddress();
-                
                 // Création du canal avec le serveur d'enregistrement
                 canalServeurEnregistrement = new Canal(IP_SE,NUMERO_PORT,true);
                 
                 // Création de la requete d'enregistrement
-                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(),adresseIP, NUMERO_PORT, Integer.parseInt((String) 
+                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(), NUMERO_PORT, Integer.parseInt((String) 
                         cbNbJoueurs.getSelectedItem()),"TruiteTD",(String) cbMode.getSelectedItem());
 
                 // Envoie de la requete
@@ -254,10 +252,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 lblEtat.setText("Enregistrement au serveur central échoué!");
             } 
             catch (CanalException e1)
-            {
-                e1.printStackTrace();
-            }
-            catch (UnknownHostException e1)
             {
                 e1.printStackTrace();
             }
