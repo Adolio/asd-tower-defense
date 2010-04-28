@@ -23,7 +23,8 @@ import models.joueurs.Equipe;
 public class WaterWorld extends Terrain
 {
     
-	public static final Image IMAGE_DE_FOND;
+    private static final long serialVersionUID = 1L;
+    public static final Image IMAGE_DE_FOND;
 	public static final Image IMAGE_MENU;
 	public final static File FICHIER_MUSIQUE_DE_FOND;
 	public final static String NOM = "WaterWorld";
@@ -62,7 +63,7 @@ public class WaterWorld extends Terrain
         e.setZoneArriveeCreatures(new Rectangle(480, 390, 20, 80));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
         jeu.ajouterEquipe(e);
-        
+        equipes.add(e);
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
@@ -84,5 +85,8 @@ public class WaterWorld extends Terrain
         ajouterMur(new Rectangle(130, 220, 240, 60));
         ajouterMur(new Rectangle(220, 130, 60, 90));
         ajouterMur(new Rectangle(220, 280, 60, 90));
+        
+        // TODO a effacer
+        serialiser(this, new File("maps/"+NOM+".map"));
     }
 }

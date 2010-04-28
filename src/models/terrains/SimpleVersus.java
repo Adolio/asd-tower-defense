@@ -20,13 +20,13 @@ import models.joueurs.Equipe;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class ElementTD extends Terrain
+public class SimpleVersus extends Terrain
 {
     private static final long serialVersionUID = 1L;
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
     public final static File  FICHIER_MUSIQUE_DE_FOND;
-    public final static String NOM = "ElementTD";
+    public final static String NOM = "Simple Versus : 1 vs 1";
 
     static
     {
@@ -41,7 +41,7 @@ public class ElementTD extends Terrain
     /**
      * Constructeur d'un terrain ElementTD selon la celebre map de Blizzard.
      */
-    public ElementTD (Jeu jeu) 
+    public SimpleVersus (Jeu jeu) 
     {
         super(  jeu,
                 480,  // largeur
@@ -60,12 +60,20 @@ public class ElementTD extends Terrain
  
         
         // Création des équipes
-        Equipe e = new Equipe();
-        e.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        jeu.ajouterEquipe(e);
-        equipes.add(e);
+        Equipe e1 = new Equipe();
+        e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        jeu.ajouterEquipe(e1);
+        equipes.add(e1);
+        
+        Equipe e2 = new Equipe();
+        e2.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e2.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        jeu.ajouterEquipe(e2);
+        equipes.add(e2);
+        
         
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;

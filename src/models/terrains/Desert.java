@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.File;
+
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -22,7 +24,8 @@ import models.joueurs.Equipe;
  */
 public class Desert extends Terrain
 {
-	public final static Image IMAGE_DE_FOND;
+    private static final long serialVersionUID = 1L;
+    public final static Image IMAGE_DE_FOND;
 	public final static Image IMAGE_MENU;
 	public final static String NOM = "Desert";
 	
@@ -60,7 +63,7 @@ public class Desert extends Terrain
         e.setZoneArriveeCreatures(new Rectangle(0,400,20,60));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
         jeu.ajouterEquipe(e);
-		
+        equipes.add(e);
 
 		// murs entourant le terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
@@ -84,5 +87,9 @@ public class Desert extends Terrain
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
 		ajouterMur(new Rectangle(320,360,60,20));
+
+		
+		// TODO a effacer
+        serialiser(this, new File("maps/"+NOM+".map"));
 	}
 }
