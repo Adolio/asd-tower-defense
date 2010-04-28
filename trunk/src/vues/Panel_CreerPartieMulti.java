@@ -2,10 +2,12 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.File;
 import java.net.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.DefaultTableModel;
+import models.terrains.Terrain;
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.fichierDeConfiguration;
@@ -33,6 +35,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private JButton bCreer = new JButton("Créer");
     private JLabel lblEtat = new JLabel();
 
+    private DefaultTableModel model = new DefaultTableModel();
+    private JTable tbTerrains;
+    
     private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
     private JComboBox cbNbJoueurs = new JComboBox();
 
@@ -170,12 +175,55 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         c.gridy = 2;
         c.gridwidth = 4;
 
-        JPanel pTerrains = new JPanel();
-        pTerrains.setPreferredSize(new Dimension(600, 200));
-        pTerrains.setBorder(new TitledBorder(
-                "Terrains disponibles pour vos critères"));
-        pCentre.add(new JScrollPane(pTerrains), c);
+        JPanel pTerrains = new JPanel(new BorderLayout());
+        pTerrains.setPreferredSize(new Dimension(600, 250));
+        pTerrains.setBorder(new TitledBorder("Terrains"));
 
+        
+        // création de la table avec boquage des editions
+        tbTerrains = new JTable(model)
+        {
+            public boolean isCellEditable(int rowIndex, int colIndex)
+            {
+                return false; // toujours désactivé
+            }
+        };
+
+        // Simple selection
+        tbTerrains.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // nom de colonnes
+        model.addColumn("Nom");
+        model.addColumn("Nb Joueurs");
+        model.addColumn("Apercu");
+        
+        // propiete des 
+        tbTerrains.setRowHeight(60);
+        tbTerrains.getColumnModel().getColumn(2).setCellRenderer(new TableCellRenderer_Image());
+        
+        // Chargement de toutes les maps
+        File f = new File("maps/");
+        File [] listFiles = f.listFiles();
+        
+        String nomFichier;
+        String extFichier;
+        
+        for(File f2 : listFiles)
+        { 
+            nomFichier = f2.getAbsolutePath();
+            extFichier = nomFichier.substring(nomFichier.lastIndexOf('.')+1, nomFichier.length());
+
+            if(extFichier.equals("map"))
+            {
+                Terrain t = Terrain.charger(f2); 
+                Object[] obj = new Object[]{t.getNom(),t.getNbJoueursMax(),t.getImageDeFond()};  
+                model.addRow(obj);
+            }
+        }
+       
+        pTerrains.add(new JScrollPane(tbTerrains), BorderLayout.CENTER);
+        pCentre.add(pTerrains, c);
+        
         // ajout du panel central
         add(pCentre, BorderLayout.CENTER);
 
@@ -207,6 +255,11 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         add(pBottom, BorderLayout.SOUTH);
     }
 
+    public String [] listFiles (String dir) throws Exception {
+        return new File(dir).list();
+    }
+    
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -215,7 +268,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         if (src == bCreer)
         {
             // TODO test des champs...
-            
             
             
             

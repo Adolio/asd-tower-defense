@@ -1,11 +1,12 @@
 package models.joueurs;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class EmplacementJoueur
+public class EmplacementJoueur implements Serializable
 {
-    Joueur joueur;
-    
+    private static final long serialVersionUID = 1L;
+    transient Joueur joueur;
     Rectangle zoneDeConstruction;
     
     public EmplacementJoueur(Rectangle zoneDeConstruction)

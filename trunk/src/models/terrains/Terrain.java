@@ -3,7 +3,15 @@ package models.terrains;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
+import javax.swing.*;
 import models.creatures.*;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
@@ -49,8 +57,13 @@ import models.tours.Tour;
  * @see Creature
  * @see Maillage
  */
-public abstract class Terrain
+public abstract class Terrain implements Serializable
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * nom de la zone de jeu
      */
@@ -84,20 +97,22 @@ public abstract class Terrain
      * 
      * @see Maillage
      */
-    private final Maillage MAILLAGE_TERRESTRE;
+    transient private final Maillage MAILLAGE_TERRESTRE;
 
     /**
      * Les creatures volantes n'ont pas besoins d'une maillage mais uniquement
      * du chemin le plus court entre la zone de depart et la zone d'arrivee
      */
-    ArrayList<Point> cheminAerien;
+    transient ArrayList<Point> cheminAerien;
 
     /**
      * Image de fond du terrain. <br>
      * Note : les murs du terrain sont normalement lies a cette image
      */
-    private final Image IMAGE_DE_FOND;
-
+    transient private Image IMAGE_DE_FOND;
+    private ImageIcon imageDeFond;
+    
+    
     /**
      * Pour le mode debug
      */
@@ -123,12 +138,14 @@ public abstract class Terrain
     /**
      * musique d'ambiance du terrain
      */
-    protected File fichierMusiqueDAmbiance;
+    transient protected File fichierMusiqueDAmbiance;
 
     
-    private Jeu jeu;
-
-    private VagueDeCreatures vagueCourante;
+    // TODO
+    transient private Jeu jeu;
+    transient private VagueDeCreatures vagueCourante;
+    
+    protected ArrayList<Equipe> equipes = new ArrayList<Equipe>();
     
     
     /**
@@ -155,7 +172,10 @@ public abstract class Terrain
         NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
         NB_VIES_INITIALES = nbViesInitiales;
         IMAGE_DE_FOND = imageDeFond;
-        NOM = nom;
+        
+        this.imageDeFond = new ImageIcon(imageDeFond);
+        
+        NOM             = nom;
         COULEUR_DE_FOND = couleurDeFond;
         COULEUR_MURS    = couleurMurs;
         
@@ -195,6 +215,10 @@ public abstract class Terrain
      */
     public Image getImageDeFond()
     {
+        if(IMAGE_DE_FOND == null)
+            if(imageDeFond != null)
+                IMAGE_DE_FOND = imageDeFond.getImage();
+                
         return IMAGE_DE_FOND;
     }
 
@@ -307,6 +331,20 @@ public abstract class Terrain
         return COULEUR_MURS;
     }
     
+    /**
+     * Permet de recuperer les nombres joueurs max que peut accueillir le terrain
+     * 
+     * @return le nombre de joueur max
+     */
+    public int getNbJoueursMax()
+    {
+        int somme = 0;
+           
+        for(Equipe e : equipes)
+            somme += e.getNbEmplacements();
+        
+        return somme;
+    }
 
     // -----------------------
     // -- GESTION DES TOURS --
@@ -640,5 +678,90 @@ public abstract class Terrain
     { 
         if(vagueCourante != null)
             vagueCourante.sortirDeLaPause();
-    } 
+    }
+    
+    /**
+     * TODO
+     */
+    public static void serialiser(Terrain terrain, File fichier)
+    {
+       try
+       {
+          // Ouverture d'un flux de sortie vers le fichier FICHIER.
+          FileOutputStream fluxSortieFichier = new FileOutputStream(fichier);
+          
+          // Creation d'un "flux objet" avec le flux fichier.
+          ObjectOutputStream fluxSortieObjet = new ObjectOutputStream(fluxSortieFichier);
+          try
+          {
+             // Serialisation : ecriture de l'objet dans le flux de sortie.
+             fluxSortieObjet.writeObject(terrain);
+             
+             // On vide le tampon.
+             fluxSortieObjet.flush();
+          }
+          finally
+          {
+             // Fermeture des flux (important!).
+             try
+             {
+                fluxSortieObjet.close();
+             }
+             finally
+             {
+                fluxSortieFichier.close();
+             }
+          }
+       }
+       catch (IOException erreur) // Erreur sur l'ObjectOutputStream.
+       {
+          erreur.printStackTrace();
+       }
+    }
+    
+    /**
+     * TODO
+     */
+    public static Terrain charger(File fichier)
+    {
+       try
+       {
+          // Ouverture d'un flux d'entree depuis le fichier FICHIER.
+          FileInputStream fluxEntreeFichier = new FileInputStream(fichier);
+          // Creation d'un "flux objet" avec le flux d'entree.
+          ObjectInputStream fluxEntreeObjet = new ObjectInputStream(fluxEntreeFichier);
+          try
+          {
+             // Deserialisation : lecture de l'objet depuis le flux d'entree
+             // (chargement des donnees du fichier).
+             return (Terrain) fluxEntreeObjet.readObject();
+          }
+          finally
+          {
+             // On ferme les flux (important!).
+             try
+             {
+                fluxEntreeObjet.close();
+             }
+             finally
+             {
+                fluxEntreeFichier.close();
+             }
+          }
+       }
+       catch (FileNotFoundException erreur) // Le fichier n'existe pas.
+       {
+           erreur.printStackTrace();
+       }
+       catch (IOException erreur) // Erreur sur l'ObjectInputStream.
+       {
+          erreur.printStackTrace();
+       }
+       catch (ClassNotFoundException erreur) // Erreur sur l'ObjectInputStream.
+       {
+          erreur.printStackTrace();
+       }
+       
+       return null;
+    }
 }

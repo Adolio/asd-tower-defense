@@ -2,6 +2,7 @@ package models.joueurs;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * @version 1.0 | 16 avril 2010
  * @since jdk1.6.0_16
  */
-public class Equipe
+public class Equipe implements Serializable
 {
    /**
     * Identificateur de l'equipe
@@ -31,7 +32,7 @@ public class Equipe
    /**
     * Liste des joueurs
     */
-   private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+   transient private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
    
    /**
     * nombre de vies restantes. 
@@ -41,11 +42,6 @@ public class Equipe
     */
    private int nbViesRestantes;
    
-   /**
-    * Zones de construction
-    */
-   private Rectangle[] zonesDeConstruction;
-  
    /**
     * Zone de départ des créatures ennemies
     */
@@ -174,5 +170,15 @@ public class Equipe
     public void ajouterEmplacementJoueur(EmplacementJoueur emplacementJoueur)
     {
         emplacementsJoueur.add(emplacementJoueur);
+    }
+
+    /**
+     * TODO 
+     * 
+     * @return
+     */
+    public int getNbEmplacements()
+    {
+        return emplacementsJoueur.size();
     }
 }
