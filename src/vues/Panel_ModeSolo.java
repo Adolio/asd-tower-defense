@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.text.DateFormat;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
@@ -38,11 +39,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	private static final ImageIcon icoSCORE      = new ImageIcon("img/icones/star.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
-    private static final Color COULEUR_DE_FOND  = new Color(0,110,0);
+    private static final Color COULEUR_DE_FOND  = Color.DARK_GRAY;
     private static final ImageIcon IMAGE_MENU   = new ImageIcon("img/tours/towers.png");
 	private static final ImageIcon icoCADENAS      = new ImageIcon("img/icones/lock.png");
     
-    
+	private final int MARGES_PANEL                 = 40;
     
 	// elements du formulaire
 	private final JMenuBar 	menuPrincipal 		= new JMenuBar();
@@ -58,13 +59,14 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
     private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
 	
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
-
+	private final JButton bAnnuler              = new JButton("Annuler");
+	
 	private JProgressBar chargementTerrain;
 	private Thread thread;
     private boolean chargementTermine;
 	private JFrame parent;
 	
-	private JButton bAnnuler = new JButton("Annuler");
+	
 	
 	/**
 	 * Constructeur de la fenetre du menu principal
@@ -78,6 +80,12 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	    setLayout(new BorderLayout());
 		parent.setTitle("Menu principal - Tower Defense");
 
+		setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
+                MARGES_PANEL, MARGES_PANEL)));
+		
+		setBackground(COULEUR_DE_FOND);
+		
+		
 		//--------------------
 		//-- menu principal --
 		//--------------------
@@ -108,9 +116,31 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// ajout du menu
 		parent.setJMenuBar(menuPrincipal);
 		
-		//---------------------------
-		//-- chargement des images --
-		//---------------------------
+		//----------------------------
+        //-- création du formulaire --
+        //----------------------------
+		
+		JPanel pFormulaire = new JPanel(new BorderLayout());
+		pFormulaire.setBackground(COULEUR_DE_FOND);
+		
+		
+		//-----------
+        //-- titre --
+        //-----------
+		
+		
+		//JLabel lblTitre = new JLabel(IMAGE_MENU);
+		JLabel lblTitre = new JLabel("PARTIE SOLO");
+		lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
+		
+		
+        pFormulaire.add(lblTitre,BorderLayout.NORTH);
+		
+		
+		//-----------------------------
+		//-- chargement des terrains --
+		//-----------------------------
+		
 		// attent que toutes les images soit complementements chargees
 		MediaTracker tracker = new MediaTracker(this);
 		tracker.addImage(ElementTD.IMAGE_MENU, 0);
@@ -143,8 +173,6 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 
 		
-		
-		
 		String[] nomTerrains = new String[]{"ElementTD","Spiral","Desert","WaterWorld"};
 	    Score[] scoresMax    = new Score[4];
 	    MeilleursScores ms;
@@ -168,67 +196,83 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// ajout des boutons au panel et ajout des ecouteurs
 		JPanel pBoutonsTerrains = new JPanel(new FlowLayout());
 		
+		pBoutonsTerrains.setBorder(new EmptyBorder(new Insets(60, 0, 0, 0)));
+		
+		
+		pBoutonsTerrains.setBackground(COULEUR_DE_FOND);
+		
 		for(int i=0; i < boutonsTerrains.length; i++)
 		{
 		    JButton bouton = boutonsTerrains[i];
 		    
-		    JPanel p = new JPanel(new BorderLayout());
-	
+		    JPanel pInfoTerrain = new JPanel(new BorderLayout());
+		    pInfoTerrain.setBackground(COULEUR_DE_FOND);
+		    
+		    
 		    bouton.addActionListener(this);
-		    p.add(bouton,BorderLayout.NORTH);
+		    pInfoTerrain.add(bouton,BorderLayout.NORTH);
 		    
 		    // recuperation du meilleur score
 		    Score score = scoresMax[i];
 		    
-		   
-		    p.add(new Panel_Etoiles(score),BorderLayout.CENTER);
+		    pInfoTerrain.add(new Panel_Etoiles(score),BorderLayout.CENTER);
 		    
 		    String txt = " ";
-		    
 		    if(score.getValeur() > 0)
 		        txt = score.getNomJoueur()+" - "+score.getValeur()+"";
 		    
+		    pInfoTerrain.add(new JLabel(txt,0),BorderLayout.SOUTH);
 		    
-	
-		    p.add(new JLabel(txt,0),BorderLayout.SOUTH);
+		    
+		    //-----------------------------------------
+	        //-- bloquage des terrains - progression --
+	        //-----------------------------------------
 		    
 		    if(i == 1 && sommeEtoiles < 1)
 		    {
 		        bouton.setEnabled(false);
 		        
-		        p.add(new JLabel("1 étoile min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel("1 étoile min.",icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		        
 		    if(i == 2 && sommeEtoiles < 3)
 		    {
                 bouton.setEnabled(false);
-		        p.add(new JLabel("3 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel("3 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		    
 		    if(i == 3 && sommeEtoiles < 7)
 		    {
 		        bouton.setEnabled(false);
-		        p.add(new JLabel("7 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel("7 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 
-		    pBoutonsTerrains.add(p);
+		    // ajout au panel
+		    pBoutonsTerrains.add(pInfoTerrain);
 		}
+	
 		
-		setBackground(COULEUR_DE_FOND);
-		add(new JLabel(IMAGE_MENU),BorderLayout.NORTH);
+		pFormulaire.add(pBoutonsTerrains,BorderLayout.CENTER);
 		
-		JPanel p = new JPanel(new BorderLayout());
 		
-		p.add(pBoutonsTerrains,BorderLayout.CENTER);
+		JPanel pFond = new JPanel(new BorderLayout());
+		pFond.setBackground(COULEUR_DE_FOND);
+		pFond.setBorder(new EmptyBorder(0, 0, 0, 100));
 		
 		
 		bAnnuler.addActionListener(this);
-        p.add(bAnnuler,BorderLayout.SOUTH);
+		bAnnuler.setPreferredSize(new Dimension(80,60));
+		pFond.add(bAnnuler,BorderLayout.WEST);
+        pFormulaire.add(pFond,BorderLayout.SOUTH);
 
-		
-		add(p,BorderLayout.CENTER);
-	
-		
+        
+        JLabel lblInfo = new JLabel("Cliquez sur un terrain pour commencer la partie.");
+        lblInfo.setForeground(new Color(200, 200, 200));
+        lblInfo.setFont(GestionnaireDesPolices.POLICE_INFO);
+        
+        pFond.add(lblInfo,BorderLayout.EAST);
+        
+		add(pFormulaire,BorderLayout.CENTER);
 	}
 
     /**
