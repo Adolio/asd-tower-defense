@@ -12,8 +12,6 @@ public class Panel_Etoiles extends JPanel
     private static final long serialVersionUID = 1L;
     private static final int LARGEUR = 100;
     private static final Image ETOILE;
-    
-    
     private Score score;
     
     static
@@ -29,7 +27,7 @@ public class Panel_Etoiles extends JPanel
     public Panel_Etoiles(Score score)
     {
         this.score = score;
-        setPreferredSize(new Dimension(LARGEUR,ETOILE.getHeight(null)));
+        setPreferredSize(new Dimension(LARGEUR,ETOILE.getHeight(null)+4));
     }
     
     @Override

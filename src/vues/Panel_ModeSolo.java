@@ -182,7 +182,15 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    
 		   
 		    p.add(new Panel_Etoiles(score),BorderLayout.CENTER);
-		    p.add(new JLabel(score.getNomJoueur()),BorderLayout.SOUTH);
+		    
+		    String txt = " ";
+		    
+		    if(score.getValeur() > 0)
+		        txt = score.getNomJoueur()+" - "+score.getValeur()+"";
+		    
+		    
+	
+		    p.add(new JLabel(txt,0),BorderLayout.SOUTH);
 		    
 		    if(i == 1 && sommeEtoiles < 1)
 		    {
