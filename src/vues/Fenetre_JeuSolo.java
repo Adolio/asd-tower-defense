@@ -288,7 +288,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir arrêter la partie ?", 
 	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
-            retourAuMenuPrincipal();
+	        demanderEnregistrementDuScore();
+	        
+	        retourAuMenuPrincipal();
         }
     }
 	
@@ -313,8 +315,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 */
 	private void retourAuMenuPrincipal()
     {
-	    demanderEnregistrementDuScore();
-	    
 	    GestionnaireSons.arreterTousLesSons();
         jeu.terminerLaPartie();
         
