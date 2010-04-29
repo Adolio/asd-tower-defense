@@ -95,7 +95,7 @@ public class Fenetre_MeilleursScores extends JDialog
         tableScore.getColumnModel().getColumn(2).setPreferredWidth(120);
         
         
-        JLabel lTitreForm = new JLabel("Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores [Terrain : "+nomTerrain+"]");
+        JLabel lTitreForm = new JLabel(nomTerrain);
         lTitreForm.setFont(GestionnaireDesPolices.POLICE_TITRE);
         getContentPane().add(lTitreForm,BorderLayout.NORTH);
         getContentPane().add(tableScore,BorderLayout.CENTER);

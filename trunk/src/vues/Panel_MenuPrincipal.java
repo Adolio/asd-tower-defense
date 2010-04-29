@@ -3,16 +3,20 @@ package vues;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import models.jeu.Jeu;
 
 public class Panel_MenuPrincipal extends JPanel implements ActionListener
 {
     // constantes statiques
+    private final int MARGES_PANEL = 40;
     private static final long serialVersionUID = 1L;
-    private static final Color COULEUR_DE_FOND = new Color(50, 50, 50);
+    private static final Color COULEUR_DE_FOND = Color.DARK_GRAY;
     private static final ImageIcon IMAGE_MENU = new ImageIcon(
             "img/tours/towers.png");
     private static final Color COULEUR_TEXTE_VERSION = new Color(200, 200, 200);
@@ -35,12 +39,16 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         super(new BorderLayout());
 
         this.parent = parent;
-
+        
         // -------------------------------
         // -- preferances de le fenetre --
         // -------------------------------
         parent.setTitle("Menu principal - ASD Tower Defense");
 
+        setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
+                MARGES_PANEL, MARGES_PANEL)));
+        
+        
         // ---------------------------
         // -- element du formulaire --
         // ---------------------------
@@ -68,7 +76,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
 
         // quitter
         bQuitter.addActionListener(this);
-        bQuitter.setBounds(480, 20, 100, 30);
+        bQuitter.setBounds(555, 20, 100, 30);
         pAbsolu.add(bQuitter);
 
         add(pAbsolu, BorderLayout.CENTER);

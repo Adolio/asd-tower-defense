@@ -3,6 +3,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import models.jeu.Jeu;
 
@@ -20,7 +21,8 @@ import models.jeu.Jeu;
  */
 public class Fenetre_APropos extends JDialog
 {
-	private static final long serialVersionUID = 1L;
+    private static final int MARGES_PANEL = 40;
+    private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private JButton bFermer = new JButton("Fermer");
 	
@@ -44,6 +46,12 @@ public class Fenetre_APropos extends JDialog
 	    setIconImage(I_AIDE.getImage());
 		setResizable(false); // taille fixe
 		
+		JPanel pFormulaire = new JPanel(new BorderLayout());
+		
+		
+		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
+                MARGES_PANEL, MARGES_PANEL)));
+		
 		// ajout des auteurs
 		pAuteurs.add(new JLabel("Auteurs :"));
 		for(String auteur : auteurs)
@@ -51,12 +59,12 @@ public class Fenetre_APropos extends JDialog
 		    pAuteurs.add(new JLabel(auteur));
 		    pAuteurs.add(new JPanel());
 		}
-		getContentPane().add(pAuteurs,BorderLayout.CENTER);
+		pFormulaire.add(pAuteurs,BorderLayout.CENTER);
 		
 		// ajout de la version
 		JLabel lversion = new JLabel(Jeu.getVersion());
-		lversion.setFont(GestionnaireDesPolices.POLICE_TITRE);
-		getContentPane().add(lversion,BorderLayout.NORTH);
+		lversion.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		pFormulaire.add(lversion,BorderLayout.NORTH);
 		
 		// ajout du bouton
 		bFermer.addActionListener(new ActionListener(){
@@ -67,7 +75,9 @@ public class Fenetre_APropos extends JDialog
 		
 		JPanel pTmp = new JPanel();
 		pTmp.add(bFermer);
-		getContentPane().add(pTmp,BorderLayout.SOUTH);
+		pFormulaire.add(pTmp,BorderLayout.SOUTH);
+		
+		getContentPane().add(pFormulaire,BorderLayout.CENTER);
 		
 		// dernieres proprietes de la fenetre
 		pack();
