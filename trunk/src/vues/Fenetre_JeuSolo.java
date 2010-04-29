@@ -273,6 +273,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
+	        demanderEnregistrementDuScore();
+	        
 	        System.exit(0); // Fermeture correcte du logiciel
 	    }
     }
@@ -290,11 +292,29 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         }
     }
 	
+	/**
+	 * Permet de demander à l'utilisateur s'il veut sauver son score
+	 */
+	private void demanderEnregistrementDuScore()
+	{
+	    if(joueur.getScore() > 0)
+        {
+            if(JOptionPane.showConfirmDialog(this, 
+                    "Voulez vous sauver votre score ?", 
+                    "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
+            {
+                new Fenetre_PartieTerminee(this, joueur.getScore(), jeu.getTerrain().getNom()); 
+            }
+        }
+	}
+
     /**
 	 * Permet de retourner au menu principal
 	 */
 	private void retourAuMenuPrincipal()
     {
+	    demanderEnregistrementDuScore();
+	    
 	    GestionnaireSons.arreterTousLesSons();
         jeu.terminerLaPartie();
         

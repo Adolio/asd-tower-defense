@@ -26,12 +26,17 @@ public class Score implements Serializable, Comparable<Score>
    
    // La version de serialisation.
    private static final long serialVersionUID = 1L;
+   
+   private static final int MAX_ETOILES = 5;
+   
    // La valeur du score du joueur.
    private int valeur;
    // Le nom du joueur.
    private String nomJoueur;
    // La date a laquelle le score est cree.
    private Date date;
+   
+   
    
    /**
     * Ce constructeur permet de creer un objet de type Score en fonction d'un nom de
@@ -126,4 +131,19 @@ public class Score implements Serializable, Comparable<Score>
       return nomJoueur + " - " + valeur + " - " + date;
    }
    
+   /**
+    * Permet de recuperer le nombre d'étoiles relative au score
+    * Limiter par MAX_ETOILES
+    * 
+    * @return le nombre d'étoiles
+    */
+   public int getNbEtoiles()
+   {
+       int etoiles = valeur / 1000;
+       
+       if(etoiles > MAX_ETOILES)
+           return MAX_ETOILES;
+           
+       return etoiles;
+   }
 }
