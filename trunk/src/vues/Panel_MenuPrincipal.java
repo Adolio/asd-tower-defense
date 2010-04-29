@@ -16,9 +16,8 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     // constantes statiques
     private final int MARGES_PANEL = 40;
     private static final long serialVersionUID = 1L;
-    private static final Color COULEUR_DE_FOND = Color.DARK_GRAY;
     private static final ImageIcon IMAGE_MENU = new ImageIcon(
-            "img/tours/towers.png");
+            "img/logos/principal.png");
     private static final Color COULEUR_TEXTE_VERSION = new Color(200, 200, 200);
 
     // elements du formulaire
@@ -53,12 +52,12 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         // -- element du formulaire --
         // ---------------------------
 
-        setBackground(COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND);
         add(new JLabel(IMAGE_MENU), BorderLayout.NORTH);
 
         JPanel pAbsolu = new JPanel(null); // layout absolu
         pAbsolu.setPreferredSize(new Dimension(0, 160));
-        pAbsolu.setBackground(COULEUR_DE_FOND);
+        pAbsolu.setBackground(LookInterface.COULEUR_DE_FOND);
 
         // partie solo
         bPartieSolo.addActionListener(this);

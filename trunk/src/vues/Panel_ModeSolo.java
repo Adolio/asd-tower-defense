@@ -2,11 +2,8 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DateFormat;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
@@ -39,8 +36,6 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	private static final ImageIcon icoSCORE      = new ImageIcon("img/icones/star.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
-    private static final Color COULEUR_DE_FOND  = Color.DARK_GRAY;
-    private static final ImageIcon IMAGE_MENU   = new ImageIcon("img/tours/towers.png");
 	private static final ImageIcon icoCADENAS      = new ImageIcon("img/icones/lock.png");
     
 	private final int MARGES_PANEL                 = 40;
@@ -59,7 +54,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
     private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
 	
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
-	private final JButton bAnnuler              = new JButton("Annuler");
+	private final JButton bRetour              = new JButton("Retour");
 	
 	private JProgressBar chargementTerrain;
 	private Thread thread;
@@ -83,7 +78,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 		
-		setBackground(COULEUR_DE_FOND);
+		setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		
 		//--------------------
@@ -121,7 +116,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         //----------------------------
 		
 		JPanel pFormulaire = new JPanel(new BorderLayout());
-		pFormulaire.setBackground(COULEUR_DE_FOND);
+		pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		
 		//-----------
@@ -132,7 +127,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		//JLabel lblTitre = new JLabel(IMAGE_MENU);
 		JLabel lblTitre = new JLabel("PARTIE SOLO");
 		lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
-		
+		lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
 		
         pFormulaire.add(lblTitre,BorderLayout.NORTH);
 		
@@ -199,14 +194,14 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		pBoutonsTerrains.setBorder(new EmptyBorder(new Insets(60, 0, 0, 0)));
 		
 		
-		pBoutonsTerrains.setBackground(COULEUR_DE_FOND);
+		pBoutonsTerrains.setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		for(int i=0; i < boutonsTerrains.length; i++)
 		{
 		    JButton bouton = boutonsTerrains[i];
 		    
 		    JPanel pInfoTerrain = new JPanel(new BorderLayout());
-		    pInfoTerrain.setBackground(COULEUR_DE_FOND);
+		    pInfoTerrain.setBackground(LookInterface.COULEUR_DE_FOND);
 		    
 		    
 		    bouton.addActionListener(this);
@@ -256,17 +251,17 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		
 		JPanel pFond = new JPanel(new BorderLayout());
-		pFond.setBackground(COULEUR_DE_FOND);
+		pFond.setBackground(LookInterface.COULEUR_DE_FOND);
 		pFond.setBorder(new EmptyBorder(0, 0, 0, 100));
 		
 		
-		bAnnuler.addActionListener(this);
-		bAnnuler.setPreferredSize(new Dimension(80,60));
-		pFond.add(bAnnuler,BorderLayout.WEST);
+		bRetour.addActionListener(this);
+		bRetour.setPreferredSize(new Dimension(80,60));
+		pFond.add(bRetour,BorderLayout.WEST);
         pFormulaire.add(pFond,BorderLayout.SOUTH);
 
         
-        JLabel lblInfo = new JLabel("Cliquez sur un terrain pour commencer la partie.");
+        JLabel lblInfo = new JLabel("Cliquez sur un terrain débloqué pour commencer une partie.");
         lblInfo.setForeground(new Color(200, 200, 200));
         lblInfo.setFont(GestionnaireDesPolices.POLICE_INFO);
         
@@ -364,7 +359,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
             new Fenetre_MeilleursScores(Desert.NOM, parent);
 		else if(source == itemMSWaterWorld)
             new Fenetre_MeilleursScores(WaterWorld.NOM, parent);
-		else if(source == bAnnuler)
+		else if(source == bRetour)
 		{
 		    parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
