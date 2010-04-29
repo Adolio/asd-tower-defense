@@ -142,7 +142,9 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         parent.setTitle("Rejoindre une partie multijoueurs");
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
-
+        setBackground(LookInterface.COULEUR_DE_FOND);
+        
+        
         // recuperation des configurations
         config  = new fichierDeConfiguration("cfg/config.cfg");
         IP_SE   = config.getProprety("IP_SE");
@@ -154,6 +156,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
+        pTop.setBackground(LookInterface.COULEUR_DE_FOND);
+        
         JLabel titre = new JLabel("REJOINDRE UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         pTop.add(titre, BorderLayout.NORTH);
@@ -161,6 +165,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         // filtre
         JPanel pADroite = new JPanel(new BorderLayout());
+        pADroite.setBackground(LookInterface.COULEUR_DE_FOND);
 
         tfFiltre.setPreferredSize(new Dimension(100, 25));
         tfFiltre.addKeyListener(this);
@@ -170,9 +175,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         pTop.add(pADroite, BorderLayout.CENTER);
         pTop.add(bRafraichir, BorderLayout.EAST);
         bRafraichir.addActionListener(this);
-        
-        
-        
+         
         add(pTop, BorderLayout.NORTH);
 
         // ------------
@@ -222,12 +225,14 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // -- BOTTOM --
         // ------------
         JPanel pBottom = new JPanel(new BorderLayout());
-
+        pBottom.setBackground(LookInterface.COULEUR_DE_FOND);
+        
         bAnnuler.addActionListener(this);
         pBottom.add(bAnnuler, BorderLayout.WEST);
 
         JPanel bottomCenter = new JPanel();
-
+        bottomCenter.setBackground(LookInterface.COULEUR_DE_FOND);
+        
         // connexion par IP
         tfConnexionParIP.setPreferredSize(new Dimension(100, 25));
         bottomCenter.add(lblConnexionParIP);

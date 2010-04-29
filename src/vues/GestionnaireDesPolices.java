@@ -1,5 +1,6 @@
 package vues;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -14,6 +15,12 @@ public class GestionnaireDesPolices
     public static final Font POLICE_NOM        = new Font("", Font.BOLD, 14);
     public static final Font POLICE_CONSOLE    = new Font("",Font.TRUETYPE_FONT,10);
     public static final Font POLICE_INFO       = new Font("", Font.BOLD, 12);
+    
+    
+    public static final Color COULEUR_TITRE     = Color.BLACK;
+    public static final Color COULEUR_TEXTE     = Color.BLACK;
+    public static final Color COULEUR_INFO      = Color.GRAY;
+    
     
     static
     {

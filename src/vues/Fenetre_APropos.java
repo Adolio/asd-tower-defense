@@ -29,7 +29,7 @@ public class Fenetre_APropos extends JDialog
 	/**
 	 * liste des auteurs du programme
 	 */
-	private final JPanel pAuteurs = new JPanel(new GridLayout(0,2));
+	private final JPanel pAuteurs;
 	private static final String[] auteurs = {
 	                            "Lazhar Farjallah",
 	                            "Pierre-Dominique Putallaz",
@@ -45,19 +45,25 @@ public class Fenetre_APropos extends JDialog
 	    super(parent,"A propos",true);
 	    setIconImage(I_AIDE.getImage());
 		setResizable(false); // taille fixe
+		setBackground(LookInterface.COULEUR_DE_FOND);
+		
 		
 		JPanel pFormulaire = new JPanel(new BorderLayout());
-		
-		
+		pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
 		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 		
 		// ajout des auteurs
+		pAuteurs = new JPanel(new GridLayout(0,2));
+		pAuteurs.setBackground(LookInterface.COULEUR_DE_FOND);
 		pAuteurs.add(new JLabel("Auteurs :"));
 		for(String auteur : auteurs)
 		{
 		    pAuteurs.add(new JLabel(auteur));
-		    pAuteurs.add(new JPanel());
+		    
+		    JPanel p = new JPanel();
+		    p.setBackground(LookInterface.COULEUR_DE_FOND);
+		    pAuteurs.add(p);
 		}
 		pFormulaire.add(pAuteurs,BorderLayout.CENTER);
 		
@@ -74,6 +80,8 @@ public class Fenetre_APropos extends JDialog
         });
 		
 		JPanel pTmp = new JPanel();
+		pTmp.setBackground(LookInterface.COULEUR_DE_FOND);
+		
 		pTmp.add(bFermer);
 		pFormulaire.add(pTmp,BorderLayout.SOUTH);
 		

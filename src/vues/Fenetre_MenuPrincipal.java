@@ -32,6 +32,9 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
     private final JMenuItem itemAPropos = new JMenuItem("A propos", I_AIDE);
     private final JMenuItem itemQuitter = new JMenuItem("Quitter", I_QUITTER);
 
+    public static final int LARGEUR_FENETRE = 800;
+    public static final int HAUTEUR_FENETRE = 600;
+    
     /**
      * Constructeur de la fenetre du menu principal
      */
@@ -40,7 +43,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         // -------------------------------
         // -- preferences de le fenetre --
         // -------------------------------
-        setSize(800, 600);
+        setSize(LARGEUR_FENETRE, HAUTEUR_FENETRE);
         setIconImage(I_FENETRE.getImage());
         // TODO uncomment
         // setResizable(false);

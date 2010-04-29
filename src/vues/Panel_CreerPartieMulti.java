@@ -43,19 +43,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
     private JLabel lblMode = new JLabel("Mode de jeu :");
     private JComboBox cbMode = new JComboBox();
-
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Serveur de test");
-
     private JLabel lblEquipeAleatoire = new JLabel("Equipe aléatoire :");
     private JCheckBox cbEquipeAleatoire = new JCheckBox();
-
     private JButton bAnnuler = new JButton("Annuler");
-
     private Canal canalServeurEnregistrement;
-    
-    
     private fichierDeConfiguration config;
+    
     
     
     /**
@@ -72,6 +67,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
+        setBackground(LookInterface.COULEUR_DE_FOND);
+        
+        
         // recuperation des configurations
         config  = new fichierDeConfiguration("cfg/config.cfg");
         IP_SE   = config.getProprety("IP_SE");
@@ -82,6 +80,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
+        
+        pTop.setBackground(LookInterface.COULEUR_DE_FOND);
         
         JLabel titre = new JLabel("CREER UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
@@ -94,7 +94,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // ------------
         JPanel pCentre = new JPanel(new GridBagLayout());
         pCentre.setBorder(new LineBorder(Color.BLACK));
-
+        pCentre.setBackground(LookInterface.COULEUR_DE_FOND);
+        
+        
         GridBagConstraints c = new GridBagConstraints();
         final int margesCellule = 5;
         c.insets = new Insets(margesCellule, margesCellule, margesCellule,
@@ -178,7 +180,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         JPanel pTerrains = new JPanel(new BorderLayout());
         pTerrains.setPreferredSize(new Dimension(600, 250));
         pTerrains.setBorder(new TitledBorder("Terrains"));
-
+        pTerrains.setBackground(LookInterface.COULEUR_DE_FOND);
         
         // création de la table avec boquage des editions
         tbTerrains = new JTable(model)
@@ -231,11 +233,16 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // -- BOTTOM --
         // ------------
         JPanel pBottom = new JPanel(new BorderLayout());
-
+        pBottom.setBackground(LookInterface.COULEUR_DE_FOND);
+        
+        
         // pseudo
         JPanel pPseudo = new JPanel();
+        pPseudo.setBackground(LookInterface.COULEUR_DE_FOND);
+        
         JPanel pTmp = new JPanel();
-
+        pTmp.setBackground(LookInterface.COULEUR_DE_FOND);
+        
         pTmp.add(lblPseudo, BorderLayout.WEST);
         pTmp.add(tfPseudo, BorderLayout.EAST);
         pPseudo.add(pTmp, BorderLayout.EAST);
