@@ -44,7 +44,7 @@ public class Fenetre_MeilleursScores extends JDialog
         // preference de la fenetre
         super(parent,"Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores",true);
         
-        contruire(nomTerrain);
+        construire(nomTerrain);
     }
     
     /**
@@ -58,7 +58,7 @@ public class Fenetre_MeilleursScores extends JDialog
     {
         super(parent,"Les "+MeilleursScores.NOMBRE_MAX_SCORES+" Meilleurs scores",true);
     
-        contruire(nomTerrain);
+        construire(nomTerrain);
     }
 
     /**
@@ -66,7 +66,7 @@ public class Fenetre_MeilleursScores extends JDialog
      * 
      * @param nomTerrain le nom du terrain
      */
-    private void contruire(String nomTerrain)
+    private void construire(String nomTerrain)
     {
         setIconImage(I_FENETRE.getImage());
         setLayout(new BorderLayout());

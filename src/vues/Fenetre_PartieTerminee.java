@@ -23,7 +23,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
 {
     // constantes statiques
     private static final long serialVersionUID      = 1L;
-    private static final Dimension TAILLE_FENETRE   = new Dimension(300,170);
     private static final String TITRE_FORM          = "Partie terminée !";
     
     // membrea graphiques
@@ -43,9 +42,8 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     public Fenetre_PartieTerminee(Frame fenParent,int score, String nomTerrain)
     {
         // preferences de la fenetre
-        super(fenParent,"Partie Terminée.",true);
+        super(fenParent,"Partie Terminée.",true); 
         setLayout(new BorderLayout());
-        setPreferredSize(TAILLE_FENETRE);
         setResizable(false);
         
         // init attributs membres
