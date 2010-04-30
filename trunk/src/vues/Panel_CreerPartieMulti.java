@@ -81,7 +81,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
         
-        pTop.setBackground(LookInterface.COULEUR_DE_FOND);
+        pTop.setOpaque(false);
         
         JLabel titre = new JLabel("CREER UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
@@ -94,7 +94,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // ------------
         JPanel pCentre = new JPanel(new GridBagLayout());
         pCentre.setBorder(new LineBorder(Color.BLACK));
-        pCentre.setBackground(LookInterface.COULEUR_DE_FOND);
+        pCentre.setOpaque(false);
         
         
         GridBagConstraints c = new GridBagConstraints();
@@ -180,7 +180,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         JPanel pTerrains = new JPanel(new BorderLayout());
         pTerrains.setPreferredSize(new Dimension(600, 250));
         pTerrains.setBorder(new TitledBorder("Terrains"));
-        pTerrains.setBackground(LookInterface.COULEUR_DE_FOND);
+        pTerrains.setOpaque(false);
         
         // création de la table avec boquage des editions
         tbTerrains = new JTable(model)
@@ -233,15 +233,15 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // -- BOTTOM --
         // ------------
         JPanel pBottom = new JPanel(new BorderLayout());
-        pBottom.setBackground(LookInterface.COULEUR_DE_FOND);
+        pBottom.setOpaque(false);
         
         
         // pseudo
         JPanel pPseudo = new JPanel();
-        pPseudo.setBackground(LookInterface.COULEUR_DE_FOND);
+        pPseudo.setOpaque(false);
         
         JPanel pTmp = new JPanel();
-        pTmp.setBackground(LookInterface.COULEUR_DE_FOND);
+        pTmp.setOpaque(false);
         
         pTmp.add(lblPseudo, BorderLayout.WEST);
         pTmp.add(tfPseudo, BorderLayout.EAST);

@@ -4,6 +4,8 @@ import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
@@ -32,7 +34,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                                                     KeyListener
 {
 	// constantes statiques
-   private static final long serialVersionUID = 1L;
+    private final int MARGES_PANEL = 40;
+    private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
@@ -94,6 +97,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                                                        + " [niveau 1]");
     private JEditorPane taConsole  = new JEditorPane("text/html","");
     
+    private JPanel pFormulaire = new JPanel(new BorderLayout());
+    
+    
     
 	// autre attribut
     // TODO commenter
@@ -119,6 +125,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
+		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+		
+		pFormulaire.setOpaque(false);
+		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
+                MARGES_PANEL, MARGES_PANEL)));
 		
 		//--------------------
 		//-- menu principal --
@@ -157,6 +168,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //-- vague suivante --
         //--------------------
         JPanel pVagueSuivante = new JPanel(new BorderLayout());
+        pVagueSuivante.setOpaque(false);
         ajouterInfoVagueSuivanteDansConsole();
 
         // style du champ de description de la vague suivante
@@ -170,7 +182,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bLancerVagueSuivante.addActionListener(this);
         pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
             
-        add(pVagueSuivante,BorderLayout.SOUTH);
+        pFormulaire.add(pVagueSuivante,BorderLayout.SOUTH);
 		
 
 		//----------------------------------------
@@ -180,6 +192,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		panelTerrain = new Panel_Terrain(jeu, this, joueur);
 		panelTerrain.addKeyListener(this);
+		conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
+		conteneurTerrain.setOpaque(false);
+		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
 		panelMenuInteraction = new Panel_MenuInteraction(this,joueur);
 		
@@ -189,11 +204,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		
 		
 		// ajout des panels
-		add(conteneurTerrain,BorderLayout.WEST);
-		add(panelMenuInteraction,BorderLayout.EAST);
+		pFormulaire.add(conteneurTerrain,BorderLayout.WEST);
+		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
 		
 		// on demarre la musique au dernier moment
 		jeu.getTerrain().demarrerMusiqueDAmbiance();
+		
+		add(pFormulaire,BorderLayout.CENTER);
+		
 		
 		//---------------------------------------
 		//-- dernieres propietes de la fenetre --

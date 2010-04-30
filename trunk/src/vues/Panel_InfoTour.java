@@ -38,7 +38,6 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
     private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour  sélectionnée");
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(250,80);
-    private static final Color COULEUR_FOND_DESCRIPTION = new Color(200,200,200);
     private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
     //private static final Border BORDURE_DESCRIPTION = new LineBorder(Color.DARK_GRAY,1,true);
     
@@ -73,11 +72,15 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		super(new BorderLayout());
 		setPreferredSize(DIMENSION_PANEL);
 		setBorder(BORDURE);
-
+		setBackground(LookInterface.COULEUR_DE_FOND);
+		
 		this.edpt = edpt;
 
 		JPanel pConteneurCaract = new JPanel();
+		pConteneurCaract.setOpaque(false);
 		int nbChamp = 0;
+		pCaracteristiques.setOpaque(false);
+		
 		
 		// champ nom
 		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
@@ -113,7 +116,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		taDescrition.setEditable(false);
 		taDescrition.setLineWrap(true);
 		taDescrition.setWrapStyleWord(true);
-		taDescrition.setBackground(COULEUR_FOND_DESCRIPTION);
+		taDescrition.setBackground(LookInterface.COULEUR_DE_FOND_2);
 		taDescrition.setBorder(BORDURE_DESCRIPTION);
 		ajouterChamp(pCaracteristiques, taDescrition, 0, nbChamp++, 2);
 	
@@ -127,6 +130,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
+		pConteneurCaraEtBoutons.setOpaque(false);
 		pConteneurCaraEtBoutons.add(pConteneurCaract,BorderLayout.NORTH);
 		pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		

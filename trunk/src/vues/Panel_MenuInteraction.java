@@ -68,11 +68,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         
 		this.edpt     = edpt;
 		this.joueur   = joueur;
+		setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		//---------------------
 		//-- panel des tours --
 		//---------------------
 		JPanel pTours = new JPanel();
+		pTours.setOpaque(false);
 		
 		bTourArcher.addActionListener(this);
 		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
@@ -103,6 +105,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		//-- (score, nb pieces or, vies restante) --
         //------------------------------------------
 		JPanel pJoueur = new JPanel();
+		pJoueur.setOpaque(false);
 		
 		// score
 		pJoueur.add(lTitreScore);
@@ -120,6 +123,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		miseAJourNbViesRestantes();
 		
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
+		pToursEtJoueur.setOpaque(false);
 		
 		pToursEtJoueur.add(pJoueur,BorderLayout.NORTH);
 		pToursEtJoueur.add(pTours,BorderLayout.SOUTH);
@@ -130,6 +134,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         //-- info tour et creature --
         //---------------------------
 	    JPanel pInfos = new JPanel(new BorderLayout());
+	    pInfos.setOpaque(false);
 	    
 		panelInfoTour = new Panel_InfoTour(edpt);
 		

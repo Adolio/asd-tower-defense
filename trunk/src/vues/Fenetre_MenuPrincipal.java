@@ -43,7 +43,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         // -------------------------------
         // -- preferences de le fenetre --
         // -------------------------------
-        setSize(LARGEUR_FENETRE, HAUTEUR_FENETRE);
+        //setSize(LARGEUR_FENETRE, HAUTEUR_FENETRE);
         setIconImage(I_FENETRE.getImage());
         // TODO uncomment
         // setResizable(false);
@@ -70,13 +70,13 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         // ---------------------
         // -- panel principal --
         // ---------------------
-        getContentPane()
-                .add(new Panel_MenuPrincipal(this), BorderLayout.CENTER);
+        getContentPane().add(new Panel_MenuPrincipal(this), BorderLayout.CENTER);
 
         // --------------------------
         // -- dernieres proprietes --
         // --------------------------
-        // pack();
+        getContentPane().setPreferredSize(new Dimension(800,600));
+        pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }

@@ -116,7 +116,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         //----------------------------
 		
 		JPanel pFormulaire = new JPanel(new BorderLayout());
-		pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
+		pFormulaire.setOpaque(false);
 		
 		
 		//-----------
@@ -194,14 +194,14 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		pBoutonsTerrains.setBorder(new EmptyBorder(new Insets(60, 0, 0, 0)));
 		
 		
-		pBoutonsTerrains.setBackground(LookInterface.COULEUR_DE_FOND);
+		pBoutonsTerrains.setOpaque(false);
 		
 		for(int i=0; i < boutonsTerrains.length; i++)
 		{
 		    JButton bouton = boutonsTerrains[i];
 		    
 		    JPanel pInfoTerrain = new JPanel(new BorderLayout());
-		    pInfoTerrain.setBackground(LookInterface.COULEUR_DE_FOND);
+		    pInfoTerrain.setOpaque(false);
 		    
 		    
 		    bouton.addActionListener(this);
@@ -251,7 +251,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		
 		JPanel pFond = new JPanel(new BorderLayout());
-		pFond.setBackground(LookInterface.COULEUR_DE_FOND);
+		pFond.setOpaque(false);
 		pFond.setBorder(new EmptyBorder(0, 0, 0, 100));
 		
 		
