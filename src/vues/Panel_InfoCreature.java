@@ -55,9 +55,11 @@ public class Panel_InfoCreature extends JPanel
 		super(new BorderLayout());
 		setBorder(BORDURE);
 		setPreferredSize(DIMENSION_PANEL);
+		setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setOpaque(false);
 		p.setPreferredSize(DIMENSION_IMAGE_ET_NOM);
 		p.setBorder(BORDURE_IMAGE_ET_NOM);
 		p.add(lImage);
@@ -69,6 +71,7 @@ public class Panel_InfoCreature extends JPanel
 		lGain.setFont(GestionnaireDesPolices.POLICE_DONNEES);
 		
 		pConteneur = new JPanel(new GridLayout(0,2));
+		pConteneur.setOpaque(false);
 		pConteneur.add(p);
 		pConteneur.add(lTitreType);
 		pConteneur.add(lTitreSante);

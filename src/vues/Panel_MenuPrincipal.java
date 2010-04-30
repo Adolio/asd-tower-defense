@@ -3,13 +3,21 @@ package vues;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import models.jeu.Jeu;
+import models.terrains.Desert;
+import models.terrains.ElementTD;
+import models.terrains.Spiral;
+import models.terrains.WaterWorld;
 
 public class Panel_MenuPrincipal extends JPanel implements ActionListener
 {
@@ -20,6 +28,8 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
             "img/logos/principal.png");
     private static final Color COULEUR_TEXTE_VERSION = new Color(200, 200, 200);
 
+    private static final Image IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/interfaces/menuPrincipal.png");
+    
     // elements du formulaire
     private JLabel version;
 
@@ -36,9 +46,8 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     public Panel_MenuPrincipal(JFrame parent)
     {
         super(new BorderLayout());
-
         this.parent = parent;
-        
+
         // -------------------------------
         // -- preferances de le fenetre --
         // -------------------------------
@@ -48,34 +57,50 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
                 MARGES_PANEL, MARGES_PANEL)));
         
         
+        // attent que toutes les images soit complementements chargees
+        MediaTracker tracker = new MediaTracker(this);
+        tracker.addImage(IMAGE_DE_FOND, 0);
+
+        try { 
+            tracker.waitForAll(); 
+        } 
+        catch (InterruptedException e){ 
+            e.printStackTrace(); 
+        }
+        
         // ---------------------------
         // -- element du formulaire --
         // ---------------------------
 
         setBackground(LookInterface.COULEUR_DE_FOND);
-        add(new JLabel(IMAGE_MENU), BorderLayout.NORTH);
+        JPanel p = new JPanel();
+        p.setOpaque(false);
+        p.setPreferredSize(new Dimension(1,280));
+        
+        add(p, BorderLayout.NORTH);
 
+        
         JPanel pAbsolu = new JPanel(null); // layout absolu
         pAbsolu.setPreferredSize(new Dimension(0, 160));
-        pAbsolu.setBackground(LookInterface.COULEUR_DE_FOND);
+        pAbsolu.setOpaque(false);
 
         // partie solo
         bPartieSolo.addActionListener(this);
-        bPartieSolo.setBounds(50, 20, 100, 30);
+        bPartieSolo.setBounds(50, 0, 100, 50);
         pAbsolu.add(bPartieSolo);
 
         // partie multijoueurs
-        bRejoindrePartieMulti.setBounds(50, 60, 100, 30);
+        bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
         bRejoindrePartieMulti.addActionListener(this);
         pAbsolu.add(bRejoindrePartieMulti);
 
-        bCreerPartieMulti.setBounds(160, 60, 100, 30);
+        bCreerPartieMulti.setBounds(160, 100, 100, 50);
         bCreerPartieMulti.addActionListener(this);
         pAbsolu.add(bCreerPartieMulti);
 
         // quitter
         bQuitter.addActionListener(this);
-        bQuitter.setBounds(555, 20, 100, 30);
+        bQuitter.setBounds(555, 100, 100, 50);
         pAbsolu.add(bQuitter);
 
         add(pAbsolu, BorderLayout.CENTER);
@@ -83,6 +108,14 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         version = new JLabel(Jeu.getVersion());
         version.setForeground(COULEUR_TEXTE_VERSION);
         add(version, BorderLayout.SOUTH);
+    }
+    
+    public void paintComponent(Graphics g)
+    {
+        g.setColor(LookInterface.COULEUR_DE_FOND);
+        g.fillRect(0, 0, 800, 600);
+        
+        g.drawImage(IMAGE_DE_FOND, 0, 0, null);
     }
 
     @Override

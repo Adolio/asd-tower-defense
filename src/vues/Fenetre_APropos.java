@@ -45,24 +45,24 @@ public class Fenetre_APropos extends JDialog
 	    super(parent,"A propos",true);
 	    setIconImage(I_AIDE.getImage());
 		setResizable(false); // taille fixe
-		setBackground(LookInterface.COULEUR_DE_FOND);
+		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		
 		JPanel pFormulaire = new JPanel(new BorderLayout());
-		pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
+		pFormulaire.setOpaque(false);
 		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 		
 		// ajout des auteurs
 		pAuteurs = new JPanel(new GridLayout(0,2));
-		pAuteurs.setBackground(LookInterface.COULEUR_DE_FOND);
+		pAuteurs.setOpaque(false);
 		pAuteurs.add(new JLabel("Auteurs :"));
 		for(String auteur : auteurs)
 		{
 		    pAuteurs.add(new JLabel(auteur));
 		    
 		    JPanel p = new JPanel();
-		    p.setBackground(LookInterface.COULEUR_DE_FOND);
+		    p.setOpaque(false);
 		    pAuteurs.add(p);
 		}
 		pFormulaire.add(pAuteurs,BorderLayout.CENTER);
@@ -80,7 +80,7 @@ public class Fenetre_APropos extends JDialog
         });
 		
 		JPanel pTmp = new JPanel();
-		pTmp.setBackground(LookInterface.COULEUR_DE_FOND);
+		pTmp.setOpaque(false);
 		
 		pTmp.add(bFermer);
 		pFormulaire.add(pTmp,BorderLayout.SOUTH);
