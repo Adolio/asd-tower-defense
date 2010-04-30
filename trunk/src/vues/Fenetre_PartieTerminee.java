@@ -27,10 +27,12 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     
     // membrea graphiques
     private JButton bOk             = new JButton("OK");
+    private JButton bAnnuler        = new JButton("Fermer");
     private JTextField tfNomJoueur  = new JTextField();
     private JPanel pFormulaire;
     private String nomFichier;
     private String nomTerrain;
+    
     
     // autres membres
     private int score;
@@ -60,9 +62,11 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         
         pFormulaire.add(new JLabel("Votre nom : "));
         pFormulaire.add(tfNomJoueur);
-        pFormulaire.add(new JPanel());
+        pFormulaire.add(bAnnuler);
+        bAnnuler.addActionListener(this);
         pFormulaire.add(bOk);
         bOk.addActionListener(this);
+        
         
         JPanel conteneurTitre = new JPanel(new FlowLayout());
         JLabel lTitreForm = new JLabel(TITRE_FORM);
@@ -88,17 +92,26 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
      */
     public void actionPerformed(ActionEvent ae)
     {
-        // le nom n'est pas vide
-        if(!tfNomJoueur.getText().isEmpty())
+        Object source = ae.getSource();
+        
+        if(source == bOk)
         {
-            // ajout du nouveau score
-            MeilleursScores ms = new MeilleursScores(nomFichier);
-            ms.ajouterMeilleurScore(tfNomJoueur.getText(), score);
-            
+            // le nom n'est pas vide
+            if(!tfNomJoueur.getText().isEmpty())
+            {
+                // ajout du nouveau score
+                MeilleursScores ms = new MeilleursScores(nomFichier);
+                ms.ajouterMeilleurScore(tfNomJoueur.getText(), score);
+                
+                dispose(); // fermeture
+                
+                // ouverture de la fenetre des meilleurs scores
+                new Fenetre_MeilleursScores(nomTerrain,this);
+            } 
+        }
+        else
+        {
             dispose(); // fermeture
-            
-            // ouverture de la fenetre des meilleurs scores
-            new Fenetre_MeilleursScores(nomTerrain,this);
-        } 
+        }
     }
 }

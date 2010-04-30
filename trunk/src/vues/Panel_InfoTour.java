@@ -71,10 +71,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// construction du panel
 		super(new BorderLayout());
 		setPreferredSize(DIMENSION_PANEL);
-		setBorder(BORDURE);
+		//setBorder(BORDURE);
 		setBackground(LookInterface.COULEUR_DE_FOND);
 		
+		
 		this.edpt = edpt;
+
+		
+		add(new JLabel("Tour sélectionnée"),BorderLayout.NORTH);
 
 		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.setOpaque(false);
@@ -83,32 +87,32 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		
 		// champ nom
-		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
+		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 2);
 		
 		// champ prix
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
-		lPrix.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lPrix.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp++, 1);
 		
 		// champ degats
 		ajouterChamp(pCaracteristiques, new JLabel("Degats"), 0, nbChamp, 1);
-		lDegats.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lDegats.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp++, 1);
 	
 		// champ rayon de portee
 		ajouterChamp(pCaracteristiques, new JLabel("Rayon de portee"), 0, nbChamp, 1);
-		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp++, 1);
 		
 		// champ cadence de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Cadence de tir"), 0, nbChamp, 1);
-		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp++, 1);
 
 		// champ type de tir
 		ajouterChamp(pCaracteristiques, new JLabel("Type de tir"), 0, nbChamp, 1);
-		lType.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lType.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
         ajouterChamp(pCaracteristiques, lType, 1, nbChamp++, 1);
 
 		// champ description
@@ -116,13 +120,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		taDescrition.setEditable(false);
 		taDescrition.setLineWrap(true);
 		taDescrition.setWrapStyleWord(true);
-		taDescrition.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
 		taDescrition.setBorder(BORDURE_DESCRIPTION);
 		ajouterChamp(pCaracteristiques, taDescrition, 0, nbChamp++, 2);
 	
-		pConteneurCaract.add(pCaracteristiques,BorderLayout.NORTH);
+		pConteneurCaract.add(pCaracteristiques,BorderLayout.CENTER);
 		
 		// les boutons
+		pBoutons.setOpaque(false);
 		pBoutons.add(bAmeliorer);
 		pBoutons.add(bVendre);
 		bAmeliorer.addActionListener(this);
@@ -130,7 +135,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
-		pConteneurCaraEtBoutons.setOpaque(false);
+		pConteneurCaraEtBoutons.setPreferredSize(new Dimension(260,160));
+		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
 		pConteneurCaraEtBoutons.add(pConteneurCaract,BorderLayout.NORTH);
 		pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		

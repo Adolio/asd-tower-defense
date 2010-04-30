@@ -31,12 +31,13 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 {
 	// constantes statiques
     private static final long serialVersionUID 	= 1L;
-	private static final ImageIcon icoQUITTER 	= new ImageIcon("img/icones/door_out.png");
-	private static final ImageIcon icoAIDE 		= new ImageIcon("img/icones/help.png");
-	private static final ImageIcon icoSCORE      = new ImageIcon("img/icones/star.png");
+	private static final ImageIcon I_QUITTER 	= new ImageIcon("img/icones/door_out.png");
+	private static final ImageIcon I_AIDE 		= new ImageIcon("img/icones/help.png");
+	private static final ImageIcon I_SCORE      = new ImageIcon("img/icones/star.png");
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
 	private static final ImageIcon icoCADENAS      = new ImageIcon("img/icones/lock.png");
+
     
 	private final int MARGES_PANEL                 = 40;
     
@@ -45,8 +46,8 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	private final JMenu 	menuFichier 		= new JMenu("Fichier");
 	private final JMenu     menuMeilleursScore  = new JMenu("Scores");
 	private final JMenu 	menuAide 			= new JMenu("Aide");
-	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",icoAIDE);
-	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",icoQUITTER);
+	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",I_AIDE);
+	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",I_QUITTER);
 	
 	private final JMenuItem itemMSElementTD     = new JMenuItem(ElementTD.NOM);
     private final JMenuItem itemMSSpiral        = new JMenuItem(Spiral.NOM);
@@ -85,7 +86,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		//-- menu principal --
 		//--------------------
 		// menu Fichier
-		menuMeilleursScore.setIcon(icoSCORE);
+		menuMeilleursScore.setIcon(I_SCORE);
 		menuFichier.add(menuMeilleursScore);
 		menuMeilleursScore.add(itemMSElementTD);
 		menuMeilleursScore.add(itemMSSpiral);
@@ -111,6 +112,31 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// ajout du menu
 		parent.setJMenuBar(menuPrincipal);
 		
+		
+		//--------------------------------------
+        //-- chargement des scores et étoiles --
+        //--------------------------------------
+		
+	    String[] nomTerrains = new String[]{"ElementTD","Spiral","Desert","WaterWorld"};
+        Score[] scoresMax    = new Score[4];
+        MeilleursScores ms;
+        int nbEtoiles = 0;
+        
+        for(int i=0; i < nomTerrains.length; i++)
+        {  
+            ms = new MeilleursScores("donnees/"+nomTerrains[i]+".ms");
+            
+            if(ms.getScores().size() > 0)
+            {
+                Score score = ms.getScores().get(0); 
+                nbEtoiles += score.getNbEtoiles();
+                scoresMax[i] = score;
+            }
+            else
+                scoresMax[i] = new Score(" ", 0);
+        }
+		
+		
 		//----------------------------
         //-- création du formulaire --
         //----------------------------
@@ -119,17 +145,26 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		pFormulaire.setOpaque(false);
 		
 		
-		//-----------
-        //-- titre --
-        //-----------
+		//------------------------------
+        //-- titre + nombre d'étoiles --
+        //------------------------------
+		JPanel pNord = new JPanel(new BorderLayout());
+		pNord.setOpaque(false);
 		
-		
-		//JLabel lblTitre = new JLabel(IMAGE_MENU);
+		// titre
 		JLabel lblTitre = new JLabel("PARTIE SOLO");
 		lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
 		lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
+		pNord.add(lblTitre,BorderLayout.WEST);
 		
-        pFormulaire.add(lblTitre,BorderLayout.NORTH);
+		// étoiles
+		JPanel pNbEtoiles = new JPanel(new FlowLayout());
+		pNbEtoiles.setOpaque(false);
+		pNbEtoiles.add(new JLabel(nbEtoiles+" x"));
+		pNbEtoiles.add(new JLabel(I_SCORE));
+		pNord.add(pNbEtoiles,BorderLayout.EAST);
+		
+        pFormulaire.add(pNord,BorderLayout.NORTH);
 		
 		
 		//-----------------------------
@@ -167,27 +202,6 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 							Outils.redimentionner(WaterWorld.IMAGE_MENU,
 									IMAGE_MENU_LARGEUR,IMAGE_MENU_HAUTEUR)));
 
-		
-		String[] nomTerrains = new String[]{"ElementTD","Spiral","Desert","WaterWorld"};
-	    Score[] scoresMax    = new Score[4];
-	    MeilleursScores ms;
-	    int sommeEtoiles = 0;
-	    
-	    for(int i=0; i < nomTerrains.length; i++)
-	    {  
-	        ms = new MeilleursScores("donnees/"+nomTerrains[i]+".ms");
-	        
-	        if(ms.getScores().size() > 0)
-	        {
-	            Score score = ms.getScores().get(0); 
-	            sommeEtoiles += score.getNbEtoiles();
-	            scoresMax[i] = score;
-	        }
-	        else
-	            scoresMax[i] = new Score(" ", 0);
-	    }
-
-	    
 		// ajout des boutons au panel et ajout des ecouteurs
 		JPanel pBoutonsTerrains = new JPanel(new FlowLayout());
 		
@@ -223,20 +237,20 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	        //-- bloquage des terrains - progression --
 	        //-----------------------------------------
 		    
-		    if(i == 1 && sommeEtoiles < 1)
+		    if(i == 1 && nbEtoiles < 1)
 		    {
 		        bouton.setEnabled(false);
 		        
 		        pInfoTerrain.add(new JLabel("1 étoile min.",icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		        
-		    if(i == 2 && sommeEtoiles < 3)
+		    if(i == 2 && nbEtoiles < 3)
 		    {
                 bouton.setEnabled(false);
 		        pInfoTerrain.add(new JLabel("3 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		    
-		    if(i == 3 && sommeEtoiles < 7)
+		    if(i == 3 && nbEtoiles < 7)
 		    {
 		        bouton.setEnabled(false);
 		        pInfoTerrain.add(new JLabel("7 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);

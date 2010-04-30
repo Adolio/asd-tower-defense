@@ -43,7 +43,7 @@ public class Panel_InfoCreature extends JPanel
 	private JLabel lGain            = new JLabel();
 	private JLabel lImage           = new JLabel();
     private JLabel lNom             = new JLabel();
-    private JPanel pConteneur;
+    private JPanel pInfos;
     private Creature creature;
 		
 	/**
@@ -53,11 +53,14 @@ public class Panel_InfoCreature extends JPanel
 	{
 		// construction du panel
 		super(new BorderLayout());
-		setBorder(BORDURE);
+		//setBorder(BORDURE);
 		setPreferredSize(DIMENSION_PANEL);
 		setBackground(LookInterface.COULEUR_DE_FOND);
 		
-		lNom.setFont(GestionnaireDesPolices.POLICE_NOM);
+		
+		add(new JLabel("Créature sélectionnée"),BorderLayout.NORTH);
+		
+		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.setOpaque(false);
 		p.setPreferredSize(DIMENSION_IMAGE_ET_NOM);
@@ -66,23 +69,32 @@ public class Panel_InfoCreature extends JPanel
 		p.add(lNom);
 		
 		
-		lSante.setFont(GestionnaireDesPolices.POLICE_DONNEES);
-		lVitesse.setFont(GestionnaireDesPolices.POLICE_DONNEES);
-		lGain.setFont(GestionnaireDesPolices.POLICE_DONNEES);
+		lSante.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lVitesse.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lGain.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		
-		pConteneur = new JPanel(new GridLayout(0,2));
-		pConteneur.setOpaque(false);
-		pConteneur.add(p);
-		pConteneur.add(lTitreType);
-		pConteneur.add(lTitreSante);
-        pConteneur.add(lSante);
-        pConteneur.add(lTitreVitesse);
-        pConteneur.add(lVitesse);
-        pConteneur.add(lTitreGain);
-        pConteneur.add(lGain);
-        add(pConteneur,BorderLayout.WEST);
+		JPanel p2 = new JPanel();
+		p2.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		p2.setPreferredSize(new Dimension(260,100));
+		
+		
+		pInfos = new JPanel(new GridLayout(0,2));
+		pInfos.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+		pInfos.setPreferredSize(new Dimension(260,100));
+		pInfos.setOpaque(false);
+		pInfos.add(p);
+		pInfos.add(lTitreType);
+		pInfos.add(lTitreSante);
+        pInfos.add(lSante);
+        pInfos.add(lTitreVitesse);
+        pInfos.add(lVitesse);
+        pInfos.add(lTitreGain);
+        pInfos.add(lGain);
         
-        pConteneur.setVisible(false);
+        p2.add(pInfos);
+        add(p2,BorderLayout.WEST);
+        
+        pInfos.setVisible(false);
 	}
 	
 	/**
@@ -116,11 +128,11 @@ public class Panel_InfoCreature extends JPanel
 			miseAJourInfosVariables();
 
 			// affichage du panel
-			pConteneur.setVisible(true);
+			pInfos.setVisible(true);
 		}
 		// mode sans creature selectionnee
 		else
-		    pConteneur.setVisible(false);
+		    pInfos.setVisible(false);
 	}
 
 	/**
