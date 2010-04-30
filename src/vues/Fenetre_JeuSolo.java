@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.text.html.HTMLDocument;
 
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -171,8 +173,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         pVagueSuivante.setOpaque(false);
         ajouterInfoVagueSuivanteDansConsole();
 
-        // style du champ de description de la vague suivante
+        // style du champ de description de la vague suivante 
         taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
+
         taConsole.setEditable(false);
         JScrollPane scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(jeu.getTerrain().getLargeur(),50));
@@ -189,10 +192,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		//-- panel du jeu et menu d'interaction --
 		//----------------------------------------
 		// creation des panels
+         
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
+		conteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
 		panelTerrain = new Panel_Terrain(jeu, this, joueur);
 		panelTerrain.addKeyListener(this);
-		conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
+		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
@@ -204,7 +209,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		
 		
 		// ajout des panels
-		pFormulaire.add(conteneurTerrain,BorderLayout.WEST);
+		JPanel pMarge = new JPanel(new BorderLayout());
+        pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
+        pMarge.setOpaque(false);
+		pMarge.add(conteneurTerrain);
+		pFormulaire.add(pMarge,BorderLayout.WEST);
 		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
 		
 		// on demarre la musique au dernier moment

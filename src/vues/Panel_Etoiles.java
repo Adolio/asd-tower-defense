@@ -34,6 +34,6 @@ public class Panel_Etoiles extends JPanel
     public void paint(Graphics g)
     {
         for(int i=score.getNbEtoiles();i > 0; i--)
-            g.drawImage(ETOILE, i*ETOILE.getWidth(null)+5, 0, null);
+            g.drawImage(ETOILE, i*ETOILE.getWidth(null)+i*6, 0, null);
     }
 }

@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
@@ -340,15 +342,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
         return afficherRayonsDePortee = !afficherRayonsDePortee;
     }
 	
-	/**
-	 * Surdéfinition de la méthode d'affichage du panel.
-	 * 
-	 * Cette methode affiche la scene du jeu. Elle recupere differents 
-	 * elements du jeu et les affiches.
-	 * 
-	 * @param g Le graphics du panel pour dessin
-	 */
-	public void paint(Graphics g)
+	@Override
+	public void paintComponent(Graphics g)
 	{
 	    Graphics2D g2 = (Graphics2D) g;
 
@@ -365,7 +360,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //---------------------------
         //-- affichage de l'espace --
         //---------------------------
-	    g2.setColor(COULEUR_UNIVERS);
+	    g2.setColor(LookInterface.COULEUR_DE_FOND_2);
 	    g2.fillRect(-1000, -1000, 2000, 2000);
 	    
 	    
@@ -944,42 +939,45 @@ public class Panel_Terrain extends JPanel implements Runnable,
         //---------------------------
         setCursor(curNormal);
 		
-		if(sourisX > 0 
-		&& sourisX < MARGES_DEPLACEMENT
-		&& decaleX < 0)
-		{
-            setCursor(curRedimGauche);
-		    decaleX++;
-		}
-		
-		if(sourisX > LARGEUR-MARGES_DEPLACEMENT 
-		&& sourisX < LARGEUR 
-		&& getCoordoneeSurTerrainOriginal(LARGEUR,0).x < LARGEUR)
-		{
-		    setCursor(curRedimDroite);
-		    decaleX--;
-		} 
-		
-		if(sourisY > 0 
-        && sourisY < MARGES_DEPLACEMENT
-        && decaleY < 0) 
-		{
-            setCursor(curRedimBas);
-            decaleY++;
-		}
-		
-		if(sourisY > HAUTEUR-MARGES_DEPLACEMENT 
-        && sourisY < HAUTEUR 
-        && getCoordoneeSurTerrainOriginal(0,HAUTEUR).y < HAUTEUR)
-		{
-            setCursor(curRedimHaut);    
-            decaleY--;
-		}
-            
-		
-		// mise a jour de la position de la tour à ajoutée
-		if(tourAAjouter != null)
-		{
+        // les décalage psr les bordures marchent uniquement lors de l'ajout 
+        // d'une tour
+        if(tourAAjouter != null)
+        {
+        
+    		if(sourisX > 0 
+    		&& sourisX < MARGES_DEPLACEMENT
+    		&& decaleX < 0)
+    		{
+                setCursor(curRedimGauche);
+    		    decaleX++;
+    		}
+    		
+    		if(sourisX > LARGEUR-MARGES_DEPLACEMENT 
+    		&& sourisX < LARGEUR 
+    		&& getCoordoneeSurTerrainOriginal(LARGEUR,0).x < LARGEUR)
+    		{
+    		    setCursor(curRedimDroite);
+    		    decaleX--;
+    		} 
+    		
+    		if(sourisY > 0 
+            && sourisY < MARGES_DEPLACEMENT
+            && decaleY < 0) 
+    		{
+                setCursor(curRedimBas);
+                decaleY++;
+    		}
+    		
+    		if(sourisY > HAUTEUR-MARGES_DEPLACEMENT 
+            && sourisY < HAUTEUR 
+            && getCoordoneeSurTerrainOriginal(0,HAUTEUR).y < HAUTEUR)
+    		{
+                setCursor(curRedimHaut);    
+                decaleY--;
+    		}
+    
+    		
+		    // mise a jour de la position de la tour à ajoutée   
 		    // pour eviter des pertes de précision,on récupère d'abord 
 		    // la position sur le terrain de taille normal...
 		    Point p = getCoordoneeSurTerrainOriginal(sourisX, sourisY);

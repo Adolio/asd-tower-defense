@@ -98,7 +98,8 @@ public abstract class Terrain implements Serializable
      * @see Maillage
      */
     transient private final Maillage MAILLAGE_TERRESTRE;
-
+    transient private final Maillage MAILLAGE_AERIEN;
+    
     /**
      * Les creatures volantes n'ont pas besoins d'une maillage mais uniquement
      * du chemin le plus court entre la zone de depart et la zone d'arrivee
@@ -181,6 +182,9 @@ public abstract class Terrain implements Serializable
         
         // creation des deux maillages
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
+                PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
+        
+        MAILLAGE_AERIEN = new Maillage(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
     }
 
@@ -279,7 +283,7 @@ public abstract class Terrain implements Serializable
 
         // desactive la zone dans le maillage qui correspond au mur
         MAILLAGE_TERRESTRE.desactiverZone(mur);
-        // MAILLAGE_AERIEN.desactiverZone(mur);
+        MAILLAGE_AERIEN.desactiverZone(mur);
 
         // ajout du mur
         murs.add(mur);
@@ -603,11 +607,12 @@ public abstract class Terrain implements Serializable
             throws IllegalArgumentException, PathNotFoundException
     {
         // TODO adapter pour chemin aérien
-        //if (typeCreature == Creature.TYPE_TERRIENNE)
+        if (typeCreature == Creature.TYPE_TERRIENNE)
             return MAILLAGE_TERRESTRE.plusCourtChemin(xDepart, yDepart,
                     xArrivee, yArrivee);
-
-        //return cheminAerien;
+        else
+            return MAILLAGE_AERIEN.plusCourtChemin(xDepart, yDepart,
+                    xArrivee, yArrivee);
     }
 
     /**
