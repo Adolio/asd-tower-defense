@@ -4,12 +4,20 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
+
+import models.jeu.Jeu;
+import models.joueurs.Equipe;
+import models.joueurs.Joueur;
 import models.terrains.Terrain;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import outils.OutilsFichier;
 import outils.fichierDeConfiguration;
 import reseau.Canal;
 import reseau.CanalException;
@@ -24,20 +32,19 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     // IP idael : "188.165.41.224";
     // IP lazhar : "10.192.51.161";
     private static String IP_SE;
-    
-    
+
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
     private JFrame parent;
     private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField("Joueur",10);
+    private JTextField tfPseudo = new JTextField("Joueur", 10);
     private JButton bCreer = new JButton("Créer");
     private JLabel lblEtat = new JLabel();
 
     private DefaultTableModel model = new DefaultTableModel();
     private JTable tbTerrains;
-    
+
     private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
     private JComboBox cbNbJoueurs = new JComboBox();
 
@@ -52,6 +59,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private fichierDeConfiguration config;
     
     
+    private ArrayList<Terrain> terrains = new ArrayList<Terrain>();;
     
     /**
      * Constructeur
@@ -68,21 +76,20 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 MARGES_PANEL, MARGES_PANEL)));
 
         setBackground(LookInterface.COULEUR_DE_FOND);
-        
-        
+
         // recuperation des configurations
-        config  = new fichierDeConfiguration("cfg/config.cfg");
-        IP_SE   = config.getProprety("IP_SE");
+        config = new fichierDeConfiguration("cfg/config.cfg");
+        IP_SE = config.getProprety("IP_SE");
         PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
         PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
-        
+
         // ---------
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
-        
+
         pTop.setOpaque(false);
-        
+
         JLabel titre = new JLabel("CREER UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         pTop.add(titre, BorderLayout.NORTH);
@@ -95,8 +102,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         JPanel pCentre = new JPanel(new GridBagLayout());
         pCentre.setBorder(new LineBorder(Color.BLACK));
         pCentre.setOpaque(false);
-        
-        
+
         GridBagConstraints c = new GridBagConstraints();
         final int margesCellule = 5;
         c.insets = new Insets(margesCellule, margesCellule, margesCellule,
@@ -181,7 +187,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         pTerrains.setPreferredSize(new Dimension(600, 250));
         pTerrains.setBorder(new TitledBorder("Terrains"));
         pTerrains.setOpaque(false);
-        
+
         // création de la table avec boquage des editions
         tbTerrains = new JTable(model)
         {
@@ -198,34 +204,38 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         model.addColumn("Nom");
         model.addColumn("Nb Joueurs");
         model.addColumn("Apercu");
-        
-        // propiete des 
-        tbTerrains.setRowHeight(60);
-        tbTerrains.getColumnModel().getColumn(2).setCellRenderer(new TableCellRenderer_Image());
-        
-        // Chargement de toutes les maps
-        File f = new File("maps/");
-        File [] listFiles = f.listFiles();
-        
-        String nomFichier;
-        String extFichier;
-        
-        for(File f2 : listFiles)
-        { 
-            nomFichier = f2.getAbsolutePath();
-            extFichier = nomFichier.substring(nomFichier.lastIndexOf('.')+1, nomFichier.length());
 
-            if(extFichier.equals("map"))
+        // propiete des
+        tbTerrains.setRowHeight(60);
+        tbTerrains.getColumnModel().getColumn(2).setCellRenderer(
+                new TableCellRenderer_Image());
+
+        // Chargement de toutes les maps
+        File repertoireMaps = new File("maps/");
+        File[] listFiles = repertoireMaps.listFiles();
+        
+        Terrain t;
+        String extFichier;
+        for (File f2 : listFiles)
+        {
+            extFichier = OutilsFichier.getExtension(f2);
+
+            if (extFichier.equals(Terrain.EXTENSION_FICHIER))
             {
-                Terrain t = Terrain.charger(f2); 
-                Object[] obj = new Object[]{t.getNom(),t.getNbJoueursMax(),t.getImageDeFond()};  
+                t = Terrain.charger(f2);
+                
+                terrains.add(t);
+                
+                Object[] obj = new Object[] { t.getNom(), t.getNbJoueursMax(),
+                        t.getImageDeFond() };
+                
                 model.addRow(obj);
             }
         }
-       
+
         pTerrains.add(new JScrollPane(tbTerrains), BorderLayout.CENTER);
         pCentre.add(pTerrains, c);
-        
+
         // ajout du panel central
         add(pCentre, BorderLayout.CENTER);
 
@@ -234,15 +244,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // ------------
         JPanel pBottom = new JPanel(new BorderLayout());
         pBottom.setOpaque(false);
-        
-        
+
         // pseudo
         JPanel pPseudo = new JPanel();
         pPseudo.setOpaque(false);
-        
+
         JPanel pTmp = new JPanel();
         pTmp.setOpaque(false);
-        
+
         pTmp.add(lblPseudo, BorderLayout.WEST);
         pTmp.add(tfPseudo, BorderLayout.EAST);
         pPseudo.add(pTmp, BorderLayout.EAST);
@@ -253,7 +262,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         pBottom.add(bCreer, BorderLayout.EAST);
         bCreer.addActionListener(this);
 
-        lblEtat.setForeground(Color.RED);
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
         bAnnuler.addActionListener(this);
@@ -262,11 +270,11 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         add(pBottom, BorderLayout.SOUTH);
     }
 
-    public String [] listFiles (String dir) throws Exception {
+    public String[] listFiles(String dir) throws Exception
+    {
         return new File(dir).list();
     }
-    
-    
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -274,97 +282,145 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         if (src == bCreer)
         {
-            // TODO test des champs...
+            // Test des champs...
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
             
+            if(tfNomServeur.getText().isEmpty())
+            {
+                lblEtat.setText("Veuillez saisir le nom de votre partie.");
+                return;
+            }
             
+            if(tfPseudo.getText().isEmpty())
+            {
+                lblEtat.setText("Veuillez entrer votre pseudo.");
+                return;
+            }
             
+            if(tbTerrains.getSelectedRow() == -1)
+            {
+                lblEtat.setText("Veuillez sélectionner un terrain de jeu.");
+                return;
+            }
+  
             // TODO connexion au serveur, demande de création de la partie...
-            //---------------------------------------------------------------
-            //-- Enregistrement du serveur sur le serveur d'enregistrement --
-            //---------------------------------------------------------------
+            // ---------------------------------------------------------------
+            // -- Enregistrement du serveur sur le serveur d'enregistrement --
+            // ---------------------------------------------------------------
             try
             {
                 // Information
-                lblEtat.setForeground(Color.BLACK);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
                 lblEtat.setText("Enregistrement au serveur central...");
 
                 // Création du canal avec le serveur d'enregistrement
-                canalServeurEnregistrement = new Canal(IP_SE,PORT_SE,true);
-                
+                canalServeurEnregistrement = new Canal(IP_SE, PORT_SE, true);
+
                 // Création de la requete d'enregistrement
-                String requete = RequeteEnregistrement.getRequeteEnregistrer(tfNomServeur.getText(), PORT_SJ, Integer.parseInt((String) 
-                        cbNbJoueurs.getSelectedItem()),"TruiteTD",(String) cbMode.getSelectedItem());
+                String requete = RequeteEnregistrement.getRequeteEnregistrer(
+                        tfNomServeur.getText(), PORT_SJ, Integer
+                                .parseInt((String) cbNbJoueurs
+                                        .getSelectedItem()), (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
+                        (String) cbMode.getSelectedItem());
 
                 // Envoie de la requete
                 canalServeurEnregistrement.envoyerString(requete);
-                
+
                 // Attente du résultat
                 String resultat = canalServeurEnregistrement.recevoirString();
-                
+
                 try
                 {
                     // Analyse de la réponse du serveur d'enregistrement
                     JSONObject jsonResultat = new JSONObject(resultat);
-                    if(jsonResultat.getInt("status") == CodeEnregistrement.OK)
+                    if (jsonResultat.getInt("status") == CodeEnregistrement.OK)
                     {
-                        lblEtat.setForeground(Color.GREEN);
-                        lblEtat.setText("Enregistrement au serveur central réussi!");
-                    }
-                    else
+                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                        lblEtat
+                                .setText("Enregistrement au serveur central réussi!");
+                    } else
                     {
-                        lblEtat.setForeground(Color.RED);
+                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
                         lblEtat.setText("Réponse du serveur central invalide!");
                     }
-                } 
-                catch (JSONException e1)
+                } catch (JSONException e1)
                 {
-                    lblEtat.setForeground(Color.RED);
+                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
                     lblEtat.setText("Réponse du serveur central invalide!");
                 }
-            } 
-            catch (ConnectException e1)
+            } catch (ConnectException e1)
             {
-                lblEtat.setForeground(Color.RED);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
                 lblEtat.setText("Enregistrement au serveur central échoué!");
-            } 
-            catch (CanalException e1)
+            } catch (CanalException e1)
             {
                 e1.printStackTrace();
             }
+
+            
+            //---------------------
+            //-- Création du jeu --
+            //---------------------
+            Jeu jeu = new Jeu();
+            jeu.setTerrain(terrains.get(tbTerrains.getSelectedRow()));
+            
+            
+            // récupération de la première equipe
+            Equipe e2 = jeu.getEquipes().get(0);
+            
+            // création du joueur
+            Joueur j2 = new Joueur(tfPseudo.getText());
+            
+            // ajout du joueur dans le premier emplacement
+            e2.ajouterJoueur(j2,e2.getEmplacementsJoueur().get(2));
+         
+            
+            
+            // TODO test
+            Equipe e3 = jeu.getEquipes().get(1); 
+            
+            Joueur j3 = new Joueur("toto");
+            
+            e3.ajouterJoueur(j3,e3.getEmplacementsJoueur().get(1));
+            
+            
             
             // connexion réussie
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, canalServeurEnregistrement,true),
+                    new Panel_AttendreJoueurs(parent, jeu),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-            
-        } 
-        else if (src == bAnnuler)
+
+        } else if (src == bAnnuler)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-            
+
             // fermeture du canal s'il est ouvert
-            if(canalServeurEnregistrement != null)
+            if (canalServeurEnregistrement != null)
             {
                 try
                 {
                     // désenregistrement du serveur
-                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.DESENREGISTRER);
+                    canalServeurEnregistrement
+                            .envoyerString(RequeteEnregistrement.DESENREGISTRER);
                     canalServeurEnregistrement.recevoirString();
-                    
+
                     // fermeture propre du canal
-                    canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
+                    canalServeurEnregistrement
+                            .envoyerString(RequeteEnregistrement.STOP);
                     canalServeurEnregistrement.recevoirString();
                 }
                 // il y a eu une erreur... on quitte tout de même
-                catch(CanalException ce){}
-                
+                catch (CanalException ce)
+                {
+                }
+
                 canalServeurEnregistrement.fermer();
             }
-        }        
+        }
     }
 }

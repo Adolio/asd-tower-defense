@@ -192,6 +192,21 @@ public abstract class Tour extends Rectangle
     public abstract boolean peutEncoreEtreAmelioree();
 	
     /**
+     * Permet de recuperer les dégats du niveau suivant
+     */
+    public abstract long getDegatsLvlSuivant();
+    
+    /**
+     * Permet de recuperer le rayon de portee du niveau suivant
+     */
+    public abstract double getRayonPorteeLvlSuivant();
+    
+    /**
+     * Permet de recuperer la cadence de tir du niveau suivant
+     */
+    public abstract double getCadenceTirLvlSuivant();
+    
+    /**
      * permet de recuperer le temps de preparation d'un tir
      * @return le temps de preparation d'un tir en miliseconde
      */
@@ -350,11 +365,11 @@ public abstract class Tour extends Rectangle
     public String getTexteType()
     {
         if(type == TYPE_TERRESTRE_ET_AIR)
-            return "Terrestre + air";
+            return "Terre + Air";
         else if(type == TYPE_TERRESTRE)
-            return "Terrestre seulement";
+            return "Terre";
         else
-            return "Air seulement";
+            return "Air";
     }
 
 	/**

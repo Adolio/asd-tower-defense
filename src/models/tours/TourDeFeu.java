@@ -37,7 +37,7 @@ public class TourDeFeu extends Tour
     
     static
     {
-        COULEUR = new Color(220,0,0);
+        COULEUR = Color.ORANGE;
         IMAGE   = Toolkit.getDefaultToolkit().getImage("img/tours/tourDeFeu.png");
         ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourDeFeu.png");
     }
@@ -73,13 +73,13 @@ public class TourDeFeu extends Tour
             prixAchat   *= 2;
             
             // augmentation des degats
-            degats      *= 1.5;
+            degats      = getDegatsLvlSuivant();
             
             // augmentation du rayon de portee
-            rayonPortee += 10;
+            rayonPortee = getRayonPorteeLvlSuivant();
             
             // raccourcissement du temps de preparation du tire
-            cadenceTir  *= 1.2;
+            cadenceTir  = getCadenceTirLvlSuivant();
         
             niveau++;
         }
@@ -98,5 +98,23 @@ public class TourDeFeu extends Tour
     public boolean peutEncoreEtreAmelioree()
     {
         return niveau <= NIVEAU_MAX;
+    }
+    
+    @Override
+    public double getCadenceTirLvlSuivant()
+    {
+        return cadenceTir * 1.2;
+    }
+
+    @Override
+    public long getDegatsLvlSuivant()
+    {
+        return (long) (degats * 1.5);
+    }
+
+    @Override
+    public double getRayonPorteeLvlSuivant()
+    {
+        return rayonPortee + 10;
     }
 }

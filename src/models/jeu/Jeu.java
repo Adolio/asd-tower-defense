@@ -42,15 +42,6 @@ public class Jeu
         = "heig-vd - ASD2 :: Tower Defense v1.0 | janvier 2010";
 
 	/**
-	 * vies restantes du joueur. 
-	 * <br>
-	 * Note : Lorsque un ennemi atteint la zone d'arrive, le nombre de vies est
-	 * decremente.
-	 */
-    // TODO effacer
-	//private int viesRestantes 	= 20;
-	
-	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
 	 * - Les tours
 	 * - Les creatures
@@ -89,7 +80,7 @@ public class Jeu
     private boolean enPause;
   
     /**
-     * TODO commenter
+     * Stockage de la vagues courante
      */
     VagueDeCreatures vagueCourante;
     
@@ -143,21 +134,7 @@ public class Jeu
     {
         return gestionnaireAnimations;    
     }
-  
-    /**
-     * Permet de recuper la couleur des murs du terrain
-     * 
-     * @param l'equipe a ajouter
-     * @throws IllegalArgumentException si l'equipe est nulle.
-     */
-    public void ajouterEquipe(Equipe equipe) throws IllegalArgumentException
-    {
-        if(equipe == null)
-            throw new IllegalArgumentException();
-        
-        equipes.add(equipe);
-    }
-    
+
     /**
      * Permet d'initialiser le terrain de jeu
      * 
@@ -166,10 +143,12 @@ public class Jeu
      */
     public void setTerrain(Terrain terrain) throws IllegalArgumentException
     {
-        if(this.terrain != null)
+        if(this.terrain != null) 
             throw new IllegalArgumentException("Terrain déjà initialisé");
 
-        this.terrain  = terrain;
+        equipes = terrain.getEquipesInitiales();
+        
+        this.terrain  = terrain;  
     }
 
     /**
@@ -280,13 +259,33 @@ public class Jeu
         return enPause;
     }
 
-    public Equipe getEquipe(int i)
-    {
-        return equipes.get(0);
-    }
-
+    /**
+     * Permet de recupérer la collection des équipes
+     * 
+     * @return la collection des équipes
+     */
     public ArrayList<Equipe> getEquipes()
     {
         return equipes;
+    }
+
+    /**
+     * Retourn une collection avec tous les joueurs fesant partie
+     * d'une des équipes du jeu.
+     * 
+     * @return les joueurs
+     */
+    public ArrayList<Joueur> getJoueurs()
+    {
+        // création de la collection
+        ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+        
+        // ajout de tous les joueurs
+        for(Equipe e : equipes)
+            for(Joueur j : e.getJoueurs())
+                joueurs.add(j);
+        
+        // retour
+        return joueurs;
     }
 }

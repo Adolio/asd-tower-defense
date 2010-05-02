@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.io.File;
-
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -58,11 +56,10 @@ public class Desert extends Terrain
 		
 		
 		// Création des équipes
-		Equipe e = new Equipe();
+		Equipe e = new Equipe("Les rouges",Color.RED);
         e.ajouterZoneDepartCreatures(new Rectangle(510,40,20,60));
         e.setZoneArriveeCreatures(new Rectangle(0,400,20,60));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
-        jeu.ajouterEquipe(e);
         equipes.add(e);
 
 		// murs entourant le terrain
@@ -87,9 +84,5 @@ public class Desert extends Terrain
 		// bas - droite
 		ajouterMur(new Rectangle(360,320,20,60));
 		ajouterMur(new Rectangle(320,360,60,20));
-
-		
-		// TODO a effacer
-        serialiser(this, new File("maps/"+NOM+".map"));
 	}
 }

@@ -36,7 +36,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                                                     KeyListener
 {
 	// constantes statiques
-    private final int MARGES_PANEL = 40;
+    private final int MARGES_PANEL = 20;
     private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");

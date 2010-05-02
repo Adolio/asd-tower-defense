@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
 import javax.swing.*;
-
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import models.outils.*;
 
 /**
@@ -21,11 +22,7 @@ public class Fenetre_MeilleursScores extends JDialog
     // constantes statiques
     private static final long serialVersionUID  = 1L;
     private static final ImageIcon I_FENETRE    = new ImageIcon("img/icones/star.png");
-    private static String[] columnNames         = {
-                                                    "Nom du joueur",
-                                                    "Score",
-                                                    "Date"
-                                                   };
+
     // membre graphiques
     private JButton bFermer = new JButton("Fermer");
     
@@ -66,41 +63,62 @@ public class Fenetre_MeilleursScores extends JDialog
      * 
      * @param nomTerrain le nom du terrain
      */
+    @SuppressWarnings("serial")
     private void construire(String nomTerrain)
-    {
+    { 
         setIconImage(I_FENETRE.getImage());
         setLayout(new BorderLayout());
         setResizable(false);
- 
-        // creation de la table de scores
-        int i = 0;
-        String[][] data = new String[MeilleursScores.NOMBRE_MAX_SCORES][3];
+
+        JPanel pFormulaire = new JPanel(new BorderLayout());
+        pFormulaire.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+        pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
+        
+        //------------------------------------
+        //-- creation de la table de scores --
+        //------------------------------------
+        DefaultTableModel model = new DefaultTableModel();
+        
+        // nom de colonnes
+        model.addColumn("Joueur");
+        model.addColumn("Score");
+        model.addColumn("Date");
+        
+        // création de la table avec boquage des editions
+        JTable tbScores = new JTable(model)
+        {
+            public boolean isCellEditable(int rowIndex, int colIndex)
+            {
+                return false; // toujours désactivé
+            }
+        };
+
+        tbScores.setEnabled(false);
+        tbScores.setCellSelectionEnabled(true);
+       
+        // taille des colonnes
+        tbScores.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbScores.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tbScores.getColumnModel().getColumn(2).setPreferredWidth(120);
+  
+        
         ms = new MeilleursScores("donnees/"+nomTerrain+".ms");
         
         for(Score score : ms.getScores())
         {
-            data[i][0] = score.getNomJoueur();
-            data[i][1] = score.getValeur()+"";
-            data[i][2] = DateFormat.getInstance().format(score.getDate());
-            i++;
+            Object[] obj = new Object[] { score.getNomJoueur(), score.getValeur()+"",
+                    DateFormat.getInstance().format(score.getDate()) };
+            
+            model.addRow(obj);
         }
-        
-        JTable tableScore = new JTable(data,columnNames);
-        tableScore.setEnabled(false);
-        tableScore.setCellSelectionEnabled(true);
-       
-        // taille des colonnes
-        tableScore.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tableScore.getColumnModel().getColumn(1).setPreferredWidth(50);
-        tableScore.getColumnModel().getColumn(2).setPreferredWidth(120);
-        
-        
+         
         JLabel lTitreForm = new JLabel(nomTerrain);
         lTitreForm.setFont(GestionnaireDesPolices.POLICE_TITRE);
-        getContentPane().add(lTitreForm,BorderLayout.NORTH);
-        getContentPane().add(tableScore,BorderLayout.CENTER);
-        getContentPane().add(bFermer,BorderLayout.SOUTH);
-        
+        pFormulaire.add(lTitreForm,BorderLayout.NORTH);
+        pFormulaire.add(new JScrollPane(tbScores),BorderLayout.CENTER);
+        pFormulaire.add(bFermer,BorderLayout.SOUTH);
+        getContentPane().add(pFormulaire,BorderLayout.CENTER);
+         
         bFermer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 dispose();

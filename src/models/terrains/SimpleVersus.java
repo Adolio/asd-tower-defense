@@ -60,18 +60,19 @@ public class SimpleVersus extends Terrain
  
         
         // Création des équipes
-        Equipe e1 = new Equipe();
+        Equipe e1 = new Equipe("Les rouges",Color.RED);
         e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
         e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        jeu.ajouterEquipe(e1);
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
         equipes.add(e1);
         
-        Equipe e2 = new Equipe();
+        Equipe e2 = new Equipe("Les bleus",Color.BLUE);
         e2.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e2.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
         e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        jeu.ajouterEquipe(e2);
+        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
         equipes.add(e2);
         
         
@@ -94,10 +95,6 @@ public class SimpleVersus extends Terrain
         ajouterMur(new Rectangle(340, 120, 20, 260));
         ajouterMur(new Rectangle(120, 360, 220, 20));
         ajouterMur(new Rectangle(20, 240, 220, 20));
-        ajouterMur(new Rectangle(220, 220, 20, 20)); 
-        
-        
-        // TODO a effacer
-        serialiser(this, new File("maps/"+NOM+".map"));
+        ajouterMur(new Rectangle(220, 220, 20, 20));
     }
 }

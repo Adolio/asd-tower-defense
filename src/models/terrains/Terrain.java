@@ -64,6 +64,8 @@ public abstract class Terrain implements Serializable
      */
     private static final long serialVersionUID = 1L;
 
+    public static final String EXTENSION_FICHIER = "map";
+
     /**
      * nom de la zone de jeu
      */
@@ -141,11 +143,22 @@ public abstract class Terrain implements Serializable
      */
     transient protected File fichierMusiqueDAmbiance;
 
-    
-    // TODO
+    /**
+     * Stockage du jeu
+     */
     transient private Jeu jeu;
+    
+    /**
+     * Stockage de la vague courante
+     */
     transient private VagueDeCreatures vagueCourante;
     
+    /**
+     * Liste des equipes, utilisé pour la définition du terrain.
+     * <br>
+     * C'est le terrain qui fourni les équipes, on doit pouvoir
+     * les sérialiser.
+     */
     protected ArrayList<Equipe> equipes = new ArrayList<Equipe>();
     
     
@@ -333,6 +346,16 @@ public abstract class Terrain implements Serializable
     public Color getCouleurMurs()
     {
         return COULEUR_MURS;
+    }
+    
+    /**
+     * Permet de recuperer les équipes initiales du terrain
+     * 
+     * @return les équipes initiales
+     */
+    public ArrayList<Equipe> getEquipesInitiales()
+    {
+        return equipes;
     }
     
     /**
@@ -686,7 +709,10 @@ public abstract class Terrain implements Serializable
     }
     
     /**
-     * TODO
+     * Permet de sérialisé un Terrain
+     * 
+     * @param terrain le terrain à sérialiser
+     * @param fichier le fichier de destination
      */
     public static void serialiser(Terrain terrain, File fichier)
     {
@@ -725,7 +751,9 @@ public abstract class Terrain implements Serializable
     }
     
     /**
-     * TODO
+     * Permet de charger un terrain serialisé
+     * 
+     * @param fichier le fichier Terrain serialisé
      */
     public static Terrain charger(File fichier)
     {

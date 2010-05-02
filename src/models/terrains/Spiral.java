@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.io.File;
-
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -57,11 +55,10 @@ public class Spiral extends Terrain
           );
 		
 		// Création des équipes
-		Equipe e = new Equipe();
+		Equipe e = new Equipe("Les rouges",Color.RED);
         e.ajouterZoneDepartCreatures(new Rectangle(500,40,20,80));
         e.setZoneArriveeCreatures(new Rectangle(320,280,20,60));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        jeu.ajouterEquipe(e);
         equipes.add(e);
 		
 		/* definition des murs du labyrinthe :
@@ -89,8 +86,5 @@ public class Spiral extends Terrain
 		ajouterMur(new Rectangle(140,360,200,20));	// 7
 		ajouterMur(new Rectangle(340,240,20,140));	// 8
 		ajouterMur(new Rectangle(240,240,100,20));	// 9
-		
-		// TODO a effacer
-        serialiser(this, new File("maps/"+NOM+".map"));
 	}
 }

@@ -23,7 +23,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
 {
     // constantes statiques
     private static final long serialVersionUID      = 1L;
-    private static final String TITRE_FORM          = "Partie terminée !";
+    private static final String TITRE_FORM          = "Partie terminee !";
     
     // membrea graphiques
     private JButton bOk             = new JButton("OK");
@@ -47,6 +47,8 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         super(fenParent,"Partie Terminée.",true); 
         setLayout(new BorderLayout());
         setResizable(false);
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+        
         
         // init attributs membres
         this.score      = score;
@@ -55,6 +57,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         
         // constructeur du formulaire
         pFormulaire = new JPanel(new GridLayout(0,2));
+        pFormulaire.setOpaque(false);
         pFormulaire.setBorder(new EmptyBorder(20,20,20,20));
         
         pFormulaire.add(new JLabel("Score obtenu : "));
@@ -69,6 +72,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         
         
         JPanel conteneurTitre = new JPanel(new FlowLayout());
+        conteneurTitre.setOpaque(false);
         JLabel lTitreForm = new JLabel(TITRE_FORM);
         lTitreForm.setFont(GestionnaireDesPolices.POLICE_TITRE);
         conteneurTitre.add(lTitreForm);

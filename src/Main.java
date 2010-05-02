@@ -1,7 +1,5 @@
 import java.io.File;
-
 import javax.swing.UIManager;
-
 import models.jeu.Jeu;
 import models.terrains.SimpleVersus;
 import models.terrains.Terrain;
@@ -46,10 +44,10 @@ public class Main
                     * C'est juste le look and feel qui n'est pas installe.
                     */ 
                } 
-          
+                  
       // TODO a effacer
-      //Terrain t = new SimpleVersus(new Jeu());      
-      //Terrain.serialiser(t,new File("maps/SimpleVersus.map"));
+      Terrain t = new SimpleVersus(new Jeu());      
+      Terrain.serialiser(t,new File("maps/SimpleVersus.map"));
                
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();

@@ -32,6 +32,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private static final long serialVersionUID      = 1L;
 	private static final ImageIcon I_PIECES         = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES 	        = new ImageIcon("img/icones/heart.png");
+	private static final ImageIcon I_ETOILE         = new ImageIcon("img/icones/star.png");
 	
 	// membres graphiques
 	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.ICONE));
@@ -42,11 +43,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
 	
 	private JLabel lScore 				    = new JLabel();
-	private JLabel lTitreScore 			    = new JLabel("Score :");
+	private JLabel lTitreScore 			    = new JLabel("Score ");
 	private JLabel lVies 					= new JLabel();
 	private JLabel lTitreVies 				= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 				= new JLabel();
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
+	private JLabel lEtoiles                 = new JLabel();
+	private JLabel lTitreEtoiles            = new JLabel(I_ETOILE);
 		
 	// autres membres
 	private EcouteurDePanelTerrain edpt;
@@ -78,26 +81,32 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		bTourArcher.addActionListener(this);
 		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
+		bTourArcher.setToolTipText("Prix : "+TourArcher.PRIX_ACHAT);
 		pTours.add(bTourArcher);
 		
 		bTourCanon.addActionListener(this);
 		bTourCanon.setBorder(new EmptyBorder(5,5,5,5));
+		bTourCanon.setToolTipText("Prix : "+TourCanon.PRIX_ACHAT);
 		pTours.add(bTourCanon);
 		
 		bTourAntiAerienne.addActionListener(this);
 		bTourAntiAerienne.setBorder(new EmptyBorder(5,5,5,5));
+		bTourAntiAerienne.setToolTipText("Prix : "+TourAntiAerienne.PRIX_ACHAT);
 		pTours.add(bTourAntiAerienne);
 		
 		bTourDeGlace.addActionListener(this);
 		bTourDeGlace.setBorder(new EmptyBorder(5,5,5,5));
+		bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
         pTours.add(bTourDeGlace);
 
         bTourDeFeu.addActionListener(this);
         bTourDeFeu.setBorder(new EmptyBorder(5,5,5,5));
+        bTourDeFeu.setToolTipText("Prix : "+TourDeFeu.PRIX_ACHAT);
         pTours.add(bTourDeFeu);
         
         bTourDeTerre.addActionListener(this);
         bTourDeTerre.setBorder(new EmptyBorder(5,5,5,5));
+        bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
         pTours.add(bTourDeTerre);
         
 		//------------------------------------------
@@ -109,18 +118,29 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		// score
 		pJoueur.add(lTitreScore);
+		lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		pJoueur.add(lScore);
+		lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		miseAJourScore();
 		
 		// pieces d'or
 		pJoueur.add(lTitrePiecesOr);
 		pJoueur.add(lNbPiecesOr);
+		lNbPiecesOr.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		miseAJourNbPiecesOr();
 		
 		// vies restantes
 		pJoueur.add(lTitreVies);
 		pJoueur.add(lVies);
+		lVies.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		miseAJourNbViesRestantes();
+		
+		// etoiles gagnées
+        pJoueur.add(lTitreEtoiles);
+        pJoueur.add(lEtoiles);
+        lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        miseAJourNbEtoiles();
+		
 		
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
 		pToursEtJoueur.setOpaque(false);
@@ -222,11 +242,21 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	}
 	
 	/**
+     * Permet de demander une mise a jour du nombre d'étoiles gagnées
+     */
+    public void miseAJourNbEtoiles()
+    {
+        lEtoiles.setText(joueur.getNbEtoiles()+"");
+    }
+	
+	
+	/**
      * Permet de demander une mise a jour du score du joueur
      */
 	public void miseAJourScore()
     {
         lScore.setText(joueur.getScore()+"");
+        miseAJourNbEtoiles();
     }
 
     /**

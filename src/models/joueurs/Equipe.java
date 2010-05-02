@@ -14,6 +14,8 @@ import java.util.ArrayList;
  */
 public class Equipe implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
    /**
     * Identificateur de l'equipe
     */
@@ -32,7 +34,7 @@ public class Equipe implements Serializable
    /**
     * Liste des joueurs
     */
-   transient private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+   private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
    
    /**
     * nombre de vies restantes. 
@@ -53,9 +55,42 @@ public class Equipe implements Serializable
    private Rectangle zoneArriveeCreatures;
 
    /**
-    * TODO
+    * Stockage des emplacements de joueurs
     */
    private ArrayList<EmplacementJoueur> emplacementsJoueur = new ArrayList<EmplacementJoueur>();
+   
+   
+   /**
+    * Constucteur
+    * 
+    * @param nom
+    * @param couleur
+    */
+   public Equipe(String nom, Color couleur)
+   {
+       this.nom = nom;
+       this.couleur = couleur;
+   }
+   
+   /**
+    * Permet de récupérer le nom
+    * 
+    * @return le nom
+    */
+   public String getNom()
+   {
+       return nom;
+   }
+   
+   /**
+    * Permet de récupérer la couleur
+    * 
+    * @return la couleur
+    */
+   public Color getCouleur()
+   {
+       return couleur;
+   }
    
    /**
     * Permet d'ajouter un joueur
@@ -69,7 +104,25 @@ public class Equipe implements Serializable
            throw new IllegalArgumentException();
                
        joueurs.add(joueur);
+       joueur.setEquipe(this);
    }
+   
+   /**
+    * Permet d'ajouter un joueur
+    * 
+    * @param joueur le joueur a ajouter
+    * @param l'emplacement du joueur sur le terrain
+    * @throws IllegalArgumentException si le joueur est nul
+    */
+   public void ajouterJoueur(Joueur joueur, EmplacementJoueur emplacementJoueur)
+   {
+       joueurs.add(joueur);
+       joueur.setEquipe(this);
+       
+       emplacementJoueur.setJoueur(joueur);
+       joueur.setEmplacementJoueur(emplacementJoueur);
+   }
+   
    
    /**
     * Permet de recuperer la collection des joueurs
@@ -136,7 +189,9 @@ public class Equipe implements Serializable
     }
     
     /**
-     * TODO
+     * Permet de récupérer la zone de départ des créatures
+     * 
+     * @return la zone de départ des créatures
      */
     public Rectangle getZoneDepartCreatures(int index)
     {
@@ -154,7 +209,8 @@ public class Equipe implements Serializable
     }
     
     /**
-     * TODO
+     * Permet de récupérer la zone d'arrivee des créatures
+     * 
      * @return la zone d'arrivee des créatures
      */
     public Rectangle getZoneArriveeCreatures()
@@ -163,9 +219,9 @@ public class Equipe implements Serializable
     }
   
     /**
-     * TODO
+     * Permet d'ajouter un emplacement de joueur
      * 
-     * @param emplacementJoueur
+     * @param emplacementJoueur l'emlacement
      */
     public void ajouterEmplacementJoueur(EmplacementJoueur emplacementJoueur)
     {
@@ -173,12 +229,22 @@ public class Equipe implements Serializable
     }
 
     /**
-     * TODO 
+     * Permet de savoir le nombre d'emplacements disponibles de joueur
      * 
-     * @return
+     * @return le nombre d'emplacements disponibles de joueur 
      */
     public int getNbEmplacements()
     {
         return emplacementsJoueur.size();
+    }
+
+    /**
+     * Perme de recupérer les emplacements de joueur
+     * 
+     * @return les emplacements de joueur
+     */
+    public ArrayList<EmplacementJoueur> getEmplacementsJoueur()
+    {
+        return emplacementsJoueur;
     }
 }

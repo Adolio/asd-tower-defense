@@ -49,9 +49,9 @@ public class ElementTD extends Terrain
                 100,  // nbPiecesOrInitiales
                 20,   // nbViesInitiales
                 0,    // positionMaillageX
-                0,    // positionMaillageY
+                -40,    // positionMaillageY
                 480,  // largeurMaillage
-                500,  // hauteurMaillage
+                540,  // hauteurMaillage
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
@@ -60,11 +60,10 @@ public class ElementTD extends Terrain
  
         
         // Création des équipes
-        Equipe e = new Equipe();
-        e.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        Equipe e = new Equipe("Les rouges",Color.RED);
+        e.ajouterZoneDepartCreatures(new Rectangle(110, -40, 80, 20));
         e.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        jeu.ajouterEquipe(e);
         equipes.add(e);
         
         
@@ -87,9 +86,5 @@ public class ElementTD extends Terrain
         ajouterMur(new Rectangle(120, 360, 220, 20));
         ajouterMur(new Rectangle(20, 240, 220, 20));
         ajouterMur(new Rectangle(220, 220, 20, 20)); 
-        
-        
-        // TODO a effacer
-        serialiser(this, new File("maps/"+NOM+".map"));
     }
 }
