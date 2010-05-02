@@ -45,8 +45,7 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         // -------------------------------
         //setSize(LARGEUR_FENETRE, HAUTEUR_FENETRE);
         setIconImage(I_FENETRE.getImage());
-        // TODO uncomment
-        // setResizable(false);
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // --------------------

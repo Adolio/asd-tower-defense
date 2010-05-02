@@ -1,5 +1,7 @@
 package models.joueurs;
 
+import models.outils.Score;
+
 public class Joueur
 {
     /**
@@ -20,7 +22,7 @@ public class Joueur
     /**
      * Pseudo
      */
-    private int pseudo;
+    private String pseudo;
     
     /**
      * Nombre de pieces d'or du joueur.
@@ -39,7 +41,7 @@ public class Joueur
      * score courant du joueur. Cette valeur equivaux a la somme 
      * de toutes les pieces d'or amassee par le joueur durant la partie.
      */
-    private int score = 0;
+    private Score score = new Score();
     
     /**
      * Nombre de créatures tuées
@@ -47,14 +49,18 @@ public class Joueur
     private int nbCreaturesTuees = 0;
     
     /**
+     * Emplacement du joueur sur le terrain
+     * 
+     * Permet de définir les zones de construction du joueur
+     */
+    private EmplacementJoueur emplacement;
+    
+    /**
      * Constructeur
      */
-    public Joueur(Equipe equipe)
+    public Joueur(String pseudo)
     {
-        if(equipe == null)
-            throw new IllegalArgumentException("Equipe nulle");
-          
-        this.equipe = equipe;
+        this.pseudo = pseudo;
         this.id = ++cmpId;
     }
 
@@ -65,7 +71,7 @@ public class Joueur
      */
     public int getScore()
     {
-        return score;
+        return score.getValeur();
     }
     
     /**
@@ -78,22 +84,56 @@ public class Joueur
         this.nbPiecesDOr = nbPiecesDOr;
     }
 
+    /**
+     * Permet de récupérer le nombre de pieces d'or du joueur
+     * 
+     * @return le nombre de pieces d'or du joueur
+     */
     public int getNbPiecesDOr()
     {
         return nbPiecesDOr;
     }
 
+    /**
+     * Permet de récupérer le score du joueur
+     * 
+     * @return le score du joueur
+     */
     public void setScore(int score)
     {
-        this.score = score;
+        this.score.setValeur(score);
     }
     
+    /**
+     * Permet de récupérer le nombre d'étoiles du joueur
+     * 
+     * @return le nombre d'étoiles du joueur
+     */
+    public int getNbEtoiles()
+    {
+        return this.score.getNbEtoiles();
+    }
+    
+    /**
+     * Permet de récupérer l'équipe du joueur
+     * 
+     * @return l'équipe du joueur
+     */
     public Equipe getEquipe()
     {
         return equipe;
     }
     
-    
+    /**
+     * Permet de récupérer l'emplacement du joueur
+     * 
+     * @return l'emplacement du joueur
+     */
+    public EmplacementJoueur getEmplacement()
+    {
+        return emplacement;
+    }
+     
     /**
      * Permet de savoir si le joueur a perdu
      * 
@@ -103,4 +143,34 @@ public class Joueur
     {
         return equipe.getNbViesRestantes() <= 0;
     }
+
+    /**
+     * Permet de récupérer le pseudo
+     * 
+     * @return le pseudo
+     */
+    public String getPseudo()
+    {
+        return pseudo;
+    }
+    
+    /**
+     * Permet de modifier l'équipe du joueur
+     * 
+     * @param equipe la nouvelle équipe du joueur
+     */
+    public void setEquipe(Equipe equipe)
+    {
+        this.equipe = equipe;
+    }
+    
+    /**
+     * Permet de modifier l'emplacement du joueur
+     * 
+     * @param emplacementJoueur l'emplacement du joueur
+     */
+    public void setEmplacementJoueur(EmplacementJoueur emplacementJoueur)
+    {
+        this.emplacement = emplacementJoueur;
+    } 
 }

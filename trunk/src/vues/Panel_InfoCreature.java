@@ -28,7 +28,6 @@ public class Panel_InfoCreature extends JPanel
 	private static final ImageIcon I_VITESSE   = new ImageIcon("img/icones/running_man.gif");
 	private static final ImageIcon I_GAIN      = new ImageIcon("img/icones/coins_add.png");
 	private static final Dimension DIMENSION_PANEL = new Dimension(280, 120);
-	private static final Border BORDURE        = BorderFactory.createTitledBorder("Créature sélectionnée");
     private static final Dimension DIMENSION_IMAGE_ET_NOM = new Dimension(110,50);
     private static final Border BORDURE_IMAGE_ET_NOM = new EmptyBorder(-5,-5,-5,-5);
 
@@ -57,8 +56,9 @@ public class Panel_InfoCreature extends JPanel
 		setPreferredSize(DIMENSION_PANEL);
 		setBackground(LookInterface.COULEUR_DE_FOND);
 		
-		
-		add(new JLabel("Créature sélectionnée"),BorderLayout.NORTH);
+		JLabel lblTitre = new JLabel("Creature selectionnee");
+        lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        add(lblTitre,BorderLayout.NORTH);
 		
 		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));

@@ -29,15 +29,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     public static final int MODE_SELECTION 	   = 0;
 	public static final int MODE_ACHAT 		   = 1;
 	private static final long serialVersionUID = 1L;
-	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/hammer.png");
-    private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/coins_add.png");
-    private static final String TXT_AMELIORER  = "Ameliorer";
-    private static final String TXT_VENDRE     = "Vendre";
+	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/upgrade.png");
+    private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/sale.png");
+    private static final String TXT_AMELIORER  = "";
+    private static final String TXT_VENDRE     = "";
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Prix total";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
-    private static final Border BORDURE        = BorderFactory.createTitledBorder("Tour  sélectionnée");
-    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(250,80);
+    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,80);
     private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
     //private static final Border BORDURE_DESCRIPTION = new LineBorder(Color.DARK_GRAY,1,true);
     
@@ -49,12 +48,16 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JLabel lTitrePrix 		 = new JLabel();
 	private JLabel lCadenceTir	     = new JLabel();
 	private JTextArea taDescrition 	 = new JTextArea();
-	private JPanel pBoutons 		 = new JPanel(new FlowLayout());
 	private JPanel pCaracteristiques = new JPanel(new GridBagLayout());
-	private JLabel lType             = new JLabel();
 	private JButton bAmeliorer       = new JButton(TXT_AMELIORER,I_AMELIORER);
     private JButton bVendre          = new JButton(TXT_VENDRE,I_VENDRE);
 	
+    private JLabel lTitreLvl         = new JLabel();
+    private JLabel lTitreLvlS        = new JLabel();
+    private JLabel lDegatsLvlS       = new JLabel();
+    private JLabel lRayonPorteeLvlS  = new JLabel();
+    private JLabel lCadenceTirLvlS   = new JLabel();
+      
     // autres membres
 	private Tour tour;
 	private EcouteurDePanelTerrain edpt;
@@ -78,7 +81,10 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		this.edpt = edpt;
 
 		
-		add(new JLabel("Tour sélectionnée"),BorderLayout.NORTH);
+		
+		JLabel lblTitre = new JLabel("Tour selectionnee");
+		lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		add(lblTitre,BorderLayout.NORTH);
 
 		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.setOpaque(false);
@@ -88,7 +94,22 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		// champ nom
 		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 2);
+		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 3);
+		
+		// champ description
+        taDescrition.setPreferredSize(DIMENSION_DESCRIPTION);
+        taDescrition.setEditable(false);
+        taDescrition.setLineWrap(true);
+        taDescrition.setWrapStyleWord(true);
+        taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
+        taDescrition.setBorder(BORDURE_DESCRIPTION);
+        ajouterChamp(pCaracteristiques, new JScrollPane(taDescrition), 0, nbChamp++, 3);
+		
+		
+		lTitreLvl.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		lTitreLvlS.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		ajouterChamp(pCaracteristiques, lTitreLvl, 1, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, lTitreLvlS, 2, nbChamp++, 1);
 		
 		// champ prix
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
@@ -98,47 +119,43 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// champ degats
 		ajouterChamp(pCaracteristiques, new JLabel("Degats"), 0, nbChamp, 1);
 		lDegats.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp++, 1);
-	
+		lDegatsLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamp++, 1);
+		
 		// champ rayon de portee
-		ajouterChamp(pCaracteristiques, new JLabel("Rayon de portee"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Portee"), 0, nbChamp, 1);
 		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp++, 1);
+		lRayonPorteeLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, lRayonPorteeLvlS, 2, nbChamp++, 1);
 		
 		// champ cadence de tir
-		ajouterChamp(pCaracteristiques, new JLabel("Cadence de tir"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Tirs / sec."), 0, nbChamp, 1);
 		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp++, 1);
-
-		// champ type de tir
-		ajouterChamp(pCaracteristiques, new JLabel("Type de tir"), 0, nbChamp, 1);
-		lType.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-        ajouterChamp(pCaracteristiques, lType, 1, nbChamp++, 1);
-
-		// champ description
-		taDescrition.setPreferredSize(DIMENSION_DESCRIPTION);
-		taDescrition.setEditable(false);
-		taDescrition.setLineWrap(true);
-		taDescrition.setWrapStyleWord(true);
-		taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
-		taDescrition.setBorder(BORDURE_DESCRIPTION);
-		ajouterChamp(pCaracteristiques, taDescrition, 0, nbChamp++, 2);
+		lCadenceTirLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamp++, 1);
+		
+		// les boutons
+        ajouterChamp(pCaracteristiques, bVendre, 1, nbChamp, 1);
+        ajouterChamp(pCaracteristiques, bAmeliorer, 2, nbChamp++, 1);
+        bAmeliorer.setPreferredSize(new Dimension(50,30));
+        bVendre.setPreferredSize(new Dimension(80,30));
+        bAmeliorer.addActionListener(this);
+        bVendre.addActionListener(this);
+		
 	
 		pConteneurCaract.add(pCaracteristiques,BorderLayout.CENTER);
 		
-		// les boutons
-		pBoutons.setOpaque(false);
-		pBoutons.add(bAmeliorer);
-		pBoutons.add(bVendre);
-		bAmeliorer.addActionListener(this);
-		bVendre.addActionListener(this);
+		
 		
 		
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
 		pConteneurCaraEtBoutons.setPreferredSize(new Dimension(260,160));
 		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
 		pConteneurCaraEtBoutons.add(pConteneurCaract,BorderLayout.NORTH);
-		pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
+		//pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		
 		add(pConteneurCaraEtBoutons,BorderLayout.WEST);
 	
@@ -155,16 +172,16 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	 * @param gridy position y dans la grille
 	 * @param gridwidth largeur de la grille
 	 */
+	private GridBagConstraints gbc = new GridBagConstraints();
 	public void ajouterChamp(JPanel panel, Component composant, int gridx, int gridy, int gridwidth)
 	{
-		GridBagConstraints c = new GridBagConstraints();
+		gbc.fill 		= GridBagConstraints.HORIZONTAL;
+		gbc.insets    = new Insets(1, 8, 1, 8);
+		gbc.gridx 	= gridx;
+		gbc.gridy 	= gridy;
+		gbc.gridwidth = gridwidth;
 		
-		c.fill 		= GridBagConstraints.HORIZONTAL;
-		c.gridx 	= gridx;
-		c.gridy 	= gridy;
-		c.gridwidth = gridwidth;
-		
-		panel.add(composant,c);
+		panel.add(composant,gbc);
 	}
 	
 	/**
@@ -200,20 +217,37 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		if(tour != null)
 		{
 			// mise a jour des caracteristiques
-		    lDegats.setText(" : "+tour.getDegats());
-			lRayonPortee.setText(" : "+String.format("%.1f", tour.getRayonPortee()));
+		    lNom.setIcon(new ImageIcon(tour.getIcone()));
+		    lNom.setForeground(tour.getCouleurDeFond());
+            lNom.setText(tour.getNom()+" lvl. "+tour.getNiveau()+" ["+tour.getTexteType()+"]");
+            lTitreLvl.setText("lvl. "+tour.getNiveau());
+            lDegats.setText(tour.getDegats()+"");
+			lRayonPortee.setText(String.format("%.1f", tour.getRayonPortee()));
+			lCadenceTir.setText(String.format("%.1f", tour.getCadenceTir()));
 			taDescrition.setText(tour.getDescription());
-			lNom.setForeground(tour.getCouleurDeFond());
-			lNom.setText(tour.getNom());
-			lCadenceTir.setText(" : "+String.format("%.1f", tour.getCadenceTir())+" tirs / sec.");
-			lType.setText(" : "+tour.getTexteType());
+			
+			// Améliorations
+			if(tour.peutEncoreEtreAmelioree())
+			{
+			    lTitreLvlS.setText("lvl. "+(tour.getNiveau()+1));
+			    lDegatsLvlS.setText(tour.getDegatsLvlSuivant()+"");
+			    lRayonPorteeLvlS.setText(String.format("%.1f",tour.getRayonPorteeLvlSuivant()));
+			    lCadenceTirLvlS.setText(String.format("%.1f",tour.getCadenceTirLvlSuivant()));
+			}
+			else
+			{
+			    lTitreLvlS.setText("");
+			    lDegatsLvlS.setText("");
+                lRayonPorteeLvlS.setText("");
+                lCadenceTirLvlS.setText("");
+			}
 			
 			// tour selectionnee pour information
 			if(mode == 0)
 			{
 				// adaptation des champs
 				lTitrePrix.setText(TXT_PRIX_TOTAL);
-				lPrix.setText(" : "+tour.getPrixTotal());
+				lPrix.setText(tour.getPrixTotal()+"");
 
 				if(!partieTerminee)
 				{
@@ -226,7 +260,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				else if(tour.peutEncoreEtreAmelioree())
     				{
     					bAmeliorer.setEnabled(true);
-    					bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
+    					bAmeliorer.setText(TXT_AMELIORER+" [-"+tour.getPrixAchat()+"]");
     				}
     				else
     				{
@@ -235,18 +269,21 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				}
 				}
 				
-				bVendre.setText(TXT_VENDRE+" ["+tour.getPrixDeVente()+"]");
-				pBoutons.setVisible(true);
+				bVendre.setText(TXT_VENDRE+" [+"+tour.getPrixDeVente()+"]");
+	
+				bVendre.setVisible(true);
+				bAmeliorer.setVisible(true);
 			}
 			// tour selectionnee pour achat
 			else if(mode == 1)
 			{
 				// adaptation des champs
 				lTitrePrix.setText(TXT_PRIX_ACHAT);
-				lPrix.setText(" : "+tour.getPrixAchat());
+				lPrix.setText(tour.getPrixAchat()+"");
 				
 				// adaptation des boutons
-				pBoutons.setVisible(false);
+				bVendre.setVisible(false);
+                bAmeliorer.setVisible(false);
 			}
 			
 			// sauvegarde de la tour pour les operations
@@ -258,7 +295,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		else
 		{
 			pCaracteristiques.setVisible(false);
-			pBoutons.setVisible(false);
+			bVendre.setVisible(false);
+            bAmeliorer.setVisible(false);
 		}
 	}
 

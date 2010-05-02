@@ -47,9 +47,9 @@ public class WaterWorld extends Terrain
               500,  // hauteur
               150,  // nbPiecesOrInitiales
               20,   // nbViesInitiales
-              0,    // positionMaillageX
+              -50,    // positionMaillageX
               0,    // positionMaillageY
-              540,  // largeurMaillage
+              550,  // largeurMaillage
               500,  // hauteurMaillage
               new Color(150,150,150), // couleur de fond
               new Color(63,131,140), // couleur des murs
@@ -58,11 +58,10 @@ public class WaterWorld extends Terrain
         );
 
         // Création des équipes
-        Equipe e = new Equipe();
-        e.ajouterZoneDepartCreatures(new Rectangle(0, 30, 20, 80));
+        Equipe e = new Equipe("Les rouges",Color.RED);
+        e.ajouterZoneDepartCreatures(new Rectangle(-30, 30, 20, 80));
         e.setZoneArriveeCreatures(new Rectangle(480, 390, 20, 80));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
-        jeu.ajouterEquipe(e);
         equipes.add(e);
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
@@ -85,8 +84,5 @@ public class WaterWorld extends Terrain
         ajouterMur(new Rectangle(130, 220, 240, 60));
         ajouterMur(new Rectangle(220, 130, 60, 90));
         ajouterMur(new Rectangle(220, 280, 60, 90));
-        
-        // TODO a effacer
-        serialiser(this, new File("maps/"+NOM+".map"));
     }
 }

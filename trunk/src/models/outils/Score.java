@@ -27,8 +27,6 @@ public class Score implements Serializable, Comparable<Score>
    // La version de serialisation.
    private static final long serialVersionUID = 1L;
    
-   private static final int MAX_ETOILES = 5;
-   
    // La valeur du score du joueur.
    private int valeur;
    // Le nom du joueur.
@@ -68,7 +66,12 @@ public class Score implements Serializable, Comparable<Score>
       date      = score.date;
    }
    
-   /**
+   public Score()
+   {
+       nomJoueur = "";
+   }
+
+/**
     * Getter pour le champ <tt>valeur</tt>
     * 
     * @return La valeur du champ <tt>valeur</tt>
@@ -139,11 +142,27 @@ public class Score implements Serializable, Comparable<Score>
     */
    public int getNbEtoiles()
    {
-       int etoiles = valeur / 1000;
-       
-       if(etoiles > MAX_ETOILES)
-           return MAX_ETOILES;
-           
-       return etoiles;
+       if(valeur > 10000)
+           return 5;
+       if(valeur > 5000)
+           return 4;
+       else if(valeur > 3000)
+           return 3;
+       else if(valeur > 1500)
+           return 2;
+       else if(valeur > 500)
+           return 1;
+       else
+           return 0;
    }
+
+    /**
+    * Permet de modifier la valeur du score
+    * 
+    * @param score la nouvelle valeur
+    */
+    public void setValeur(int score)
+    {
+        valeur = score;   
+    }
 }

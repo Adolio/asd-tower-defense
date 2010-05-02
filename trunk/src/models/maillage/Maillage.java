@@ -171,12 +171,12 @@ public class Maillage
 		/*
 		 * Test des arguments
 		 */
-		if (xDepart >= LARGEUR_EN_PIXELS || xArrivee >= LARGEUR_EN_PIXELS
-				|| xDepart < 0 || xArrivee < 0)
+		if (xDepart >= LARGEUR_EN_PIXELS-xOffset || xArrivee >= LARGEUR_EN_PIXELS-xOffset
+				|| xDepart-xOffset < 0 || xArrivee-xOffset < 0)
 			throw new IllegalArgumentException("Valeur invalide en x");
 
-		if (yDepart >= HAUTEUR_EN_PIXELS || yArrivee >= HAUTEUR_EN_PIXELS
-				|| yDepart < 0 || yArrivee < 0)
+		if (yDepart-yOffset >= HAUTEUR_EN_PIXELS || yArrivee-yOffset >= HAUTEUR_EN_PIXELS
+				|| yDepart-yOffset < 0 || yArrivee-yOffset < 0)
 			throw new IllegalArgumentException("Valeur invalide en y");
 
 		/*

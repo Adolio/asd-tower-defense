@@ -112,6 +112,11 @@ public abstract class Creature extends Rectangle
 	 * Il s'agit de la cible a attaquer
 	 */
 	private Equipe equipeCiblee;
+
+	/**
+	 * Stockage de l'angle entre la créature et son prochain noeud
+	 */
+    private double angle = 0.0;
 	
 	/**
 	 * Constructeur de la creature.
@@ -284,6 +289,17 @@ public abstract class Creature extends Rectangle
         return NOM;
     }
 	
+    /**
+     * Permet de recuperer l'angle entre la creature et le prochain noeud
+     * [angle de déplcement]
+     * 
+     * @return l'angle entre la creature et le prochain noeud
+     */
+    public double getAngle()
+    {
+        return angle;
+    }
+    
 	/**
 	 * Permet de recuperer la position sur l'axe X de la creature
 	 * 
@@ -383,7 +399,7 @@ public abstract class Creature extends Rectangle
             
             // calcul de l'angle entre la creature et le noeud suivant
             // /!\ Math.atan2(y,x) /!\
-            double angle = Math.atan2(centreY - pSuivant.y,centreX - pSuivant.x);
+            angle = Math.atan2(centreY - pSuivant.y,centreX - pSuivant.x);
 
             // calcul de la distance effectuee
             double distance = getVitesseReelle() * ((double) tempsEcoule / 1000.0);

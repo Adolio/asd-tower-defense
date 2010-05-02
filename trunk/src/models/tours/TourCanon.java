@@ -67,9 +67,15 @@ public class TourCanon extends Tour
 		prixTotal 	+= prixAchat;
 		
 		prixAchat 	*= 2;	// + 100%
-		degats    	*= 1.5; // + 50%
-		rayonPortee *= 1.2; // + 20%
-		cadenceTir	*= 1.2; // + 20%
+		
+		// augmentation des degats
+        degats      = getDegatsLvlSuivant();
+        
+        // augmentation du rayon de portee
+        rayonPortee = getRayonPorteeLvlSuivant();
+        
+        // raccourcissement du temps de preparation du tire
+        cadenceTir  = getCadenceTirLvlSuivant();
 		
 		niveau++;
 	}
@@ -89,4 +95,22 @@ public class TourCanon extends Tour
 	{
 		return niveau <= NIVEAU_MAX;
 	}
+	
+    @Override
+    public double getCadenceTirLvlSuivant()
+    {
+        return cadenceTir * 1.2;
+    }
+
+    @Override
+    public long getDegatsLvlSuivant()
+    {
+        return (long) (degats * 1.5);
+    }
+
+    @Override
+    public double getRayonPorteeLvlSuivant()
+    {
+        return rayonPortee + 10;
+    }
 }

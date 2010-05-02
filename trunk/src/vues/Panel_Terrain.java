@@ -2,6 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
@@ -208,6 +209,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Stockage du bouton lors d'un aggripement
 	 */
     private int boutonDragg;
+
+    private boolean centrerSurCreatureSelectionnee;
 	
 	// curseurs
 	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
@@ -425,20 +428,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 							    (int)arc.getX2(),(int)arc.getY2());
 			}
 			
-			/*
-			// affichage des noeuds actifs ou non
-			ArrayList<Noeud> noeuds = jeu.getNoeuds();
-			for(Noeud n : noeuds)
-			{
-				if(n.isActif())
-				    g2.setColor(Color.GREEN);
-				else
-					g2.setColor(Color.RED);
-				
-				g2.drawRect((int)n.getX(),(int)n.getY(),1,1);
-			}
-			*/
-			
 			// reinitialisation de la transparence
 			setTransparence(1.f, g2);
 		}
@@ -515,11 +504,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			setTransparence(ALPHA_CHEMIN_CREATURE,g2);
 			dessinerCheminCreature(creatureSelectionnee,g2);
 			
-			// TODO implémenter
-			/*
-			centrerSur((int) creatureSelectionnee.getX(),
-			           (int) creatureSelectionnee.getY());
-			*/
+			if(centrerSurCreatureSelectionnee )
+			    centrerSur((int) creatureSelectionnee.getX(),
+			               (int) creatureSelectionnee.getY());
+			
+			setTransparence(1.f,g2);
 		}
 		
 		g2.setStroke(traitTmp);
@@ -564,6 +553,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.setColor(Color.DARK_GRAY);
             g2.fillRect(0, 0, LARGEUR, HAUTEUR);
             setTransparence(1.0f, g2);
+            
             g2.setColor(Color.WHITE);
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
             g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 50, HAUTEUR / 2 - 50);
@@ -594,18 +584,23 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{  
 	    if(creature.getImage() != null)
 	    {
-	        // TODO [INFO] comment faire une rotation ?
-	        //AffineTransform tx = new AffineTransform();
-	        //double radians = -Math.PI/4;
-	        //tx.rotate(radians);
-	        //g2.drawImage(terrain.getImageDeFond(), tx, this);
+	        // rotation des créatures
+	        AffineTransform tx = new AffineTransform();
+	        tx.translate(creature.getX(), creature.getY());
+	        tx.translate(creature.getWidth()/2, creature.getHeight()/2);
+	        tx.rotate(creature.getAngle()+Math.PI/2);
+	        tx.translate(-creature.getWidth()/2, -creature.getHeight()/2);
 	        
+	        // dessin de la créature avec rotation
+	        g2.drawImage(creature.getImage(), tx, this);
+	        
+	        /*
 	        // affichage de l'image de la creature au centre de sa position
             g2.drawImage(creature.getImage(),
                     (int) creature.getX(), 
                     (int) creature.getY(), 
                     (int) creature.getWidth(), 
-                    (int) creature.getHeight(), null);
+                    (int) creature.getHeight(), null);*/
 	    }
         else
         {
@@ -868,9 +863,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 
 			    if (creature.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
 				{	
+			        // on enleve le suivi de la creature
+			        centrerSurCreatureSelectionnee = false;
+			        
 			        // si le joueur clique sur une creature deja selectionnee
 			        if (creatureSelectionnee == creature)
 						creatureSelectionnee = null; // deselection
+			        
 					else
 						creatureSelectionnee = creature; // la creature est selectionnee
 					
@@ -1093,7 +1092,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
     			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
     				edpt.ameliorerTour(tourSelectionnee);
     		}
-    		
+    	    
+    	    // focus sur la creature
+    	    if(ke.getKeyChar() == 'f' && creatureSelectionnee != null)
+    	        centrerSurCreatureSelectionnee = true;
+    	    
     		// raccourci lancer vague suivante
             if(Character.isSpaceChar(ke.getKeyChar()))  
                 edpt.lancerVagueSuivante();

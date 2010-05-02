@@ -265,7 +265,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         tbServeurs.setEnabled(false);
         bRafraichir.setEnabled(false);
         tfFiltre.setEnabled(false);
-        lblEtat.setForeground(Color.RED);
+        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
         lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
     }
 
@@ -326,18 +326,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
   
                 }
                 
-                lblEtat.setForeground(Color.GREEN);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
                 lblEtat.setText("Connexion au serveur central établie!");
             }
             else
             {
-                lblEtat.setForeground(Color.GREEN);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
                 lblEtat.setText("Connexion au serveur central établie! [ Aucun serveur disponible pour le moment ]");
             }
         } 
         catch (JSONException e1)
         {
-            lblEtat.setForeground(Color.RED);
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
             lblEtat.setText("Format de réponse du serveur incorrect!");
         }
     }
@@ -416,7 +416,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             } 
             catch (Exception exception)
             {
-                lblEtat.setForeground(Color.RED);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
                 lblEtat.setText(exception.getMessage());
             }
         } 
@@ -456,10 +456,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
      */
     private String recupererIP() throws Exception
     {
+        // si selectionné
         if (tbServeurs.getSelectedRow() != -1)
             return (String) model.getValueAt(tbServeurs.getSelectedRow(), 1);
         
-        if (tfConnexionParIP.getText().isEmpty())
+        // sinon on retourne l'ip manuelle si elle est valide
+        else if (tfConnexionParIP.getText().isEmpty())
             throw new Exception("Erreur : Selectionnez un serveur "
                     + "ou entrez directement l'IP du serveur.");
         
@@ -534,7 +536,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             bRejoindre.setText("Rejoindre");
             bRejoindre.setEnabled(true);
             
-            lblEtat.setForeground(Color.RED);
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
             lblEtat.setText("Connection au serveur de jeu impossible");
         } 
         catch (CanalException e)
@@ -542,7 +544,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             bRejoindre.setText("Rejoindre");
             bRejoindre.setEnabled(true);
             
-            lblEtat.setForeground(Color.RED);
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
             lblEtat.setText("Connection au serveur de jeu impossible");
         }
     }
