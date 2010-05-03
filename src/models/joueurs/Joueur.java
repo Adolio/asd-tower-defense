@@ -161,8 +161,16 @@ public class Joueur
      */
     public void setEquipe(Equipe equipe)
     {
+        // si le joueur avait une equipe qui le contenait
+        if(this.equipe != null && this.equipe.contient(this))
+            this.equipe.retirerJoueur(this);
+        
         this.equipe = equipe;
     }
+    
+    
+    
+    
     
     /**
      * Permet de modifier l'emplacement du joueur
@@ -171,6 +179,21 @@ public class Joueur
      */
     public void setEmplacementJoueur(EmplacementJoueur emplacementJoueur)
     {
+        if(emplacementJoueur != null 
+        && emplacementJoueur.getJoueur() != this) // fin de récursion de maj
+            emplacementJoueur.setJoueur(this);
+        
         this.emplacement = emplacementJoueur;
+    }
+
+    
+    
+    public void quitterEmplacementJoueur()
+    {
+        // fin de récursion de maj
+        if(emplacement != null && emplacement.getJoueur() != this) 
+            emplacement.retirerJoueur();
+        
+        emplacement = null;
     } 
 }

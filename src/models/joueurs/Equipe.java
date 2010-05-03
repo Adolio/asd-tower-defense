@@ -102,9 +102,39 @@ public class Equipe implements Serializable
    {
        if(joueur == null)
            throw new IllegalArgumentException();
-               
-       joueurs.add(joueur);
-       joueur.setEquipe(this);
+          
+       EmplacementJoueur ej = trouverEmplacementDiponible();
+       if(ej == null) // emplacement non trouvé
+           throw new IllegalArgumentException("Aucun emplacement disponible");
+       else // emplacement trouvé
+       {
+           // on retire le joueur de son ancienne equipe
+           if(joueur.getEquipe() != null)
+               joueur.getEquipe().retirerJoueur(joueur);
+           
+           // on l'ajout dans la nouvelle equipe
+           joueurs.add(joueur);
+
+           // on modifier sont equipe
+           joueur.setEquipe(this);
+           
+           // on lui attribut le nouvel emplacement
+           joueur.setEmplacementJoueur(ej);
+       }
+   }
+
+   /**
+    * TODO
+    * @return
+    */
+   public EmplacementJoueur trouverEmplacementDiponible()
+   {
+       // cherche un emplacement disponible
+       for(EmplacementJoueur ej : emplacementsJoueur)
+           if(ej.getJoueur() == null)
+               return ej;
+  
+       return null;
    }
    
    /**
@@ -114,13 +144,35 @@ public class Equipe implements Serializable
     * @param l'emplacement du joueur sur le terrain
     * @throws IllegalArgumentException si le joueur est nul
     */
-   public void ajouterJoueur(Joueur joueur, EmplacementJoueur emplacementJoueur)
+   /*public void ajouterJoueur(Joueur joueur, EmplacementJoueur emplacementJoueur)
    {
        joueurs.add(joueur);
        joueur.setEquipe(this);
        
-       emplacementJoueur.setJoueur(joueur);
+       //emplacementJoueur.setJoueur(joueur);
        joueur.setEmplacementJoueur(emplacementJoueur);
+   }*/
+   
+   /**
+    * TODO
+    * @param joueur
+    */
+   public void retirerJoueur(Joueur joueur)
+   {
+       // effacement
+       joueurs.remove(joueur);
+       
+       // quitte l'emplacement
+       if(joueur.getEmplacement() != null)
+           joueur.getEmplacement().retirerJoueur();
+       
+       // quitte l'equipe
+       joueur.setEquipe(null);
+   }
+
+   public boolean contient(Joueur joueur)
+   {
+       return joueurs.contains(joueur);
    }
    
    
@@ -246,5 +298,11 @@ public class Equipe implements Serializable
     public ArrayList<EmplacementJoueur> getEmplacementsJoueur()
     {
         return emplacementsJoueur;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return nom;
     }
 }

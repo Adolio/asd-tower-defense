@@ -20,13 +20,13 @@ import models.joueurs.Equipe;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class SimpleVersus extends Terrain
+public class SimpleFiveVersus extends Terrain
 {
     private static final long serialVersionUID = 1L;
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
     public final static File  FICHIER_MUSIQUE_DE_FOND;
-    public final static String NOM = "Simple Versus : 1 vs 1";
+    public final static String NOM = "Simple Versus de 2 à 5 joueurs";
 
     static
     {
@@ -35,22 +35,22 @@ public class SimpleVersus extends Terrain
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                           "img/cartes/menu_principal/elementTD.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage(
-    	                                                 "img/cartes/elementTD.png");
+    	                                                 "img/cartes/simpleFiveVersus.png");
     }
 	
     /**
      * Constructeur d'un terrain ElementTD selon la celebre map de Blizzard.
      */
-    public SimpleVersus (Jeu jeu) 
+    public SimpleFiveVersus (Jeu jeu) 
     {
         super(  jeu,
-                480,  // largeur
+                520,  // largeur
                 500,  // hauteur
                 100,  // nbPiecesOrInitiales
                 20,   // nbViesInitiales
                 0,    // positionMaillageX
                 0,    // positionMaillageY
-                480,  // largeurMaillage
+                520,  // largeurMaillage
                 500,  // hauteurMaillage
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
@@ -60,22 +60,35 @@ public class SimpleVersus extends Terrain
  
         
         // Création des équipes
-        Equipe e1 = new Equipe("Les rouges",Color.RED);
+        Equipe e1 = new Equipe("Les Rouges",Color.RED);
         e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,0,80,500),Color.RED));
         equipes.add(e1);
         
-        Equipe e2 = new Equipe("Les bleus",Color.BLUE);
+        Equipe e2 = new Equipe("Les Bleus",Color.BLUE);
         e2.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e2.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
-        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
+        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(120,0,80,500),Color.BLUE));
         equipes.add(e2);
         
+        Equipe e3 = new Equipe("Les Verts",Color.GREEN);
+        e3.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e3.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e3.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(220,0,80,500),Color.GREEN));
+        equipes.add(e3);
         
+        Equipe e4 = new Equipe("Les Jaunes",Color.YELLOW);
+        e4.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e4.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e4.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(320,0,80,500),Color.YELLOW));
+        equipes.add(e4);
+        
+        Equipe e5 = new Equipe("Les Noirs",Color.BLACK);
+        e5.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
+        e5.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e5.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(420,0,80,500),Color.BLACK));
+        equipes.add(e5);
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
