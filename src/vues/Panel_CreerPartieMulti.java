@@ -8,11 +8,17 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
+import models.terrains.ElementTD;
+import models.terrains.ElementTD_Coop;
 import models.terrains.Terrain;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,34 +38,37 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     // IP idael : "188.165.41.224";
     // IP lazhar : "10.192.51.161";
     private static String IP_SE;
-
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
     private JFrame parent;
-    private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField("Joueur", 10);
-    private JButton bCreer = new JButton("Créer");
-    private JLabel lblEtat = new JLabel();
 
-    private DefaultTableModel model = new DefaultTableModel();
-    private JTable tbTerrains;
-
+    // form
     private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
     private JComboBox cbNbJoueurs = new JComboBox();
-
     private JLabel lblMode = new JLabel("Mode de jeu :");
     private JComboBox cbMode = new JComboBox();
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Serveur de test");
-    private JLabel lblEquipeAleatoire = new JLabel("Equipe aléatoire :");
+    private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
     private JCheckBox cbEquipeAleatoire = new JCheckBox();
+    private JLabel lblTitreTerrains = new JLabel("Choisissez votre terrain");
+    private JLabel lblEtat = new JLabel();
+    
+    private JLabel lblPseudo = new JLabel("Pseudo : ");
+    private JTextField tfPseudo = new JTextField("Joueur", 10);
+    private JButton bCreer = new JButton("Créer");
     private JButton bAnnuler = new JButton("Annuler");
+    
+    // terrains
+    private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+    private DefaultTableModel model = new DefaultTableModel();
+    private JTable tbTerrains;
+    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(0.3);
+    
+    // reseau
     private Canal canalServeurEnregistrement;
     private fichierDeConfiguration config;
-    
-    
-    private ArrayList<Terrain> terrains = new ArrayList<Terrain>();;
     
     /**
      * Constructeur
@@ -90,9 +99,10 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         pTop.setOpaque(false);
 
-        JLabel titre = new JLabel("CREER UNE PARTIE");
-        titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
-        pTop.add(titre, BorderLayout.NORTH);
+        JLabel lblTitre = new JLabel("CREER UNE PARTIE");
+        lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
+        lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
+        pTop.add(lblTitre, BorderLayout.NORTH);
 
         add(pTop, BorderLayout.NORTH);
 
@@ -103,91 +113,72 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         pCentre.setBorder(new LineBorder(Color.BLACK));
         pCentre.setOpaque(false);
 
+        int ligne = 0;
+        
         GridBagConstraints c = new GridBagConstraints();
-        final int margesCellule = 5;
+        final int margesCellule = 15;
         c.insets = new Insets(margesCellule, margesCellule, margesCellule,
                 margesCellule);
         c.anchor = GridBagConstraints.LINE_START;
 
-        c.gridx = 0;
-        c.gridy = 0;
-        pCentre.add(lblNbJoueurs, c);
-
-        cbNbJoueurs.addItem("2");
-        cbNbJoueurs.addItem("3");
-        cbNbJoueurs.addItem("4");
-        cbNbJoueurs.addItem("5");
-        cbNbJoueurs.addItem("6");
-        cbNbJoueurs.addItem("7");
-        cbNbJoueurs.addItem("8");
-        cbNbJoueurs.setPreferredSize(DEFAULT_DIMENTION_COMP);
-
-        c.gridx = 1;
-        c.gridy = 0;
-
-        pCentre.add(cbNbJoueurs, c);
-
-        // ----------
-        // -- mode --
-        // ----------
-
-        c.gridx = 0;
-        c.gridy = 1;
-
-        pCentre.add(lblMode, c);
-
-        c.gridx = 1;
-        c.gridy = 1;
-
-        cbMode.addItem("Versus");
-        cbMode.addItem("Coopération");
-        cbMode.setPreferredSize(DEFAULT_DIMENTION_COMP);
-
-        pCentre.add(cbMode, c);
-
+ 
         // --------------------
         // -- nom du serveur --
         // --------------------
 
-        c.gridx = 2;
-        c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = ligne;
 
+        lblNomServeur.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblNomServeur.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
         pCentre.add(lblNomServeur, c);
 
-        c.gridx = 3;
-        c.gridy = 0;
+        c.gridx = 1;
+        c.gridy = ligne;
 
         tfNomServeur.setPreferredSize(DEFAULT_DIMENTION_COMP);
 
         pCentre.add(tfNomServeur, c);
-
+        
         // ----------------------
         // -- equipe aléatoire --
         // ----------------------
 
         c.gridx = 2;
-        c.gridy = 1;
+        c.gridy = ligne;
 
+        lblEquipeAleatoire.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblEquipeAleatoire.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
         pCentre.add(lblEquipeAleatoire, c);
 
         c.gridx = 3;
-        c.gridy = 1;
+        c.gridy = ligne;
 
         pCentre.add(cbEquipeAleatoire, c);
 
+        
+        // changement de ligne
+        ligne++;
+        
+        
         // --------------
         // -- terrains --
         // --------------
 
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = ligne;
         c.gridwidth = 4;
-
+        
         JPanel pTerrains = new JPanel(new BorderLayout());
-        pTerrains.setPreferredSize(new Dimension(600, 250));
-        pTerrains.setBorder(new TitledBorder("Terrains"));
+        pTerrains.setPreferredSize(new Dimension(650, 250));
         pTerrains.setOpaque(false);
 
+        
+        
+        lblTitreTerrains.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblTitreTerrains.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        pTerrains.add(lblTitreTerrains,BorderLayout.NORTH);
+        
         // création de la table avec boquage des editions
         tbTerrains = new JTable(model)
         {
@@ -196,18 +187,55 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 return false; // toujours désactivé
             }
         };
+        
+        // evenement sur le changement de sélection
+        tbTerrains.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+
+            @Override
+            public void valueChanged(ListSelectionEvent listSelectionEvent){
+                
+                if (listSelectionEvent.getValueIsAdjusting())
+                    return;
+                    
+                ListSelectionModel lsm = (ListSelectionModel)listSelectionEvent.getSource();
+                
+                if (!lsm.isSelectionEmpty()) 
+                {
+                    int ligneSelectionnee = lsm.getMinSelectionIndex();
+                    
+                    pEmplacementTerrain.setTerrain(terrains.get(ligneSelectionnee));
+                }
+            }});
+     
+        
+        
 
         // Simple selection
         tbTerrains.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // nom de colonnes
         model.addColumn("Nom");
-        model.addColumn("Nb Joueurs");
+        model.addColumn("Joueurs");
+        model.addColumn("Equipes");
         model.addColumn("Apercu");
 
+        
+        // Disable auto resizing 
+        tbTerrains.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
+        
+        // Set the first visible column to 100 pixels wide 
+       
+        tbTerrains.getColumnModel().getColumn(0).setPreferredWidth(270);
+        tbTerrains.getColumnModel().getColumn(1).setPreferredWidth(60);
+        tbTerrains.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tbTerrains.getColumnModel().getColumn(3).setPreferredWidth(60);
+        
+        
+        
         // propiete des
         tbTerrains.setRowHeight(60);
-        tbTerrains.getColumnModel().getColumn(2).setCellRenderer(
+        
+        tbTerrains.getColumnModel().getColumn(3).setCellRenderer(
                 new TableCellRenderer_Image());
 
         // Chargement de toutes les maps
@@ -226,16 +254,77 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 
                 terrains.add(t);
                 
-                Object[] obj = new Object[] { t.getNom(), t.getNbJoueursMax(),
-                        t.getImageDeFond() };
+                Object[] obj = new Object[] { t.getNom(), t.getNbJoueursMax(), 
+                        t.getEquipesInitiales().size()+"", t.getImageDeFond() };
                 
                 model.addRow(obj);
             }
         }
 
-        pTerrains.add(new JScrollPane(tbTerrains), BorderLayout.CENTER);
+        pTerrains.add(new JScrollPane(tbTerrains), BorderLayout.WEST);
+        
+        pEmplacementTerrain.setTerrain(new ElementTD_Coop(new Jeu()));
+        
+        JPanel pTmp = new JPanel(new BorderLayout());
+        pTmp.setOpaque(false);
+        pTmp.add(new JScrollPane(pEmplacementTerrain), BorderLayout.NORTH);
+
+        pTerrains.add(pTmp, BorderLayout.EAST);
+        
         pCentre.add(pTerrains, c);
 
+        
+        // changement de ligne
+        ligne++;
+        
+        // TODO amélioration
+        /*
+        // ----------------
+        // -- Nb Joueurs --
+        // ----------------
+        
+        c.gridx = 0;
+        c.gridy = ligne;
+        
+        lblNbJoueurs.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblNbJoueurs.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        pCentre.add(lblNbJoueurs, c);
+
+        cbNbJoueurs.addItem("2");
+        cbNbJoueurs.addItem("3");
+        cbNbJoueurs.addItem("4");
+        cbNbJoueurs.addItem("5");
+        cbNbJoueurs.addItem("6");
+        cbNbJoueurs.addItem("7");
+        cbNbJoueurs.addItem("8");
+        cbNbJoueurs.setPreferredSize(DEFAULT_DIMENTION_COMP);
+
+        c.gridx = 1;
+        c.gridy = ligne;
+
+        pCentre.add(cbNbJoueurs, c);
+
+        // ----------
+        // -- mode --
+        // ----------
+
+        c.gridx = 2;
+        c.gridy = ligne;
+
+        lblMode.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblMode.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        pCentre.add(lblMode, c);
+
+        c.gridx = 3;
+        c.gridy = ligne;
+
+        cbMode.addItem("Versus");
+        cbMode.addItem("Coopération");
+        cbMode.setPreferredSize(DEFAULT_DIMENTION_COMP);
+
+        pCentre.add(cbMode, c);
+        */
+        
         // ajout du panel central
         add(pCentre, BorderLayout.CENTER);
 
@@ -249,12 +338,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         JPanel pPseudo = new JPanel();
         pPseudo.setOpaque(false);
 
-        JPanel pTmp = new JPanel();
-        pTmp.setOpaque(false);
+        JPanel pAlignementADroite = new JPanel();
+        pAlignementADroite.setOpaque(false);
 
-        pTmp.add(lblPseudo, BorderLayout.WEST);
-        pTmp.add(tfPseudo, BorderLayout.EAST);
-        pPseudo.add(pTmp, BorderLayout.EAST);
+        lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        pAlignementADroite.add(lblPseudo, BorderLayout.WEST);
+        pAlignementADroite.add(tfPseudo, BorderLayout.EAST);
+        pPseudo.add(pAlignementADroite, BorderLayout.EAST);
         pBottom.add(pPseudo, BorderLayout.CENTER);
 
         // bouton créer
