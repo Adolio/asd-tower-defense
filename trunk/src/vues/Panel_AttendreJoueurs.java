@@ -224,7 +224,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             JPanel pCenter = new JPanel(new BorderLayout());
             pCenter.setOpaque(false);
 
-            pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeu.getTerrain());
+            pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeu.getTerrain(),0.7);
            
             
             JScrollPane spEmplacement = new JScrollPane(pEmplacementsTerrain);

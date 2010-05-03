@@ -1,7 +1,6 @@
 package vues;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -15,9 +14,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import models.joueurs.Joueur;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +44,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private JTextField tfFiltre = new JTextField(FILTRE_DEFAUT);
 
     private JLabel lblConnexionParIP = new JLabel("Connexion par IP : ");
-    private JTextField tfConnexionParIP = new JTextField(10);
+    private JTextField tfConnexionParIP = new JTextField("127.0.0.1",10);
 
     private JLabel lblPseudo = new JLabel("Pseudo : ");
     private JTextField tfPseudo = new JTextField("Joueur",10);
@@ -236,15 +233,20 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel bottomCenter = new JPanel();
         bottomCenter.setBackground(LookInterface.COULEUR_DE_FOND);
         
-        // connexion par IP
-        tfConnexionParIP.setPreferredSize(new Dimension(100, 25));
+        // connexion par IP 
+        lblConnexionParIP.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblConnexionParIP.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
         bottomCenter.add(lblConnexionParIP);
+        tfConnexionParIP.setPreferredSize(new Dimension(100, 25));
         bottomCenter.add(tfConnexionParIP);
         tfConnexionParIP.addMouseListener(this);
 
         // pseudo
         JPanel pPseudo = new JPanel();
         JPanel pTmp = new JPanel();
+        
+        lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
         bottomCenter.add(lblPseudo);
         bottomCenter.add(tfPseudo);
         pPseudo.add(pTmp, BorderLayout.EAST);
@@ -526,6 +528,9 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // TODO connexion au serveur, demande d'acceptation dans la partie...
         try
         {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+            lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
+            
             Canal canalServeurJeu = new Canal(IP,port,true);
             
             

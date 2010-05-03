@@ -12,7 +12,7 @@ public class GestionnaireDesPolices
 {
     public static Font POLICE_TITRE;
     public static Font POLICE_SOUS_TITRE;
-    
+
     public static final Font POLICE_VALEUR_CHAMP    = new Font("Verdana", Font.BOLD, 12);
     public static final Font POLICE_TITRE_CHAMP     = new Font("", Font.BOLD, 14);
     public static final Font POLICE_CONSOLE         = new Font("",Font.TRUETYPE_FONT,10);
@@ -24,6 +24,7 @@ public class GestionnaireDesPolices
     public static final Color COULEUR_INFO      = new Color(30,0,170);
     public static final Color COULEUR_ERREUR    = Color.ORANGE;
     public static final Color COULEUR_SUCCES    = Color.CYAN;
+    public static final Color COULEUR_SOUS_TITRE = Color.LIGHT_GRAY;;
     
     static
     {

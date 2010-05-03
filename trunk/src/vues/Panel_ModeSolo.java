@@ -62,6 +62,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
     private boolean chargementTermine;
 	private JFrame parent;
 	
+	private JLabel lblInfo = new JLabel("Cliquez sur un terrain débloqué pour commencer une partie.");
 	
 	
 	/**
@@ -74,7 +75,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		//-------------------------------
 	    this.parent = parent;
 	    setLayout(new BorderLayout());
-		parent.setTitle("Menu principal - Tower Defense");
+		parent.setTitle("Mode Solo - ASD Tower Defense");
 
 		setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
@@ -160,7 +161,12 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// étoiles
 		JPanel pNbEtoiles = new JPanel(new FlowLayout());
 		pNbEtoiles.setOpaque(false);
-		pNbEtoiles.add(new JLabel(nbEtoiles+" x"));
+		
+		JLabel lblNbEtoiles = new JLabel(nbEtoiles+" x");
+		lblNbEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		lblNbEtoiles.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+		
+		pNbEtoiles.add(lblNbEtoiles);
 		pNbEtoiles.add(new JLabel(I_SCORE));
 		pNord.add(pNbEtoiles,BorderLayout.EAST);
 		
@@ -230,7 +236,10 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    if(score.getValeur() > 0)
 		        txt = score.getNomJoueur()+" - "+score.getValeur()+"";
 		    
-		    pInfoTerrain.add(new JLabel(txt,0),BorderLayout.SOUTH);
+		    JLabel lblScore = new JLabel(txt,0);
+		    lblScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		    lblScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+		    pInfoTerrain.add(lblScore,BorderLayout.SOUTH);
 		    
 		    
 		    //-----------------------------------------
@@ -274,11 +283,10 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		pFond.add(bRetour,BorderLayout.WEST);
         pFormulaire.add(pFond,BorderLayout.SOUTH);
 
-        
-        JLabel lblInfo = new JLabel("Cliquez sur un terrain débloqué pour commencer une partie.");
-        lblInfo.setForeground(new Color(200, 200, 200));
+
         lblInfo.setFont(GestionnaireDesPolices.POLICE_INFO);
-        
+        lblInfo.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+
         pFond.add(lblInfo,BorderLayout.EAST);
         
 		add(pFormulaire,BorderLayout.CENTER);
