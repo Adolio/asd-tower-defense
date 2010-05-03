@@ -6,8 +6,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
@@ -113,7 +111,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_RAYON_PORTEE = Color.WHITE;
 	private static final Color COULEUR_NIVEAU 		= Color.WHITE;
 	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
-	private static final Color COULEUR_UNIVERS      = Color.BLACK;
 	
 	
 	/**

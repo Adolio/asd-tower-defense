@@ -1,7 +1,8 @@
 import java.io.File;
 import javax.swing.UIManager;
 import models.jeu.Jeu;
-import models.terrains.SimpleVersus;
+import models.terrains.ElementTD_Coop;
+import models.terrains.SimpleFiveVersus;
 import models.terrains.Terrain;
 import vues.Fenetre_MenuPrincipal;
 
@@ -46,9 +47,15 @@ public class Main
                } 
                   
       // TODO a effacer
-      Terrain t = new SimpleVersus(new Jeu());      
-      Terrain.serialiser(t,new File("maps/SimpleVersus.map"));
+      Terrain t = new ElementTD_Coop(new Jeu());      
+      Terrain.serialiser(t,new File("maps/ElementTD_Coop.map"));
                
+      
+      Terrain t2 = new SimpleFiveVersus(new Jeu());      
+      Terrain.serialiser(t2,new File("maps/SimpleFiveVersus.map"));
+      
+      
+      
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }

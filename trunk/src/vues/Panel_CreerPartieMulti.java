@@ -366,29 +366,29 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             
             // récupération de la première equipe
-            Equipe e2 = jeu.getEquipes().get(0);
-            
-            // création du joueur
-            Joueur j2 = new Joueur(tfPseudo.getText());
+            Joueur joueur1 = new Joueur(tfPseudo.getText());
+            Equipe equipe1 = jeu.getEquipes().get(0);
             
             // ajout du joueur dans le premier emplacement
-            e2.ajouterJoueur(j2,e2.getEmplacementsJoueur().get(2));
-         
+            equipe1.ajouterJoueur(joueur1);
+            
+            
             
             
             // TODO test
-            Equipe e3 = jeu.getEquipes().get(1); 
+            Joueur joueur2 = new Joueur("toto");
+            //Joueur joueur3 = new Joueur("Noemie");
             
-            Joueur j3 = new Joueur("toto");
-            
-            e3.ajouterJoueur(j3,e3.getEmplacementsJoueur().get(1));
+            Equipe equipe2 = jeu.getEquipes().get(1);
+            //equipe1.ajouterJoueur(joueur3);
+            equipe2.ajouterJoueur(joueur2);
             
             
             
             // connexion réussie
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, jeu),
+                    new Panel_AttendreJoueurs(parent, jeu, joueur1),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
 
