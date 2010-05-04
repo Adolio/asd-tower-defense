@@ -98,8 +98,7 @@ public class Fleche extends Attaque
     @Override
     public void animer(long tempsPasse)
     {
-        // si la creature meurt on arrete l'attaque
-        if(!cible.estMorte() && !estTerminee)
+        if(!estTerminee)
         {    
             // la fleche avance
             distanceTeteTour += 5;
@@ -116,9 +115,9 @@ public class Fleche extends Attaque
                 estTerminee = true;
                 
                 attaquerCibles();
+                
+                estTerminee = true;
             }
         }
-        else
-            estTerminee = true;
     }
 }

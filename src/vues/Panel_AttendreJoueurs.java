@@ -128,6 +128,10 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                     final JComboBox cbEmplacements = new JComboBox();
                     final JComboBox cbEquipes = new JComboBox();
 
+                    // styles
+                    GestionnaireDesPolices.setStyle(cbEmplacements);
+                    GestionnaireDesPolices.setStyle(cbEquipes);
+                    
                     final JLabel lPseudo = new JLabel(joueur.getPseudo());
                     lPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
                     pJoueurs.add(lPseudo, 1, i, 1);
@@ -280,6 +284,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         if (ADMIN)
         {
             bDemarrerMaintenant.setPreferredSize(new Dimension(100, 50));
+            GestionnaireDesPolices.setStyle(bDemarrerMaintenant);
             pBottom.add(bDemarrerMaintenant, BorderLayout.EAST);
             bDemarrerMaintenant.addActionListener(this);
         }
@@ -307,6 +312,8 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         
         
         bDeconnecter.addActionListener(this);
+        bDeconnecter.setPreferredSize(new Dimension(120, 50));
+        GestionnaireDesPolices.setStyle(bDeconnecter);
         pBottom.add(bDeconnecter, BorderLayout.WEST);
 
         if (ADMIN)
@@ -332,29 +339,18 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     {
 
         synchronized(cbEmplacements)
-        {
-            
+        {  
             // vidage
-            while(cbEmplacements.getItemCount() > 0)
-            {
-                System.out.println("**"+cbEmplacements.getItemCount());
-                cbEmplacements.removeItemAt(0); 
-            }
-            
-            System.out.println("**"+joueur.getEmplacement());
-            
+            cbEmplacements.removeAllItems();
+
             // Emplacements de l'equipe
             Equipe equipe = joueur.getEquipe();
-            
-            
             for (int j = 0; j < equipe.getEmplacementsJoueur().size(); j++)
             {
-                System.out.println(joueur.getEmplacement());
-                
                 EmplacementJoueur ej = equipe.getEmplacementsJoueur().get(j);
     
                 cbEmplacements.addItem(ej.toString());
-    
+   
                 if (joueur.getEmplacement() == ej)
                     cbEmplacements.setSelectedIndex(j);
             }

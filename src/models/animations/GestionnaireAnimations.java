@@ -37,7 +37,10 @@ public class GestionnaireAnimations implements Runnable
      */
     public void ajouterAnimation(Animation animation)
     {
-        animations.add(animation);
+        synchronized(animations)
+        {
+            animations.add(animation);
+        }
     }
     
     /**
@@ -95,7 +98,6 @@ public class GestionnaireAnimations implements Runnable
            {
                e1.printStackTrace();
            }
-           
            
            try{
                 Thread.sleep(TEMPS_ATTENTE);

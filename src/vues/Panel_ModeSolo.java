@@ -219,6 +219,8 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		for(int i=0; i < boutonsTerrains.length; i++)
 		{
 		    JButton bouton = boutonsTerrains[i];
+		    GestionnaireDesPolices.setStyle(bouton);
+		    
 		    
 		    JPanel pInfoTerrain = new JPanel(new BorderLayout());
 		    pInfoTerrain.setOpaque(false);
@@ -280,6 +282,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		bRetour.addActionListener(this);
 		bRetour.setPreferredSize(new Dimension(80,60));
+		GestionnaireDesPolices.setStyle(bRetour);
 		pFond.add(bRetour,BorderLayout.WEST);
         pFormulaire.add(pFond,BorderLayout.SOUTH);
 

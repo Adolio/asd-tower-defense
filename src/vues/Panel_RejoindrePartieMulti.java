@@ -178,6 +178,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         pADroite.add(tfFiltre, BorderLayout.WEST);
         pTop.add(pADroite, BorderLayout.CENTER);
+        GestionnaireDesPolices.setStyle(bRafraichir);
         pTop.add(bRafraichir, BorderLayout.EAST);
         bRafraichir.addActionListener(this);
          
@@ -233,6 +234,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         pBottom.setBackground(LookInterface.COULEUR_DE_FOND);
         
         bAnnuler.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bAnnuler);
         pBottom.add(bAnnuler, BorderLayout.WEST);
 
         JPanel bottomCenter = new JPanel();
@@ -259,6 +261,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         // bouton rejoindre
         bRejoindre.setPreferredSize(new Dimension(100, 50));
+        GestionnaireDesPolices.setStyle(bRejoindre);
         pBottom.add(bRejoindre, BorderLayout.EAST);
         bRejoindre.addActionListener(this);
 

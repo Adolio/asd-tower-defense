@@ -8,6 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
+
 public class GestionnaireDesPolices
 {
     public static Font POLICE_TITRE;
@@ -24,7 +27,8 @@ public class GestionnaireDesPolices
     public static final Color COULEUR_INFO      = new Color(30,0,170);
     public static final Color COULEUR_ERREUR    = Color.ORANGE;
     public static final Color COULEUR_SUCCES    = Color.CYAN;
-    public static final Color COULEUR_SOUS_TITRE = Color.LIGHT_GRAY;;
+    public static final Color COULEUR_SOUS_TITRE = Color.LIGHT_GRAY;
+    public static final Color COULEUR_TXT_BOUTON = Color.WHITE;
     
     static
     {
@@ -48,6 +52,13 @@ public class GestionnaireDesPolices
         {
             e.printStackTrace();
         }
+    }
+    
+    public static void setStyle(JComponent composant)
+    {
+        //bouton.setFont(POLICE_SOUS_TITRE);
+        composant.setForeground(COULEUR_TXT_BOUTON);
+        composant.setBackground(LookInterface.COULEUR_BOUTON);
     }
     
 }

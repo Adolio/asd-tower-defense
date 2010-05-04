@@ -6,8 +6,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.text.html.HTMLDocument;
-
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
@@ -182,6 +180,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
         
         // bouton
+        GestionnaireDesPolices.setStyle(bLancerVagueSuivante);
         bLancerVagueSuivante.addActionListener(this);
         pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
             
@@ -525,7 +524,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
 		
 		// augmentation du score
+		int nbEtoiles = joueur.getNbEtoiles();
+		
 		joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
+		
+		// nouvelle étoile
+		if(nbEtoiles < joueur.getNbEtoiles())
+		    jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
 		
 		// on efface la creature des panels d'information
 		if(creature == panelTerrain.getCreatureSelectionnee())
@@ -553,7 +558,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		// si pas encore perdu
 	    if(!joueur.aPerdu())
 		{
-	        
 	        // creation de l'animation de blessure du joueur
 	        jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
 	        
@@ -651,7 +655,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
             ajouterPiecesDOr(1000);
-            jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
+            
+            //jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
+            //jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
