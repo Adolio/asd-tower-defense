@@ -47,6 +47,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JLabel lPrix 			 = new JLabel();
 	private JLabel lTitrePrix 		 = new JLabel();
 	private JLabel lCadenceTir	     = new JLabel();
+	private JLabel lDPS              = new JLabel();
 	private JTextArea taDescrition 	 = new JTextArea();
 	private JPanel pCaracteristiques = new JPanel(new GridBagLayout());
 	private JButton bAmeliorer       = new JButton(TXT_AMELIORER,I_AMELIORER);
@@ -57,6 +58,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private JLabel lDegatsLvlS       = new JLabel();
     private JLabel lRayonPorteeLvlS  = new JLabel();
     private JLabel lCadenceTirLvlS   = new JLabel();
+    private JLabel lDPSLvlS          = new JLabel();
       
     // autres membres
 	private Tour tour;
@@ -136,6 +138,13 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		lCadenceTirLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp, 1);
 		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamp++, 1);
+		
+		// champ DPS : dégats par seconde
+		ajouterChamp(pCaracteristiques, new JLabel("DPS"), 0, nbChamp, 1);
+		lDPS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lDPSLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+        ajouterChamp(pCaracteristiques, lDPS, 1, nbChamp, 1);
+        ajouterChamp(pCaracteristiques, lDPSLvlS, 2, nbChamp++, 1);
 		
 		// les boutons
         ajouterChamp(pCaracteristiques, bVendre, 1, nbChamp, 1);
@@ -224,6 +233,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
             lDegats.setText(tour.getDegats()+"");
 			lRayonPortee.setText(String.format("%.1f", tour.getRayonPortee()));
 			lCadenceTir.setText(String.format("%.1f", tour.getCadenceTir()));
+			lDPS.setText(String.format("%.1f", tour.getCadenceTir()*tour.getDegats()));
 			taDescrition.setText(tour.getDescription());
 			
 			// Améliorations
@@ -233,6 +243,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			    lDegatsLvlS.setText(tour.getDegatsLvlSuivant()+"");
 			    lRayonPorteeLvlS.setText(String.format("%.1f",tour.getRayonPorteeLvlSuivant()));
 			    lCadenceTirLvlS.setText(String.format("%.1f",tour.getCadenceTirLvlSuivant()));
+			    lDPSLvlS.setText(String.format("%.1f", tour.getCadenceTirLvlSuivant()*tour.getDegatsLvlSuivant()));
 			}
 			else
 			{
@@ -240,6 +251,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			    lDegatsLvlS.setText("");
                 lRayonPorteeLvlS.setText("");
                 lCadenceTirLvlS.setText("");
+                lDPSLvlS.setText("");
 			}
 			
 			// tour selectionnee pour information

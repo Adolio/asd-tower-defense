@@ -19,6 +19,8 @@ import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
+import models.terrains.ElementTD_Coop;
+import models.terrains.Terrain;
 import reseau.Canal;
 import serveur.enregistrement.RequeteEnregistrement;
 
@@ -49,8 +51,19 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         if (admin)
             this.canalServeurEnregistrement = canal;
         else
+        {
             this.canalServeurJeu = canal;
-
+            
+            // TODO demande au serveur les info du jeu
+            jeu = new Jeu();
+            Terrain terrain = new ElementTD_Coop(jeu);
+            jeu.setTerrain(terrain);
+            
+            jeu.getEquipes().get(0).ajouterJoueur(new Joueur("LEONARD"));
+            jeu.getEquipes().get(0).ajouterJoueur(joueur);
+            
+        }
+            
         initialiserForm();
     }
 

@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 
@@ -52,6 +53,7 @@ public class ElementTD_Coop extends Terrain
                 0,    // positionMaillageY
                 480,  // largeurMaillage
                 500,  // hauteurMaillage
+                ModeDeJeu.MODE_COOP, // mode de jeu
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
@@ -66,14 +68,9 @@ public class ElementTD_Coop extends Terrain
         e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,20,180,220),Color.RED));
         e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(200,120,140,240),Color.BLUE));
         e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,260,180,220),Color.GREEN));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(200,380,260,100),Color.ORANGE));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(360,20,100,360),Color.CYAN));
         equipes.add(e1);
-        
-        Equipe e2 = new Equipe("Les bleus",Color.BLUE);
-        e2.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e2.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(200,380,260,100),Color.ORANGE));
-        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(360,20,100,360),Color.CYAN));
-        equipes.add(e2);
         
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;

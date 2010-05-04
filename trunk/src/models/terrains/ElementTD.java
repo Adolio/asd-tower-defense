@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 
@@ -52,6 +53,7 @@ public class ElementTD extends Terrain
                 -40,    // positionMaillageY
                 480,  // largeurMaillage
                 540,  // hauteurMaillage
+                ModeDeJeu.MODE_SOLO, // mode de jeu
                 new Color(197,148,90), // couleur de fond
                 new Color(91,123,43),  // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond
