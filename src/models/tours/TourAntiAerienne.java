@@ -62,9 +62,8 @@ public class TourAntiAerienne extends Tour
 	
 	public void ameliorer()
 	{
-		// que six niveau pour la tour
-		if(niveau <= 6)
-		{
+	    if(peutEncoreEtreAmelioree())
+        {
 			// le prix total est ajouté du prix d'achat de la tour
 			prixTotal 	+= prixAchat;
 			
@@ -97,7 +96,7 @@ public class TourAntiAerienne extends Tour
 
 	public boolean peutEncoreEtreAmelioree()
 	{
-		return niveau <= NIVEAU_MAX;
+		return niveau < NIVEAU_MAX;
 	}
 
     @Override

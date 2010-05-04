@@ -554,6 +554,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    if(!joueur.aPerdu())
 		{
 	        
+	        // creation de l'animation de blessure du joueur
+	        jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
+	        
             joueur.getEquipe().perdreUneVie();
             
             // mise a jour des infos
@@ -648,6 +651,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
             ajouterPiecesDOr(1000);
+            jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)

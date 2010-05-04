@@ -39,7 +39,7 @@ public class Jeu
 	 * version du jeu
 	 */
     private static final String VERSION 
-        = "heig-vd - ASD2 :: Tower Defense v1.0 | janvier 2010";
+        = "ASD2 :: Tower Defense v2.0 [dev. version] | juin 2010 | heig-vd";
 
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :

@@ -31,9 +31,10 @@ public class Fenetre_APropos extends JDialog
 	 */
 	private final JPanel pAuteurs;
 	private static final String[] auteurs = {
+	                            "Aurélien Da Campo",
 	                            "Lazhar Farjallah",
 	                            "Pierre-Dominique Putallaz",
-	                            "Aurélien Da Campo"
+	                            "Romain Poulain"
 	                            };
 	
 	/**

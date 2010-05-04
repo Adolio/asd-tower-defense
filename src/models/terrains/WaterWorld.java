@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 
@@ -51,6 +52,7 @@ public class WaterWorld extends Terrain
               0,    // positionMaillageY
               550,  // largeurMaillage
               500,  // hauteurMaillage
+              ModeDeJeu.MODE_SOLO, // mode de jeu
               new Color(150,150,150), // couleur de fond
               new Color(63,131,140), // couleur des murs
               IMAGE_DE_FOND, // imageDeFond

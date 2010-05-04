@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 
@@ -48,6 +49,7 @@ public class Desert extends Terrain
                 0,        // positionMaillageY
                 540,      // largeurMaillage
                 500,      // hauteurMaillage
+                ModeDeJeu.MODE_SOLO, // mode de jeu
                 new Color(161,72,0), // couleur de fond
                 new Color(150,150,150), // couleur des murs
                 IMAGE_DE_FOND, // imageDeFond

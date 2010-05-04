@@ -25,7 +25,7 @@ public class TourCanon extends Tour
 	public static final Color COULEUR;
 	public static final Image IMAGE;
 	public static final Image ICONE;
-	public static final int NIVEAU_MAX = 4;
+	public static final int NIVEAU_MAX = 5;
     private static final double RAYON_IMPACT = 30.0;
     public static final int PRIX_ACHAT = 15;
     private static final String DESCRIPTION = 
@@ -63,21 +63,24 @@ public class TourCanon extends Tour
 
 	public void ameliorer()
 	{
-		// le prix total est ajouté du prix d'achat de la tour
-		prixTotal 	+= prixAchat;
-		
-		prixAchat 	*= 2;	// + 100%
-		
-		// augmentation des degats
-        degats      = getDegatsLvlSuivant();
-        
-        // augmentation du rayon de portee
-        rayonPortee = getRayonPorteeLvlSuivant();
-        
-        // raccourcissement du temps de preparation du tire
-        cadenceTir  = getCadenceTirLvlSuivant();
-		
-		niveau++;
+        if(peutEncoreEtreAmelioree())
+        {
+    	    // le prix total est ajouté du prix d'achat de la tour
+    		prixTotal 	+= prixAchat;
+    		
+    		prixAchat 	*= 2;	// + 100%
+    		
+    		// augmentation des degats
+            degats      = getDegatsLvlSuivant();
+            
+            // augmentation du rayon de portee
+            rayonPortee = getRayonPorteeLvlSuivant();
+            
+            // raccourcissement du temps de preparation du tire
+            cadenceTir  = getCadenceTirLvlSuivant();
+    		
+    		niveau++;
+        }
 	}
 	
 	public void tirer(Creature creature)
@@ -93,7 +96,7 @@ public class TourCanon extends Tour
 	
 	public boolean peutEncoreEtreAmelioree()
 	{
-		return niveau <= NIVEAU_MAX;
+		return niveau < NIVEAU_MAX;
 	}
 	
     @Override

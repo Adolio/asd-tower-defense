@@ -161,6 +161,11 @@ public abstract class Terrain implements Serializable
      */
     protected ArrayList<Equipe> equipes = new ArrayList<Equipe>();
     
+    /**
+     * Mode de jeu du terrain, utilisé pour construire les bons formulaires 
+     * et affichages
+     */
+    private final int MODE;
     
     /**
      * Constructeur du terrain.
@@ -177,7 +182,7 @@ public abstract class Terrain implements Serializable
      */
     public Terrain(Jeu jeu, int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
-            int largeurMaillage, int hauteurMaillage, Color couleurDeFond, 
+            int largeurMaillage, int hauteurMaillage, int mode, Color couleurDeFond, 
             Color couleurMurs, Image imageDeFond, String nom)
     {
         this.jeu = jeu; 
@@ -192,6 +197,8 @@ public abstract class Terrain implements Serializable
         NOM             = nom;
         COULEUR_DE_FOND = couleurDeFond;
         COULEUR_MURS    = couleurMurs;
+        MODE            = mode;
+        
         
         // creation des deux maillages
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
@@ -277,6 +284,16 @@ public abstract class Terrain implements Serializable
     public String getNom()
     {
         return NOM;
+    }
+    
+    /**
+     * Permet de recuperer le mode de jeu du terrain
+     * 
+     * @return le mode de jeu
+     */
+    public int getMode()
+    {
+        return MODE;
     }
 
     // ----------------------

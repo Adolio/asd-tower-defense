@@ -15,6 +15,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.terrains.ElementTD;
@@ -64,7 +65,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
     private DefaultTableModel model = new DefaultTableModel();
     private JTable tbTerrains;
-    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(0.3);
+    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(0.35);
     
     // reseau
     private Canal canalServeurEnregistrement;
@@ -215,27 +216,24 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         // nom de colonnes
         model.addColumn("Nom");
+        model.addColumn("Mode");
         model.addColumn("Joueurs");
         model.addColumn("Equipes");
         model.addColumn("Apercu");
 
         
-        // Disable auto resizing 
-        tbTerrains.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
-        
-        // Set the first visible column to 100 pixels wide 
-       
-        tbTerrains.getColumnModel().getColumn(0).setPreferredWidth(270);
+        // Taille des colonnes
+        tbTerrains.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);  
+        tbTerrains.getColumnModel().getColumn(0).setPreferredWidth(210);
         tbTerrains.getColumnModel().getColumn(1).setPreferredWidth(60);
         tbTerrains.getColumnModel().getColumn(2).setPreferredWidth(60);
         tbTerrains.getColumnModel().getColumn(3).setPreferredWidth(60);
-        
-        
-        
+        tbTerrains.getColumnModel().getColumn(4).setPreferredWidth(60);
+         
         // propiete des
         tbTerrains.setRowHeight(60);
         
-        tbTerrains.getColumnModel().getColumn(3).setCellRenderer(
+        tbTerrains.getColumnModel().getColumn(4).setCellRenderer(
                 new TableCellRenderer_Image());
 
         // Chargement de toutes les maps
@@ -254,7 +252,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 
                 terrains.add(t);
                 
-                Object[] obj = new Object[] { t.getNom(), t.getNbJoueursMax(), 
+                Object[] obj = new Object[] { t.getNom(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
                         t.getEquipesInitiales().size()+"", t.getImageDeFond() };
                 
                 model.addRow(obj);
@@ -458,21 +456,32 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             // récupération de la première equipe
             Joueur joueur1 = new Joueur(tfPseudo.getText());
-            Equipe equipe1 = jeu.getEquipes().get(0);
+            //Equipe equipe1 = jeu.getEquipes().get(0);
             
             // ajout du joueur dans le premier emplacement
-            equipe1.ajouterJoueur(joueur1);
-            
+            //equipe1.ajouterJoueur(joueur1);
+            ajouterJoueurDansJeu(jeu, joueur1);
             
             
             
             // TODO test
             Joueur joueur2 = new Joueur("toto");
-            //Joueur joueur3 = new Joueur("Noemie");
+            ajouterJoueurDansJeu(jeu, joueur2);
             
-            Equipe equipe2 = jeu.getEquipes().get(1);
+            Joueur joueur3 = new Joueur("Noemie");
+            ajouterJoueurDansJeu(jeu, joueur3);
+            
+            
+            //Equipe equipe2 = jeu.getEquipes().get(1);
             //equipe1.ajouterJoueur(joueur3);
-            equipe2.ajouterJoueur(joueur2);
+            //equipe2.ajouterJoueur(joueur2);
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -512,6 +521,23 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
                 canalServeurEnregistrement.fermer();
             }
+        }
+    }
+
+    private void ajouterJoueurDansJeu(Jeu jeu, Joueur joueur)
+    {
+        for(int i=0;i<jeu.getEquipes().size();i++)
+        {
+            try
+            {              
+                Equipe tmpE = jeu.getEquipes().get(i);
+                
+                tmpE.ajouterJoueur(joueur);
+                
+                return;
+            }
+            catch(IllegalArgumentException iae)
+            {}
         }
     }
 }
