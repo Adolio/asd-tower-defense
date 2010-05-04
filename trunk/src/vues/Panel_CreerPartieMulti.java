@@ -348,12 +348,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         // bouton créer
         bCreer.setPreferredSize(new Dimension(100, 50));
+        GestionnaireDesPolices.setStyle(bCreer);
         pBottom.add(bCreer, BorderLayout.EAST);
         bCreer.addActionListener(this);
 
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
         bAnnuler.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bAnnuler);
         pBottom.add(bAnnuler, BorderLayout.WEST);
 
         add(pBottom, BorderLayout.SOUTH);

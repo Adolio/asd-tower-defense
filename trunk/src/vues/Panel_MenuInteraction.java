@@ -81,31 +81,37 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		bTourArcher.addActionListener(this);
 		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
+		GestionnaireDesPolices.setStyle(bTourArcher);
 		bTourArcher.setToolTipText("Prix : "+TourArcher.PRIX_ACHAT);
 		pTours.add(bTourArcher);
 		
 		bTourCanon.addActionListener(this);
 		bTourCanon.setBorder(new EmptyBorder(5,5,5,5));
+		GestionnaireDesPolices.setStyle(bTourCanon);
 		bTourCanon.setToolTipText("Prix : "+TourCanon.PRIX_ACHAT);
 		pTours.add(bTourCanon);
 		
 		bTourAntiAerienne.addActionListener(this);
 		bTourAntiAerienne.setBorder(new EmptyBorder(5,5,5,5));
+		GestionnaireDesPolices.setStyle(bTourAntiAerienne);
 		bTourAntiAerienne.setToolTipText("Prix : "+TourAntiAerienne.PRIX_ACHAT);
 		pTours.add(bTourAntiAerienne);
 		
 		bTourDeGlace.addActionListener(this);
 		bTourDeGlace.setBorder(new EmptyBorder(5,5,5,5));
+		GestionnaireDesPolices.setStyle(bTourDeGlace);
 		bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
         pTours.add(bTourDeGlace);
 
         bTourDeFeu.addActionListener(this);
         bTourDeFeu.setBorder(new EmptyBorder(5,5,5,5));
+        GestionnaireDesPolices.setStyle(bTourDeFeu);
         bTourDeFeu.setToolTipText("Prix : "+TourDeFeu.PRIX_ACHAT);
         pTours.add(bTourDeFeu);
         
         bTourDeTerre.addActionListener(this);
         bTourDeTerre.setBorder(new EmptyBorder(5,5,5,5));
+        GestionnaireDesPolices.setStyle(bTourDeTerre);
         bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
         pTours.add(bTourDeTerre);
         

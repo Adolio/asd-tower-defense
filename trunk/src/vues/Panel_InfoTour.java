@@ -151,6 +151,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         ajouterChamp(pCaracteristiques, bAmeliorer, 2, nbChamp++, 1);
         bAmeliorer.setPreferredSize(new Dimension(50,30));
         bVendre.setPreferredSize(new Dimension(80,30));
+        GestionnaireDesPolices.setStyle(bAmeliorer);
+        GestionnaireDesPolices.setStyle(bVendre);
         bAmeliorer.addActionListener(this);
         bVendre.addActionListener(this);
 		

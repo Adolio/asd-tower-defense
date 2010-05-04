@@ -173,7 +173,10 @@ public class GestionnaireTours implements Runnable
         // arret du thread
         tour.arreter();
 
-        tours.remove(tour);
+        synchronized (tours)
+        {
+            tours.remove(tour);
+        }
         
         // reactive la zone dans le maillage qui correspond a la tour
         jeu.getTerrain().activerZone(tour, true);
@@ -186,7 +189,10 @@ public class GestionnaireTours implements Runnable
      */
     public void ajouterTour(Tour tour)
     {
-        tours.add(tour);
+        synchronized(tours)
+        {
+            tours.add(tour);
+        }
     }
     
     /**
@@ -274,7 +280,7 @@ public class GestionnaireTours implements Runnable
         gestionEnCours = false;
     }
     
-    // TODO [PAS PROPRE] faire mieux, perd l'encapsulation
+    // TODO [PAS PROPRE] faire mieux, perd l'encapsulation ET LA SYNCHRONISATION
     /**
      * Permet de recuperer la collection des tours
      */

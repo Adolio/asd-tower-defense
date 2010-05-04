@@ -73,7 +73,10 @@ public class Fenetre_APropos extends JDialog
 		lversion.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		pFormulaire.add(lversion,BorderLayout.NORTH);
 		
+		
 		// ajout du bouton
+		getRootPane().setDefaultButton(bFermer); // def button
+		GestionnaireDesPolices.setStyle(bFermer);
 		bFermer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){   
                 dispose();

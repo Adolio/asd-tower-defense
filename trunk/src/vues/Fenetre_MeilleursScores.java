@@ -119,6 +119,8 @@ public class Fenetre_MeilleursScores extends JDialog
         pFormulaire.add(bFermer,BorderLayout.SOUTH);
         getContentPane().add(pFormulaire,BorderLayout.CENTER);
          
+        getRootPane().setDefaultButton(bFermer); // def button
+        GestionnaireDesPolices.setStyle(bFermer);
         bFermer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 dispose();

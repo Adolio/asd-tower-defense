@@ -38,7 +38,10 @@ public class GestionnaireCreatures implements Runnable
         if (creature == null)
             throw new IllegalArgumentException("Creature nulle");
         
-        creatures.add(creature);
+        synchronized(creatures)
+        {
+            creatures.add(creature);
+        }
     }
     
     /**
@@ -47,7 +50,10 @@ public class GestionnaireCreatures implements Runnable
     public void supprimerCreature(Creature creature)
     {
         if (creature != null)
-            creatures.remove(creature);
+            synchronized (creatures)
+            {
+                creatures.remove(creature);  
+            }
     }
 
     @Override
@@ -88,7 +94,8 @@ public class GestionnaireCreatures implements Runnable
                 e1.printStackTrace();
             }
             
-            try{
+            try
+            {
                  Thread.sleep(TEMPS_ATTENTE);
             } 
             catch (InterruptedException e){
@@ -113,7 +120,7 @@ public class GestionnaireCreatures implements Runnable
     {
         return creatures;
     }
-
+    
     /**
      * Permet de mettre les créatures en pause.
      */

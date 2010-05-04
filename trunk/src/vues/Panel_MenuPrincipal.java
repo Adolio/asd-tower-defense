@@ -87,20 +87,28 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         // partie solo
         bPartieSolo.addActionListener(this);
         bPartieSolo.setBounds(50, 0, 100, 50);
+        parent.getRootPane().setDefaultButton(bPartieSolo); // def button
+        GestionnaireDesPolices.setStyle(bPartieSolo);  
         pAbsolu.add(bPartieSolo);
+        
 
+        
+        
         // partie multijoueurs
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
         bRejoindrePartieMulti.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bRejoindrePartieMulti);
         pAbsolu.add(bRejoindrePartieMulti);
 
         bCreerPartieMulti.setBounds(160, 100, 100, 50);
         bCreerPartieMulti.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bCreerPartieMulti);
         pAbsolu.add(bCreerPartieMulti);
 
         // quitter
         bQuitter.addActionListener(this);
         bQuitter.setBounds(555, 100, 100, 50);
+        GestionnaireDesPolices.setStyle(bQuitter);
         pAbsolu.add(bQuitter);
 
         add(pAbsolu, BorderLayout.CENTER);

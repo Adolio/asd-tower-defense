@@ -7,7 +7,7 @@ import java.awt.Toolkit;
 import models.outils.MeilleursScores;
 
 /**
- * Classe de gestion de l'animation d'une perte de vie
+ * Classe de gestion de l'animation d'une explosion
  * 
  * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
@@ -16,21 +16,21 @@ import models.outils.MeilleursScores;
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */
-public class PerteVie extends Animation
+public class Explosion extends Animation
 {
 	// constantes statiques
     private static final long serialVersionUID         = 1L;
 	private static final float ETAPE_ALPHA             = .1f;
-	private static final Image BLESSURE;
+	private static final Image[] EXPLOSION = new Image[4];
 	
 	// attributs
 	private float alpha = 1.0f;
-	private int largeur;
-	private int hauteur;
+	private int indiceAnim = 0;
 	
 	static
-    {
-        BLESSURE = Toolkit.getDefaultToolkit().getImage("img/animations/perteVie.png");
+    { 
+	    for(int i=0;i<EXPLOSION.length;i++)
+	        EXPLOSION[i] = Toolkit.getDefaultToolkit().getImage("img/animations/explosion/"+i+".gif");
     }
 	
 	/**
@@ -39,33 +39,30 @@ public class PerteVie extends Animation
 	 * @param largeur largeur de l'anim
 	 * @param hauteur hauteur de l'anim
 	 */
-	public PerteVie(int largeur, int hauteur)
+	public Explosion(int x, int y)
 	{
-		super(0, 0);
-		this.largeur = largeur;
-		this.hauteur = hauteur;
+		super(x, y);
 	}
 
 	@Override
 	public void dessiner(Graphics2D g2)
 	{
 	    // style
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
 	    
 	    // dessin
-		g2.drawImage(BLESSURE,x,y,largeur,hauteur,null);
+		g2.drawImage(EXPLOSION[indiceAnim],x,y,null);
 		
 		// retabli la transparence
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
+		//g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
 	}
 
     @Override
     public void animer(long tempsPasse)
     {
-        if(alpha >= ETAPE_ALPHA)
-            alpha -= ETAPE_ALPHA;
-       
-        if(alpha < ETAPE_ALPHA)
+        if(indiceAnim < EXPLOSION.length-1)
+            indiceAnim++;
+        else
             estTerminee = true;
     }
 }

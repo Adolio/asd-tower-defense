@@ -87,10 +87,10 @@ public class BouleDeGlace extends Attaque
 
     @Override
     public void animer(long tempsPasse)
-    {
-        // si la creature meurt on arrete l'attaque
-        if(!cible.estMorte())
-        {    
+    {   
+        if(!estTerminee)
+        {
+        
             // la fleche avance
             distanceCentreBoule += 5;
             
@@ -113,9 +113,9 @@ public class BouleDeGlace extends Attaque
                     cible.setCoeffRalentissement(coeffRalentissement);
                     jeu.getGestionnaireAnimations().ajouterAnimation(new Glacon(jeu,attaquant,cible,DUREE_RALENTISSEMENT));
                 }
+                
+                estTerminee = true;
             }
         }
-        else
-            estTerminee = true;
     }
 }

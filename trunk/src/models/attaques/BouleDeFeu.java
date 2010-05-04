@@ -87,8 +87,8 @@ public class BouleDeFeu extends Attaque
     public void animer(long tempsPasse)
     {
         // si la creature meurt on arrete l'attaque
-        if(!cible.estMorte())
-        {    
+        if(!estTerminee)
+        {      
             // la fleche avance
             distanceCentreBoule += 5;
             
@@ -104,10 +104,9 @@ public class BouleDeFeu extends Attaque
                 estTerminee = true;
                 
                 attaquerCibles();
+                
+                estTerminee = true;
             }
-        }
-        else
-            estTerminee = true;
-      
+        } 
     }
 }
