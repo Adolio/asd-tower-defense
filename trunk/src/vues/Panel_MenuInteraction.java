@@ -41,6 +41,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JButton bTourDeGlace            = new JButton(new ImageIcon(TourDeGlace.ICONE));
     private JButton bTourDeFeu              = new JButton(new ImageIcon(TourDeFeu.ICONE));
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
+    private JButton bTourElectrique         = new JButton(new ImageIcon(TourElectrique.ICONE));
 	
 	private JLabel lScore 				    = new JLabel();
 	private JLabel lTitreScore 			    = new JLabel("Score ");
@@ -103,6 +104,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
         pTours.add(bTourDeGlace);
 
+        bTourElectrique.addActionListener(this);
+        bTourElectrique.setBorder(new EmptyBorder(5,5,5,5));
+        GestionnaireDesPolices.setStyle(bTourElectrique);
+        bTourElectrique.setToolTipText("Prix : "+TourElectrique.PRIX_ACHAT);
+        pTours.add(bTourElectrique);
+        
         bTourDeFeu.addActionListener(this);
         bTourDeFeu.setBorder(new EmptyBorder(5,5,5,5));
         GestionnaireDesPolices.setStyle(bTourDeFeu);
@@ -115,6 +122,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
         pTours.add(bTourDeTerre);
         
+
 		//------------------------------------------
         //-- panel des donnees du joueur          --
 		//-- (score, nb pieces or, vies restante) --
@@ -214,6 +222,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		    tour = new TourDeFeu();
 		else if(source == bTourDeTerre)
 		    tour = new TourDeTerre();
+		else if(source == bTourElectrique)
+		    tour = new TourElectrique();
 		else
 		    return;
 		
@@ -233,6 +243,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	    bTourCanon.setEnabled(nbPiecesOr >= TourCanon.PRIX_ACHAT);
 	    bTourAntiAerienne.setEnabled(nbPiecesOr >= TourAntiAerienne.PRIX_ACHAT);
 	    bTourDeGlace.setEnabled(nbPiecesOr >= TourDeGlace.PRIX_ACHAT);
+	    bTourElectrique.setEnabled(nbPiecesOr >= TourElectrique.PRIX_ACHAT);
 	    bTourDeFeu.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
 	    bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
 	    
@@ -278,6 +289,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bTourCanon.setEnabled(false);
         bTourAntiAerienne.setEnabled(false);
         bTourDeGlace.setEnabled(false);
+        bTourElectrique.setEnabled(false);
         bTourDeFeu.setEnabled(false);
         bTourDeTerre.setEnabled(false);
     }
