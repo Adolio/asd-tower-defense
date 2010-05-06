@@ -417,7 +417,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
      
             chargementTerrain.setValue(pourcent);
             // TODO EXCEPTION ICI java.lang.ClassCastException
-            chargementTerrain.paintImmediately(0,0,1000,200);
+            //chargementTerrain.paintImmediately(0,0,1000,200);
             
             try{
                 Thread.sleep(10);
