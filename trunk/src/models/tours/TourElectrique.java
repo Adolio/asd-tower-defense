@@ -27,15 +27,15 @@ public class TourElectrique extends Tour
     public static final int NIVEAU_MAX = 5;
     public static final int PRIX_ACHAT = 150;
     private static final String DESCRIPTION = 
-        "La tour électrique est une tour qui très rapide " +
-        "mais qui fait de faible dégâts. " +
+        "La tour électrique est une tour qui émet des arcs très puissants à une " +
+        "fréquence relativement faible." +
         "Cette tour attaque n'attaque que les créatures terriennes";
     
     static
     {
         COULEUR = Color.WHITE;
         IMAGE   = Toolkit.getDefaultToolkit().getImage("img/tours/tourElectrique.png");
-        ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/tourElectrique.png");
+        ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourElectrique.png");
     }
     
     public TourElectrique()
@@ -47,9 +47,9 @@ public class TourElectrique extends Tour
               COULEUR,          // couleur de fond
               "Electrique",     // nom
               PRIX_ACHAT,       // prix achat
-              100,               // degats
-              100,               // rayon de portee
-              1,               // cadence de tir (tirs / sec.)
+              120,              // degats
+              70,               // rayon de portee
+              1,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE, // type
               IMAGE,            // image sur terrain
               ICONE);           // icone pour bouton

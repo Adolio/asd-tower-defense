@@ -407,6 +407,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         panelInfoTour.effacerTour();
         panelMenuInteraction.miseAJourNbPiecesOr();
         panelTerrain.setTourSelectionnee(null);
+        
+        jeu.getGestionnaireAnimations().ajouterAnimation(
+                new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
+                        tour.getPrixDeVente())
+                );
+        
     }
 	
     /**

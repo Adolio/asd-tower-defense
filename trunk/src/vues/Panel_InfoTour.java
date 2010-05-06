@@ -31,10 +31,10 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/upgrade.png");
     private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/sale.png");
-    private static final String TXT_AMELIORER  = "";
-    private static final String TXT_VENDRE     = "";
+    private static final String TXT_AMELIORER  = "Améliorer";
+    private static final String TXT_VENDRE     = "Vendre";
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
-    private static final String TXT_PRIX_TOTAL = "Prix total";
+    private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,80);
     private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
@@ -50,9 +50,10 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JLabel lDPS              = new JLabel();
 	private JTextArea taDescrition 	 = new JTextArea();
 	private JPanel pCaracteristiques = new JPanel(new GridBagLayout());
-	private JButton bAmeliorer       = new JButton(TXT_AMELIORER,I_AMELIORER);
-    private JButton bVendre          = new JButton(TXT_VENDRE,I_VENDRE);
+	private JButton bAmeliorer       = new JButton(TXT_AMELIORER);//I_AMELIORER);
+    private JButton bVendre          = new JButton(TXT_VENDRE);//I_VENDRE);
 	
+    private JLabel lPrixLvlS         = new JLabel();
     private JLabel lTitreLvl         = new JLabel();
     private JLabel lTitreLvlS        = new JLabel();
     private JLabel lDegatsLvlS       = new JLabel();
@@ -116,17 +117,19 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		// champ prix
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
 		lPrix.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp++, 1);
+		lPrixLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp, 1);
+        ajouterChamp(pCaracteristiques, lPrixLvlS, 2, nbChamp++, 1);
 		
 		// champ degats
-		ajouterChamp(pCaracteristiques, new JLabel("Degats"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Dégâts"), 0, nbChamp, 1);
 		lDegats.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lDegatsLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp, 1);
 		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamp++, 1);
 		
 		// champ rayon de portee
-		ajouterChamp(pCaracteristiques, new JLabel("Portee"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Portée"), 0, nbChamp, 1);
 		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lRayonPorteeLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp, 1);
@@ -147,10 +150,15 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         ajouterChamp(pCaracteristiques, lDPSLvlS, 2, nbChamp++, 1);
 		
 		// les boutons
-        ajouterChamp(pCaracteristiques, bVendre, 1, nbChamp, 1);
+        ajouterChamp(pCaracteristiques, bVendre, 0, nbChamp, 2);
         ajouterChamp(pCaracteristiques, bAmeliorer, 2, nbChamp++, 1);
+        
+        Font f = new Font("", Font.BOLD, 9);
+        
+        bAmeliorer.setFont(f);
+        bVendre.setFont(f);
         bAmeliorer.setPreferredSize(new Dimension(50,30));
-        bVendre.setPreferredSize(new Dimension(80,30));
+        bVendre.setPreferredSize(new Dimension(50,30));
         GestionnaireDesPolices.setStyle(bAmeliorer);
         GestionnaireDesPolices.setStyle(bVendre);
         bAmeliorer.addActionListener(this);
@@ -159,9 +167,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	
 		pConteneurCaract.add(pCaracteristiques,BorderLayout.CENTER);
 		
-		
-		
-		
+
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
 		pConteneurCaraEtBoutons.setPreferredSize(new Dimension(260,160));
 		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
@@ -186,8 +192,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private GridBagConstraints gbc = new GridBagConstraints();
 	public void ajouterChamp(JPanel panel, Component composant, int gridx, int gridy, int gridwidth)
 	{
-		gbc.fill 		= GridBagConstraints.HORIZONTAL;
-		gbc.insets    = new Insets(1, 8, 1, 8);
+		gbc.fill    = GridBagConstraints.HORIZONTAL;
+		gbc.insets  = new Insets(1, 8, 1, 8);
 		gbc.gridx 	= gridx;
 		gbc.gridy 	= gridy;
 		gbc.gridwidth = gridwidth;
@@ -242,6 +248,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			if(tour.peutEncoreEtreAmelioree())
 			{
 			    lTitreLvlS.setText("lvl. "+(tour.getNiveau()+1));
+			    lPrixLvlS.setText(tour.getPrixAchat()+"");
 			    lDegatsLvlS.setText(tour.getDegatsLvlSuivant()+"");
 			    lRayonPorteeLvlS.setText(String.format("%.1f",tour.getRayonPorteeLvlSuivant()));
 			    lCadenceTirLvlS.setText(String.format("%.1f",tour.getCadenceTirLvlSuivant()));
@@ -250,10 +257,12 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			else
 			{
 			    lTitreLvlS.setText("");
+			    lPrixLvlS.setText("");
 			    lDegatsLvlS.setText("");
                 lRayonPorteeLvlS.setText("");
                 lCadenceTirLvlS.setText("");
                 lDPSLvlS.setText("");
+                
 			}
 			
 			// tour selectionnee pour information
@@ -274,7 +283,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				else if(tour.peutEncoreEtreAmelioree())
     				{
     					bAmeliorer.setEnabled(true);
-    					bAmeliorer.setText(TXT_AMELIORER+" [-"+tour.getPrixAchat()+"]");
+    					bAmeliorer.setText(TXT_AMELIORER);
     				}
     				else
     				{
@@ -283,7 +292,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				}
 				}
 				
-				bVendre.setText(TXT_VENDRE+" [+"+tour.getPrixDeVente()+"]");
+				bVendre.setText(TXT_VENDRE+"["+tour.getPrixDeVente()+"]");
 	
 				bVendre.setVisible(true);
 				bAmeliorer.setVisible(true);
