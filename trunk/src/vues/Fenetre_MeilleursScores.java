@@ -80,6 +80,7 @@ public class Fenetre_MeilleursScores extends JDialog
         DefaultTableModel model = new DefaultTableModel();
         
         // nom de colonnes
+        model.addColumn("");
         model.addColumn("Joueur");
         model.addColumn("Score");
         model.addColumn("Date");
@@ -97,16 +98,18 @@ public class Fenetre_MeilleursScores extends JDialog
         tbScores.setCellSelectionEnabled(true);
        
         // taille des colonnes
-        tbScores.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbScores.getColumnModel().getColumn(1).setPreferredWidth(50);
-        tbScores.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tbScores.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tbScores.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tbScores.getColumnModel().getColumn(2).setPreferredWidth(50);
+        tbScores.getColumnModel().getColumn(3).setPreferredWidth(120);
   
         
         ms = new MeilleursScores("donnees/"+nomTerrain+".ms");
         
+        int i=1;
         for(Score score : ms.getScores())
         {
-            Object[] obj = new Object[] { score.getNomJoueur(), score.getValeur()+"",
+            Object[] obj = new Object[] { (i++)+".", score.getNomJoueur(), score.getValeur()+"",
                     DateFormat.getInstance().format(score.getDate()) };
             
             model.addRow(obj);

@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
@@ -98,6 +100,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     private JEditorPane taConsole  = new JEditorPane("text/html","");
     
     private JPanel pFormulaire = new JPanel(new BorderLayout());
+    
+    private myTimer timer = new myTimer(1000,null);
     
     
     
@@ -200,7 +204,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(this,joueur);
+		panelMenuInteraction = new Panel_MenuInteraction(this,joueur,timer);
+		timer.start();
+		
 		
 		panelInfoTour = panelMenuInteraction.getPanelInfoTour();
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
@@ -676,6 +682,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         else if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
         {
             boolean enPause = jeu.togglePause();
+            
+            if(enPause)
+                timer.pause();
+            else
+                timer.play();
             
             // inhibation
             panelInfoTour.setPause(enPause); 

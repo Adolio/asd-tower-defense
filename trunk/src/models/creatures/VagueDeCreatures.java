@@ -268,9 +268,9 @@ public class VagueDeCreatures implements Runnable
         this.edv = edv;
     }
 
-    private static final double VITESSE_CREATURE_LENTE = 10.0;
-    private static final double VITESSE_CREATURE_RAPIDE = 30.0;
-    private static final double VITESSE_CREATURE_NORMALE = 20.0;
+    private static final double VITESSE_CREATURE_LENTE = 20.0;
+    private static final double VITESSE_CREATURE_RAPIDE = 50.0;
+    private static final double VITESSE_CREATURE_NORMALE = 40.0;
 
     private static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
     private static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
@@ -282,7 +282,7 @@ public class VagueDeCreatures implements Runnable
     private static final double COEF_SANTE_PRE_BOSS = 5.0;
     private static final double COEF_SANTE_BOSS = 11.0;
 
-    private static final boolean DEPART_ALEATOIRE_CREATURES = false;
+    private static final boolean DEPART_ALEATOIRE_CREATURES = true;
 
     /**
      * Permet de generer une vague en fonction de son indice de vague courante
