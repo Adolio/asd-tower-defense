@@ -1,6 +1,8 @@
 package models.jeu;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -85,13 +87,21 @@ public class Jeu
     VagueDeCreatures vagueCourante;
     
     /**
+     * TODO
+     */
+    Date temps;
+    
+    
+    /**
      * Constructeur
      */
     public Jeu()
     {
         gestionnaireTours     = new GestionnaireTours(this);
         gestionnaireCreatures = new GestionnaireCreatures();
-        gestionnaireAnimations = new GestionnaireAnimations();  
+        gestionnaireAnimations = new GestionnaireAnimations();
+        
+        temps = new Date();
     }
     
     /**

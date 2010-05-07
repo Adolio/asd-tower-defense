@@ -2,8 +2,11 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import outils.myTimer;
 import models.creatures.*;
 import models.joueurs.Joueur;
 import models.tours.*;
@@ -43,6 +46,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
     private JButton bTourElectrique         = new JButton(new ImageIcon(TourElectrique.ICONE));
 	
+    
+    private JLabel lTimer                   = new JLabel();
 	private JLabel lScore 				    = new JLabel();
 	private JLabel lTitreScore 			    = new JLabel("Score ");
 	private JLabel lVies 					= new JLabel();
@@ -66,7 +71,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 * @param jeu le jeu avec lequel on interagit (le model)
 	 * @param fenJeu la fenetre de jeu
 	 */
-	public Panel_MenuInteraction(EcouteurDePanelTerrain edpt,Joueur joueur)
+	public Panel_MenuInteraction(EcouteurDePanelTerrain edpt,Joueur joueur, final myTimer timer)
 	{
 		super(new BorderLayout());
         
@@ -74,6 +79,15 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		this.joueur   = joueur;
 		setBackground(LookInterface.COULEUR_DE_FOND);
 		
+		timer.addActionListener(new ActionListener()
+	    {
+	        @Override
+	        public void actionPerformed(ActionEvent e)
+	        {
+	            lTimer.setText(timer.toString());
+	        }
+	    });
+
 		//---------------------
 		//-- panel des tours --
 		//---------------------
@@ -129,6 +143,10 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         //------------------------------------------
 		JPanel pJoueur = new JPanel();
 		pJoueur.setOpaque(false);
+		
+		//timer
+		//lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		pJoueur.add(lTimer);
 		
 		// score
 		pJoueur.add(lTitreScore);
