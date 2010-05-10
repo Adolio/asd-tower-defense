@@ -337,7 +337,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-                new Fenetre_PartieTerminee(this, joueur.getScore(), jeu.getTerrain().getNom()); 
+                new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
             }
         }
 	}
@@ -598,7 +598,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		        bLancerVagueSuivante.setText("Retour au menu");
 		        bLancerVagueSuivante.setIcon(I_QUITTER);
 		        
-			    new Fenetre_PartieTerminee(this, joueur.getScore(), jeu.getTerrain().getNom());
+			    new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom());
 			}
 		}
 	}

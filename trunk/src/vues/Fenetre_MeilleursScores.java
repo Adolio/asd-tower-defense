@@ -83,6 +83,7 @@ public class Fenetre_MeilleursScores extends JDialog
         model.addColumn("");
         model.addColumn("Joueur");
         model.addColumn("Score");
+        model.addColumn("Durée");
         model.addColumn("Date");
         
         // création de la table avec boquage des editions
@@ -101,7 +102,8 @@ public class Fenetre_MeilleursScores extends JDialog
         tbScores.getColumnModel().getColumn(0).setPreferredWidth(10);
         tbScores.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbScores.getColumnModel().getColumn(2).setPreferredWidth(50);
-        tbScores.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tbScores.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tbScores.getColumnModel().getColumn(4).setPreferredWidth(120);
   
         
         ms = new MeilleursScores("donnees/"+nomTerrain+".ms");
@@ -109,7 +111,7 @@ public class Fenetre_MeilleursScores extends JDialog
         int i=1;
         for(Score score : ms.getScores())
         {
-            Object[] obj = new Object[] { (i++)+".", score.getNomJoueur(), score.getValeur()+"",
+            Object[] obj = new Object[] { (i++)+".", score.getNomJoueur(), score.getValeur()+"", score.getHMS(),
                     DateFormat.getInstance().format(score.getDate()) };
             
             model.addRow(obj);

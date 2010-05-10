@@ -33,7 +33,8 @@ public class Score implements Serializable, Comparable<Score>
    private String nomJoueur;
    // La date a laquelle le score est cree.
    private Date date;
-   
+   // La duree de la parties en secondes
+   private long dureePartie;
    
    
    /**
@@ -45,10 +46,12 @@ public class Score implements Serializable, Comparable<Score>
     * @param valeur
     *        La valeur du score obtenue par le joueur.
     */
-   public Score (String nomJoueur, int valeur)
+   public Score (String nomJoueur, int valeur, long dureePartie)
    {
       this.valeur = valeur;
       this.nomJoueur = nomJoueur;
+      this.dureePartie = dureePartie;
+    
       // new Date() cree automatiquement la date courante.
       date = new Date();
    }
@@ -61,9 +64,10 @@ public class Score implements Serializable, Comparable<Score>
     */
    public Score (Score score)
    {
-      valeur    = score.valeur;
-      nomJoueur = score.nomJoueur;
-      date      = score.date;
+      valeur        = score.valeur;
+      nomJoueur     = score.nomJoueur;
+      dureePartie   = score.dureePartie;
+      date          = score.date;
    }
    
    public Score()
@@ -89,6 +93,16 @@ public class Score implements Serializable, Comparable<Score>
    public String getNomJoueur ()
    {
       return nomJoueur;
+   }
+   
+   /**
+    * Getter pour le champ <tt>dureePartie</tt>
+    * 
+    * @return La valeur du champ <tt>dureePartie</tt>
+    */
+   public long getDureePartie()
+   {
+      return dureePartie;
    }
    
    /**
@@ -164,5 +178,31 @@ public class Score implements Serializable, Comparable<Score>
     public void setValeur(int score)
     {
         valeur = score;   
+    }
+    
+    // TODO commenter
+    private int getSeconds()
+    {
+        return (int) (dureePartie) % 60;
+    }
+    
+    // TODO commenter
+    private int getMinutes()
+    {
+        return (int) (dureePartie / 60) % 60;
+    }
+    
+    // TODO commenter
+    private int getHours()
+    {
+        return (int) (dureePartie / 3600) % 24;
+    }
+    
+    // TODO commenter
+    public String getHMS()
+    {
+        return String.format("%02d:%02d:%02d", getHours(), 
+                                               getMinutes(), 
+                                               getSeconds());
     }
 }

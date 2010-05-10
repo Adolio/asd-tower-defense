@@ -134,7 +134,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
                 scoresMax[i] = score;
             }
             else
-                scoresMax[i] = new Score(" ", 0);
+                scoresMax[i] = new Score(" ",0,0);
         }
 		
 		

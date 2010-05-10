@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+//TODO commenter
 public class myTimer extends Timer
 {
     private static final long serialVersionUID = 1L;
