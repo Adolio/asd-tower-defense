@@ -71,9 +71,9 @@ public final class MeilleursScores
     * @param valeurScore
     *        La valeur du meilleur score que le joueur a atteint.
     */
-   public void ajouterMeilleurScore (String nomJoueur, int valeurScore)
+   public void ajouterMeilleurScore (String nomJoueur, int valeurScore, long dureePartie)
    {
-      scores.add(new Score(nomJoueur, valeurScore));
+      scores.add(new Score(nomJoueur, valeurScore, dureePartie));
       Collections.sort(scores);
       if (scores.size() > NOMBRE_MAX_SCORES)
       {

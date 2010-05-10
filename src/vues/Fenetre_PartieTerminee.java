@@ -33,15 +33,15 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     private String nomFichier;
     private String nomTerrain;
     
-    
     // autres membres
     private int score;
+    private long dureePartie;
     
     /**
      * Constructeur de la fenetre
      * @param score le score a ajouter
      */
-    public Fenetre_PartieTerminee(Frame fenParent,int score, String nomTerrain)
+    public Fenetre_PartieTerminee(Frame fenParent, int score, long dureePartie, String nomTerrain)
     {
         // TODO modal preferences de la fenetre
         super(fenParent,"Partie Terminée.",true); 
@@ -52,6 +52,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         
         // init attributs membres
         this.score      = score;
+        this.dureePartie = dureePartie;
         this.nomTerrain = nomTerrain;
         this.nomFichier = "donnees/"+nomTerrain+".ms";
         
@@ -109,7 +110,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
             {
                 // ajout du nouveau score
                 MeilleursScores ms = new MeilleursScores(nomFichier);
-                ms.ajouterMeilleurScore(tfNomJoueur.getText(), score);
+                ms.ajouterMeilleurScore(tfNomJoueur.getText(), score, dureePartie);
                 
                 dispose(); // fermeture
                 
