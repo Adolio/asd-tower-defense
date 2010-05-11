@@ -1,6 +1,11 @@
 package models.creatures;
 
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.util.Vector;
+
+import models.tours.Tour;
 
 /**
  * Classe d'encapsulation des tours.
@@ -140,4 +145,60 @@ public class GestionnaireCreatures implements Runnable
             pause.notify(); 
         }
     }
+
+    /**
+     * Permet de recupérer le créatures qui intersectent un rectangle
+     * 
+     * @param rectangle la zone
+     * @return une collection de créatures
+     */
+    public Vector<Creature> getCreaturesQuiIntersectent(Rectangle rectangle)
+    {
+        Vector<Creature> creaturesIntersctees = new Vector<Creature>();
+        
+        synchronized (creatures)
+        { 
+            Creature creature;
+            for(int i=0;i<creatures.size();i++)
+            {
+                creature = creatures.get(i);
+
+                if(creature.intersects(rectangle))
+                    creaturesIntersctees.add(creature);
+            }
+        }
+        
+        return creaturesIntersctees;
+    }
+    
+    
+    /**
+     * Permet de recupérer le créatures qui intersectent un cercle
+     * 
+     * @param rectangle la zone
+     * @return une collection de créatures
+     */
+    public Vector<Creature> getCreaturesQuiIntersectent(int x, int y, double rayon)
+    {
+        Vector<Creature> creaturesIntersctees = new Vector<Creature>();
+        
+        synchronized (creatures)
+        { 
+            Creature creature;
+            for(int i=0;i<creatures.size();i++)
+            {
+                creature = creatures.get(i);
+
+                Point pCreature = new Point((int)creature.getCenterX(), 
+                                            (int)creature.getCenterY());
+                Point pCercle = new Point(x,y);
+                
+                if(pCreature.distance(pCercle) < rayon + creature.getWidth() / 2)
+                    creaturesIntersctees.add(creature);
+            }
+        }
+        
+        return creaturesIntersctees;
+    }
+    
 }

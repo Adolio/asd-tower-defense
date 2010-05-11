@@ -39,7 +39,7 @@ public class BouleDeFeu extends Attaque
     
     static
     {
-        IMAGE_BOULE   = Toolkit.getDefaultToolkit().getImage("img/attaques/bouleDeFeu.png");
+        IMAGE_BOULE   = Toolkit.getDefaultToolkit().getImage("img/animations/attaques/bouleDeFeu.png");
     }
     
     

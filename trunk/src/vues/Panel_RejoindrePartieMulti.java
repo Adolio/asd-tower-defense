@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
-import models.jeu.Jeu;
 import models.joueurs.Joueur;
-import models.terrains.ElementTD_Coop;
-import models.terrains.Terrain;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -540,6 +535,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
             Canal canalServeurJeu = new Canal(IP,port,true);
+            
+            
             
             
             

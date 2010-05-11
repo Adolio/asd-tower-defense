@@ -6,12 +6,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-
 import javax.swing.JPanel;
-
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
-import models.terrains.ElementTD_Coop;
 import models.terrains.Terrain;
 
 public class Panel_EmplacementsTerrain extends JPanel

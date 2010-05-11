@@ -29,8 +29,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     public static final int MODE_SELECTION 	   = 0;
 	public static final int MODE_ACHAT 		   = 1;
 	private static final long serialVersionUID = 1L;
-	private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/upgrade.png");
-    private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/sale.png");
+	//private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/upgrade.png");
+    //private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/sale.png");
     private static final String TXT_AMELIORER  = "Améliorer";
     private static final String TXT_VENDRE     = "Vendre";
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
@@ -49,6 +49,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private JLabel lCadenceTir	     = new JLabel();
 	private JLabel lDPS              = new JLabel();
 	private JTextArea taDescrition 	 = new JTextArea();
+	private JScrollPane spDescription;
 	private JPanel pCaracteristiques = new JPanel(new GridBagLayout());
 	private JButton bAmeliorer       = new JButton(TXT_AMELIORER);//I_AMELIORER);
     private JButton bVendre          = new JButton(TXT_VENDRE);//I_VENDRE);
@@ -100,14 +101,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 3);
 		
 		// champ description
-        taDescrition.setPreferredSize(DIMENSION_DESCRIPTION);
         taDescrition.setEditable(false);
         taDescrition.setLineWrap(true);
         taDescrition.setWrapStyleWord(true);
         taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
         taDescrition.setBorder(BORDURE_DESCRIPTION);
-        ajouterChamp(pCaracteristiques, new JScrollPane(taDescrition), 0, nbChamp++, 3);
-		
+        spDescription = new JScrollPane(taDescrition);
+        spDescription.setPreferredSize(DIMENSION_DESCRIPTION);
+        ajouterChamp(pCaracteristiques, spDescription, 0, nbChamp++, 3);
 		
 		lTitreLvl.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		lTitreLvlS.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
@@ -167,7 +168,6 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	
 		pConteneurCaract.add(pCaracteristiques,BorderLayout.CENTER);
 		
-
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
 		pConteneurCaraEtBoutons.setPreferredSize(new Dimension(260,160));
 		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
@@ -244,6 +244,15 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			lDPS.setText(String.format("%.1f", tour.getCadenceTir()*tour.getDegats()));
 			taDescrition.setText(tour.getDescription());
 			
+			// reset des scroll bars
+			repaint();
+			JScrollBar verticalScrollBar = spDescription.getVerticalScrollBar();
+		    JScrollBar horizontalScrollBar = spDescription.getHorizontalScrollBar();
+		    verticalScrollBar.setValue(verticalScrollBar.getMinimum());
+		    horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
+		    
+		    updateUI();
+		    
 			// Améliorations
 			if(tour.peutEncoreEtreAmelioree())
 			{
