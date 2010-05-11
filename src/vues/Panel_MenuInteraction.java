@@ -43,6 +43,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JButton bTourAntiAerienne 		= new JButton(new ImageIcon(TourAntiAerienne.ICONE));
 	private JButton bTourDeGlace            = new JButton(new ImageIcon(TourDeGlace.ICONE));
     private JButton bTourDeFeu              = new JButton(new ImageIcon(TourDeFeu.ICONE));
+    private JButton bTourDAir               = new JButton(new ImageIcon(TourDAir.ICONE));
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
     private JButton bTourElectrique         = new JButton(new ImageIcon(TourElectrique.ICONE));
 	
@@ -64,6 +65,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	// panels internes
 	private Panel_InfoTour panelInfoTour;
 	private Panel_InfoCreature panelInfoCreature = new Panel_InfoCreature();
+    private Container pJoueur;
 	
 	/**
 	 * Constructeur du panel d'interaction
@@ -91,9 +93,10 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		//---------------------
 		//-- panel des tours --
 		//---------------------
-		JPanel pTours = new JPanel();
+		JPanel pTours = new JPanel(new GridLayout(2,0));
 		pTours.setOpaque(false);
-		
+		//pTours.setPreferredSize(new Dimension(200,80));
+
 		bTourArcher.addActionListener(this);
 		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
 		GestionnaireDesPolices.setStyle(bTourArcher);
@@ -130,11 +133,32 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bTourDeFeu.setToolTipText("Prix : "+TourDeFeu.PRIX_ACHAT);
         pTours.add(bTourDeFeu);
         
+        bTourDAir.addActionListener(this);
+        bTourDAir.setBorder(new EmptyBorder(5,5,5,5));
+        GestionnaireDesPolices.setStyle(bTourDAir);
+        bTourDAir.setToolTipText("Prix : "+TourDAir.PRIX_ACHAT);
+        pTours.add(bTourDAir);
+        
         bTourDeTerre.addActionListener(this);
         bTourDeTerre.setBorder(new EmptyBorder(5,5,5,5));
         GestionnaireDesPolices.setStyle(bTourDeTerre);
         bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
         pTours.add(bTourDeTerre);
+        
+        
+        JPanel pScore = new JPanel();
+        pScore.setOpaque(false);
+        
+        //timer
+        //lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        pScore.add(lTimer);
+        
+        // score
+        pScore.add(lTitreScore);
+        lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        pScore.add(lScore);
+        lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        miseAJourScore();
         
 
 		//------------------------------------------
@@ -143,17 +167,6 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         //------------------------------------------
 		JPanel pJoueur = new JPanel();
 		pJoueur.setOpaque(false);
-		
-		//timer
-		//lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		pJoueur.add(lTimer);
-		
-		// score
-		pJoueur.add(lTitreScore);
-		lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		pJoueur.add(lScore);
-		lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		miseAJourScore();
 		
 		// pieces d'or
 		pJoueur.add(lTitrePiecesOr);
@@ -177,7 +190,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
 		pToursEtJoueur.setOpaque(false);
 		
-		pToursEtJoueur.add(pJoueur,BorderLayout.NORTH);
+		pToursEtJoueur.add(pScore,BorderLayout.NORTH);
+		pToursEtJoueur.add(pJoueur,BorderLayout.CENTER);
 		pToursEtJoueur.add(pTours,BorderLayout.SOUTH);
 		
 	    add(pToursEtJoueur,BorderLayout.NORTH);
@@ -238,6 +252,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		    tour = new TourDeGlace();
 		else if(source == bTourDeFeu)
 		    tour = new TourDeFeu();
+		else if(source == bTourDAir)
+		    tour = new TourDAir();
 		else if(source == bTourDeTerre)
 		    tour = new TourDeTerre();
 		else if(source == bTourElectrique)
@@ -263,6 +279,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	    bTourDeGlace.setEnabled(nbPiecesOr >= TourDeGlace.PRIX_ACHAT);
 	    bTourElectrique.setEnabled(nbPiecesOr >= TourElectrique.PRIX_ACHAT);
 	    bTourDeFeu.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
+	    bTourDAir.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
 	    bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
 	    
 	    lNbPiecesOr.setText(nbPiecesOr+"");
@@ -309,6 +326,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         bTourDeGlace.setEnabled(false);
         bTourElectrique.setEnabled(false);
         bTourDeFeu.setEnabled(false);
+        bTourDAir.setEnabled(false);
         bTourDeTerre.setEnabled(false);
     }
 

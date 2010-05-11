@@ -1,7 +1,6 @@
 package models.attaques;
 
 import java.awt.*;
-import java.util.Date;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.outils.MeilleursScores;
@@ -26,12 +25,10 @@ public class Glacon extends Attaque
     private static final Image IMAGE;
     private long DUREE_RALENTISSEMENT;
     private long tempsPasse;
-    private Date date = new Date();
-    private long tempsDernierPassage = date.getTime();
     
     static
     {
-        IMAGE   = Toolkit.getDefaultToolkit().getImage("img/attaques/glacon.png");
+        IMAGE   = Toolkit.getDefaultToolkit().getImage("img/animations/attaques/glacon.png");
     }
  
     /**
@@ -62,16 +59,8 @@ public class Glacon extends Attaque
     @Override
     public void animer(long tempsPasse)
     {
-        // recuperation du temps passe depuis le dernier appel
-        date = new Date();
-        
         this.tempsPasse += tempsPasse;
-        
-        // TODO j'ai du adapater pour la mise en place de la pause
-        
-        //tempsPasse += date.getTime() - tempsDernierPassage;
-        tempsDernierPassage = date.getTime();
-        
+         
         // le temps est passe
         if(this.tempsPasse > DUREE_RALENTISSEMENT)
         {
@@ -81,6 +70,7 @@ public class Glacon extends Attaque
             
             estTerminee = true;
         }
+        // si la cible meurt, l'animation meurt aussi
         else if(cible.estMorte())
             estTerminee = true;     
     }

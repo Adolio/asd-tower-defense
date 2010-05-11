@@ -5,25 +5,19 @@ import java.awt.event.*;
 import java.io.File;
 import java.net.*;
 import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
-import models.terrains.ElementTD;
 import models.terrains.ElementTD_Coop;
 import models.terrains.Terrain;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import outils.OutilsFichier;
 import outils.fichierDeConfiguration;
 import reseau.Canal;

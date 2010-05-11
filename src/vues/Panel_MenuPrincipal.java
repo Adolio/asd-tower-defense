@@ -12,22 +12,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import models.jeu.Jeu;
-import models.terrains.Desert;
-import models.terrains.ElementTD;
-import models.terrains.Spiral;
-import models.terrains.WaterWorld;
 
 public class Panel_MenuPrincipal extends JPanel implements ActionListener
 {
     // constantes statiques
     private final int MARGES_PANEL = 40;
     private static final long serialVersionUID = 1L;
-    private static final ImageIcon IMAGE_MENU = new ImageIcon(
-            "img/logos/principal.png");
     private static final Color COULEUR_TEXTE_VERSION = new Color(200, 200, 200);
-
     private static final Image IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/interfaces/menuPrincipal.png");
     
     // elements du formulaire
