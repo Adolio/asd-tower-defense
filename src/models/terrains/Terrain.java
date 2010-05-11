@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
+
 import javax.swing.*;
 import models.creatures.*;
 import models.jeu.Jeu;
@@ -568,58 +569,57 @@ public abstract class Terrain implements Serializable
     {
         // Il ne doit pas y avoir de modifications sur la collection
         // durant le parcours.
-        Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
-        synchronized (creatures)
+        Creature creature;
+        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        while(eCreatures.hasMoreElements())
         {
-            // mise a jour de tous les chemins
-            for (Creature creature : creatures)
+            creature = eCreatures.nextElement();
+        
+            // les tours n'affecte que le chemin des creatures terriennes
+            if (creature.getType() == Creature.TYPE_TERRIENNE)   
             {
-                // les tours n'affecte que le chemin des creatures terriennes
-                if (creature.getType() == Creature.TYPE_TERRIENNE)   
+                Rectangle zoneArrivee = creature.getEquipeCiblee().getZoneArriveeCreatures();
+                
+                try
+                { 
+                    creature.setChemin(getCheminLePlusCourt((int) creature
+                            .getCenterX(), (int) creature.getCenterY(),
+                            (int) zoneArrivee.getCenterX(),
+                            (int) zoneArrivee.getCenterY(), creature
+                                    .getType()));
+                }
+                catch (PathNotFoundException e)
                 {
-                    Rectangle zoneArrivee = creature.getEquipeCiblee().getZoneArriveeCreatures();
-                    
+                    /*
+                     *  s'il n'y a pas de chemin, 
+                     *  on essaye depuis le noeud precedent
+                     */
                     try
-                    { 
-                        creature.setChemin(getCheminLePlusCourt((int) creature
-                                .getCenterX(), (int) creature.getCenterY(),
-                                (int) zoneArrivee.getCenterX(),
-                                (int) zoneArrivee.getCenterY(), creature
-                                        .getType()));
-                    }
-                    catch (PathNotFoundException e)
                     {
-                        /*
-                         *  s'il n'y a pas de chemin, 
-                         *  on essaye depuis le noeud precedent
-                         */
-                        try
+                        ArrayList<Point> chemin = creature.getChemin();
+                        
+                        if(chemin != null)
                         {
-                            ArrayList<Point> chemin = creature.getChemin();
+                            // recuperation du noeud precedent sur le chemin
+                            Point noeudPrecedent;
                             
-                            if(chemin != null)
-                            {
-                                // recuperation du noeud precedent sur le chemin
-                                Point noeudPrecedent;
-                                
-                                if(creature.getIndiceCourantChemin() > 0) // pas au depart
-                                    noeudPrecedent = chemin.get(creature.getIndiceCourantChemin()-1);
-                                else
-                                    noeudPrecedent = new Point(zoneArrivee.x, zoneArrivee.y);
-             
-                                // calcul du nouveau chemin
-                                creature.setChemin(getCheminLePlusCourt(
-                                        (int) noeudPrecedent.x, 
-                                        (int) noeudPrecedent.y,
-                                        (int) zoneArrivee.getCenterX(),
-                                        (int) zoneArrivee.getCenterY(), 
-                                        creature.getType())); 
-                            } 
-                        }
-                        catch (PathNotFoundException e2)
-                        {
-                            // s'il n'y a toujours pas de chemin, on garde l'ancien.
-                        }
+                            if(creature.getIndiceCourantChemin() > 0) // pas au depart
+                                noeudPrecedent = chemin.get(creature.getIndiceCourantChemin()-1);
+                            else
+                                noeudPrecedent = new Point(zoneArrivee.x, zoneArrivee.y);
+         
+                            // calcul du nouveau chemin
+                            creature.setChemin(getCheminLePlusCourt(
+                                    (int) noeudPrecedent.x, 
+                                    (int) noeudPrecedent.y,
+                                    (int) zoneArrivee.getCenterX(),
+                                    (int) zoneArrivee.getCenterY(), 
+                                    creature.getType())); 
+                        } 
+                    }
+                    catch (PathNotFoundException e2)
+                    {
+                        // s'il n'y a toujours pas de chemin, on garde l'ancien.
                     }
                 }
             }

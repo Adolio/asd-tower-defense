@@ -1,11 +1,9 @@
 package models.creatures;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.util.Enumeration;
 import java.util.Vector;
-
-import models.tours.Tour;
 
 /**
  * Classe d'encapsulation des tours.
@@ -43,10 +41,7 @@ public class GestionnaireCreatures implements Runnable
         if (creature == null)
             throw new IllegalArgumentException("Creature nulle");
         
-        synchronized(creatures)
-        {
-            creatures.add(creature);
-        }
+        creatures.add(creature);
     }
     
     /**
@@ -55,10 +50,7 @@ public class GestionnaireCreatures implements Runnable
     public void supprimerCreature(Creature creature)
     {
         if (creature != null)
-            synchronized (creatures)
-            {
-                creatures.remove(creature);  
-            }
+            creatures.remove(creature);  
     }
 
     @Override
@@ -68,21 +60,18 @@ public class GestionnaireCreatures implements Runnable
         
         while(gestionEnCours)
         {
-          
-            synchronized (creatures)
-            { 
-                Creature creature;
-                for(int i=0;i<creatures.size();i++)
-                {
-                    creature = creatures.get(i);
-                    
-                    // efface les creatures mortes
-                    if(creature.estMorte() || creature.aDetruire())
-                        creatures.remove(i--);
-                    else
-                        // anime la creature
-                        creature.action(TEMPS_ATTENTE);
-                }
+            Creature creature;
+            Enumeration<Creature> eCreatures = creatures.elements();
+            while(eCreatures.hasMoreElements())
+            {
+                creature = eCreatures.nextElement();
+                
+                // efface les creatures mortes
+                if(creature.estMorte() || creature.aDetruire())
+                    creatures.remove(creature);
+                else
+                    // anime la creature
+                    creature.action(TEMPS_ATTENTE);
             }
             
             // gestion de la pause
@@ -154,11 +143,14 @@ public class GestionnaireCreatures implements Runnable
      */
     public Vector<Creature> getCreaturesQuiIntersectent(Rectangle rectangle)
     {
-        Vector<Creature> creaturesIntersctees = new Vector<Creature>();
         
-        synchronized (creatures)
-        { 
-            Creature creature;
+        Vector<Creature> creaturesIntersctees = new Vector<Creature>();
+        Creature creature;
+        Enumeration<Creature> eCreatures = creatures.elements();
+        while(eCreatures.hasMoreElements())
+        {
+            creature = eCreatures.nextElement();
+    
             for(int i=0;i<creatures.size();i++)
             {
                 creature = creatures.get(i);
