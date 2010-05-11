@@ -44,9 +44,9 @@ abstract public class Attaque extends Animation
     public Attaque(int x, int y, Jeu jeu, Tour attaquant, Creature cible)
     {
         super(x, y);
+        this.jeu        = jeu;
         this.attaquant  = attaquant;
         this.cible      = cible;
-        this.jeu        = jeu;
     }
     
     /**
@@ -60,7 +60,8 @@ abstract public class Attaque extends Animation
             return blesserCreaturesDansZoneImpact();
         else
         {
-            cible.blesser(degats,attaquant.getPrioprietaire());
+            if(attaquant.peutBlesser(cible))
+                cible.blesser(degats,attaquant.getPrioprietaire());
             
             ArrayList<Creature> a = new ArrayList<Creature>();
             a.add(cible); 
@@ -89,19 +90,23 @@ abstract public class Attaque extends Animation
         {
             tmpCreature = eCreatures.nextElement();
             
-            // si la creature est dans le splash
-            distanceImpact = Point.distance(tmpCreature.getCenterX(), 
-                                            tmpCreature.getCenterY(), 
-                                            impact.x, 
-                                            impact.y);
-            
-            if(distanceImpact <= rayonImpact)
+            if(attaquant.peutBlesser(tmpCreature))
             {
-                // calcul des degats en fonction de la distance de l'impact
-                degatsFinal = (long) (degats - (distanceImpact / rayonImpact * degats));
-                tmpCreature.blesser(degatsFinal, attaquant.getPrioprietaire());
                 
-                a.add(tmpCreature);
+                // si la creature est dans le splash
+                distanceImpact = Point.distance(tmpCreature.getCenterX(), 
+                                                tmpCreature.getCenterY(), 
+                                                impact.x, 
+                                                impact.y);
+                
+                if(distanceImpact <= rayonImpact)
+                {
+                    // calcul des degats en fonction de la distance de l'impact
+                    degatsFinal = (long) (degats - (distanceImpact / rayonImpact * degats));
+                    tmpCreature.blesser(degatsFinal, attaquant.getPrioprietaire());
+                    
+                    a.add(tmpCreature);
+                }
             }
         }
         

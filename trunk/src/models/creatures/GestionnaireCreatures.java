@@ -110,9 +110,10 @@ public class GestionnaireCreatures implements Runnable
     /**
      * Permet de recuperer la collection des creatures
      */
+    @SuppressWarnings("unchecked")
     public Vector<Creature> getCreatures()
     {
-        return creatures;
+        return (Vector<Creature>) creatures.clone();
     }
     
     /**
@@ -192,5 +193,4 @@ public class GestionnaireCreatures implements Runnable
         
         return creaturesIntersctees;
     }
-    
 }
