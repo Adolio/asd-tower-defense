@@ -1,6 +1,7 @@
 package models.tours;
 
 import java.awt.Rectangle;
+import java.util.Enumeration;
 import java.util.Vector;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -109,12 +110,15 @@ public class GestionnaireTours implements Runnable
             return false;
 
         // il n'y a pas deja une creature
-        Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
-        synchronized (creatures)
+        
+        Creature creature;
+        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        while(eCreatures.hasMoreElements())
         {
-            for (Rectangle creature : creatures)
-                if (tour.intersects(creature))
-                    return false;
+            creature = eCreatures.nextElement();
+        
+            if (tour.intersects(creature))
+                return false;
         }
 
         // rien empeche la tour d'etre posee

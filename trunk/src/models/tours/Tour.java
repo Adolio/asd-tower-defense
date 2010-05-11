@@ -1,7 +1,7 @@
 package models.tours;
 
 import java.awt.*;
-import java.util.Vector;
+import java.util.Enumeration;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
@@ -485,34 +485,32 @@ public abstract class Tour extends Rectangle
 		double distance               = 0;
 
 		// bloque la reference vers la collection des creatures
-		Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
-		
-		synchronized (creatures)
+		Creature creature;
+        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        while(eCreatures.hasMoreElements())
         {
-    		// pour chaque creature sur le terrain
-    		for(Creature creature : creatures)
-    		{
-				// si la creature est accessible
-    		    if (estBlessable(creature))
-                {
-        		    // calcul de la distance entre la tour et la creature
-    				distance = getDistance(creature);
-    
-    				// est-elle a portee ?
-    				if (distance <= rayonPortee)
-    				{
-    					// la creature actuelle est-elle plus proche que la derniere
-    					// creature a portee testee ?
-    					if (creatureLaPlusProche == null 
-    					|| distance < distanceLaPlusProche)
-    					{ 
-    					    // nouvelle creature plus proche trouvee!
-    						creatureLaPlusProche = creature;
-    						distanceLaPlusProche = distance;
-    					}
-    				}
-                }
-    		}
+            creature = eCreatures.nextElement();
+		
+			// si la creature est accessible
+		    if (estBlessable(creature))
+            {
+    		    // calcul de la distance entre la tour et la creature
+				distance = getDistance(creature);
+
+				// est-elle a portee ?
+				if (distance <= rayonPortee)
+				{
+					// la creature actuelle est-elle plus proche que la derniere
+					// creature a portee testee ?
+					if (creatureLaPlusProche == null 
+					|| distance < distanceLaPlusProche)
+					{ 
+					    // nouvelle creature plus proche trouvee!
+						creatureLaPlusProche = creature;
+						distanceLaPlusProche = distance;
+					}
+				}
+            }
         }
 		
 		return creatureLaPlusProche;

@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
+
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -433,18 +434,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
 		Creature creature;
-		Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
-		synchronized (creatures)
+        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        while(eCreatures.hasMoreElements())
         {
-    		Iterator<Creature> iCreatures = creatures.iterator();
-            while(iCreatures.hasNext())
-            {
-                creature = iCreatures.next();
-                 
-                // affichage des creatures terriennes uniquement
-                if(creature.getType() == Creature.TYPE_TERRIENNE)
-                    dessinerCreature(creature,g2);
-            }
+            creature = eCreatures.nextElement();
+                
+            // affichage des creatures terriennes uniquement
+            if(creature.getType() == Creature.TYPE_TERRIENNE)
+                dessinerCreature(creature,g2);
         }
 		
 		//-------------------------
@@ -456,7 +453,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //--------------------------------------
         //-- affichage des creatures aerienne --
         //--------------------------------------
-		Enumeration<Creature> eCreatures = creatures.elements();
+		eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();

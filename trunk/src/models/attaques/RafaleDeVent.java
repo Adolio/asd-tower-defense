@@ -108,14 +108,15 @@ public class RafaleDeVent extends Attaque
                 x = (int) (Math.cos(ANGLE) * distanceDeLaSource + attaquant.getCenterX()); // x
                 y = (int) (Math.sin(ANGLE) * distanceDeLaSource + attaquant.getCenterY()); // y
 
-                // blessures des créatures en contact pas encore touchées
+                
                 Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreaturesQuiIntersectent((int)x,(int)y,DIAMETRE_BOULE);
                 Creature creature;
                 for(int i=0;i<creatures.size();i++)
                 {
                     creature = creatures.get(i);
                     
-                    if(!creaturesTouchees.contains(creature))
+                    // blessures des créatures volantes en contact pas encore touchées
+                    if(creature.getType() == Creature.TYPE_AERIENNE && !creaturesTouchees.contains(creature))
                     {
                         creature.blesser((long)(degats * alpha), attaquant.getPrioprietaire());
                         creaturesTouchees.add(creature);
