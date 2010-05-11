@@ -1092,10 +1092,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
     	    // focus sur la creature
     	    if(ke.getKeyChar() == 'f' && creatureSelectionnee != null)
     	        centrerSurCreatureSelectionnee = true;
-    	    
-    		// raccourci lancer vague suivante
-            if(Character.isSpaceChar(ke.getKeyChar()))  
-                edpt.lancerVagueSuivante();
 		}
 	}
 	
