@@ -55,6 +55,26 @@ public class ArcElectrique extends Attaque
     }
 
     
+    /**
+     * Constructeur de l'attaque
+     * 
+     * @param terrain le terrain sur lequel l'attaque est lancee
+     * @param attaquant la tour attaquante
+     * @param cible la creature visee
+     */
+    public ArcElectrique(Jeu jeu, Tour attaquant, int xDepart, int yDepart, Creature cible, long degats)
+    {
+        super((int) attaquant.getCenterX(),(int) attaquant.getCenterY(), jeu, attaquant, cible);
+        
+        this.degats = degats;
+  
+        arcs.add(creerArc());
+        arcs.add(creerArc());
+        arcs.add(creerArc());
+        arcs.add(creerArc());
+        arcs.add(creerArc());
+    }
+    
     private ArrayList<Point> creerArc()
     {
         // création de l'arc

@@ -458,11 +458,11 @@ public abstract class Tour extends Rectangle
 	 * @param creature le crature a testee
 	 * @return true si la creature peut etre blessee, false sinon
 	 */
-	private boolean estBlessable(Creature creature)
+	public boolean peutBlesser(Creature creature)
 	{
 	    return type == TYPE_TERRESTRE_ET_AIR 
-	        || type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE 
-	        || type == TYPE_AIR && creature.getType()       == Creature.TYPE_AERIENNE;
+	        || (type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE) 
+	        || (type == TYPE_AIR && creature.getType()       == Creature.TYPE_AERIENNE);
 	}
 	
 	/**
@@ -477,8 +477,6 @@ public abstract class Tour extends Rectangle
 		if (jeu == null)
 			return null;
 
-		
-		
 		// variables temporaires pour calcul
 		Creature creatureLaPlusProche = null;
 		double distanceLaPlusProche   = 0;
@@ -489,28 +487,34 @@ public abstract class Tour extends Rectangle
         Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
-            creature = eCreatures.nextElement();
-		
-			// si la creature est accessible
-		    if (estBlessable(creature))
-            {
-    		    // calcul de la distance entre la tour et la creature
-				distance = getDistance(creature);
-
-				// est-elle a portee ?
-				if (distance <= rayonPortee)
-				{
-					// la creature actuelle est-elle plus proche que la derniere
-					// creature a portee testee ?
-					if (creatureLaPlusProche == null 
-					|| distance < distanceLaPlusProche)
-					{ 
-					    // nouvelle creature plus proche trouvee!
-						creatureLaPlusProche = creature;
-						distanceLaPlusProche = distance;
-					}
-				}
-            }
+            try{
+                creature = eCreatures.nextElement();
+               
+        		// si la creature est accessible
+        	    if (peutBlesser(creature))
+                {
+        		    // calcul de la distance entre la tour et la creature
+        			distance = getDistance(creature);
+        
+        			// est-elle a portee ?
+        			if (distance <= rayonPortee)
+        			{
+        				// la creature actuelle est-elle plus proche que la derniere
+        				// creature a portee testee ?
+        				if (creatureLaPlusProche == null 
+        				|| distance < distanceLaPlusProche)
+        				{ 
+        				    // nouvelle creature plus proche trouvee!
+        					creatureLaPlusProche = creature;
+        					distanceLaPlusProche = distance;
+        				}
+        			}
+                }
+        	}
+    	    catch(java.util.NoSuchElementException nsee)
+    	    {
+    	        nsee.printStackTrace();
+    	    }
         }
 		
 		return creatureLaPlusProche;

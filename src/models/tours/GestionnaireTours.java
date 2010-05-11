@@ -1,6 +1,5 @@
 package models.tours;
 
-import java.awt.Rectangle;
 import java.util.Enumeration;
 import java.util.Vector;
 import models.creatures.Creature;
@@ -288,9 +287,10 @@ public class GestionnaireTours implements Runnable
     /**
      * Permet de recuperer la collection des tours
      */
+    @SuppressWarnings("unchecked")
     public Vector<Tour> getTours()
     {
-        return tours;
+        return (Vector<Tour>) tours.clone();
     }
 
     /**

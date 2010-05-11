@@ -20,7 +20,6 @@ public class Explosion extends Animation
 {
 	// constantes statiques
     private static final long serialVersionUID         = 1L;
-	private static final float ETAPE_ALPHA             = .1f;
 	private static final Image[] EXPLOSION = new Image[4];
 	
 	// attributs
@@ -48,20 +47,23 @@ public class Explosion extends Animation
 	public void dessiner(Graphics2D g2)
 	{
 	    // style
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
+	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 	    
 	    // dessin
 		g2.drawImage(EXPLOSION[indiceAnim],x,y,null);
 		
 		// retabli la transparence
-		//g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.f));
 	}
 
     @Override
     public void animer(long tempsPasse)
     {
         if(indiceAnim < EXPLOSION.length-1)
+        {
             indiceAnim++;
+            alpha -= (1.f / EXPLOSION.length) / 2.0;
+        }
         else
             estTerminee = true;
     }
