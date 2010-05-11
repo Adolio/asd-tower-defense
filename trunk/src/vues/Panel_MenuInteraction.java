@@ -2,6 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -46,7 +47,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private JButton bTourDAir               = new JButton(new ImageIcon(TourDAir.ICONE));
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
     private JButton bTourElectrique         = new JButton(new ImageIcon(TourElectrique.ICONE));
-	
+    private ArrayList<JButton> boutonsTours = new ArrayList<JButton>();
     
     private JLabel lTimer                   = new JLabel();
 	private JLabel lScore 				    = new JLabel();
@@ -63,10 +64,11 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private Joueur joueur;
 	
 	// panels internes
-	private Panel_InfoTour panelInfoTour;
-	private Panel_InfoCreature panelInfoCreature = new Panel_InfoCreature();
-    private Container pJoueur;
-	
+	//private Panel_InfoTour panelInfoTour;
+	//private Panel_InfoCreature panelInfoCreature = new Panel_InfoCreature();
+    
+	private Panel_Selection pSelection;
+
 	/**
 	 * Constructeur du panel d'interaction
 	 * 
@@ -96,56 +98,39 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		JPanel pTours = new JPanel(new GridLayout(2,0));
 		pTours.setOpaque(false);
 		//pTours.setPreferredSize(new Dimension(200,80));
-
-		bTourArcher.addActionListener(this);
-		bTourArcher.setBorder(new EmptyBorder(5,5,5,5));
-		GestionnaireDesPolices.setStyle(bTourArcher);
+		
+		boutonsTours.add(bTourArcher);
 		bTourArcher.setToolTipText("Prix : "+TourArcher.PRIX_ACHAT);
-		pTours.add(bTourArcher);
 		
-		bTourCanon.addActionListener(this);
-		bTourCanon.setBorder(new EmptyBorder(5,5,5,5));
-		GestionnaireDesPolices.setStyle(bTourCanon);
-		bTourCanon.setToolTipText("Prix : "+TourCanon.PRIX_ACHAT);
-		pTours.add(bTourCanon);
-		
-		bTourAntiAerienne.addActionListener(this);
-		bTourAntiAerienne.setBorder(new EmptyBorder(5,5,5,5));
-		GestionnaireDesPolices.setStyle(bTourAntiAerienne);
-		bTourAntiAerienne.setToolTipText("Prix : "+TourAntiAerienne.PRIX_ACHAT);
-		pTours.add(bTourAntiAerienne);
-		
-		bTourDeGlace.addActionListener(this);
-		bTourDeGlace.setBorder(new EmptyBorder(5,5,5,5));
-		GestionnaireDesPolices.setStyle(bTourDeGlace);
-		bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
-        pTours.add(bTourDeGlace);
-
-        bTourElectrique.addActionListener(this);
-        bTourElectrique.setBorder(new EmptyBorder(5,5,5,5));
-        GestionnaireDesPolices.setStyle(bTourElectrique);
+        boutonsTours.add(bTourCanon);
+        bTourCanon.setToolTipText("Prix : "+TourCanon.PRIX_ACHAT);
+        
+        boutonsTours.add(bTourAntiAerienne);
+        bTourAntiAerienne.setToolTipText("Prix : "+TourAntiAerienne.PRIX_ACHAT);
+        
+        boutonsTours.add(bTourDeGlace);
+        bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
+        
+        boutonsTours.add(bTourElectrique);
         bTourElectrique.setToolTipText("Prix : "+TourElectrique.PRIX_ACHAT);
-        pTours.add(bTourElectrique);
         
-        bTourDeFeu.addActionListener(this);
-        bTourDeFeu.setBorder(new EmptyBorder(5,5,5,5));
-        GestionnaireDesPolices.setStyle(bTourDeFeu);
+        boutonsTours.add(bTourDeFeu);
         bTourDeFeu.setToolTipText("Prix : "+TourDeFeu.PRIX_ACHAT);
-        pTours.add(bTourDeFeu);
         
-        bTourDAir.addActionListener(this);
-        bTourDAir.setBorder(new EmptyBorder(5,5,5,5));
-        GestionnaireDesPolices.setStyle(bTourDAir);
+        boutonsTours.add(bTourDAir);
         bTourDAir.setToolTipText("Prix : "+TourDAir.PRIX_ACHAT);
-        pTours.add(bTourDAir);
         
-        bTourDeTerre.addActionListener(this);
-        bTourDeTerre.setBorder(new EmptyBorder(5,5,5,5));
-        GestionnaireDesPolices.setStyle(bTourDeTerre);
+        boutonsTours.add(bTourDeTerre);
         bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
-        pTours.add(bTourDeTerre);
         
-        
+		for(JButton bTour : boutonsTours)
+        {
+            bTour.addActionListener(this);
+            bTour.setBorder(new EmptyBorder(5,5,5,5));
+            GestionnaireDesPolices.setStyle(bTour);
+            pTours.add(bTour);
+        }
+         
         JPanel pScore = new JPanel();
         pScore.setOpaque(false);
         
@@ -190,8 +175,18 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
 		pToursEtJoueur.setOpaque(false);
 		
-		pToursEtJoueur.add(pScore,BorderLayout.NORTH);
-		pToursEtJoueur.add(pJoueur,BorderLayout.CENTER);
+		
+		
+		JPanel pAlignADroite = new JPanel(new BorderLayout());
+        pAlignADroite.setOpaque(false);
+        pAlignADroite.add(pScore,BorderLayout.EAST);
+		pToursEtJoueur.add(pAlignADroite,BorderLayout.NORTH);
+		
+		JPanel pAlignADroite2 = new JPanel(new BorderLayout());
+		pAlignADroite2.setOpaque(false);
+		pAlignADroite2.add(pJoueur,BorderLayout.EAST);
+		pToursEtJoueur.add(pAlignADroite2,BorderLayout.CENTER);
+		
 		pToursEtJoueur.add(pTours,BorderLayout.SOUTH);
 		
 	    add(pToursEtJoueur,BorderLayout.NORTH);
@@ -199,15 +194,17 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		//---------------------------
         //-- info tour et creature --
         //---------------------------
-	    JPanel pInfos = new JPanel(new BorderLayout());
-	    pInfos.setOpaque(false);
+	    pSelection = new Panel_Selection(edpt);
+      
+	    //JPanel pInfos = new JPanel(new BorderLayout());
+	    //pInfos.setOpaque(false);
 	    
-		panelInfoTour = new Panel_InfoTour(edpt);
+		//panelInfoTour = new Panel_InfoTour(edpt);
 		
-        pInfos.add(panelInfoTour,BorderLayout.NORTH);
-        pInfos.add(panelInfoCreature,BorderLayout.CENTER);
+        //pInfos.add(panelInfoTour,BorderLayout.NORTH);
+        //pInfos.add(panelInfoCreature,BorderLayout.CENTER);
         
-        add(pInfos,BorderLayout.CENTER);
+        add(pSelection,BorderLayout.CENTER);
 	}
 	
 	/**
@@ -218,7 +215,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 */
 	public void setTourSelectionnee(Tour tour, int mode)
 	{
-		panelInfoTour.setTour(tour, mode);
+		pSelection.setSelection(tour, mode);
 	}
 	
 	/**
@@ -228,7 +225,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	public void setCreatureSelectionnee(Creature creature)
     {
-        panelInfoCreature.setCreature(creature);
+        pSelection.setSelection(creature, 0);
     }
 
 	/**
@@ -262,6 +259,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		    return;
 		
 		tour.setProprietaire(joueur);
+		
+		pSelection.setSelection(tour,Panel_InfoTour.MODE_ACHAT);
 		edpt.setTourAAcheter(tour);
 	}
 	
@@ -301,7 +300,6 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         lEtoiles.setText(joueur.getNbEtoiles()+"");
     }
 	
-	
 	/**
      * Permet de demander une mise a jour du score du joueur
      */
@@ -317,17 +315,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     public void partieTerminee()
     {
         // informe le panel des tours
-        panelInfoTour.partieTerminee();
+        //panelInfoTour.partieTerminee();
+        pSelection.partieTerminee();
         
         // desactivation des tours
-        bTourArcher.setEnabled(false);
-        bTourCanon.setEnabled(false);
-        bTourAntiAerienne.setEnabled(false);
-        bTourDeGlace.setEnabled(false);
-        bTourElectrique.setEnabled(false);
-        bTourDeFeu.setEnabled(false);
-        bTourDAir.setEnabled(false);
-        bTourDeTerre.setEnabled(false);
+        for(JButton bTour : boutonsTours)
+            bTour.setEnabled(false); 
     }
 
     /**
@@ -336,7 +329,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
     public Panel_InfoTour getPanelInfoTour()
     {
-        return panelInfoTour;
+        //return panelInfoTour;
+        return pSelection.getPanelInfoTour();
     }
     
     /**
@@ -345,6 +339,24 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
     public Panel_InfoCreature getPanelInfoCreature()
     {
-        return panelInfoCreature;
+        //return panelInfoCreature;
+        return pSelection.getPanelInfoCreature();
+    }
+
+    /**
+     * Permet d'indiquer que le jeu est en pause ou non.
+     * 
+     * @param enPause si le jeu est en pause.
+     */
+    public void setPause(boolean enPause)
+    {
+        pSelection.setPause(enPause);
+
+        // desactivation des tours
+        if(enPause)
+            for(JButton bTour : boutonsTours)
+                bTour.setEnabled(false);
+        else
+            miseAJourNbPiecesOr();
     }
 }
