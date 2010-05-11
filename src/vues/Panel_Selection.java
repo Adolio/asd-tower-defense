@@ -1,6 +1,8 @@
 package vues;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.*;
 
@@ -39,13 +41,29 @@ public class Panel_Selection extends JPanel
 	{
 		super(new BorderLayout());
 		
-		Panel_InfoCreature pInfoTour = new Panel_InfoCreature();
-		add(pInfoTour,BorderLayout.NORTH);
+		setOpaque(false);
+		
+		setPreferredSize(new Dimension(280,0));
+		//setBackground(LookInterface.COULEUR_DE_FOND_2);
+		
+		JLabel titre = new JLabel("Information sur la selection");
+		titre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		add(titre,BorderLayout.NORTH);
+		
+		JPanel p = new JPanel(new FlowLayout());
+		//p.setOpaque(false);
+		p.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		
+		
+		pInfoTour = new Panel_InfoTour(edpt);
+		p.add(pInfoTour);
 		pInfoTour.setVisible(false);
 		
-		Panel_InfoTour pInfoCreature = new Panel_InfoTour(edpt);
-        add(pInfoCreature,BorderLayout.SOUTH);
+	    pInfoCreature = new Panel_InfoCreature();
+        p.add(pInfoCreature);
         pInfoCreature.setVisible(false);
+        
+        add(p,BorderLayout.CENTER);  
 	}
 	
 	/**
@@ -55,7 +73,7 @@ public class Panel_Selection extends JPanel
      */
     public void partieTerminee()
     {
-        
+        pInfoTour.partieTerminee();
     }
 	
 	/**
@@ -67,8 +85,13 @@ public class Panel_Selection extends JPanel
 	 */
 	public void setSelection(Object selection, int mode)
 	{
-		// Tour
-	    if(Tour.class.isInstance(selection))
+	    if(selection == null)
+	    {
+	        pInfoCreature.setVisible(false);
+	        pInfoTour.setVisible(false);
+	    }
+	    // Tour
+	    else if(Tour.class.isInstance(selection))
 		{
 	        pInfoTour.setTour((Tour) selection, mode);
 	        pInfoTour.setVisible(true);
@@ -86,5 +109,16 @@ public class Panel_Selection extends JPanel
     public void setPause(boolean enPause)
     {
         this.enPause = enPause;
+        pInfoTour.setPause(enPause);
+    }
+
+    public Panel_InfoTour getPanelInfoTour()
+    {
+        return pInfoTour;
+    }
+
+    public Panel_InfoCreature getPanelInfoCreature()
+    {
+        return pInfoCreature;
     }
 }

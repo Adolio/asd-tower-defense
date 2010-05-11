@@ -36,7 +36,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
-    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,80);
+    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(220,120);
     private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
     //private static final Border BORDURE_DESCRIPTION = new LineBorder(Color.DARK_GRAY,1,true);
     
@@ -77,18 +77,20 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	{
 		// construction du panel
 		super(new BorderLayout());
+		setOpaque(false);
+		
 		setPreferredSize(DIMENSION_PANEL);
 		//setBorder(BORDURE);
-		setBackground(LookInterface.COULEUR_DE_FOND);
+		//setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		
 		this.edpt = edpt;
 
 		
 		
-		JLabel lblTitre = new JLabel("Tour selectionnee");
-		lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		add(lblTitre,BorderLayout.NORTH);
+		//JLabel lblTitre = new JLabel("Tour selectionnee");
+		//lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		//add(lblTitre,BorderLayout.NORTH);
 
 		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.setOpaque(false);
@@ -105,7 +107,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         taDescrition.setLineWrap(true);
         taDescrition.setWrapStyleWord(true);
         taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
-        taDescrition.setBorder(BORDURE_DESCRIPTION);
+        //taDescrition.setBorder(BORDURE_DESCRIPTION);
+        taDescrition.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
         spDescription = new JScrollPane(taDescrition);
         spDescription.setPreferredSize(DIMENSION_DESCRIPTION);
         ajouterChamp(pCaracteristiques, spDescription, 0, nbChamp++, 3);

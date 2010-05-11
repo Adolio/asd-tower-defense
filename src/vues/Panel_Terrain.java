@@ -904,6 +904,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
     		{
     			edpt.acheterTour(tourAAjouter);
     			setCursor(curNormal);
+    			
+    			// informe la fenetre qu'une tour a ete selectionnee
+                edpt.tourSelectionnee(tourAAjouter, Panel_InfoTour.MODE_SELECTION);
     		}
         }
 	}

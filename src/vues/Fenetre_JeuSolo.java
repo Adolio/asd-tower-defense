@@ -212,7 +212,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
 		
 		
-		
 		// ajout des panels
 		JPanel pMarge = new JPanel(new BorderLayout());
         pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -453,7 +452,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void creatureSelectionnee(Creature creature)
     {
-        panelInfoCreature.setCreature(creature);
+        panelMenuInteraction.setCreatureSelectionnee(creature);
     }
 
 	/**
@@ -689,7 +688,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                 timer.play();
             
             // inhibation
-            panelInfoTour.setPause(enPause); 
+            panelMenuInteraction.setPause(enPause);
+            
             bLancerVagueSuivante.setEnabled(!enPause);
         } 
     }

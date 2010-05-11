@@ -52,13 +52,12 @@ public class Panel_InfoCreature extends JPanel
 	{
 		// construction du panel
 		super(new BorderLayout());
-		//setBorder(BORDURE);
+		setOpaque(false);
 		setPreferredSize(DIMENSION_PANEL);
-		setBackground(LookInterface.COULEUR_DE_FOND);
 		
-		JLabel lblTitre = new JLabel("Creature selectionnee");
-        lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        add(lblTitre,BorderLayout.NORTH);
+		//JLabel lblTitre = new JLabel("Creature selectionnee");
+        //lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        //add(lblTitre,BorderLayout.NORTH);
 		
 		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
