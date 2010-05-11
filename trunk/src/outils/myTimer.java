@@ -62,7 +62,7 @@ public class myTimer extends Timer
     
     public String toString()
     {
-        return String.format("%02d:%02d:%02d", getHours(), 
+        return String.format("%02d.%02d.%02d", getHours(), 
                                                getMinutes(), 
                                                getSeconds());
     }

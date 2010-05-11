@@ -677,8 +677,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.lancerVagueSuivante(joueur.getEquipe(),this, this);
             ajouterInfoVagueSuivanteDansConsole();
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke)
+    {
         // PAUSE
-        else if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
+        if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
         {
             boolean enPause = jeu.togglePause();
             
@@ -692,11 +697,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             
             bLancerVagueSuivante.setEnabled(!enPause);
         } 
+        // raccourci lancer vague suivante
+        else if(Character.isSpaceChar(ke.getKeyChar())) 
+            if(!jeu.estEnPause())
+                lancerVagueSuivante();
     }
-
-    @Override
-    public void keyReleased(KeyEvent e)
-    {}
 
     @Override
     public void keyTyped(KeyEvent e)

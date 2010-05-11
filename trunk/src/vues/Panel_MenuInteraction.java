@@ -37,6 +37,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private static final ImageIcon I_PIECES         = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES 	        = new ImageIcon("img/icones/heart.png");
 	private static final ImageIcon I_ETOILE         = new ImageIcon("img/icones/star.png");
+	private static final ImageIcon I_TEMPS         = new ImageIcon("img/icones/time.png");
+	private static final ImageIcon I_SCORE         = new ImageIcon("img/icones/cup.png");
 	
 	// membres graphiques
 	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.ICONE));
@@ -50,8 +52,9 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
     private ArrayList<JButton> boutonsTours = new ArrayList<JButton>();
     
     private JLabel lTimer                   = new JLabel();
+    private JLabel lTitreTimer              = new JLabel(I_TEMPS);
 	private JLabel lScore 				    = new JLabel();
-	private JLabel lTitreScore 			    = new JLabel("Score ");
+	private JLabel lTitreScore 			    = new JLabel(I_SCORE);
 	private JLabel lVies 					= new JLabel();
 	private JLabel lTitreVies 				= new JLabel(I_VIES);
 	private JLabel lNbPiecesOr 				= new JLabel();
@@ -131,19 +134,20 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
             pTours.add(bTour);
         }
          
-        JPanel pScore = new JPanel();
-        pScore.setOpaque(false);
+        JPanel pGlobalInfo = new JPanel();
+        pGlobalInfo.setOpaque(false);
         
         //timer
-        //lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        pScore.add(lTimer);
-        
-        // score
-        pScore.add(lTitreScore);
-        lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        pScore.add(lScore);
-        lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        miseAJourScore();
+        pGlobalInfo.add(lTitreTimer);
+        pGlobalInfo.add(lTimer);
+        lTimer.setText("00.00.00");
+        lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            
+        // etoiles gagnées
+        pGlobalInfo.add(lTitreEtoiles);
+        pGlobalInfo.add(lEtoiles);
+        lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        miseAJourNbEtoiles();
         
 
 		//------------------------------------------
@@ -152,6 +156,14 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         //------------------------------------------
 		JPanel pJoueur = new JPanel();
 		pJoueur.setOpaque(false);
+		
+		
+		// score
+		pJoueur.add(lTitreScore);
+        lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        pJoueur.add(lScore);
+        lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        miseAJourScore();
 		
 		// pieces d'or
 		pJoueur.add(lTitrePiecesOr);
@@ -165,11 +177,8 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		lVies.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		miseAJourNbViesRestantes();
 		
-		// etoiles gagnées
-        pJoueur.add(lTitreEtoiles);
-        pJoueur.add(lEtoiles);
-        lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        miseAJourNbEtoiles();
+		
+		
 		
 		
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
@@ -179,7 +188,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 		JPanel pAlignADroite = new JPanel(new BorderLayout());
         pAlignADroite.setOpaque(false);
-        pAlignADroite.add(pScore,BorderLayout.EAST);
+        pAlignADroite.add(pGlobalInfo,BorderLayout.EAST);
 		pToursEtJoueur.add(pAlignADroite,BorderLayout.NORTH);
 		
 		JPanel pAlignADroite2 = new JPanel(new BorderLayout());
@@ -281,7 +290,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	    bTourDAir.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
 	    bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
 	    
-	    lNbPiecesOr.setText(nbPiecesOr+"");
+	    lNbPiecesOr.setText(String.format("%04d",nbPiecesOr));
 	}
 
 	/**
@@ -289,7 +298,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	public void miseAJourNbViesRestantes()
 	{
-		lVies.setText(joueur.getEquipe().getNbViesRestantes()+"");
+		lVies.setText(String.format("%02d",joueur.getEquipe().getNbViesRestantes()));
 	}
 	
 	/**
@@ -297,7 +306,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
     public void miseAJourNbEtoiles()
     {
-        lEtoiles.setText(joueur.getNbEtoiles()+"");
+        lEtoiles.setText(String.format("%02d",joueur.getNbEtoiles()));
     }
 	
 	/**
@@ -305,7 +314,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	public void miseAJourScore()
     {
-        lScore.setText(joueur.getScore()+"");
+        lScore.setText(String.format("%06d",joueur.getScore()));
         miseAJourNbEtoiles();
     }
 
