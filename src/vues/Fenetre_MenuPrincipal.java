@@ -2,6 +2,8 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
 import javax.swing.*;
 
 /**
@@ -91,6 +93,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 
         // a propos
         else if (source == itemAPropos)
-            new Fenetre_APropos(this); // ouverture de la fenetre "A propos"
+            new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
     }
 }

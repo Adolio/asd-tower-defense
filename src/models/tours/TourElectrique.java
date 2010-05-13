@@ -25,7 +25,7 @@ public class TourElectrique extends Tour
     public static final Image IMAGE;
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
-    public static final int PRIX_ACHAT = 150;
+    public static final int PRIX_ACHAT = 100;
     private static final String DESCRIPTION = 
         "La tour électrique est une tour qui émet des arcs très puissants à une " +
         "fréquence relativement faible." +

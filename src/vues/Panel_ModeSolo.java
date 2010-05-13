@@ -2,6 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -57,6 +58,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
     private final JMenuItem itemMSWaterWorld    = new JMenuItem(WaterWorld.NOM);
 	
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
+	private final JButton[] boutonsScore        = new JButton[4]; 
 	private final JButton bRetour              = new JButton("Retour");
 	
 	private JProgressBar chargementTerrain;
@@ -236,20 +238,26 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    
 		    pInfoTerrain.add(new Panel_Etoiles(score),BorderLayout.CENTER);
 		    
-		    String txt = " ";
+		    
 		    if(score.getValeur() > 0)
-		        txt = score.getNomJoueur()+" - "+score.getValeur()+"";
+		    {
+		        String txt = score.getNomJoueur()+" - "+score.getValeur()+"";
 		    
-		    //JLabel lblScore = new JLabel(txt,0);
-		    JButton lblScore = new JButton(txt);
-		    lblScore.setBackground(LookInterface.COULEUR_BOUTON);
-		    lblScore.addActionListener(this);
+		        JButton bScore = new JButton(txt);
 		    
-		    lblScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		    lblScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
-		    pInfoTerrain.add(lblScore,BorderLayout.SOUTH);
-		    
-		    
+        	    boutonsScore[i] = bScore;
+        	    bScore.setBackground(LookInterface.COULEUR_BOUTON);
+        	    bScore.addActionListener(this);
+        	    
+        	    bScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        	    bScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+
+        	    pInfoTerrain.add(bScore,BorderLayout.SOUTH);
+		    }
+		    else
+		    {
+		        pInfoTerrain.add(new JLabel(" "),BorderLayout.SOUTH);
+		    }
 		    //-----------------------------------------
 	        //-- bloquage des terrains - progression --
 	        //-----------------------------------------
@@ -340,7 +348,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_APropos(parent); // ouverture de la fenetre "A propos"
+		    new Fenetre_HTML("A propos", new File("aPropos/aPropos.html"),parent);
 		
 		// les terrains
 		else if(source == boutonsTerrains[0])
@@ -418,13 +426,13 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
 		}
-		else if(source == boutonsTerrains[0])
+		else if(source == boutonsScore[0])
             new Fenetre_MeilleursScores("ElementTD", parent);    
-        else if(source == boutonsTerrains[1])
+        else if(source == boutonsScore[1])
             new Fenetre_MeilleursScores("Spiral", parent); 
-        else if(source == boutonsTerrains[2])
+        else if(source == boutonsScore[2])
             new Fenetre_MeilleursScores("Desert", parent); 
-        else if(source == boutonsTerrains[3])
+        else if(source == boutonsScore[3])
             new Fenetre_MeilleursScores("WaterWorld", parent);   
 	}
 
