@@ -237,7 +237,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         
         // connexion par IP 
         lblConnexionParIP.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblConnexionParIP.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblConnexionParIP.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         bottomCenter.add(lblConnexionParIP);
         tfConnexionParIP.setPreferredSize(new Dimension(100, 25));
         bottomCenter.add(tfConnexionParIP);
@@ -248,7 +248,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel pTmp = new JPanel();
         
         lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         bottomCenter.add(lblPseudo);
         bottomCenter.add(tfPseudo);
         pPseudo.add(pTmp, BorderLayout.EAST);

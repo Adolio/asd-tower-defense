@@ -1,7 +1,6 @@
 package vues;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,6 +9,7 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
@@ -19,7 +19,6 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     // constantes statiques
     private final int MARGES_PANEL = 40;
     private static final long serialVersionUID = 1L;
-    private static final Color COULEUR_TEXTE_VERSION = new Color(200, 200, 200);
     private static final Image IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/interfaces/menuPrincipal.png");
     
     // elements du formulaire
@@ -28,6 +27,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     private JButton bPartieSolo = new JButton("Partie Solo");
     private JButton bRejoindrePartieMulti = new JButton("Rejoindre");
     private JButton bCreerPartieMulti = new JButton("Créer");
+    private JButton bRegles = new JButton("Règles");
     private JButton bQuitter = new JButton("Quitter");
 
     private JFrame parent;
@@ -83,9 +83,6 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         GestionnaireDesPolices.setStyle(bPartieSolo);  
         pAbsolu.add(bPartieSolo);
         
-
-        
-        
         // partie multijoueurs
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
         bRejoindrePartieMulti.addActionListener(this);
@@ -97,6 +94,12 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         GestionnaireDesPolices.setStyle(bCreerPartieMulti);
         pAbsolu.add(bCreerPartieMulti);
 
+        // Regles
+        bRegles.addActionListener(this);
+        bRegles.setBounds(555, 0, 100, 50);
+        GestionnaireDesPolices.setStyle(bRegles);
+        pAbsolu.add(bRegles);
+
         // quitter
         bQuitter.addActionListener(this);
         bQuitter.setBounds(555, 100, 100, 50);
@@ -106,7 +109,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         add(pAbsolu, BorderLayout.CENTER);
 
         version = new JLabel(Jeu.getVersion());
-        version.setForeground(COULEUR_TEXTE_VERSION);
+        version.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         add(version, BorderLayout.SOUTH);
     }
     
@@ -145,6 +148,10 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
             parent.getContentPane().add(new Panel_CreerPartieMulti(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
+        }
+        else if(source == bRegles)
+        {
+            new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), parent);
         }
     }
 }
