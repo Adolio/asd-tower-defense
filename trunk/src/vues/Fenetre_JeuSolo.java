@@ -3,6 +3,8 @@ package vues;
 import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -267,7 +269,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		    
 		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_APropos(this); // ouverture de la fenetre "A propos"
+			new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
 		
 		// basculer affichage du maillage
 		else if(source == itemAfficherMaillage)

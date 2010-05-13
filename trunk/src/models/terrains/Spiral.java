@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.File;
+
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
@@ -26,10 +28,13 @@ public class Spiral extends Terrain
     private static final long serialVersionUID = 1L;
     public final static Image IMAGE_DE_FOND;
     public final static Image IMAGE_MENU;
+    public final static File  FICHIER_MUSIQUE_DE_FOND;
     public final static String NOM = "Spiral";
  
     static
     {
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/Oursvince_Etincelle/Espoir.mp3");
+        
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/spirale.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/spirale.png");
@@ -63,6 +68,9 @@ public class Spiral extends Terrain
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500)));
         equipes.add(e);
 		
+        
+        fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
+        
 		/* definition des murs du labyrinthe :
 		 
 		 		 1

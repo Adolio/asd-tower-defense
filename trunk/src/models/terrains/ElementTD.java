@@ -31,7 +31,7 @@ public class ElementTD extends Terrain
 
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/blizzard/Human_I_(Fanfare).mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/Oursvince_Etincelle/Around.mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                           "img/cartes/menu_principal/elementTD.png");

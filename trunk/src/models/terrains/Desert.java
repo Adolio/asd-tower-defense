@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.File;
+
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
@@ -26,10 +28,13 @@ public class Desert extends Terrain
     private static final long serialVersionUID = 1L;
     public final static Image IMAGE_DE_FOND;
 	public final static Image IMAGE_MENU;
+	public final static File FICHIER_MUSIQUE_DE_FOND;
 	public final static String NOM = "Desert";
 	
     static
     {
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/Oursvince_Etincelle/Perdue.mp3");
+        
         IMAGE_MENU = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/objectif.png");
     	IMAGE_DE_FOND = Toolkit.getDefaultToolkit().getImage("img/cartes/objectif.png");
@@ -64,6 +69,10 @@ public class Desert extends Terrain
         e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
         equipes.add(e);
 
+        
+        fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
+        
+        
 		// murs entourant le terrain
 		ajouterMur(new Rectangle(0,0,20,380)); 		// gauche
 		ajouterMur(new Rectangle(0,0,500,20)); 		// haut
