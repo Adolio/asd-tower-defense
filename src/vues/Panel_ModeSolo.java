@@ -2,11 +2,13 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
+import models.outils.Astuces;
 import models.outils.MeilleursScores;
 import models.outils.Outils;
 import models.outils.Score;
@@ -238,7 +240,11 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    if(score.getValeur() > 0)
 		        txt = score.getNomJoueur()+" - "+score.getValeur()+"";
 		    
-		    JLabel lblScore = new JLabel(txt,0);
+		    //JLabel lblScore = new JLabel(txt,0);
+		    JButton lblScore = new JButton(txt);
+		    lblScore.setBackground(LookInterface.COULEUR_BOUTON);
+		    lblScore.addActionListener(this);
+		    
 		    lblScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		    lblScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
 		    pInfoTerrain.add(lblScore,BorderLayout.SOUTH);
@@ -272,10 +278,30 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		}
 	
 		
-		pFormulaire.add(pBoutonsTerrains,BorderLayout.CENTER);
 		
+		JPanel pCentre = new JPanel(new BorderLayout());
+		pCentre.setOpaque(false);
+		
+		pCentre.add(pBoutonsTerrains,BorderLayout.NORTH);
+		
+		JLabel lblAstuce = new JLabel("\""+Astuces.getAstuceAleatoirement()+"\"");
+		lblAstuce.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		lblAstuce.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+		pCentre.add(lblAstuce,BorderLayout.EAST);
+        
+		pFormulaire.add(pCentre,BorderLayout.CENTER);
+		
+		
+		
+	    //-------------------
+        //-- bouton retour --
+        //-------------------
 		
 		JPanel pFond = new JPanel(new BorderLayout());
+		
+		
+		
+		
 		pFond.setOpaque(false);
 		pFond.setBorder(new EmptyBorder(0, 0, 0, 100));
 		
@@ -288,8 +314,9 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 
 
         lblInfo.setFont(GestionnaireDesPolices.POLICE_INFO);
-        lblInfo.setForeground(GestionnaireDesPolices.COULEUR_INFO);
-
+        //lblInfo.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+        lblInfo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        
         pFond.add(lblInfo,BorderLayout.EAST);
         
 		add(pFormulaire,BorderLayout.CENTER);
@@ -391,7 +418,14 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
 		}
-		    
+		else if(source == boutonsTerrains[0])
+            new Fenetre_MeilleursScores("ElementTD", parent);    
+        else if(source == boutonsTerrains[1])
+            new Fenetre_MeilleursScores("Spiral", parent); 
+        else if(source == boutonsTerrains[2])
+            new Fenetre_MeilleursScores("Desert", parent); 
+        else if(source == boutonsTerrains[3])
+            new Fenetre_MeilleursScores("WaterWorld", parent);   
 	}
 
     synchronized private void actionnerBarreDeChargement()

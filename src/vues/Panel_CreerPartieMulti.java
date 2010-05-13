@@ -125,7 +125,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         c.gridy = ligne;
 
         lblNomServeur.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblNomServeur.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblNomServeur.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pCentre.add(lblNomServeur, c);
 
         c.gridx = 1;
@@ -143,7 +143,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         c.gridy = ligne;
 
         lblEquipeAleatoire.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblEquipeAleatoire.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblEquipeAleatoire.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pCentre.add(lblEquipeAleatoire, c);
 
         c.gridx = 3;
@@ -171,7 +171,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         
         
         lblTitreTerrains.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblTitreTerrains.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblTitreTerrains.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pTerrains.add(lblTitreTerrains,BorderLayout.NORTH);
         
         // création de la table avec boquage des editions
@@ -334,7 +334,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         pAlignementADroite.setOpaque(false);
 
         lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pAlignementADroite.add(lblPseudo, BorderLayout.WEST);
         pAlignementADroite.add(tfPseudo, BorderLayout.EAST);
         pPseudo.add(pAlignementADroite, BorderLayout.EAST);

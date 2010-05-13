@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import javax.swing.JButton;
 import javax.swing.JComponent;
 
 public class GestionnaireDesPolices
@@ -29,6 +27,8 @@ public class GestionnaireDesPolices
     public static final Color COULEUR_SUCCES    = Color.CYAN;
     public static final Color COULEUR_SOUS_TITRE = Color.LIGHT_GRAY;
     public static final Color COULEUR_TXT_BOUTON = Color.WHITE;
+    public static final Color COULEUR_TXT_SUR_COULEUR_DE_FOND = new Color(20,60,0);
+    
     
     static
     {
