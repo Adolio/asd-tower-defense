@@ -10,6 +10,7 @@ import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.outils.Astuces;
+import models.outils.GestionnaireSons;
 import models.outils.MeilleursScores;
 import models.outils.Outils;
 import models.outils.Score;
@@ -115,7 +116,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		itemAPropos.addActionListener(this);
 		
 		// ajout du menu
-		parent.setJMenuBar(menuPrincipal);
+		//parent.setJMenuBar(menuPrincipal);
 		
 		
 		//--------------------------------------
@@ -168,7 +169,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		JLabel lblNbEtoiles = new JLabel(nbEtoiles+" x");
 		lblNbEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		lblNbEtoiles.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+		lblNbEtoiles.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
 		
 		pNbEtoiles.add(lblNbEtoiles);
 		pNbEtoiles.add(new JLabel(I_SCORE));
@@ -249,14 +250,17 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         	    bScore.setBackground(LookInterface.COULEUR_BOUTON);
         	    bScore.addActionListener(this);
         	    
-        	    bScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        	    //bScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         	    bScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
 
         	    pInfoTerrain.add(bScore,BorderLayout.SOUTH);
 		    }
 		    else
 		    {
-		        pInfoTerrain.add(new JLabel(" "),BorderLayout.SOUTH);
+		        JPanel tmp = new JPanel();
+		        tmp.setPreferredSize(new Dimension(1,30));
+		        tmp.setOpaque(false);
+		        pInfoTerrain.add(tmp,BorderLayout.SOUTH);
 		    }
 		    //-----------------------------------------
 	        //-- bloquage des terrains - progression --
@@ -353,63 +357,23 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// les terrains
 		else if(source == boutonsTerrains[0])
 		{
-		    actionnerBarreDeChargement();
-		    
 		    Jeu jeu = new Jeu();
-		    jeu.setTerrain(new ElementTD(jeu));
-		    Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
-            Joueur joueur = new Joueur("Joueur");
-            equipe.ajouterJoueur(joueur);
-            jeu.initialiser();
-            new Fenetre_JeuSolo(jeu,joueur);
-			
-			chargementTermine = true;
-			parent.dispose();
+		    lancerJeu(jeu, new ElementTD(jeu));
 		}
 		else if(source == boutonsTerrains[1])
 		{
-		    actionnerBarreDeChargement();
-
 		    Jeu jeu = new Jeu();
-            jeu.setTerrain(new Spiral(jeu));
-            Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
-            Joueur joueur = new Joueur("Joueur");
-            equipe.ajouterJoueur(joueur);
-            jeu.initialiser();
-            new Fenetre_JeuSolo(jeu,joueur);
-		    
-		    chargementTermine = true;
-		    parent.dispose();
+            lancerJeu(jeu, new Spiral(jeu));
 		}
 		else if(source == boutonsTerrains[2])
-		{
-		    actionnerBarreDeChargement();
-		     
+		{ 
 		    Jeu jeu = new Jeu();
-            jeu.setTerrain(new Desert(jeu));
-            Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
-            Joueur joueur = new Joueur("Joueur");
-            equipe.ajouterJoueur(joueur);
-            jeu.initialiser();
-            new Fenetre_JeuSolo(jeu,joueur);
-
-		    chargementTermine = true;
-		    parent.dispose();
+		    lancerJeu(jeu, new Desert(jeu));
 		}
 		else if(source == boutonsTerrains[3])
 		{
-		    actionnerBarreDeChargement();
-		    
 		    Jeu jeu = new Jeu();
-            jeu.setTerrain(new WaterWorld(jeu));
-            Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
-            Joueur joueur = new Joueur("Joueur");
-            equipe.ajouterJoueur(joueur);
-            jeu.initialiser();
-            new Fenetre_JeuSolo(jeu,joueur);
-		    
-		    chargementTermine = true;
-		    parent.dispose();
+		    lancerJeu(jeu, new WaterWorld(jeu));
 		}
 		else if(source == itemMSElementTD)
 		    new Fenetre_MeilleursScores(ElementTD.NOM, parent);
@@ -435,6 +399,31 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         else if(source == boutonsScore[3])
             new Fenetre_MeilleursScores("WaterWorld", parent);   
 	}
+
+	/**
+	 * Permet de lancer un jeu.
+	 * 
+	 * Elle créer les équipes pour un jeu solo
+	 * 
+	 * @param jeu le jeu
+	 * @param terrain le terrain
+	 */
+    private void lancerJeu(Jeu jeu, Terrain terrain)
+    {
+        GestionnaireSons.arreterTousLesSons(Fenetre_MenuPrincipal.FICHIER_MUSIQUE_MENU);
+        
+        actionnerBarreDeChargement();
+        
+        jeu.setTerrain(terrain);
+        Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
+        Joueur joueur = new Joueur("Joueur");
+        equipe.ajouterJoueur(joueur);
+        jeu.initialiser();
+        new Fenetre_JeuSolo(jeu,joueur);
+        
+        chargementTermine = true;
+        parent.dispose();
+    }
 
     synchronized private void actionnerBarreDeChargement()
     {  

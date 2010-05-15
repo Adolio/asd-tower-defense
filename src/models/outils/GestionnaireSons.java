@@ -128,16 +128,29 @@ public class GestionnaireSons
         {
             Iterator<Son> iSons = sons.iterator();
             Son son;
-            while(iSons.hasNext())
+            
+            /* 
+             * TODO lève une java.util.ConcurrentModificationException 
+             * lors du lancement du jeu, je sais pas pourquoi...
+             */
+            try 
             {
-                son = iSons.next();
-                
-                if(son.getFichier() == fichier)
+                while(iSons.hasNext())
                 {
-                    son.arreter();
-                    iSons.remove();
+                    son = iSons.next();
+                    
+                    if(son.getFichier() == fichier)
+                    {
+                        son.arreter();
+                        
+                        
+                            iSons.remove();
+                    }
+                   
                 }
-            }
+             }
+            catch(java.util.ConcurrentModificationException cme)
+            {}
         }
     }
     

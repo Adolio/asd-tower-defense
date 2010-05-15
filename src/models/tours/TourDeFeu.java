@@ -29,7 +29,7 @@ public class TourDeFeu extends Tour
     public static final Image ICONE;
     public static final int NIVEAU_MAX = 5;
     private static final double RAYON_IMPACT = 20.0;
-    public static final int PRIX_ACHAT = 100;
+    public static final int PRIX_ACHAT = 120;
     private static final String DESCRIPTION = 
         "La tour de feu est une tour qui très rapide " +
         "mais qui fait de faible dégâts. " +

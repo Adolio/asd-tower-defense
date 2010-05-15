@@ -51,7 +51,7 @@ public class TourDeGlace extends Tour
               COULEUR,          // couleur de fond
               "Glace",          // nom
               PRIX_ACHAT,       // prix achat
-              30,               // degats
+              20,               // degats
               50,               // rayon de portee
               2,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE_ET_AIR, // type
