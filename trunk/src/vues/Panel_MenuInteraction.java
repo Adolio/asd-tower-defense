@@ -287,7 +287,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	    bTourDeGlace.setEnabled(nbPiecesOr >= TourDeGlace.PRIX_ACHAT);
 	    bTourElectrique.setEnabled(nbPiecesOr >= TourElectrique.PRIX_ACHAT);
 	    bTourDeFeu.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
-	    bTourDAir.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
+	    bTourDAir.setEnabled(nbPiecesOr >= TourDAir.PRIX_ACHAT);
 	    bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
 	    
 	    lNbPiecesOr.setText(String.format("%04d",nbPiecesOr));

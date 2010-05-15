@@ -90,6 +90,11 @@ public class Jeu
      * TODO
      */
     Date temps;
+
+    /**
+     * Permet de savoir si la partie est terminée
+     */
+    private boolean estTerminee;
     
     
     /**
@@ -126,12 +131,25 @@ public class Jeu
 	    
         vagueCourante.lancerVague(this, cible, edv, edc);
 	}
+	
+	/**
+     * Permet de savoir si la partie est terminée
+     * 
+     * @return true si elle l'est false sinon
+     */
+	public boolean estTerminee()
+	{
+	    return estTerminee;
+	}
+	
 
     /**
      * Permet de terminer la partie en cours
      */
     public void terminerLaPartie()
     {
+        estTerminee = true;
+        
         arreterTout();
     }
 

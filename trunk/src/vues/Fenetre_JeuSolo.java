@@ -332,7 +332,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 */
 	private void demanderEnregistrementDuScore()
 	{
-	    if(joueur.getScore() > 0)
+	    // si le joueur a un score > 0 et que la partie n'est pas déjà terminée
+	    if(joueur.getScore() > 0 && !jeu.estTerminee())
         {
             if(JOptionPane.showConfirmDialog(this, 
                     "Voulez vous sauver votre score ?", 

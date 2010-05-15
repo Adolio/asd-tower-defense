@@ -32,7 +32,7 @@ public class WaterWorld extends Terrain
 	
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/Oursvince_Etincelle/Etincelle.mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/Defnael/Combat.mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/water.png");

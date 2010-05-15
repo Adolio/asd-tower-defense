@@ -28,6 +28,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     private JButton bRejoindrePartieMulti = new JButton("Rejoindre");
     private JButton bCreerPartieMulti = new JButton("Créer");
     private JButton bRegles = new JButton("Règles");
+    private JButton bAPropos = new JButton("A propos");
     private JButton bQuitter = new JButton("Quitter");
 
     private JFrame parent;
@@ -96,9 +97,15 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
 
         // Regles
         bRegles.addActionListener(this);
-        bRegles.setBounds(555, 0, 100, 50);
+        bRegles.setBounds(555, 0, 100, 25);
         GestionnaireDesPolices.setStyle(bRegles);
         pAbsolu.add(bRegles);
+
+        // A propos
+        bAPropos.addActionListener(this);
+        bAPropos.setBounds(555, 30, 100, 25);
+        GestionnaireDesPolices.setStyle(bAPropos);
+        pAbsolu.add(bAPropos);
 
         // quitter
         bQuitter.addActionListener(this);
@@ -136,13 +143,15 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
             parent.getContentPane().add(new Panel_ModeSolo(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-        } else if (source == bRejoindrePartieMulti)
+        } 
+        else if (source == bRejoindrePartieMulti)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_RejoindrePartieMulti(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-        } else if (source == bCreerPartieMulti)
+        } 
+        else if (source == bCreerPartieMulti)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_CreerPartieMulti(parent),
@@ -150,8 +159,11 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
             parent.getContentPane().validate();
         }
         else if(source == bRegles)
-        {
             new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), parent);
-        }
+       
+        else if(source == bAPropos)
+            new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"), parent);
+      
+        
     }
 }

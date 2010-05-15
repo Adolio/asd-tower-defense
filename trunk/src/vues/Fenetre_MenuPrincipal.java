@@ -6,6 +6,9 @@ import java.io.File;
 
 import javax.swing.*;
 
+import models.outils.GestionnaireSons;
+import models.outils.Son;
+
 /**
  * Fenetre du menu principal du jeu.
  * <p>
@@ -37,6 +40,10 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
     public static final int LARGEUR_FENETRE = 800;
     public static final int HAUTEUR_FENETRE = 600;
     
+    public static final File FICHIER_MUSIQUE_MENU = new File("snd/Oursvince_Etincelle/Espoir.mp3");
+    
+    
+    
     /**
      * Constructeur de la fenetre du menu principal
      */
@@ -66,8 +73,18 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         itemAPropos.addActionListener(this);
 
         // ajout du menu
-        setJMenuBar(menuPrincipal);
+        //setJMenuBar(menuPrincipal);
 
+        
+        // ------------------------
+        // -- musique d'ambiance --
+        // ------------------------
+        Son musiqueDAmbiance = new Son(FICHIER_MUSIQUE_MENU);
+
+        GestionnaireSons.ajouterSon(musiqueDAmbiance);
+        musiqueDAmbiance.lire(0); // lecture infinie
+        
+        
         // ---------------------
         // -- panel principal --
         // ---------------------
