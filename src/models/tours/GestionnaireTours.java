@@ -27,8 +27,14 @@ public class GestionnaireTours implements Runnable
      */
     public GestionnaireTours(Jeu jeu)
     {
-        this.jeu = jeu;
-        
+        this.jeu = jeu; 
+    }
+    
+    /**
+     * Permet de demarrer la gestion
+     */
+    public void demarrer()
+    {
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -104,12 +110,15 @@ public class GestionnaireTours implements Runnable
                     return false;
         }
         
+        // elle est dans la zone de construction du joueur
+        if(!tour.getPrioprietaire().getEmplacement().getZoneDeConstruction().intersects(tour))
+            return false;
+        
         // il n'y a pas un mur et elle est bien dans le terrain
         if(!jeu.getTerrain().laTourPeutEtrePosee(tour))
             return false;
 
         // il n'y a pas deja une creature
-        
         Creature creature;
         Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
         while(eCreatures.hasMoreElements())

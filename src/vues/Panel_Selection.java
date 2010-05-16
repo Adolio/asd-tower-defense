@@ -17,18 +17,15 @@ import models.tours.*;
  * 
  * C'est dans ce panel que le joueur peut ameliorer une tour ou la vendre.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.0 | mai 2010
  * @since jdk1.6.0_16
  * @see JPanel
  * @see Tour
  */
 public class Panel_Selection extends JPanel
 {
-	private boolean enPause;
-	
+    private static final long serialVersionUID = 1L;
 	private Panel_InfoTour pInfoTour;
 	private Panel_InfoCreature pInfoCreature;
 
@@ -106,17 +103,31 @@ public class Panel_Selection extends JPanel
         }
 	}
 
+	/**
+	 * Permet d'informer le panel d'un changement d'état de la pause
+	 * 
+	 * @param enPause
+	 */
     public void setPause(boolean enPause)
     {
-        this.enPause = enPause;
         pInfoTour.setPause(enPause);
     }
 
+    /**
+     * Permet de recuperer le panel d'info tour
+     * 
+     * @return le panel d'information d'une tour
+     */
     public Panel_InfoTour getPanelInfoTour()
     {
         return pInfoTour;
     }
 
+    /**
+     * Permet de recuperer le panel d'information d'une créature
+     * 
+     * @return le panel d'information d'une créature
+     */
     public Panel_InfoCreature getPanelInfoCreature()
     {
         return pInfoCreature;

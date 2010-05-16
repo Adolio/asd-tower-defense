@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.tours.Tour;
 
@@ -385,14 +386,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    // modification de la transparence
 		    setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
 			
-			// dessin de la zone de depart
-			g2.setColor(COULEUR_ZONE_DEPART);
-			dessinerZone(joueur.getEquipe().getZoneDepartCreatures(0),g2);
-			
-			// dessin de la zone d'arrivee
-			g2.setColor(COULEUR_ZONE_ARRIVEE);
-			dessinerZone(joueur.getEquipe().getZoneArriveeCreatures(),g2);
-			
+			// affichages des zones de départ et arrivée
+		    for(Equipe equipe : jeu.getEquipes())
+		    {
+		        // dessin de la zone de depart
+	            g2.setColor(COULEUR_ZONE_DEPART);
+	            dessinerZone(equipe.getZoneDepartCreatures(0),g2);
+	            
+	            // dessin de la zone d'arrivee
+	            g2.setColor(COULEUR_ZONE_ARRIVEE);
+	            dessinerZone(equipe.getZoneArriveeCreatures(),g2);
+		    }
+
 			ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
 			setTransparence(ALPHA_SURFACE_MUR, g2);
 			g2.setColor(jeu.getTerrain().getCouleurMurs());
@@ -765,7 +770,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void run()
 	{
 		// Tant que la partie est en cours...
-		while(!joueur.aPerdu())
+		while(!jeu.estTermine())
 		{
 			// Raffraichissement du panel
 			repaint(); // -> appel paintComponent

@@ -414,6 +414,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         
         actionnerBarreDeChargement();
         
+        terrain.initialiser();
         jeu.setTerrain(terrain);
         Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
         Joueur joueur = new Joueur("Joueur");

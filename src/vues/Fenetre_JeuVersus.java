@@ -26,7 +26,7 @@ import models.joueurs.Joueur;
  * @see JFrame
  * @see ActionListener
  */
-public class Fenetre_JeuSolo extends JFrame implements ActionListener, 
+public class Fenetre_JeuVersus extends JFrame implements ActionListener, 
                                                     EcouteurDeCreature, 
                                                     EcouteurDeVague,
                                                     EcouteurDePanelTerrain,
@@ -137,7 +137,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_JeuSolo(Jeu jeu, Joueur joueur)
+	public Fenetre_JeuVersus(Jeu jeu, Joueur joueur)
 	{
 	    this.jeu = jeu;
         this.joueur = joueur;
@@ -258,8 +258,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    //----------------------
         //-- demarrage du jeu --
         //----------------------
-        jeu.demarrer();
-        
+		// TODO faire un 5.. 4.. 3.. 2.. 1..
+		jeu.demarrer();
+		
+	
 		//---------------------------------------
 		//-- dernieres propietes de la fenetre --
 		//---------------------------------------

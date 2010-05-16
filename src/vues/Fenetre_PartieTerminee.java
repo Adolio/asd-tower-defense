@@ -43,7 +43,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
      */
     public Fenetre_PartieTerminee(Frame fenParent, int score, long dureePartie, String nomTerrain)
     {
-        // TODO modal preferences de la fenetre
+        // modal preferences de la fenetre
         super(fenParent,"Partie Terminée.",true); 
         setLayout(new BorderLayout());
         setResizable(false);

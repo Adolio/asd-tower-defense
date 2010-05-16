@@ -446,39 +446,25 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             //---------------------
             //-- Création du jeu --
             //---------------------
+            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
+            terrain.initialiser();
+            
             Jeu jeu = new Jeu();
-            jeu.setTerrain(terrains.get(tbTerrains.getSelectedRow()));
+            jeu.setTerrain(terrain);
             
+            terrain.setJeu(jeu);
             
-            // récupération de la première equipe
-            Joueur joueur1 = new Joueur(tfPseudo.getText());
-            //Equipe equipe1 = jeu.getEquipes().get(0);
-            
+ 
             // ajout du joueur dans le premier emplacement
-            //equipe1.ajouterJoueur(joueur1);
-            ajouterJoueurDansJeu(jeu, joueur1);
-            
-            
+            Joueur joueur1 = new Joueur(tfPseudo.getText());
+            jeu.trouverPlace(joueur1);
             
             // TODO test
-            Joueur joueur2 = new Joueur("toto");
-            ajouterJoueurDansJeu(jeu, joueur2);
+            Joueur joueur2 = new Joueur("fictiveBoy");
+            jeu.trouverPlace(joueur2);
             
-            Joueur joueur3 = new Joueur("Noemie");
-            ajouterJoueurDansJeu(jeu, joueur3);
-            
-            
-            //Equipe equipe2 = jeu.getEquipes().get(1);
-            //equipe1.ajouterJoueur(joueur3);
-            //equipe2.ajouterJoueur(joueur2);
-            
-            
-            
-            
-            
-            
-            
-            
+            Joueur joueur3 = new Joueur("fictiveGirl");
+            jeu.trouverPlace(joueur3);
             
             
             // connexion réussie
@@ -517,23 +503,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
                 canalServeurEnregistrement.fermer();
             }
-        }
-    }
-
-    private void ajouterJoueurDansJeu(Jeu jeu, Joueur joueur)
-    {
-        for(int i=0;i<jeu.getEquipes().size();i++)
-        {
-            try
-            {              
-                Equipe tmpE = jeu.getEquipes().get(i);
-                
-                tmpE.ajouterJoueur(joueur);
-                
-                return;
-            }
-            catch(IllegalArgumentException iae)
-            {}
         }
     }
 }

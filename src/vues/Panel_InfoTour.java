@@ -3,8 +3,6 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-
 import models.tours.*;
 
 /**
@@ -37,8 +35,6 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(220,120);
-    private static final Border BORDURE_DESCRIPTION = new EmptyBorder(10,10,10,10);
-    //private static final Border BORDURE_DESCRIPTION = new LineBorder(Color.DARK_GRAY,1,true);
     
 	// membres graphiques
 	private JLabel lNom 			 = new JLabel();
