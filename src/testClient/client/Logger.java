@@ -24,7 +24,7 @@ public class Logger {
      * @param message Le message d'erreur
      */
     public static void err(String message) {
-	log("[\033[31mError\033[00m] " + message);
+	log("[Error] " + message);
     }
 
     /**
@@ -33,7 +33,7 @@ public class Logger {
      * @param message Le message à afficher
      */
     private static void _log(String message) {
-	System.out.println("[\033[32mCaveShooter\033[00m] " + message);
+	System.out.println("[Client]" + message);
     }
 
 }
