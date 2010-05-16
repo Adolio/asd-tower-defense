@@ -90,7 +90,7 @@ public class Spiral extends Terrain
 		ajouterMur(new Rectangle(20,0,460,20)); 	// 1
 		ajouterMur(new Rectangle(0,0,20,500));	 	// 2	
 		ajouterMur(new Rectangle(20,480,440,20)); 	// 3
-		ajouterMur(new Rectangle(460,140,20,360));  // 4
+		ajouterMur(new Rectangle(460,140,80,360));  // 4
 		ajouterMur(new Rectangle(140,140,340,20));  // 5
 		ajouterMur(new Rectangle(120,140,20,240));	// 6
 		ajouterMur(new Rectangle(140,360,200,20));	// 7

@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
-
 import javax.swing.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -208,6 +207,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
     private int boutonDragg;
 
+    /**
+     * Permet de savoir s'il faut centrer la vue sur la creature selectionnee
+     */
     private boolean centrerSurCreatureSelectionnee;
 	
 	// curseurs
@@ -229,9 +231,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	                 (image, new Point(0, 0), "curseurInvisible");
 	    */
 	    
-	    Image imagee = Toolkit.getDefaultToolkit().getImage("img/icones/hand_grab2.png");
+	    Image iHandGrab = Toolkit.getDefaultToolkit().getImage("img/icones/hand_grab.gif");   
 	    curMainAgripper = Toolkit.getDefaultToolkit().createCustomCursor
-        (imagee,  new Point(0, 0), "curseurInvisible"); 
+        (iHandGrab,  new Point(0, 0), "grab"); 
 	}
 	
 	
@@ -347,24 +349,17 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void paintComponent(Graphics g)
 	{
 	    Graphics2D g2 = (Graphics2D) g;
-
-	    if(coeffTaille < 1)
-	    {
-	        decaleX = (int) (getSize().width/2.0 - LARGEUR*coeffTaille/2.0);
-	        decaleY = (int) (getSize().height/2.0 - HAUTEUR*coeffTaille/2.0);
-	    }
-	    
+ 
+	    // echelle du rendu et positionnement
 	    g2.scale(coeffTaille, coeffTaille);
 	    g2.translate(decaleX, decaleY);
-	    
 	    
 	    //---------------------------
         //-- affichage de l'espace --
         //---------------------------
 	    g2.setColor(LookInterface.COULEUR_DE_FOND_2);
 	    g2.fillRect(-1000, -1000, 2000, 2000);
-	    
-	    
+	     
 		//--------------------------
 		//-- affichage du terrain --
 		//--------------------------
@@ -498,7 +493,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			setTransparence(ALPHA_CHEMIN_CREATURE,g2);
 			dessinerCheminCreature(creatureSelectionnee,g2);
 			
-			if(centrerSurCreatureSelectionnee )
+			if(centrerSurCreatureSelectionnee)
 			    centrerSur((int) creatureSelectionnee.getX(),
 			               (int) creatureSelectionnee.getY());
 			
@@ -550,7 +545,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             
             g2.setColor(Color.WHITE);
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
-            g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 50, HAUTEUR / 2 - 50);
+            g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 100, HAUTEUR / 2 - 50);
 	    }
 	}
 
@@ -773,7 +768,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		while(!joueur.aPerdu())
 		{
 			// Raffraichissement du panel
-			repaint(); // -> appel paint
+			repaint(); // -> appel paintComponent
 			
 			// Endore le thread
 			try {
@@ -798,15 +793,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    
 	    // clique gauche
 	    if (me.getButton() == MouseEvent.BUTTON1)
-		{
-	        
-	            
+		{    
 	        sourisGrabX = me.getX();
 	        sourisGrabY = me.getY();
 	        
 	        decaleGrabX = decaleX;
 	        decaleGrabY = decaleY;
-	        
 	        
 	        Point positionSurTerrain = getCoordoneeSurTerrainOriginal(sourisX,sourisY);
 	        
@@ -826,7 +818,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					{
 						tourSelectionnee = tour; // la tour est selectionnee
 						// si une tour est selectionnee, il n'y pas d'ajout
-						tourAAjouter = null;  
+						tourAAjouter = null;
 					}
 					
 				    // informe la fenetre qu'une tour a ete selectionnee
@@ -838,8 +830,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        // aucun tour trouvee => clique dans le vide.
             tourSelectionnee = null;
             
-            edpt.tourSelectionnee(tourSelectionnee,
-                    Panel_InfoTour.MODE_SELECTION);
+            edpt.tourSelectionnee(tourSelectionnee, Panel_InfoTour.MODE_SELECTION);
 			
             //------------------------------
             //-- selection d'une creature --
@@ -1068,7 +1059,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	}
 	
 	// methodes non redéfinies (voir MouseListener)
-	public void mouseClicked(MouseEvent me){}
+	public void mouseClicked(MouseEvent me)
+	{}
 	
 	/**
 	 * Methode de gestion des evenements lors de la relache d'une touche
@@ -1100,7 +1092,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{}
 	
 	@Override
-	public void keyTyped(KeyEvent ke){}
+	public void keyTyped(KeyEvent ke)
+	{}
 
 	@Override
     public void mouseWheelMoved(MouseWheelEvent e)
@@ -1109,18 +1102,26 @@ public class Panel_Terrain extends JPanel implements Runnable,
         Point pAvant = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
         
         // adaptation de l'echelle
-        if(e.getWheelRotation() < 0 || coeffTaille > 1.0) // zoom
-            coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
-        //else if() // dézoom
-        //    coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
-
-        // recupère le point après le changement d'echelle
-        Point pAprès = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+        coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
         
-        // adapte le décalage pour que le point ciblé reste au même
-        // endroit en proportion de du panel
-        decaleX +=  pAprès.x - pAvant.x;
-        decaleY +=  pAprès.y - pAvant.y;
+        // pas de dézoom
+        if(coeffTaille < 1.0)
+        {
+            coeffTaille = 1.0;
+            
+            // centrer sur le milieu du terrain
+            centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
+        }
+        else
+        {
+            // recupère le point après le changement d'echelle
+            Point pAprès = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+            
+            // adapte le décalage pour que le point ciblé reste au même
+            // endroit en proportion du panel
+            decaleX +=  pAprès.x - pAvant.x;
+            decaleY +=  pAprès.y - pAvant.y;
+        }
     }
     
     /**
@@ -1132,9 +1133,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
      */
     private void centrerSur(int x, int y)
     {
-        // TODO marche pas vraiment avec les zooms
-        decaleX = (int) (getSize().width/2.0 - x * coeffTaille);
-        decaleY = (int) (getSize().height/2.0 - y * coeffTaille);
+        decaleX = (int) ((getSize().width/2.0 - x * coeffTaille) / coeffTaille);
+        decaleY = (int) ((getSize().height/2.0 - y * coeffTaille) / coeffTaille);
     }
-    
 }

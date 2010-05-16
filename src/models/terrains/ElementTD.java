@@ -74,14 +74,12 @@ public class ElementTD extends Terrain
         /*
          * Définition des murs du labyrinthe.
          */
-        ajouterMur(new Rectangle(20, 0, 80, 20));
-        ajouterMur(new Rectangle(0, 0, 20, 500));
+        ajouterMur(new Rectangle(0, -40, 100, 60));
+        ajouterMur(new Rectangle(0, 20, 20, 480));
         ajouterMur(new Rectangle(20, 480, 440, 20));
-        ajouterMur(new Rectangle(460, 0, 20, 500));
-        ajouterMur(new Rectangle(320, 0, 140, 20));
-        
+        ajouterMur(new Rectangle(460, 20, 20, 480));
+        ajouterMur(new Rectangle(320, -40, 160, 60));
         ajouterMur(new Rectangle(200, -40, 20, 140));
-        
         ajouterMur(new Rectangle(120, 100, 240, 20));
         ajouterMur(new Rectangle(120, 120, 20, 20));
         ajouterMur(new Rectangle(340, 120, 20, 260));

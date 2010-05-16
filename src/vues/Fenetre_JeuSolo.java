@@ -4,11 +4,9 @@ import models.animations.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
 import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -40,8 +38,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	// constantes statiques
     private final int MARGES_PANEL = 20;
     private static final long serialVersionUID = 1L;
+    private static final ImageIcon I_RETOUR = new ImageIcon("img/icones/arrow_undo.png");
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
+	private static final ImageIcon I_REGLES = new ImageIcon("img/icones/script.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
@@ -56,20 +56,24 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
+	private final JMenu     menuJeu         = new JMenu("Jeu");
 	private final JMenu     menuSon         = new JMenu("Son");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemAPropos	    = new JMenuItem("A propos",I_AIDE);
+	private final JMenuItem itemRegles      = new JMenuItem("Règles du jeu...",I_REGLES);
+	private final JMenuItem itemAPropos	    = new JMenuItem("A propos...",I_AIDE);
 
+	private final JMenuItem itemPause
+        = new JMenuItem("Pause"); 
 	private final JMenuItem itemActiverDesactiverSon 
-	    = new JMenuItem("activer / desactiver",I_SON_ACTIF); 
+	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem("activer / desactiver le mode debug");
+		= new JMenuItem("Activer / Désactiver le mode debug");
 	private final JMenuItem itemAfficherRayonsPortee	    
-		= new JMenuItem("activer / desactiver affichage des rayons de portee");
+		= new JMenuItem("Activer / Désactiver l'affichage des rayons de portée");
 	private final JMenuItem itemQuitter	    
 	    = new JMenuItem("Quitter",I_QUITTER);
 	private final JMenuItem itemRetourMenu  
-	    = new JMenuItem("Retour vers le menu",I_QUITTER);
+	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
 	
 	//----------------------------
 	//-- declaration des panels --
@@ -146,26 +150,34 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		menuPrincipal.add(menuFichier);
 		
 		// menu Edition
+		itemPause.setAccelerator(KeyStroke.getKeyStroke('P'));
 		menuEdition.add(itemAfficherMaillage);
 		menuEdition.add(itemAfficherRayonsPortee);
 		menuPrincipal.add(menuEdition);
+		
+		// menu Jeu
+		menuJeu.add(itemPause);
+		menuPrincipal.add(menuJeu);
 		
 		// menu Son
 		menuSon.add(itemActiverDesactiverSon);
 		menuPrincipal.add(menuSon);
 
-		
 		// menu Aide
+		menuAide.add(itemRegles);
 		menuAide.add(itemAPropos);
 		menuPrincipal.add(menuAide);
 		
 		// ajout des ecouteurs
 		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
+		itemPause.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
 		itemActiverDesactiverSon.addActionListener(this);
+		itemRegles.addActionListener(this);
 		itemAPropos.addActionListener(this);
+		
 		
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
@@ -266,7 +278,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		// retour au menu principal
 		else if(source == itemRetourMenu)
 		    demanderRetourAuMenuPrincipal();  
-		    
+		
+		// règles
+		else if(source == itemRegles)
+		    new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), this);
+
 		// a propos
 		else if(source == itemAPropos)
 			new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
@@ -278,6 +294,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 			else
 			    itemAfficherMaillage.setIcon(I_INACTIF);
 		
+		else if(source == itemPause) 
+		    activerDesactiverLaPause();
+
 		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)
 		    if(panelTerrain.basculerAffichageRayonPortee())
@@ -598,7 +617,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 			    bLancerVagueSuivante.setEnabled(true);
 			    vaguePeutEtreLancee = false;
 		        bLancerVagueSuivante.setText("Retour au menu");
-		        bLancerVagueSuivante.setIcon(I_QUITTER);
+		        bLancerVagueSuivante.setIcon(I_RETOUR);
 		        
 			    new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom());
 			}
@@ -687,26 +706,35 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {
         // PAUSE
         if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
-        {
-            boolean enPause = jeu.togglePause();
-            
-            if(enPause)
-                timer.pause();
-            else
-                timer.play();
-            
-            // inhibation
-            panelMenuInteraction.setPause(enPause);
-            
-            bLancerVagueSuivante.setEnabled(!enPause);
-        } 
+            activerDesactiverLaPause();  
         // raccourci lancer vague suivante
         else if(Character.isSpaceChar(ke.getKeyChar())) 
             if(!jeu.estEnPause())
                 lancerVagueSuivante();
     }
 
+    /**
+     * Permet de mettre le jeu en pause.
+     */
+    private void activerDesactiverLaPause()
+    {
+        boolean enPause = jeu.togglePause();
+        
+        if(enPause)
+            timer.pause();
+        else
+            timer.play();
+        
+        // inhibation
+        panelMenuInteraction.setPause(enPause);
+        
+        bLancerVagueSuivante.setEnabled(!enPause);
+    }
+
     @Override
     public void keyTyped(KeyEvent e)
     {}
+    
+    
+    
 }
