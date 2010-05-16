@@ -9,86 +9,88 @@ import java.awt.event.*;
 import java.awt.*;
 
 /**
- * A basic help window, displaying a web page containing the User documentation
- * of the program
+ * Fenetre premettant d'afficher une page HTML.
  * 
- * @author Da Silva Yvan
- * 
+ * @author Aurelien Da Campo
  */
-class Fenetre_HTML extends JFrame implements ActionListener {
+class Fenetre_HTML extends JFrame implements ActionListener
+{
 
-    private JEditorPane       editorPane;
+    private JEditorPane epHTML;
     private static final long serialVersionUID = 1L;
     private JButton bFermer = new JButton("Fermer");
-    
-    
-   /**
-    * HelpWindow constructor
-    * 
-    * @param title The window title
-    * @param url The web page link
-    * @param parent The parent window
-    */
-   public Fenetre_HTML(String title, File fichier, JFrame parent) {
-      
-       super(title);
-      setIconImage(parent.getIconImage());
-      getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
-      
-      // contenu HTML
-      editorPane = new JEditorPane();
-      editorPane.setEditable(false);
-      editorPane.setBorder(new EmptyBorder(-20,0,0,0));
-      
-      URL url = null;
-      
-      try{
-          url = new URL("file:"+fichier.getPath());
-      } 
-      catch (MalformedURLException e){
-          e.printStackTrace();
-      }
-      
-      try {
-         editorPane.setPage(url);
-      } 
-      catch (Exception e) {}
-      
-      // ajout du fichier
-      editorPane.addHyperlinkListener(new HyperlinkListener() {
-         public void hyperlinkUpdate(HyperlinkEvent event) {
-            try {
-               if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                  editorPane.setPage(event.getURL());
-               }
-            } catch (IOException e) {
-            }
-         }
-      });
-      
-      getContentPane().add(new JScrollPane(editorPane), BorderLayout.CENTER);
-      
-      // bouton fermer
-      bFermer.addActionListener(this);
-      bFermer.setBackground(LookInterface.COULEUR_BOUTON);
-      bFermer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
-      getContentPane().add(bFermer, BorderLayout.SOUTH);
-      
-      // dernier réglages
-      setSize(550, 600);
-      setLocationRelativeTo(null);
-      setVisible(true);
-   }
 
-   /**
-    * ActionPerformed read action from user on the window.
-    * 
-    * @param e The event performed
-    */
-   public void actionPerformed(ActionEvent e) {
-      
-       if (e.getSource() == bFermer)
-         this.dispose();
-       
-   }
+    /**
+     * Constructeur
+     * 
+     * @param titre le titre de la fenetre
+     * @param fichier le fichier html local
+     * @param parent la fenêtre parent
+     */
+    public Fenetre_HTML(String titre, File fichier, JFrame parent)
+    {
+
+        super(titre);
+        setIconImage(parent.getIconImage());
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+
+        // contenu HTML
+        epHTML = new JEditorPane();
+        epHTML.setEditable(false);
+        epHTML.setBorder(new EmptyBorder(-20, 0, 0, 0));
+
+        URL url = null;
+
+        try
+        {
+            url = new URL("file:" + fichier.getPath());
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            epHTML.setPage(url);
+        } catch (Exception e)
+        {
+        }
+
+        // ajout du fichier
+        epHTML.addHyperlinkListener(new HyperlinkListener()
+        {
+            public void hyperlinkUpdate(HyperlinkEvent event)
+            {
+                try
+                {
+                    if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+                    {
+                        epHTML.setPage(event.getURL());
+                    }
+                } catch (IOException e)
+                {
+                }
+            }
+        });
+
+        getContentPane().add(new JScrollPane(epHTML), BorderLayout.CENTER);
+
+        // bouton fermer
+        bFermer.addActionListener(this);
+        bFermer.setBackground(LookInterface.COULEUR_BOUTON);
+        bFermer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
+        getContentPane().add(bFermer, BorderLayout.SOUTH);
+
+        // dernier réglages
+        setSize(550, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == bFermer)
+            this.dispose();
+    }
 }

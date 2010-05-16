@@ -304,7 +304,6 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         } 
         catch (SocketException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         lIPs.setText(s);
@@ -375,8 +374,12 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                     canalServeurEnregistrement
                             .envoyerString(RequeteEnregistrement.DESENREGISTRER);
                     canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.STOP);
+                            .envoyerString(RequeteEnregistrement.STOP); 
                 }
+
+                jeu.initialiser();
+                new Fenetre_JeuVersus(jeu,joueur);
+                parent.dispose();
             }
 
             // parent.getContentPane().removeAll();

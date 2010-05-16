@@ -1,8 +1,6 @@
 package models.jeu;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -85,16 +83,16 @@ public class Jeu
      * Stockage de la vagues courante
      */
     VagueDeCreatures vagueCourante;
-    
-    /**
-     * TODO
-     */
-    Date temps;
 
     /**
      * Permet de savoir si la partie est terminée
      */
-    private boolean estTerminee;
+    private boolean estTermine;
+
+    /**
+     * Permet de savoir si la partie est initialisée
+     */
+    private boolean estInitialise;
     
     
     /**
@@ -105,8 +103,57 @@ public class Jeu
         gestionnaireTours     = new GestionnaireTours(this);
         gestionnaireCreatures = new GestionnaireCreatures();
         gestionnaireAnimations = new GestionnaireAnimations();
+    }
+    
+    /**
+     * Permet d'initialiser la partie avant le commencement
+     */
+    public void initialiser()
+    {
+        if(terrain == null)
+            throw new IllegalStateException("Terrain nul");
         
-        temps = new Date();
+        if(equipes.size() == 0)
+            throw new IllegalStateException("Aucune équipe inscrite");
+        
+        // initialisation des valeurs par defaut
+        for(Equipe equipe : equipes)
+        {
+            // initialisation des vies restantes
+            equipe.setNbViesRestantes(terrain.getNbViesInitiales());
+            
+            // initialisation des pieces d'or des joueurs
+            for(Joueur joueur : equipe.getJoueurs())
+                joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
+        }  
+        
+        estInitialise = true;
+    }
+
+    /**
+     * Permet de démarrer la partie
+     */
+    public void demarrer()
+    {
+        if(terrain == null)
+            throw new IllegalStateException("Terrain nul");
+        
+        if(!estInitialise)
+            throw new IllegalStateException("Le jeu n'est pas initialisé");
+            
+        // donne les pieces aux joueurs et les vies aux equipes
+        for(Equipe equipe : getEquipes())
+        {
+            equipe.setNbViesRestantes(terrain.getNbViesInitiales());
+            
+            for(Joueur joueur : equipe.getJoueurs())
+                joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
+        }
+        
+        // demarrage des gestionnaires
+        gestionnaireTours.demarrer();
+        gestionnaireCreatures.demarrer();
+        gestionnaireAnimations.demarrer();
     }
     
     /**
@@ -137,18 +184,18 @@ public class Jeu
      * 
      * @return true si elle l'est false sinon
      */
-	public boolean estTerminee()
+	public boolean estTermine()
 	{
-	    return estTerminee;
+	    return estTermine;
 	}
 	
 
     /**
      * Permet de terminer la partie en cours
      */
-    public void terminerLaPartie()
+    public void terminer()
     {
-        estTerminee = true;
+        estTermine = true;
         
         arreterTout();
     }
@@ -228,30 +275,6 @@ public class Jeu
         gestionnaireAnimations.arreterAnimations();
     }
 
-
-    /**
-     * Permet d'initialiser la partie avant le commencement
-     */
-    public void initialiser()
-    {
-        if(terrain == null)
-            throw new IllegalStateException("Terrain nul");
-        
-        if(equipes.size() == 0)
-            throw new IllegalStateException("Aucune équipe inscrite");
-        
-        // initialisation des valeurs par defaut
-        for(Equipe equipe : equipes)
-        {
-            // initialisation des vies restantes
-            equipe.setNbViesRestantes(terrain.getNbViesInitiales());
-            
-            // initialisation des pieces d'or des joueurs
-            for(Joueur joueur : equipe.getJoueurs())
-                joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
-        }     
-    }
-
     /**
      * Permet de mettre en pause le jeu.
      * 
@@ -298,7 +321,7 @@ public class Jeu
     }
 
     /**
-     * Retourn une collection avec tous les joueurs fesant partie
+     * Retourne une collection avec tous les joueurs fesant partie
      * d'une des équipes du jeu.
      * 
      * @return les joueurs
@@ -315,5 +338,31 @@ public class Jeu
         
         // retour
         return joueurs;
+    }
+    
+    /**
+     * Permet d'ajouter un jueur dans le premier emplacement disponible
+     * 
+     * @param joueur le joueur
+     */
+    public void trouverPlace(Joueur joueur)
+    {
+        // ajout du joueur dans le premier emplacement disponible
+        for(int i=0;i<equipes.size();i++)
+        {
+            try
+            {              
+                // on tente l'ajout...
+                equipes.get(i).ajouterJoueur(joueur);
+                return; // équipe trouvée
+            }
+            catch(IllegalArgumentException iae)
+            {
+                
+            }
+        }
+        
+        // TODO securite
+        // throw AucunePlaceDisponible();
     }
 }

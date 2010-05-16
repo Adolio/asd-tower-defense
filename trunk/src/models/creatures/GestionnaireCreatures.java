@@ -26,6 +26,12 @@ public class GestionnaireCreatures implements Runnable
      * Constructeur du gestionnaire des creatures
      */
     public GestionnaireCreatures()
+    {}
+    
+    /**
+     * Permet de demarrer la gestion
+     */
+    public void demarrer()
     {
         Thread thread = new Thread(this);
         thread.start();

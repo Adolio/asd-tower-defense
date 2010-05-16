@@ -46,16 +46,13 @@ public class Main
                     */ 
                } 
                   
-      // TODO a effacer
+      // TODO [A EFFACER]
       Terrain t = new ElementTD_Coop(new Jeu());      
       Terrain.serialiser(t,new File("maps/ElementTD_Coop.map"));
                
-      
       Terrain t2 = new SimpleFiveVersus(new Jeu());      
       Terrain.serialiser(t2,new File("maps/SimpleFiveVersus.map"));
-      
-      
-      
+
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }

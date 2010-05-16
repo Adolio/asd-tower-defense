@@ -63,53 +63,46 @@ public class SimpleFiveVersus extends Terrain
         
         // Création des équipes
         Equipe e1 = new Equipe("Les Rouges",Color.RED);
-        e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e1.ajouterZoneDepartCreatures(new Rectangle(20, 0, 80, 20));
+        e1.setZoneArriveeCreatures(new Rectangle(20, 480, 80, 20));
         e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,0,80,500),Color.RED));
         equipes.add(e1);
         
         Equipe e2 = new Equipe("Les Bleus",Color.BLUE);
-        e2.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e2.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e2.ajouterZoneDepartCreatures(new Rectangle(120, 0, 80, 20));
+        e2.setZoneArriveeCreatures(new Rectangle(120, 480, 80, 20));
         e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(120,0,80,500),Color.BLUE));
         equipes.add(e2);
         
         Equipe e3 = new Equipe("Les Verts",Color.GREEN);
-        e3.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e3.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e3.ajouterZoneDepartCreatures(new Rectangle(220, 0, 80, 20));
+        e3.setZoneArriveeCreatures(new Rectangle(220, 480, 80, 20));
         e3.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(220,0,80,500),Color.GREEN));
         equipes.add(e3);
         
         Equipe e4 = new Equipe("Les Jaunes",Color.YELLOW);
-        e4.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e4.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e4.ajouterZoneDepartCreatures(new Rectangle(320, 0, 80, 20));
+        e4.setZoneArriveeCreatures(new Rectangle(320, 480, 80, 20));
         e4.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(320,0,80,500),Color.YELLOW));
         equipes.add(e4);
         
         Equipe e5 = new Equipe("Les Noirs",Color.BLACK);
-        e5.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
-        e5.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e5.ajouterZoneDepartCreatures(new Rectangle(420, 0, 80, 20));
+        e5.setZoneArriveeCreatures(new Rectangle(420, 480, 80, 20));
         e5.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(420,0,80,500),Color.BLACK));
         equipes.add(e5);
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
         /*
-         * Définition des murs du labyrinthe.
+         * Définition des murs.
          */
-        ajouterMur(new Rectangle(20, 0, 80, 20));
         ajouterMur(new Rectangle(0, 0, 20, 500));
-        ajouterMur(new Rectangle(20, 480, 440, 20));
-        ajouterMur(new Rectangle(460, 0, 20, 500));
-        ajouterMur(new Rectangle(320, 0, 140, 20));
         
-        ajouterMur(new Rectangle(200, -40, 20, 140));
-        
-        ajouterMur(new Rectangle(120, 100, 240, 20));
-        ajouterMur(new Rectangle(120, 120, 20, 20));
-        ajouterMur(new Rectangle(340, 120, 20, 260));
-        ajouterMur(new Rectangle(120, 360, 220, 20));
-        ajouterMur(new Rectangle(20, 240, 220, 20));
-        ajouterMur(new Rectangle(220, 220, 20, 20));
+        ajouterMur(new Rectangle(100, 0, 20, 500));
+        ajouterMur(new Rectangle(200, 0, 20, 500));
+        ajouterMur(new Rectangle(300, 0, 20, 500));
+        ajouterMur(new Rectangle(400, 0, 20, 500));
+        ajouterMur(new Rectangle(500, 0, 20, 500));
     }
 }

@@ -100,8 +100,18 @@ public abstract class Terrain implements Serializable
      * 
      * @see Maillage
      */
-    transient private final Maillage MAILLAGE_TERRESTRE;
-    transient private final Maillage MAILLAGE_AERIEN;
+    transient private Maillage MAILLAGE_TERRESTRE;
+    transient private Maillage MAILLAGE_AERIEN;
+    
+    /**
+     * Dimention du maillage
+     */
+    int largeurMaillage, hauteurMaillage;
+    
+    /**
+     * Offset du maillage
+     */
+    int positionMaillageX, positionMaillageY;
     
     /**
      * Les creatures volantes n'ont pas besoins d'une maillage mais uniquement
@@ -113,9 +123,11 @@ public abstract class Terrain implements Serializable
      * Image de fond du terrain. <br>
      * Note : les murs du terrain sont normalement lies a cette image
      */
-    transient private Image IMAGE_DE_FOND;
-    private ImageIcon imageDeFond;
+    transient private Image imageDeFond;
     
+    // seule les ImageIcon peuvent etre serialisé
+    // utilisation de cette variable pour sauver l'image de fond
+    private ImageIcon iconImageDeFond;
     
     /**
      * Pour le mode debug
@@ -190,25 +202,43 @@ public abstract class Terrain implements Serializable
         LARGEUR = largeur;
         HAUTEUR = hauteur;
         NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
-        NB_VIES_INITIALES = nbViesInitiales;
-        IMAGE_DE_FOND = imageDeFond;
+        NB_VIES_INITIALES      = nbViesInitiales;
+        this.imageDeFond       = imageDeFond;
+        this.iconImageDeFond   = new ImageIcon(imageDeFond);
         
-        this.imageDeFond = new ImageIcon(imageDeFond);
+        this.largeurMaillage = largeurMaillage;
+        this.hauteurMaillage = hauteurMaillage;
+        this.positionMaillageX = positionMaillageX;
+        this.positionMaillageY = positionMaillageY;
         
         NOM             = nom;
         COULEUR_DE_FOND = couleurDeFond;
         COULEUR_MURS    = couleurMurs;
-        MODE            = mode;
-        
-        
+        MODE            = mode;   
+    }
+   
+    /**
+     * Permet d'initialiser le terrain.
+     * 
+     * Il s'agit de construire les maillages et d'activer les murs.
+     */
+    public void initialiser()
+    {
         // creation des deux maillages
         MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
         
         MAILLAGE_AERIEN = new Maillage(largeurMaillage, hauteurMaillage,
-                PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
+                PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);  
+        
+        // activation des murs
+        for(Rectangle mur : murs)
+        {
+            MAILLAGE_TERRESTRE.desactiverZone(mur);
+            MAILLAGE_AERIEN.desactiverZone(mur);
+        }
     }
-
+    
     // ------------------------------
     // -- GETTER / SETTER BASIQUES --
     // ------------------------------
@@ -239,12 +269,8 @@ public abstract class Terrain implements Serializable
      * @return l'image de fond du terrain
      */
     public Image getImageDeFond()
-    {
-        if(IMAGE_DE_FOND == null)
-            if(imageDeFond != null)
-                IMAGE_DE_FOND = imageDeFond.getImage();
-                
-        return IMAGE_DE_FOND;
+    {      
+        return imageDeFond;
     }
 
     /**
@@ -313,8 +339,11 @@ public abstract class Terrain implements Serializable
             throw new IllegalArgumentException("Mur nul");
 
         // desactive la zone dans le maillage qui correspond au mur
-        MAILLAGE_TERRESTRE.desactiverZone(mur);
-        MAILLAGE_AERIEN.desactiverZone(mur);
+        if(MAILLAGE_TERRESTRE != null)
+            MAILLAGE_TERRESTRE.desactiverZone(mur);
+        
+        if(MAILLAGE_AERIEN != null)
+            MAILLAGE_AERIEN.desactiverZone(mur);
 
         // ajout du mur
         murs.add(mur);
@@ -536,7 +565,8 @@ public abstract class Terrain implements Serializable
             boolean miseAJourDesCheminsDesCreatures)
     {
         // activation de la zone
-        MAILLAGE_TERRESTRE.activerZone(zone);
+        if(MAILLAGE_TERRESTRE != null)
+            MAILLAGE_TERRESTRE.activerZone(zone);
 
         // mise a jour des chemins si necessaire
         if (miseAJourDesCheminsDesCreatures)
@@ -554,7 +584,8 @@ public abstract class Terrain implements Serializable
             boolean miseAJourDesCheminsDesCreatures)
     {
         // desactivation de la zone
-        MAILLAGE_TERRESTRE.desactiverZone(zone);
+        if(MAILLAGE_TERRESTRE != null)
+            MAILLAGE_TERRESTRE.desactiverZone(zone);
         
         // mise a jour des chemins si necessaire
         if (miseAJourDesCheminsDesCreatures)
@@ -784,7 +815,14 @@ public abstract class Terrain implements Serializable
           {
              // Deserialisation : lecture de l'objet depuis le flux d'entree
              // (chargement des donnees du fichier).
-             return (Terrain) fluxEntreeObjet.readObject();
+              
+             Terrain terrain = (Terrain) fluxEntreeObjet.readObject();
+             
+             // seule les ImageIcon peuvent etre serialisée 
+             // donc la on met a jour l'image de font avec une ImageIcon
+             terrain.imageDeFond = terrain.iconImageDeFond.getImage();
+            
+             return terrain ;
           }
           finally
           {
@@ -813,5 +851,10 @@ public abstract class Terrain implements Serializable
        }
        
        return null;
+    }
+
+    public void setJeu(Jeu jeu)
+    {
+        this.jeu = jeu;
     }
 }

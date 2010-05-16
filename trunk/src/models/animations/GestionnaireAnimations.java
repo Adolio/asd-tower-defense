@@ -24,7 +24,12 @@ public class GestionnaireAnimations implements Runnable
     /**
      * Constructeur du gestionnaire des animations
      */
-    public GestionnaireAnimations()
+    public GestionnaireAnimations(){}
+    
+    /**
+     * Permet de demarrer la gestion
+     */
+    public void demarrer()
     {
         thread = new Thread(this);
         thread.start();
