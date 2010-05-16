@@ -48,9 +48,9 @@ public class WaterWorld extends Terrain
               500,  // hauteur
               150,  // nbPiecesOrInitiales
               20,   // nbViesInitiales
-              -50,    // positionMaillageX
+              -40,    // positionMaillageX
               0,    // positionMaillageY
-              550,  // largeurMaillage
+              540,  // largeurMaillage
               500,  // hauteurMaillage
               ModeDeJeu.MODE_SOLO, // mode de jeu
               new Color(150,150,150), // couleur de fond
@@ -80,9 +80,8 @@ public class WaterWorld extends Terrain
         ajouterMur(new Rectangle(280, 480, 220, 20));
         ajouterMur(new Rectangle(220, 410, 60, 90));
         ajouterMur(new Rectangle(0, 480, 220, 20));
-        ajouterMur(new Rectangle(0, 280, 20, 200));
-        ajouterMur(new Rectangle(0, 220, 90, 60));
-        ajouterMur(new Rectangle(0, 120, 20, 100));
+        ajouterMur(new Rectangle(20, 220, 70, 60));
+        ajouterMur(new Rectangle(-40, 120, 60, 380));
         ajouterMur(new Rectangle(130, 220, 240, 60));
         ajouterMur(new Rectangle(220, 130, 60, 90));
         ajouterMur(new Rectangle(220, 280, 60, 90));
