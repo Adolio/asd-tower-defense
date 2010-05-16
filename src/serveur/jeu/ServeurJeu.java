@@ -8,6 +8,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import reseau.Canal;
+import reseau.Port;
+
 /**
  * Cette classe contiendra le serveur de jeu sur lequel se connecteront tout les
  * cliens.
@@ -17,8 +20,8 @@ import java.net.Socket;
  */
 public class ServeurJeu
 {
-	private static int port = 2357;
-	private ServerSocket serverSocket;
+	private static int _port = 2357;
+	private static Port port;
 
 	/**
 	 * Méthode MAIN : entrée dans le programme
@@ -30,6 +33,7 @@ public class ServeurJeu
 		System.out.println("Lancement du serveur sur le port " + port);
 		try
 		{
+			port = new Port(_port);
 			ServeurJeu serveur = new ServeurJeu(port);
 		} catch (IOException e)
 		{
@@ -41,9 +45,8 @@ public class ServeurJeu
 	 * 
 	 * @throws IOException
 	 */
-	public ServeurJeu(int port) throws IOException
+	public ServeurJeu(Port port) throws IOException
 	{
-		serverSocket = new ServerSocket(port);
 		ecouter();
 	}
 
@@ -56,18 +59,12 @@ public class ServeurJeu
 	public void ecouter()
 	{
 		log("Ecoute sur le port " + port);
-		try
+		while (true)
 		{
-			while (true)
-			{
-				// Attente d'une connexion avec un éventuel client
-				Socket socket = serverSocket.accept();
-				new GestionnaireDeConnection(socket);
-			}
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Attente d'une connexion avec un éventuel client
+			log("Attente...");
+			Canal canal = new Canal(port,true);
+			log(canal.recevoirString());
 		}
 	}
 
@@ -93,7 +90,7 @@ public class ServeurJeu
 			{
 				while (true)
 				{
-
+					log("Attente de "+socket.getInetAddress());
 					ois = new ObjectInputStream(socket.getInputStream());
 					String msg = (String) ois.readObject();
 					log("Reçu : " + msg);
