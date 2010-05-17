@@ -12,6 +12,15 @@ import reseau.CanalException;
  */
 public class JoueurDistant implements Runnable, ConstantesServeurJeu
 {
+	// Constantes pour les états de la connexion avec le joueur distant
+
+	private final static int EN_ATTENTE = 0;
+	private final static int VALIDATION = 1;
+	private final static int EN_JEU = 2;
+	private final static int EN_PAUSE = 3;
+	private final static int QUITTE = 4;
+
+	// Variables d'instance
 	private Thread thread;
 	private Canal canal;
 	private int ID;
@@ -60,25 +69,65 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		{
 			try
 			{
-				// Récéption du message du client
-				synchronized (canal)
-				{
-					str = canal.recevoirString();
-					log("Récéption de " + str);
-				}
-				// Interprétation de la chaine
-				parse(str);
+				finalStateMachin();
 			} catch (JSONException e)
 			{
 				log("ERROR : récéption inconnue " + str);
 			} catch (CanalException e)
 			{
 				log("ERROR : une erreur est survenue durant la connexion");
-				break;
 			}
-
-			log("Terminaison de la liaison avec le client");
 		}
+	}
+
+	/**
+	 * Ecoute un message du client.
+	 * 
+	 * @return Une chaine de caractère.
+	 */
+	public String getMessage()
+	{
+		// Récéption du message du client
+		synchronized (canal)
+		{
+			String str = canal.recevoirString();
+			log("Récéption de " + str);
+			return str;
+		}
+	}
+
+	/**
+	 * Machine d'état du client
+	 * 
+	 * @throws JSONException
+	 *             Erreur levée si la chaine de caractère reçu du serveur n'est
+	 *             pas un format JSON
+	 */
+	private void finalStateMachin() throws JSONException
+	{
+		String str = "";
+		log("Passage dans l'état : " + nomEtat(etat));
+
+		switch (etat)
+		{
+		case VALIDATION:
+			str = getMessage();
+			// Interprétation de la chaine
+			parse(str);
+			break;
+		case EN_ATTENTE:
+			break;
+		case EN_JEU:
+			break;
+		case EN_PAUSE:
+			break;
+		case QUITTE:
+			log("Terminaison de la liaison avec le client");
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	/**
@@ -187,11 +236,39 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	public String toString()
 	{
 		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + pseudo + "\n"
-				+ "IP : " + canal.getIpClient() + "\n" + "Etat : " + etat;
+				+ "IP : " + canal.getIpClient() + "\n" + "Etat : "
+				+ nomEtat(etat);
 	}
 
 	private void log(String msg)
 	{
 		ServeurJeu.log("[CLIENT " + ID + "] " + msg);
+	}
+
+	/**
+	 * Donne une représentation sous forme de chaine de caractère de l'état
+	 * actuel du client
+	 * 
+	 * @param etat
+	 *            L'état actuel du client
+	 * @return Une chaine de caractère
+	 */
+	public static String nomEtat(int etat)
+	{
+		switch (etat)
+		{
+		case EN_ATTENTE:
+			return "En attente";
+		case EN_JEU:
+			return "En jeu";
+		case EN_PAUSE:
+			return "En pause";
+		case VALIDATION:
+			return "Validation";
+		case QUITTE:
+			return "Quitte la partie";
+		default:
+			return "<BAD>";
+		}
 	}
 }
