@@ -6,6 +6,7 @@ public interface ConstantesServeurJeu
 	public final int STOP = 101;
 	
 	public final int TO_ALL = 150;
+	public final int FROM_SRV = 151;
 	
 	public final int OK = 200;
 	

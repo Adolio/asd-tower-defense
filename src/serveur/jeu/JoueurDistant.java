@@ -1,22 +1,35 @@
 package serveur.jeu;
 
-import java.io.EOFException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import reseau.Canal;
 import reseau.CanalException;
 
-public class Joueur implements Runnable, ConstantesServeurJeu
+/**
+ * Une classe qui modélise coté serveur un joueur.
+ * 
+ * @author Pierre-Do
+ */
+public class JoueurDistant implements Runnable, ConstantesServeurJeu
 {
 	private Thread thread;
 	private Canal canal;
 	private int ID;
 	private ServeurJeu serveur;
 	private String pseudo = "unknown";
+	private int etat = 0;
 
-	public Joueur(int ID, Canal canal, ServeurJeu serveur)
+	/**
+	 * Crée un lien avec un joueur distant.
+	 * 
+	 * @param ID
+	 *            L'ID associée au joueur.
+	 * @param canal
+	 *            Le canal de communication.
+	 * @param serveur
+	 *            Le serveur de jeu associé au joueur.
+	 */
+	protected JoueurDistant(int ID, Canal canal, ServeurJeu serveur)
 	{
 		log("Nouveau client");
 
@@ -26,6 +39,14 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 
 		thread = new Thread(this);
 		thread.start();
+	}
+
+	@Override
+	protected void finalize() throws Throwable
+	{
+		// En cas de déréférencement de l'objet, on aura tendance à couper le
+		// canal de communication
+		couperLeCanal();
 	}
 
 	@Override
@@ -60,7 +81,13 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 		}
 	}
 
-	public void envoyer(String msg)
+	/**
+	 * Envoi un message au client
+	 * 
+	 * @param msg
+	 *            Le message à envoyer.
+	 */
+	public void envoyer(final String msg)
 	{
 		synchronized (canal)
 		{
@@ -148,12 +175,22 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 		}
 	}
 
+	/**
+	 * Termine la liaison avec le client
+	 */
 	public void couperLeCanal()
 	{
 		canal.fermer();
 	}
 
-	public void log(String msg)
+	@Override
+	public String toString()
+	{
+		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + pseudo + "\n"
+				+ "IP : " + canal.getIpClient() + "\n" + "Etat : " + etat;
+	}
+
+	private void log(String msg)
 	{
 		ServeurJeu.log("[CLIENT " + ID + "] " + msg);
 	}
