@@ -7,7 +7,6 @@ import reseau.CanalException;
 
 public class TestClient
 {
-
 	/**
 	 * @param args
 	 */
