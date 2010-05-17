@@ -7,24 +7,15 @@ import java.net.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-import models.jeu.Jeu;
-import models.jeu.Jeu_Solo;
-import models.jeu.ModeDeJeu;
-import models.joueurs.Equipe;
+import models.jeu.*;
 import models.joueurs.Joueur;
-import models.terrains.ElementTD_Coop;
-import models.terrains.Terrain;
-import org.json.JSONException;
-import org.json.JSONObject;
-import outils.OutilsFichier;
-import outils.fichierDeConfiguration;
-import reseau.Canal;
-import reseau.CanalException;
-import serveur.enregistrement.CodeEnregistrement;
-import serveur.enregistrement.RequeteEnregistrement;
+import models.terrains.*;
+import org.json.*;
+import outils.*;
+import reseau.*;
+import serveur.enregistrement.*;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
@@ -40,9 +31,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private JFrame parent;
 
     // form
-    private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
+    //private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
     private JComboBox cbNbJoueurs = new JComboBox();
-    private JLabel lblMode = new JLabel("Mode de jeu :");
+    //private JLabel lblMode = new JLabel("Mode de jeu :");
     private JComboBox cbMode = new JComboBox();
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Serveur de test");

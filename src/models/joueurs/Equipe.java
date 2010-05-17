@@ -17,11 +17,6 @@ public class Equipe implements Serializable
     private static final long serialVersionUID = 1L;
 
    /**
-    * Identificateur de l'equipe
-    */
-   private int id;
-   
-   /**
     * Nom de l'equipe
     */
    private String nom;

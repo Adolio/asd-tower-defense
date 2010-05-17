@@ -10,14 +10,9 @@ public class Joueur
     private static int cmpId = 0;
     
     /**
-     * Adresse du joueur
-     */
-    private String IP;
-    
-    /**
      * Identificateur du joueur
      */
-    private int id;
+    private final int id;
     
     /**
      * Pseudo
@@ -44,11 +39,6 @@ public class Joueur
     private Score score = new Score();
     
     /**
-     * Nombre de créatures tuées
-     */
-    private int nbCreaturesTuees = 0;
-    
-    /**
      * Emplacement du joueur sur le terrain
      * 
      * Permet de définir les zones de construction du joueur
@@ -64,6 +54,15 @@ public class Joueur
         this.id = ++cmpId;
     }
 
+    /**
+     * Permet de recuperer l'id
+     * @return l'id
+     */
+    public int getId()
+    {
+        return id;
+    }
+    
     /**
      * Permet de recuperer le score du joueur
      * 
@@ -168,10 +167,6 @@ public class Joueur
         this.equipe = equipe;
     }
     
-    
-    
-    
-    
     /**
      * Permet de modifier l'emplacement du joueur
      * 
@@ -186,8 +181,9 @@ public class Joueur
         this.emplacement = emplacementJoueur;
     }
 
-    
-    
+    /**
+     * Permet de quitter l'emplacement
+     */
     public void quitterEmplacementJoueur()
     {
         // fin de récursion de maj
