@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import reseau.Canal;
 import reseau.Port;
@@ -25,7 +26,7 @@ public class ServeurJeu
 	private static Port port;
 	public static final String VERSION = "0.1";
 
-	private ArrayList<Client> clients = new ArrayList<Client>();
+	private HashSet<Joueur> clients = new HashSet<Joueur>();
 
 	private static int IDClient = 0;
 
@@ -60,11 +61,17 @@ public class ServeurJeu
 			log("écoute sur le port " + _port);
 			canal = new Canal(port, true);
 			log("Récéption de " + canal.getIpClient());
-			clients.add(new Client(Integer.toString(IDClient++), canal));
+			clients.add(new Joueur(IDClient++, canal, this));
 		}
 	}
 
-	public void log(String msg)
+	public void direATous(int IDFrom, String message)
+	{
+		for (Joueur client : clients)
+			client.envoyerMessageTexte(IDFrom,message);
+	}
+
+	public static void log(String msg)
 	{
 		System.out.print("[SERVEUR] ");
 		System.out.println(msg);
