@@ -52,7 +52,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         {
             this.canalServeurJeu = canal;
             
-            // TODO demande au serveur les info du jeu
+            // TODO [CONTACT SERVEUR] demande les info du jeu
             jeu = new Jeu_Solo();
             Terrain terrain = new ElementTD_Coop(jeu);
             jeu.setTerrain(terrain);
@@ -122,7 +122,6 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                 if (i < joueurs.size())
                 {
                     final Joueur joueur = joueurs.get(i);
-                    final Equipe equipe = joueur.getEquipe();
                     final JComboBox cbEmplacements = new JComboBox();
                     final JComboBox cbEquipes = new JComboBox();
 
@@ -160,9 +159,6 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                                 try
                                 {
                                     lEtat.setText("");
-                                    
-                                    EmplacementJoueur old = joueur.getEmplacement();
-                                    
                                     Equipe equipe = (Equipe) cbEquipes
                                             .getSelectedItem();
                                     
@@ -188,7 +184,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     
                         pJoueurs.add(cbEquipes, 2, i, 1);
     
-                        // TODO
+                        // remplissage de la combobox
                         remplirCombo(cbEmplacements,joueur);
     
                         // Action de la liste des emplacements
@@ -332,9 +328,14 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         add(pBottom, BorderLayout.SOUTH);
     }
 
+    /**
+     * Permte de remplir la combobox
+     * 
+     * @param cbEmplacements la combobox
+     * @param joueur pour pré-sélection
+     */
     private void remplirCombo(JComboBox cbEmplacements, Joueur joueur)
     {
-
         synchronized(cbEmplacements)
         {  
             // vidage
@@ -373,18 +374,14 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                             .envoyerString(RequeteEnregistrement.DESENREGISTRER);
                     canalServeurEnregistrement
                             .envoyerString(RequeteEnregistrement.STOP); 
-                }
-
-                jeu.initialiser(joueur);
-                new Fenetre_JeuVersus(jeu);
-                parent.dispose();
+                } 
             }
-
-            // parent.getContentPane().removeAll();
-            // parent.getContentPane().add(new Panel_JeuMulti(parent, new
-            // Jeu(),new Joueur(new Equipe()), BorderLayout.CENTER);
-            // parent.getContentPane().validate();
-        } else if (src == bDeconnecter)
+            
+            jeu.initialiser(joueur);
+            new Fenetre_JeuVersus(jeu);
+            parent.dispose();
+        }
+        else if (src == bDeconnecter)
         {
             if (ADMIN)
             {

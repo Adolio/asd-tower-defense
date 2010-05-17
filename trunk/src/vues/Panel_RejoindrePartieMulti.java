@@ -528,18 +528,13 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRejoindre.setText("Connexion...");
         bRejoindre.setEnabled(false);
 
-        // TODO connexion au serveur, demande d'acceptation dans la partie...
         try
         {
             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
+            // TODO [CONTACT SERVEUR] demande d'acceptation dans la partie...
             Canal canalServeurJeu = new Canal(IP,port,true);
-            
-            
-            
-            
-            
         } 
         catch (ConnectException e)
         {
