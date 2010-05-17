@@ -116,9 +116,11 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Attente du pseudo du joueur
 			pseudo = getMessage();
 			// Passage en état EN_JEU
-			etat = EN_JEU;
+			etat = EN_ATTENTE;
 			break;
 		case EN_ATTENTE:
+			// Début de la partie
+			etat = EN_JEU;
 			break;
 		case EN_JEU:
 			// Interprétation de la chaine
@@ -126,9 +128,15 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			parse(str);
 			break;
 		case EN_PAUSE:
+			// La partie continue
+			etat = EN_JEU;
 			break;
 		case QUITTE:
 			log("Terminaison de la liaison avec le client");
+			// On clos la liaison avec le client
+			couperLeCanal();
+			// On supprime le joueur distant de la liste des clients
+			desenregistrement();
 			break;
 		default:
 			break;
@@ -249,6 +257,11 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private void log(String msg)
 	{
 		ServeurJeu.log("[CLIENT " + ID + "] " + msg);
+	}
+
+	private void desenregistrement()
+	{
+		serveur.supprimerJoueur(ID);
 	}
 
 	/**
