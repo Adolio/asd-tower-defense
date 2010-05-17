@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import reseau.Canal;
 import reseau.Port;
@@ -22,6 +23,11 @@ public class ServeurJeu
 {
 	private static int _port = 2357;
 	private static Port port;
+	public static final String VERSION = "0.1";
+
+	private ArrayList<Client> clients = new ArrayList<Client>();
+
+	private static int IDClient = 0;
 
 	/**
 	 * Méthode MAIN : entrée dans le programme
@@ -49,15 +55,12 @@ public class ServeurJeu
 		port = new Port(_port);
 		port.reserver();
 		Canal canal;
-		while(true){
-			log("écoute sur le port "+_port);
-			canal = new Canal(port,true);
-			log("Récéption de "+canal.getIpClient());
-			log("Récéption : "+canal.recevoirString());
-			log("Envoit de PONG");
-			canal.envoyerString("PONG");
-			log("Fermeture de la connexion");
-			canal.fermer();
+		while (true)
+		{
+			log("écoute sur le port " + _port);
+			canal = new Canal(port, true);
+			log("Récéption de " + canal.getIpClient());
+			clients.add(new Client(Integer.toString(IDClient++), canal));
 		}
 	}
 
