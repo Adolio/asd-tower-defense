@@ -30,11 +30,10 @@ public class ServeurJeu
 	 */
 	public static void main(String[] args)
 	{
-		System.out.println("Lancement du serveur sur le port " + port);
+		System.out.println("Lancement du serveur sur le port " + _port);
 		try
 		{
-			port = new Port(_port);
-			ServeurJeu serveur = new ServeurJeu(port);
+			ServeurJeu serveur = new ServeurJeu();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -45,9 +44,21 @@ public class ServeurJeu
 	 * 
 	 * @throws IOException
 	 */
-	public ServeurJeu(Port port) throws IOException
+	public ServeurJeu() throws IOException
 	{
-		ecouter();
+		port = new Port(_port);
+		port.reserver();
+		Canal canal;
+		while(true){
+			log("écoute sur le port "+_port);
+			canal = new Canal(port,true);
+			log("Récéption de "+canal.getIpClient());
+			log("Récéption : "+canal.recevoirString());
+			log("Envoit de PONG");
+			canal.envoyerString("PONG");
+			log("Fermeture de la connexion");
+			canal.fermer();
+		}
 	}
 
 	public void log(String msg)
@@ -56,60 +67,4 @@ public class ServeurJeu
 		System.out.println(msg);
 	}
 
-	public void ecouter()
-	{
-		log("Ecoute sur le port " + port);
-		while (true)
-		{
-			// Attente d'une connexion avec un éventuel client
-			log("Attente...");
-			Canal canal = new Canal(port,true);
-			log(canal.recevoirString());
-		}
-	}
-
-	private class GestionnaireDeConnection implements Runnable
-	{
-		private Socket socket;
-		ObjectInputStream ois;
-		ObjectOutputStream oos;
-
-		public GestionnaireDeConnection(Socket socket)
-		{
-			log("Nouvelle connection avec le client");
-			log("Client : "+socket.getInetAddress());
-			this.socket = socket;
-			Thread t = new Thread(this);
-			t.start();
-		}
-
-		@Override
-		public void run()
-		{
-			try
-			{
-				while (true)
-				{
-					log("Attente de "+socket.getInetAddress());
-					ois = new ObjectInputStream(socket.getInputStream());
-					String msg = (String) ois.readObject();
-					log("Reçu : " + msg);
-
-					oos = new ObjectOutputStream(socket.getOutputStream());
-					oos.writeObject("PONG");
-					
-					ois.close();
-					oos.close();
-					socket.close();
-
-				}
-				} catch (IOException e)
-			{
-				e.printStackTrace();
-			} catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
 }
