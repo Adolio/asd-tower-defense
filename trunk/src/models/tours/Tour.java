@@ -570,7 +570,7 @@ public abstract class Tour extends Rectangle
     /**
      * Permet de modifier le propriétaire de la tour
      * 
-     * @param Joueur le propriétaire de la tour
+     * @param JoueurDistant le propriétaire de la tour
      */
     public void setProprietaire(Joueur proprietaire)
     {
