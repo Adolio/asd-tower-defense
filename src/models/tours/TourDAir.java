@@ -36,7 +36,7 @@ public class TourDAir extends Tour
     {
         COULEUR = new Color(255,255,255);
         IMAGE   = Toolkit.getDefaultToolkit().getImage("img/tours/tourAir.png");
-        ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/tourAir.png");
+        ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourAir.png");
     }
     
     public TourDAir()
