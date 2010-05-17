@@ -34,6 +34,7 @@ public class SEInscription {
       port.reserver();
       while (true) {
          System.out.println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
+         // Fonction bloquante qui attend que quelqu'un se connecte
          creerCanal();
          (new Thread(new SEConnexion(canal))).start();
       }
