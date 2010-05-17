@@ -26,7 +26,6 @@ public class ServeurJeu
 	 */
 	public final static int _port = 2357;
 	
-	private static Port port;
 	private static final boolean DEBUG = true;
 	private HashMap<Integer, JoueurDistant> clients = new HashMap<Integer, JoueurDistant>();
 
@@ -45,7 +44,8 @@ public class ServeurJeu
 		System.out.println("Lancement du serveur sur le port " + _port);
 		try
 		{
-			ServeurJeu serveur = new ServeurJeu();
+			// Création d'un serveur de jeu en standalone
+			new ServeurJeu();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -58,8 +58,10 @@ public class ServeurJeu
 	 */
 	public ServeurJeu() throws IOException
 	{
-		port = new Port(_port);
+		// Réservation du port d'écoute
+		Port port = new Port(_port);
 		port.reserver();
+		// Canal d'écoute
 		Canal canal;
 		// Boucle d'attente de connections
 		while (true)
