@@ -5,6 +5,8 @@ public interface ConstantesServeurJeu
 	public final int START = 100;
 	public final int STOP = 101;
 	
+	public final int TO_ALL = 150;
+	
 	public final int OK = 200;
 	
 	public final int MSG = 301;
@@ -14,8 +16,8 @@ public interface ConstantesServeurJeu
 	public final int WAVE = 305;
 	public final int PLAY = 306;
 	public final int TOWER = 307;
-	public final int TOWER_DEL = 306;
-	public final int TOWER_UP = 307;
+	public final int TOWER_DEL = 308;
+	public final int TOWER_UP = 309;
 	
 	public final int OBJECT = 350;
 	

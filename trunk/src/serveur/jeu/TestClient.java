@@ -22,11 +22,9 @@ public class TestClient
 			canal.fermer();
 		} catch (ConnectException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CanalException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

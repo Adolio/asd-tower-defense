@@ -259,7 +259,10 @@ public class Canal
 
       catch (Exception e)
       {
-         e.printStackTrace();
+    	  // P-Do : Suppression de l'affichage brutal de la pile d'erreur, on prefera
+    	  // laisser le choix d'affichage au programme client dans la gestion des
+    	  // exceptions associée.
+         // e.printStackTrace();
          throw new CanalException(e);
       }
       if (afficherMessagesDebug)
