@@ -1,9 +1,12 @@
 package serveur.jeu;
 
+import java.io.EOFException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import reseau.Canal;
+import reseau.CanalException;
 
 public class Joueur implements Runnable, ConstantesServeurJeu
 {
@@ -29,8 +32,8 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 	public void run()
 	{
 		// Message du client;
-		String str;
-		// Envoit de la version du serveur au client
+		String str = "";
+		// Envoi de la version du serveur au client
 		canal.envoyerString(ServeurJeu.VERSION);
 		while (true)
 		{
@@ -42,12 +45,18 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 					str = canal.recevoirString();
 					log("Récéption de " + str);
 				}
+				// Interprétation de la chaine
 				parse(str);
 			} catch (JSONException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log("ERROR : récéption inconnue " + str);
+			} catch (CanalException e)
+			{
+				log("ERROR : une erreur est survenue durant la connexion");
+				break;
 			}
+
+			log("Terminaison de la liaison avec le client");
 		}
 	}
 
@@ -83,19 +92,44 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 			// Extraction du texte du message
 			String text = message.getString("message");
 			log("Texte : " + text);
-			// On broadcast le message à tous les clients
-			// TODO : Faire le mode client <-> client
-			serveur.direATous(ID, text);
+			if (cible == TO_ALL)
+			{
+				// On broadcast le message à tous les clients
+				serveur.direATous(ID, text);
+			} else
+			{
+				// On envoit un message à un client en particulier
+				serveur.direAuClient(ID, cible, text);
+			}
 			break;
 		// Changement d'état d'un joueur
-		case PLAYER :
-		break;
+		case PLAYER:
+			break;
+		// Action sur une vague
+		case WAVE:
+			break;
+		// Changement d'état d'une partie
+		case PLAY:
+			break;
+		// Requête de création d'une tour
+		case TOWER:
+			break;
+		// Requête d'amélioration d'une tour
+		case TOWER_UP:
+			break;
+		// Requete de suppresion d'une tour
+		case TOWER_DEL:
+			break;
 		default:
 			log("ERROR action inconnue : " + type);
 			break;
 		}
 	}
 
+	/**
+	 * @param IDFrom
+	 * @param contenu
+	 */
 	public void envoyerMessageTexte(int IDFrom, String contenu)
 	{
 		// Message JSON
@@ -112,6 +146,11 @@ public class Joueur implements Runnable, ConstantesServeurJeu
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public void couperLeCanal()
+	{
+		canal.fermer();
 	}
 
 	public void log(String msg)

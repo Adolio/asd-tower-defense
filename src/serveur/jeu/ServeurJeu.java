@@ -1,14 +1,9 @@
 package serveur.jeu;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import reseau.Canal;
 import reseau.Port;
@@ -25,8 +20,9 @@ public class ServeurJeu
 	private static int _port = 2357;
 	private static Port port;
 	public static final String VERSION = "0.1";
+	public static final boolean DEBUG = true;
 
-	private HashSet<Joueur> clients = new HashSet<Joueur>();
+	private HashMap<Integer, Joueur> clients = new HashMap<Integer, Joueur>();
 
 	private static int IDClient = 0;
 
@@ -59,16 +55,21 @@ public class ServeurJeu
 		while (true)
 		{
 			log("écoute sur le port " + _port);
-			canal = new Canal(port, true);
+			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
-			clients.add(new Joueur(IDClient++, canal, this));
+			IDClient++;
+			clients.put(IDClient, new Joueur(IDClient, canal, this));
 		}
 	}
 
 	public void direATous(int IDFrom, String message)
 	{
-		for (Joueur client : clients)
-			client.envoyerMessageTexte(IDFrom,message);
+		for (Entry<Integer, Joueur> joueur : clients.entrySet())
+			joueur.getValue().envoyerMessageTexte(IDFrom, message);
+	}
+	
+	public void direAuClient(int IDFrom, int IDTo, String message){
+		clients.get(IDTo).envoyerMessageTexte(IDFrom, message);
 	}
 
 	public static void log(String msg)
