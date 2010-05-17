@@ -23,7 +23,7 @@ import models.joueurs.Joueur;
  * et de les gerer. Elle fournit aussi de quoi gerer les vagues d'ennemis.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.0 | 17 mai 2010
  * @since jdk1.6.0_16
  * @see JFrame
  * @see ActionListener
@@ -574,13 +574,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
             ajouterPiecesDOr(1000);
-        }
-        // TODO [DEBUG] enlever pour version finale
-        // raccourci de gain d'argent (debug)
-        else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
-        {
-            jeu.lancerVagueSuivante(joueur.getEquipe());
-            ajouterInfoVagueSuivanteDansConsole();
         }
     }
 
