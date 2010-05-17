@@ -23,7 +23,7 @@ import models.joueurs.Joueur;
  * et de les gerer. Elle fournit aussi de quoi gerer les vagues d'ennemis.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | 17 mai 2010
  * @since jdk1.6.0_16
  * @see JFrame
  * @see ActionListener
@@ -132,6 +132,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * Permet de savoir si la prochaine vague peut etre lancée
 	 */
     private boolean vaguePeutEtreLancee = true;
+    private boolean scoreSauve;
 
 	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
@@ -374,13 +375,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 */
 	private void demanderEnregistrementDuScore()
 	{
-	    // si le joueur a un score > 0 et que la partie n'est pas déjà terminée
-	    if(joueur.getScore() > 0 && !jeu.estTermine())
+	    // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
+	    if(joueur.getScore() > 0 && !scoreSauve)
         {
             if(JOptionPane.showConfirmDialog(this, 
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
+                scoreSauve = true;
                 new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
             }
         }
@@ -392,7 +394,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void retourAuMenuPrincipal()
     {
 	    GestionnaireSons.arreterTousLesSons();
-        jeu.terminer();
+	    
+	    if(!jeu.estTermine())
+	        jeu.terminer();
         
         dispose(); // destruction de la fenetre
         System.gc(); // passage du remasse miette
@@ -728,10 +732,15 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         vaguePeutEtreLancee = false;
         bLancerVagueSuivante.setText("Retour au menu");
         bLancerVagueSuivante.setIcon(I_RETOUR);
-        
-        new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
-    }
 
+        // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
+        if(joueur.getScore() > 0 && !scoreSauve)
+        {
+            scoreSauve = true;
+            new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+        }
+    }
+    
     @Override
     public void etoileGagnee()
     {

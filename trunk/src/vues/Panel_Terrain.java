@@ -20,10 +20,8 @@ import models.tours.Tour;
  * Celle-ci affichera les tours avec les créatures et gèrera le positionnement
  * des tours et la selection des tours.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | 17 mai 2010
  * @since jdk1.6.0_16
  * @see JPanel
  * @see Runnable
