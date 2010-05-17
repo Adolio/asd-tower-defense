@@ -83,7 +83,7 @@ public class TourDAir extends Tour
 
     public void tirer(Creature creature)
     {
-        jeu.getGestionnaireAnimations().ajouterAnimation(new RafaleDeVent(jeu,this,creature,degats));
+        jeu.ajouterAnimation(new RafaleDeVent(jeu,this,creature,degats));
     }
 
     public Tour getCopieOriginale()

@@ -1,6 +1,7 @@
 package vues;
 
 import models.animations.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -11,6 +12,7 @@ import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
+import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
 
@@ -27,11 +29,12 @@ import models.joueurs.Joueur;
  * @see ActionListener
  */
 public class Fenetre_JeuVersus extends JFrame implements ActionListener, 
-                                                    EcouteurDeCreature, 
-                                                    EcouteurDeVague,
+                                                    EcouteurDeJeu,
+                                                    EcouteurDeLanceurDeVagues,
                                                     EcouteurDePanelTerrain,
                                                     WindowListener,
                                                     KeyListener
+                                                    
 {
 	// constantes statiques
     private final int MARGES_PANEL = 20;
@@ -45,7 +48,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
-    private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
 	private static final int VOLUME_PAR_DEFAUT = 20;
 	
 	//---------------------------
@@ -54,14 +56,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
 	private final JMenu 	menuEdition 	= new JMenu("Edition");
-	private final JMenu     menuJeu         = new JMenu("Jeu");
 	private final JMenu     menuSon         = new JMenu("Son");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
 	private final JMenuItem itemRegles      = new JMenuItem("Règles du jeu...",I_REGLES);
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos...",I_AIDE);
 
-	private final JMenuItem itemPause
-        = new JMenuItem("Pause"); 
 	private final JMenuItem itemActiverDesactiverSon 
 	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
@@ -97,11 +96,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	 */
 	private Panel_InfoCreature panelInfoCreature;
 
-	/**
-	 * bouton pour lancer la vagues suivante
-	 */
-    private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE 
-                                                       + " [niveau 1]");
     /**
      * Console d'affichages des vagues suivantes
      */
@@ -128,19 +122,14 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private Joueur joueur;
 	
 	/**
-	 * Permet de savoir si la prochaine vague peut etre lancée
-	 */
-    private boolean vaguePeutEtreLancee = true;
-
-	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_JeuVersus(Jeu jeu, Joueur joueur)
+	public Fenetre_JeuVersus(Jeu jeu)
 	{
 	    this.jeu = jeu;
-        this.joueur = joueur;
+        this.joueur = jeu.getJoueurPrincipal();
         
 	    //-------------------------------
 		//-- preferances de le fenetre --
@@ -165,14 +154,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		menuPrincipal.add(menuFichier);
 		
 		// menu Edition
-		itemPause.setAccelerator(KeyStroke.getKeyStroke('P'));
 		menuEdition.add(itemAfficherMaillage);
 		menuEdition.add(itemAfficherRayonsPortee);
 		menuPrincipal.add(menuEdition);
 		
 		// menu Jeu
-		menuJeu.add(itemPause);
-		menuPrincipal.add(menuJeu);
+		//menuPrincipal.add(menuJeu);
 		
 		// menu Son
 		menuSon.add(itemActiverDesactiverSon);
@@ -186,7 +173,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		// ajout des ecouteurs
 		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
-		itemPause.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
 		itemActiverDesactiverSon.addActionListener(this);
@@ -212,10 +198,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         scrollConsole.setPreferredSize(new Dimension(jeu.getTerrain().getLargeur(),50));
         pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
         
-        // bouton
-        GestionnaireDesPolices.setStyle(bLancerVagueSuivante);
-        bLancerVagueSuivante.addActionListener(this);
-        pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
+        // panel de création de vagues
+        JScrollPane js = new JScrollPane(new Panel_CreationVague(jeu,joueur,this));
+        js.setOpaque(false);
+        js.setPreferredSize(new Dimension(300,100));
+        pVagueSuivante.add(js,BorderLayout.CENTER);
             
         pFormulaire.add(pVagueSuivante,BorderLayout.SOUTH);
 		
@@ -259,6 +246,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         //-- demarrage du jeu --
         //----------------------
 		// TODO faire un 5.. 4.. 3.. 2.. 1..
+		jeu.setJoueurPrincipal(joueur);
+		jeu.setEcouteurDeJeu(this);
 		jeu.demarrer();
 		
 	
@@ -316,26 +305,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 			else
 			    itemAfficherMaillage.setIcon(I_INACTIF);
 		
-		else if(source == itemPause) 
-		    activerDesactiverLaPause();
-
 		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)
 		    if(panelTerrain.basculerAffichageRayonPortee())
 		        itemAfficherRayonsPortee.setIcon(I_ACTIF);
 		    else
 		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
-		
-		else if(source == bLancerVagueSuivante)
-		{
-		    if(!joueur.aPerdu())
-		    {
-    		    lancerVagueSuivante();
-    		    bLancerVagueSuivante.setEnabled(false);
-		    }
-		    else
-		        retourAuMenuPrincipal();
-		}
 	}
 
 	/**
@@ -347,8 +322,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
-	        demanderEnregistrementDuScore();
-	        
 	        System.exit(0); // Fermeture correcte du logiciel
 	    }
     }
@@ -362,29 +335,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir arrêter la partie ?", 
 	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
-	        demanderEnregistrementDuScore();
-	        
 	        retourAuMenuPrincipal();
         }
     }
 	
-	/**
-	 * Permet de demander à l'utilisateur s'il veut sauver son score
-	 */
-	private void demanderEnregistrementDuScore()
-	{
-	    // si le joueur a un score > 0 et que la partie n'est pas déjà terminée
-	    if(joueur.getScore() > 0 && !jeu.estTermine())
-        {
-            if(JOptionPane.showConfirmDialog(this, 
-                    "Voulez vous sauver votre score ?", 
-                    "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
-            {
-                new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
-            }
-        }
-	}
-
     /**
 	 * Permet de retourner au menu principal
 	 */
@@ -398,16 +352,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         new Fenetre_MenuPrincipal();  
     }
 
-    /**
-	 * Permet d'informer la fenetre que le joueur veut acheter une tour
-	 * 
-	 * @param tour la tour voulue
-	 */
+    @Override
 	public void acheterTour(Tour tour)
 	{
 	    try
 	    {
-	        jeu.getGestionnaireTours().poserTour(tour);
+	        jeu.poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
             panelMenuInteraction.miseAJourNbPiecesOr();
@@ -424,16 +374,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    }
 	}
 	
-	/**
-	 * Permet d'informer la fenetre que le joueur veut ameliorer une tour
-	 * 
-	 * @param tour la tour a ameliorer
-	 */
+	@Override
 	public void ameliorerTour(Tour tour)
 	{
 	    try
         {
-	        jeu.getGestionnaireTours().ameliorerTour(tour);
+	        jeu.ameliorerTour(tour);
 	        
 	        panelMenuInteraction.miseAJourNbPiecesOr();
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
@@ -445,23 +391,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         }
 	}
 	
-	/**
-     * Permet d'informer la fenetre que le joueur veut vendre une tour
-     * 
-     * @param tour la tour a ameliorer
-     */
+	@Override
     public void vendreTour(Tour tour)
     {
-        jeu.getGestionnaireTours().vendreTour(tour);
+        jeu.vendreTour(tour);
         panelInfoTour.effacerTour();
         panelMenuInteraction.miseAJourNbPiecesOr();
         panelTerrain.setTourSelectionnee(null);
         
-        jeu.getGestionnaireAnimations().ajouterAnimation(
+        jeu.ajouterAnimation(
                 new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
                         tour.getPrixDeVente())
                 );
-        
     }
 	
     /**
@@ -478,12 +419,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     }
     
     
-	/**
-	 * Permet d'informer la fenetre qu'une tour a ete selectionnee
-	 * 
-	 * @param tour la tour selectionnee
-	 * @param mode le mode de selection
-	 */
+	@Override
 	public void tourSelectionnee(Tour tour,int mode)
 	{
 		panelMenuInteraction.setTourSelectionnee(tour,mode);
@@ -531,76 +467,29 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         this.panelInfoCreature = panelInfoCreature;
     }
-	
-	/**
-	 * Permet d'informer la fenetre que le joueur veut lancer une vague de
-	 * creatures.
-	 */
-	public void lancerVagueSuivante()
-	{ 
-	    if(vaguePeutEtreLancee)
-	    {
-	        jeu.lancerVagueSuivante(joueur.getEquipe(),this,this);
-	        ajouterInfoVagueSuivanteDansConsole();
-	        bLancerVagueSuivante.setEnabled(false);
-	        vaguePeutEtreLancee = false;
-	    }
-	}
-	
-	/**
-     * Permet de demander une mise a jour des informations de la vague suivante
-     */
-    public void ajouterInfoVagueSuivanteDansConsole()
-    {
-        ajouterTexteHTMLDansConsole("["+(jeu.getTerrain().getNumVagueCourante()+1)+"] Vague suivante : "+jeu.getTerrain().getDescriptionVagueSuivante()+"<br />");
-        
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getTerrain().getNumVagueCourante()+1)+"]");
-    }
-	
-	/**
-	 * methode regissant de l'interface EcouteurDeCreature
-	 * 
-	 * Permet d'etre informe lorsqu'une creature subie des degats.
-	 */
+    
+    @Override
 	public void creatureBlessee(Creature creature)
 	{
 	    panelInfoCreature.miseAJourInfosVariables();
-	    
 	}
 
-	/**
-	 * methode regissant de l'interface EcouteurDeCreature
-	 * 
-	 * Permet d'etre informe lorsqu'une creature a ete tuee.
-	 */
+	@Override
 	public void creatureTuee(Creature creature)
 	{
-		// gain de pieces d'or
-		joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
-		
-		// augmentation du score
-		int nbEtoiles = joueur.getNbEtoiles();
-		
-		joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
-		
-		// nouvelle étoile
-		if(nbEtoiles < joueur.getNbEtoiles())
-		    jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
-		
-		// on efface la creature des panels d'information
-		if(creature == panelTerrain.getCreatureSelectionnee())
-		{
-		    panelInfoCreature.effacerCreature();
-		    panelTerrain.setCreatureSelectionnee(null);
-		}
-		    
-		panelMenuInteraction.miseAJourNbPiecesOr();
-		panelMenuInteraction.miseAJourScore();
+	    // on efface la creature des panels d'information
+        if(creature == panelTerrain.getCreatureSelectionnee())
+        {
+            panelInfoCreature.effacerCreature();
+            panelTerrain.setCreatureSelectionnee(null);
+        }
+            
+        panelMenuInteraction.miseAJourNbPiecesOr();
+        panelMenuInteraction.miseAJourScore();
 
-		jeu.getGestionnaireAnimations().ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
+        jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
                 creature.getNbPiecesDOr()));
-				
 	}
 
 	/**
@@ -608,50 +497,25 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
      * 
      * Permet d'etre informe lorsqu'une creature est arrivee en zone d'arrivee.
      */
-	public void estArriveeEnZoneArrivee(Creature creature)
+	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-		// si pas encore perdu
-	    if(!joueur.aPerdu())
-		{
-	        // creation de l'animation de blessure du joueur
-	        jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
-	        
-            joueur.getEquipe().perdreUneVie();
-            
-            // mise a jour des infos
-	        panelMenuInteraction.miseAJourNbViesRestantes();
-			
-	        // si c'est la creature selectionnee
-	        if(panelTerrain.getCreatureSelectionnee() == creature)
-	        {
-	            panelInfoCreature.setCreature(null);
-	            panelTerrain.setCreatureSelectionnee(null);
-	        }
-			
-			// le joueur n'a plus de vie
-			if(joueur.aPerdu())
-			{
-			    jeu.terminer();
-			    
-			    panelMenuInteraction.partieTerminee();
-			    
-			    // le bouton lancer vague suivante devient un retour au menu
-			    bLancerVagueSuivante.setEnabled(true);
-			    vaguePeutEtreLancee = false;
-		        bLancerVagueSuivante.setText("Retour au menu");
-		        bLancerVagueSuivante.setIcon(I_RETOUR);
-		        
-			    new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom());
-			}
-		}
+	    // creation de l'animation de blessure du joueur
+        jeu.ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
+
+	    // mise a jour des infos
+        panelMenuInteraction.miseAJourNbViesRestantes();
+        
+        // si c'est la creature selectionnee
+        if(panelTerrain.getCreatureSelectionnee() == creature)
+        {
+            panelInfoCreature.setCreature(null);
+            panelTerrain.setCreatureSelectionnee(null);
+        }
 	}
 
     @Override
     public void vagueEntierementLancee(VagueDeCreatures vagueDeCreatures)
-    {
-        bLancerVagueSuivante.setEnabled(true);
-        vaguePeutEtreLancee = true;
-    }
+    {}
  
     /**
      * Permet de mettre a jour les infos du jeu
@@ -710,50 +574,48 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
             ajouterPiecesDOr(1000);
-            
-            //jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
-            //jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
         {
-            jeu.lancerVagueSuivante(joueur.getEquipe(),this, this);
+            jeu.lancerVagueSuivante(joueur.getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent ke)
-    {
-        // PAUSE
-        if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
-            activerDesactiverLaPause();  
-        // raccourci lancer vague suivante
-        else if(Character.isSpaceChar(ke.getKeyChar())) 
-            if(!jeu.estEnPause())
-                lancerVagueSuivante();
-    }
+    public void keyTyped(KeyEvent e)
+    {}
+    
+    @Override
+    public void keyReleased(KeyEvent e)
+    {}
 
-    /**
-     * Permet de mettre le jeu en pause.
-     */
-    private void activerDesactiverLaPause()
+    @Override
+    public void lancerVague(VagueDeCreatures vague)
     {
-        boolean enPause = jeu.togglePause();
-        
-        if(enPause)
-            timer.pause();
-        else
-            timer.play();
-        
-        // inhibation
-        panelMenuInteraction.setPause(enPause);
-        
-        bLancerVagueSuivante.setEnabled(!enPause);
+        jeu.lancerVague(vague); 
     }
 
     @Override
-    public void keyTyped(KeyEvent e)
-    {}   
+    public void ajouterInfoVagueSuivanteDansConsole(){}
+
+    @Override
+    public void lancerVagueSuivante() {}
+
+    @Override
+    public void partieTerminee()
+    {
+        panelMenuInteraction.partieTerminee();
+        
+        // TODO continuer
+    }
+
+    @Override
+    public void etoileGagnee()
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

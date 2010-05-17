@@ -84,7 +84,7 @@ abstract public class Attaque extends Animation
         long degatsFinal;
         double distanceImpact;
         
-        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
         Creature tmpCreature;
         while(eCreatures.hasMoreElements())
         {

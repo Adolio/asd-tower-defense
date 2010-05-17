@@ -1,6 +1,7 @@
 package vues;
 
 import models.animations.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -11,6 +12,7 @@ import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
+import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
 
@@ -27,8 +29,7 @@ import models.joueurs.Joueur;
  * @see ActionListener
  */
 public class Fenetre_JeuSolo extends JFrame implements ActionListener, 
-                                                    EcouteurDeCreature, 
-                                                    EcouteurDeVague,
+                                                    EcouteurDeJeu, 
                                                     EcouteurDePanelTerrain,
                                                     WindowListener,
                                                     KeyListener
@@ -137,13 +138,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_JeuSolo(Jeu jeu, Joueur joueur)
+	public Fenetre_JeuSolo(Jeu jeu)
 	{
 	    this.jeu = jeu;
-        this.joueur = joueur;
+        this.joueur = jeu.getJoueurPrincipal();
         
 	    //-------------------------------
-		//-- preferances de le fenetre --
+		//-- preferences de le fenetre --
 		//-------------------------------
 		setTitle(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
@@ -258,6 +259,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    //----------------------
         //-- demarrage du jeu --
         //----------------------
+		jeu.setJoueurPrincipal(joueur);
+		jeu.setEcouteurDeJeu(this);
         jeu.demarrer();
         
 		//---------------------------------------
@@ -405,7 +408,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	{
 	    try
 	    {
-	        jeu.getGestionnaireTours().poserTour(tour);
+	        jeu.poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
             panelMenuInteraction.miseAJourNbPiecesOr();
@@ -431,7 +434,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	{
 	    try
         {
-	        jeu.getGestionnaireTours().ameliorerTour(tour);
+	        jeu.ameliorerTour(tour);
 	        
 	        panelMenuInteraction.miseAJourNbPiecesOr();
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
@@ -450,12 +453,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void vendreTour(Tour tour)
     {
-        jeu.getGestionnaireTours().vendreTour(tour);
+        jeu.vendreTour(tour);
         panelInfoTour.effacerTour();
         panelMenuInteraction.miseAJourNbPiecesOr();
         panelTerrain.setTourSelectionnee(null);
         
-        jeu.getGestionnaireAnimations().ajouterAnimation(
+        jeu.ajouterAnimation(
                 new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
                         tour.getPrixDeVente())
                 );
@@ -538,7 +541,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	{ 
 	    if(vaguePeutEtreLancee)
 	    {
-	        jeu.lancerVagueSuivante(joueur.getEquipe(),this,this);
+	        jeu.lancerVagueSuivante(joueur.getEquipe());
 	        ajouterInfoVagueSuivanteDansConsole();
 	        bLancerVagueSuivante.setEnabled(false);
 	        vaguePeutEtreLancee = false;
@@ -563,7 +566,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	public void creatureBlessee(Creature creature)
 	{
 	    panelInfoCreature.miseAJourInfosVariables();
-	    
 	}
 
 	/**
@@ -573,75 +575,36 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 */
 	public void creatureTuee(Creature creature)
 	{
-		// gain de pieces d'or
-		joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
-		
-		// augmentation du score
-		int nbEtoiles = joueur.getNbEtoiles();
-		
-		joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
-		
-		// nouvelle étoile
-		if(nbEtoiles < joueur.getNbEtoiles())
-		    jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
-		
-		// on efface la creature des panels d'information
-		if(creature == panelTerrain.getCreatureSelectionnee())
-		{
-		    panelInfoCreature.effacerCreature();
-		    panelTerrain.setCreatureSelectionnee(null);
-		}
-		    
-		panelMenuInteraction.miseAJourNbPiecesOr();
-		panelMenuInteraction.miseAJourScore();
+	    // on efface la creature des panels d'information
+        if(creature == panelTerrain.getCreatureSelectionnee())
+        {
+            panelInfoCreature.effacerCreature();
+            panelTerrain.setCreatureSelectionnee(null);
+        }
+            
+        panelMenuInteraction.miseAJourNbPiecesOr();
+        panelMenuInteraction.miseAJourScore();
 
-		jeu.getGestionnaireAnimations().ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
+        jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
-                creature.getNbPiecesDOr()));
-				
+                creature.getNbPiecesDOr()));	
 	}
 
-	/**
-     * methode regissant de l'interface EcouteurDeCreature
-     * 
-     * Permet d'etre informe lorsqu'une creature est arrivee en zone d'arrivee.
-     */
-	public void estArriveeEnZoneArrivee(Creature creature)
+	@Override
+	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-		// si pas encore perdu
-	    if(!joueur.aPerdu())
-		{
-	        // creation de l'animation de blessure du joueur
-	        jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
-	        
-            joueur.getEquipe().perdreUneVie();
-            
-            // mise a jour des infos
-	        panelMenuInteraction.miseAJourNbViesRestantes();
-			
-	        // si c'est la creature selectionnee
-	        if(panelTerrain.getCreatureSelectionnee() == creature)
-	        {
-	            panelInfoCreature.setCreature(null);
-	            panelTerrain.setCreatureSelectionnee(null);
-	        }
-			
-			// le joueur n'a plus de vie
-			if(joueur.aPerdu())
-			{
-			    jeu.terminer();
-			    
-			    panelMenuInteraction.partieTerminee();
-			    
-			    // le bouton lancer vague suivante devient un retour au menu
-			    bLancerVagueSuivante.setEnabled(true);
-			    vaguePeutEtreLancee = false;
-		        bLancerVagueSuivante.setText("Retour au menu");
-		        bLancerVagueSuivante.setIcon(I_RETOUR);
-		        
-			    new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom());
-			}
-		}
+	    // creation de l'animation de blessure du joueur
+        jeu.ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
+
+	    // mise a jour des infos
+        panelMenuInteraction.miseAJourNbViesRestantes();
+        
+        // si c'est la creature selectionnee
+        if(panelTerrain.getCreatureSelectionnee() == creature)
+        {
+            panelInfoCreature.setCreature(null);
+            panelTerrain.setCreatureSelectionnee(null);
+        }
 	}
 
     @Override
@@ -716,7 +679,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
         {
-            jeu.lancerVagueSuivante(joueur.getEquipe(),this, this);
+            jeu.lancerVagueSuivante(joueur.getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
     }
@@ -753,5 +716,25 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
     @Override
     public void keyTyped(KeyEvent e)
-    {}   
+    {}
+
+    @Override
+    public void partieTerminee()
+    {
+        panelMenuInteraction.partieTerminee();
+        
+        // le bouton lancer vague suivante devient un retour au menu
+        bLancerVagueSuivante.setEnabled(true);
+        vaguePeutEtreLancee = false;
+        bLancerVagueSuivante.setText("Retour au menu");
+        bLancerVagueSuivante.setIcon(I_RETOUR);
+        
+        new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+    }
+
+    @Override
+    public void etoileGagnee()
+    {
+        jeu.ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;   
+    }   
 }

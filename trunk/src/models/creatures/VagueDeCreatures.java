@@ -242,7 +242,7 @@ public class VagueDeCreatures implements Runnable
                 // le chemin reste nul.
             }
 
-            jeu.getGestionnaireCreatures().ajouterCreature(creature);
+            jeu.ajouterCreature(creature);
 
             // temps d'attente entre chaque creature
             try

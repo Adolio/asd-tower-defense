@@ -364,7 +364,7 @@ public abstract class Creature extends Rectangle
             // informe les ecouteurs que la creature est arrivee 
             // a la fin du parcours
             for(EcouteurDeCreature edc : ecouteursDeCreature)
-                edc.estArriveeEnZoneArrivee(this);
+                edc.creatureArriveeEnZoneArrivee(this);
         }
 	}
 	

@@ -111,7 +111,7 @@ public class BouleDeGlace extends Attaque
                 if(cible.getCoeffRalentissement() == 0.0)
                 {
                     cible.setCoeffRalentissement(coeffRalentissement);
-                    jeu.getGestionnaireAnimations().ajouterAnimation(new Glacon(jeu,attaquant,cible,DUREE_RALENTISSEMENT));
+                    jeu.ajouterAnimation(new Glacon(jeu,attaquant,cible,DUREE_RALENTISSEMENT));
                 }
                 
                 estTerminee = true;

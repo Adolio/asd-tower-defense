@@ -84,11 +84,22 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Crayon pour un trait tillé
 	 */
 	// 2 pixels remplis suivi de 2 pixels transparents
-	private static final float [] DASHES   = {2.0F, 2.0F}; 
+	private static final float [] DASHES   = {2.0F, 2.0F};
+	
 	private static final BasicStroke TRAIT_TILLE = new BasicStroke(
 	            1.0f,BasicStroke.CAP_ROUND, 
 	            BasicStroke.JOIN_MITER, 
 	            10.0F, DASHES, 0.F);
+	
+	
+	private static final float [] DASHES_EPAIS   = {8.0F, 4.0F};
+	private static final BasicStroke TRAIT_TILLE_EPAIS = new BasicStroke(
+            3.0f,BasicStroke.CAP_ROUND, 
+            BasicStroke.JOIN_ROUND, 
+            10.0F, DASHES_EPAIS, 0.F);
+	
+	
+	
 	Stroke traitTmp;
 	
 	// 0.0f = 100% transparent et 1.0f vaut 100% opaque.
@@ -406,6 +417,31 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			
 		}
 		
+		//-------------------------------------------------
+        //-- Affichage de la zone de depart et d'arrivee --
+        //-------------------------------------------------
+        //if(afficherMaillage)
+        //{ 
+            // modification de la transparence
+            setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
+            
+            Stroke tmp = g2.getStroke();
+            g2.setStroke(TRAIT_TILLE_EPAIS);
+  
+            // affichages des zones de départ et arrivée
+            //for(Joueur joueur : jeu.getJoueurs())
+            //{
+                Rectangle zoneC = joueur.getEmplacement().getZoneDeConstruction();
+                g2.setColor(joueur.getEmplacement().getCouleur());
+                g2.drawRect(zoneC.x , zoneC.y, zoneC.width, zoneC.height);
+            //}
+            
+            g2.setStroke(tmp);
+            
+            setTransparence(1.f, g2);
+        //}
+		
+		
 		//------------------------------------
 		//-- Affichage du maillage (graphe) --
 		//------------------------------------
@@ -434,7 +470,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des creatures terrestres --
 		//----------------------------------------
 		Creature creature;
-        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();
@@ -447,13 +483,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------
 		//-- affichage des tours --
 		//-------------------------
-		for(Tour tour : jeu.getGestionnaireTours().getTours())
+		for(Tour tour : jeu.getTours())
 			dessinerTour(tour,g2,false);
 		
 	    //--------------------------------------
         //-- affichage des creatures aerienne --
         //--------------------------------------
-		eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+		eCreatures = jeu.getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();
@@ -511,13 +547,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des rayons de portee --
 		//------------------------------------
 		if(afficherRayonsDePortee)
-			for(Tour tour : jeu.getGestionnaireTours().getTours())
+			for(Tour tour : jeu.getTours())
 				dessinerPortee(tour,g2,COULEUR_RAYON_PORTEE);
 		
 		//------------------------------
 		//-- affichage des animations --
 		//------------------------------
-		jeu.getGestionnaireAnimations().dessinerAnimations(g2);
+		jeu.dessinerAnimations(g2);
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --
@@ -531,7 +567,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			dessinerTour(tourAAjouter,g2,false);
 			
 			// positionnnable ou non
-			if(!jeu.getGestionnaireTours().laTourPeutEtrePosee(tourAAjouter))
+			if(!jeu.laTourPeutEtrePosee(tourAAjouter))
 				dessinerPortee(tourAAjouter,g2,COULEUR_POSE_IMPOSSIBLE);
 			else
 				// affichage du rayon de portee
@@ -813,7 +849,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        //--------------------------
 	        
 	        // la selection se fait lors du clique
-			for(Tour tour : jeu.getGestionnaireTours().getTours()) // pour chaque tour... 
+			for(Tour tour : jeu.getTours()) // pour chaque tour... 
 				if (tour.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
 				{	
 					// si le joueur clique sur une tour deja selectionnee
@@ -842,7 +878,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             //------------------------------
 
 			Creature creature;
-			Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreatures();
+			Vector<Creature> creatures = jeu.getCreatures();
 			
 			// parcours a l'envers car il faut traiter les creatures les plus
             // devant en premier (les derniers affiches)

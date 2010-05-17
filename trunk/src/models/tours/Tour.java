@@ -484,7 +484,7 @@ public abstract class Tour extends Rectangle
 
 		// bloque la reference vers la collection des creatures
 		Creature creature;
-        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
             try{

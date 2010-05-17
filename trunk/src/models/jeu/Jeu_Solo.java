@@ -3,7 +3,7 @@ package models.jeu;
 import models.creatures.VagueDeCreatures;
 import models.tours.Tour;
 
-public class Jeu_Serveur extends Jeu
+public class Jeu_Solo extends Jeu
 {
 
     @Override
@@ -40,10 +40,6 @@ public class Jeu_Serveur extends Jeu
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat()); 
-    
-    
-        // TODO [CONTACT CLIENTS]
-    
     }
 
     @Override
@@ -55,8 +51,6 @@ public class Jeu_Serveur extends Jeu
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
-    
-        // TODO [CONTACT CLIENTS]
     }
 
     @Override
@@ -73,15 +67,11 @@ public class Jeu_Serveur extends Jeu
      
         // amelioration de la tour
         tour.ameliorer();
-        
-        // TODO [CONTACT CLIENTS]
     }
 
     @Override
     public void lancerVague(VagueDeCreatures vague)
     { 
-        vague.lancerVague(this, joueur.getEquipe(), this, this);
-        
-        // TODO [CONTACT CLIENTS]
+        vague.lancerVague(this, joueur.getEquipe(), this, this); 
     }
 }

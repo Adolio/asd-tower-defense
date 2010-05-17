@@ -86,7 +86,7 @@ public class TourDeTerre extends Tour
 
     public void tirer(Creature creature)
     {
-        jeu.getGestionnaireAnimations().ajouterAnimation(new BouleDeTerre(jeu,this,creature,degats,RAYON_IMPACT));
+        jeu.ajouterAnimation(new BouleDeTerre(jeu,this,creature,degats,RAYON_IMPACT));
     }
 
     public Tour getCopieOriginale()
