@@ -120,4 +120,13 @@ public class ServeurJeu
 		System.out.print("[SERVEUR] ");
 		System.out.println(msg);
 	}
+
+	/**
+	 * Supprime un joueur de la partie
+	 * @param iD l'ID du joueur à supprimer
+	 */
+	public void supprimerJoueur(int ID)
+	{
+		clients.remove(ID);	
+	}
 }
