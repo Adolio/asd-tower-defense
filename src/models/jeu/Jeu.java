@@ -1,6 +1,8 @@
 package models.jeu;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Vector;
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -33,7 +35,8 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public class Jeu
+public abstract class Jeu implements EcouteurDeCreature, 
+                            EcouteurDeVague
 {
 	/**
 	 * version du jeu
@@ -47,7 +50,7 @@ public class Jeu
 	 * - Les creatures
 	 * - Le maillage
 	 */
-	private Terrain terrain;
+    protected Terrain terrain;
 	
 	/**
 	 * Collection des équipes en jeu
@@ -59,7 +62,7 @@ public class Jeu
      * 
      * @see Tour
      */
-    private GestionnaireTours gestionnaireTours;
+	protected GestionnaireTours gestionnaireTours;
 
     /**
      * Les creatures de deplacent sur le terrain d'une zone de depart a une zone
@@ -67,17 +70,17 @@ public class Jeu
      * 
      * @see Creature
      */
-    private GestionnaireCreatures gestionnaireCreatures;
+	protected GestionnaireCreatures gestionnaireCreatures;
 
     /**
      * Outil de gestion des animations
      */
-    private GestionnaireAnimations gestionnaireAnimations;
+	protected GestionnaireAnimations gestionnaireAnimations;
 
     /**
      * Variable d'etat de la pause
      */
-    private boolean enPause;
+	protected boolean enPause;
   
     /**
      * Stockage de la vagues courante
@@ -87,34 +90,48 @@ public class Jeu
     /**
      * Permet de savoir si la partie est terminée
      */
-    private boolean estTermine;
+    protected boolean estTermine;
 
     /**
      * Permet de savoir si la partie est initialisée
      */
     private boolean estInitialise;
     
+    /**
+     * Pour notifications (observable)
+     */
+    private EcouteurDeJeu edj;
+    
+    /**
+     * Joueur principal  
+     */
+    protected Joueur joueur;
     
     /**
      * Constructeur
      */
     public Jeu()
     {
-        gestionnaireTours     = new GestionnaireTours(this);
-        gestionnaireCreatures = new GestionnaireCreatures();
+        gestionnaireTours      = new GestionnaireTours(this);
+        gestionnaireCreatures  = new GestionnaireCreatures();
         gestionnaireAnimations = new GestionnaireAnimations();
     }
     
     /**
      * Permet d'initialiser la partie avant le commencement
+     * 
+     * @param joueur 
      */
-    public void initialiser()
+    public void initialiser(Joueur joueur)
     {
         if(terrain == null)
             throw new IllegalStateException("Terrain nul");
         
         if(equipes.size() == 0)
             throw new IllegalStateException("Aucune équipe inscrite");
+        
+        // le joueur principal
+        this.joueur = joueur;
         
         // initialisation des valeurs par defaut
         for(Equipe equipe : equipes)
@@ -123,8 +140,8 @@ public class Jeu
             equipe.setNbViesRestantes(terrain.getNbViesInitiales());
             
             // initialisation des pieces d'or des joueurs
-            for(Joueur joueur : equipe.getJoueurs())
-                joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
+            for(Joueur j : equipe.getJoueurs())
+                j.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
         }  
         
         estInitialise = true;
@@ -157,6 +174,41 @@ public class Jeu
     }
     
     /**
+     * Indique au jeu qu'une vague veut etre lancée
+     * 
+     * @param vague la vague
+     */
+    abstract public void lancerVague(VagueDeCreatures vague);
+    
+    /**
+     * Permet de poser un tour
+     * 
+     * @param tour la tour
+     * @throws Exception si c'est pas possible
+     */
+    public abstract void poserTour(Tour tour) throws Exception;
+    
+    
+    /**
+     * Permet de vendre une tour.
+     * 
+     * @param tour la tour a vendre
+     */
+    public abstract void vendreTour(Tour tour);
+ 
+    
+    /**
+     * Permet d'ameliorer une tour.
+     * 
+     * @param tour la tour a ameliorer
+     * @return vrai si operation realisee avec succes, sinon faux 
+     * @throws Exception si pas assez d'argent 
+     * @throws Exception si niveau max de la tour atteint
+     */
+    public abstract void ameliorerTour(Tour tour) throws Exception;
+    
+    
+    /**
      * Permet de recuperer la version du jeu.
      * 
      * @return la version du jeu.
@@ -169,14 +221,14 @@ public class Jeu
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
-	public void lancerVagueSuivante(Equipe cible, EcouteurDeVague edv,EcouteurDeCreature edc)
+	public void lancerVagueSuivante(Equipe cible)
 	{
 	    // lancement de la vague
 	    VagueDeCreatures vagueCourante = terrain.getVagueDeCreaturesSuivante();
         
 	    terrain.passerALaProchaineVague();
 	    
-        vagueCourante.lancerVague(this, cible, edv, edc);
+        vagueCourante.lancerVague(this, cible, this, this);
 	}
 	
 	/**
@@ -198,16 +250,8 @@ public class Jeu
         estTermine = true;
         
         arreterTout();
-    }
-
-    /**
-     * Permet de recuperer le gestionnaire d'animations
-     * 
-     * @return le gestionnaire d'animations
-     */
-    public GestionnaireAnimations getGestionnaireAnimations()
-    {
-        return gestionnaireAnimations;    
+        
+        edj.partieTerminee();
     }
 
     /**
@@ -239,25 +283,15 @@ public class Jeu
         
         return terrain;
     }
-
-    /**
-     * Permet de recuperer le gestionnaire de tours
-     * 
-     * @return le gestionnaire de tours
-     */
-    public GestionnaireTours getGestionnaireTours()
-    {
-        return gestionnaireTours;
-    }
     
     /**
      * Permet de recuperer le gestionnaire de creatures
      * 
      * @return le gestionnaire de creatures
      */
-    public GestionnaireCreatures getGestionnaireCreatures()
+    public Vector<Creature> getCreatures()
     {
-        return gestionnaireCreatures;
+        return gestionnaireCreatures.getCreatures();
     }
 
     /**
@@ -341,11 +375,11 @@ public class Jeu
     }
     
     /**
-     * Permet d'ajouter un jueur dans le premier emplacement disponible
+     * Permet d'ajouter un joueur dans le premier emplacement disponible
      * 
      * @param joueur le joueur
      */
-    public void trouverPlace(Joueur joueur)
+    public void ajouterJoueur(Joueur joueur)
     {
         // ajout du joueur dans le premier emplacement disponible
         for(int i=0;i<equipes.size();i++)
@@ -362,7 +396,141 @@ public class Jeu
             }
         }
         
-        // TODO securite
-        // throw AucunePlaceDisponible();
+       throw new IllegalStateException("Aucun place disponible.");
+    }
+
+    /**
+     * Permet de modifier l'écouteur de jeu
+     * 
+     * @param edj l'écouteur de jeu
+     */
+    public void setEcouteurDeJeu(EcouteurDeJeu edj)
+    {
+        this.edj = edj;
+    }
+    
+    /**
+     * Permet de recuperer le joueur principal du jeu
+     * 
+     * @param joueur le joueur principal du jeu
+     */
+    public Joueur getJoueurPrincipal()
+    { 
+        return joueur;
+    }
+    
+    /**
+     * Permet de modifier le joueur principal du jeu
+     * 
+     * @param joueur le joueur principal du jeu
+     */
+    public void setJoueurPrincipal(Joueur joueur)
+    {
+        this.joueur = joueur;
+    }
+    
+    @Override
+    public void creatureBlessee(Creature creature)
+    {
+        if(edj != null)
+            edj.creatureBlessee(creature);
+    }
+
+    @Override
+    public void creatureTuee(Creature creature)
+    {
+        // gain de pieces d'or
+        joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
+        
+        // augmentation du score
+        int nbEtoiles = joueur.getNbEtoiles();
+        
+        joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
+        
+        // nouvelle étoile
+        if(nbEtoiles < joueur.getNbEtoiles())
+            edj.etoileGagnee();
+ 
+        if(edj != null)
+            edj.creatureTuee(creature);
+    }
+
+    @Override
+    synchronized public void creatureArriveeEnZoneArrivee(Creature creature)
+    {
+        // si pas encore perdu
+        if(!joueur.aPerdu())
+        {
+            joueur.getEquipe().perdreUneVie();
+            
+            if(edj != null)
+                edj.creatureArriveeEnZoneArrivee(creature);
+            
+            // le joueur n'a plus de vie
+            if(joueur.aPerdu())
+                terminer();
+        }  
+    }
+
+    @Override
+    public void vagueEntierementLancee(VagueDeCreatures vagueDeCreatures)
+    {
+        if(edj != null)
+            edj.vagueEntierementLancee(vagueDeCreatures); 
+    }
+    
+    /**
+     * Permet de savoir si une tour peut etre posee.
+     * 
+     * Controle de l'intersection avec les tours.
+     * Controle de l'intersection avec les creatures.
+     * Controle de l'intersection avec les zones du terrain. (murs et depart / arrive)
+     * 
+     * @param tour la tour a posee
+     * @return true si la tour peut etre posee, false sinon
+     */
+    public boolean laTourPeutEtrePosee(Tour tour)
+    {
+        return gestionnaireTours.laTourPeutEtrePosee(tour);
+    }
+    
+    /**
+     * Permet de savoir si une tour peut etre achetee.
+     * 
+     * @param tour la tour a achetee
+     * @return true si le joueur a assez de pieces d'or, false sinon
+     */
+    public boolean laTourPeutEtreAchetee(Tour tour)
+    {  
+        return gestionnaireTours.laTourPeutEtreAchetee(tour);
+    }
+
+    /**
+     * Permet de recuperer une copie de la collection des tours
+     */
+    public Vector<Tour> getTours()
+    {
+        return gestionnaireTours.getTours();
+    }
+
+    public Vector<Creature> getCreaturesQuiIntersectent(int x, int y,
+            int rayon)
+    {
+        return gestionnaireCreatures.getCreaturesQuiIntersectent(x, y, rayon);
+    }
+
+    public void ajouterCreature(Creature creature)
+    {
+        gestionnaireCreatures.ajouterCreature(creature);
+    }
+
+    public void ajouterAnimation(Animation animation)
+    {
+        gestionnaireAnimations.ajouterAnimation(animation);
+    }
+
+    public void dessinerAnimations(Graphics2D g2)
+    {
+        gestionnaireAnimations.dessinerAnimations(g2);
     }
 }

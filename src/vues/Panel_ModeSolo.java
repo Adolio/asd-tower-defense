@@ -7,6 +7,7 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
+import models.jeu.Jeu_Solo;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.outils.Astuces;
@@ -357,22 +358,22 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// les terrains
 		else if(source == boutonsTerrains[0])
 		{
-		    Jeu jeu = new Jeu();
+		    Jeu jeu = new Jeu_Solo();
 		    lancerJeu(jeu, new ElementTD(jeu));
 		}
 		else if(source == boutonsTerrains[1])
 		{
-		    Jeu jeu = new Jeu();
+		    Jeu jeu = new Jeu_Solo();
             lancerJeu(jeu, new Spiral(jeu));
 		}
 		else if(source == boutonsTerrains[2])
 		{ 
-		    Jeu jeu = new Jeu();
+		    Jeu jeu = new Jeu_Solo();
 		    lancerJeu(jeu, new Desert(jeu));
 		}
 		else if(source == boutonsTerrains[3])
 		{
-		    Jeu jeu = new Jeu();
+		    Jeu jeu = new Jeu_Solo();
 		    lancerJeu(jeu, new WaterWorld(jeu));
 		}
 		else if(source == itemMSElementTD)
@@ -419,8 +420,8 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
         Joueur joueur = new Joueur("Joueur");
         equipe.ajouterJoueur(joueur);
-        jeu.initialiser();
-        new Fenetre_JeuSolo(jeu,joueur);
+        jeu.initialiser(joueur);
+        new Fenetre_JeuSolo(jeu);
         
         chargementTermine = true;
         parent.dispose();

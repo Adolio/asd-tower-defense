@@ -5,17 +5,15 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
+import models.jeu.Jeu_Solo;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
@@ -55,7 +53,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             this.canalServeurJeu = canal;
             
             // TODO demande au serveur les info du jeu
-            jeu = new Jeu();
+            jeu = new Jeu_Solo();
             Terrain terrain = new ElementTD_Coop(jeu);
             jeu.setTerrain(terrain);
             
@@ -377,8 +375,8 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                             .envoyerString(RequeteEnregistrement.STOP); 
                 }
 
-                jeu.initialiser();
-                new Fenetre_JeuVersus(jeu,joueur);
+                jeu.initialiser(joueur);
+                new Fenetre_JeuVersus(jeu);
                 parent.dispose();
             }
 

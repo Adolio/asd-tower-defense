@@ -85,7 +85,7 @@ public class TourArcher extends Tour
 
 	public void tirer(Creature creature)
 	{
-	    jeu.getGestionnaireAnimations().ajouterAnimation(new Fleche(jeu,this,creature,degats));
+	    jeu.ajouterAnimation(new Fleche(jeu,this,creature,degats));
 	}
 
 	public Tour getCopieOriginale()

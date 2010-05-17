@@ -104,7 +104,7 @@ public class BouleDeTerre extends Attaque
                 informerEcouteurAttaqueTerminee();
                 estTerminee = true;
     
-                jeu.getGestionnaireAnimations().ajouterAnimation(
+                jeu.ajouterAnimation(
                         (new Explosion((int) xCentreBoule - DIAMETRE_BOULE,
                                 (int) yCentreBoule - DIAMETRE_BOULE)));
     

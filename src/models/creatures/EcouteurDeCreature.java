@@ -30,5 +30,5 @@ public interface EcouteurDeCreature
 	 * Permet de savoir quand une creature arrive à la fin du parcours.
 	 * @param creature la creature qui est arrivee
 	 */
-	void estArriveeEnZoneArrivee(Creature creature);
+	void creatureArriveeEnZoneArrivee(Creature creature);
 }

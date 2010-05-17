@@ -14,8 +14,8 @@ public class Jeu_Sauvergarde
     
     public Jeu_Sauvergarde(Jeu jeu)
     {
-        creatures = jeu.getGestionnaireCreatures().getCreatures();
-        tours = jeu.getGestionnaireTours().getTours();
+        creatures = jeu.getCreatures();
+        tours = jeu.getTours();
         //animations = jeu.getGestionnaireAnimations().getAnimations(); 
     }
     

@@ -601,7 +601,7 @@ public abstract class Terrain implements Serializable
         // Il ne doit pas y avoir de modifications sur la collection
         // durant le parcours.
         Creature creature;
-        Enumeration<Creature> eCreatures = jeu.getGestionnaireCreatures().getCreatures().elements();
+        Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();

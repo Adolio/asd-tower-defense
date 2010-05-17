@@ -82,7 +82,7 @@ public class TourElectrique extends Tour
 
     public void tirer(Creature creature)
     {
-        jeu.getGestionnaireAnimations().ajouterAnimation(new ArcElectrique(jeu,this,creature,degats));
+        jeu.ajouterAnimation(new ArcElectrique(jeu,this,creature,degats));
     }
 
     public Tour getCopieOriginale()

@@ -11,6 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import models.jeu.Jeu;
+import models.jeu.Jeu_Solo;
 import models.jeu.ModeDeJeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
@@ -255,7 +256,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         pTerrains.add(new JScrollPane(tbTerrains), BorderLayout.WEST);
         
-        pEmplacementTerrain.setTerrain(new ElementTD_Coop(new Jeu()));
+        pEmplacementTerrain.setTerrain(new ElementTD_Coop(new Jeu_Solo()));
         
         JPanel pTmp = new JPanel(new BorderLayout());
         pTmp.setOpaque(false);
@@ -449,7 +450,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
             terrain.initialiser();
             
-            Jeu jeu = new Jeu();
+            Jeu jeu = new Jeu_Solo();
             jeu.setTerrain(terrain);
             
             terrain.setJeu(jeu);
@@ -457,14 +458,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
  
             // ajout du joueur dans le premier emplacement
             Joueur joueur1 = new Joueur(tfPseudo.getText());
-            jeu.trouverPlace(joueur1);
+            jeu.ajouterJoueur(joueur1);
             
             // TODO test
             Joueur joueur2 = new Joueur("fictiveBoy");
-            jeu.trouverPlace(joueur2);
+            jeu.ajouterJoueur(joueur2);
             
             Joueur joueur3 = new Joueur("fictiveGirl");
-            jeu.trouverPlace(joueur3);
+            jeu.ajouterJoueur(joueur3);
             
             
             // connexion réussie

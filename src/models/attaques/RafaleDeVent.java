@@ -109,7 +109,7 @@ public class RafaleDeVent extends Attaque
                 y = (int) (Math.sin(ANGLE) * distanceDeLaSource + attaquant.getCenterY()); // y
 
                 
-                Vector<Creature> creatures = jeu.getGestionnaireCreatures().getCreaturesQuiIntersectent((int)x,(int)y,DIAMETRE_BOULE);
+                Vector<Creature> creatures = jeu.getCreaturesQuiIntersectent((int)x,(int)y,DIAMETRE_BOULE);
                 Creature creature;
                 for(int i=0;i<creatures.size();i++)
                 {
