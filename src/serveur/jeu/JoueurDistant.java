@@ -111,13 +111,19 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		switch (etat)
 		{
 		case VALIDATION:
-			str = getMessage();
-			// Interprétation de la chaine
-			parse(str);
+			// Envoi de la version du serveur au client
+			send(ServeurJeu.VERSION);
+			// Attente du pseudo du joueur
+			pseudo = getMessage();
+			// Passage en état EN_JEU
+			etat = EN_JEU;
 			break;
 		case EN_ATTENTE:
 			break;
 		case EN_JEU:
+			// Interprétation de la chaine
+			str = getMessage();
+			parse(str);
 			break;
 		case EN_PAUSE:
 			break;
@@ -136,7 +142,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param msg
 	 *            Le message à envoyer.
 	 */
-	public void envoyer(final String msg)
+	public void send(final String msg)
 	{
 		synchronized (canal)
 		{
@@ -217,7 +223,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			message.put("ID_Player", IDFrom);
 			message.put("message", contenu);
 			// Envoit de la structure à travers le réseau
-			envoyer(message.toString());
+			send(message.toString());
 		} catch (JSONException e)
 		{
 			e.printStackTrace();
