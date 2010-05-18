@@ -6,6 +6,15 @@ import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
 import models.tours.Tour;
 
+/**
+ * Interface permettant de s'abonner au jeu pour recevoir des notifications 
+ * lorsque le jeu change d'état.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
+ * @see Jeu
+ */
 public interface EcouteurDeJeu
 {
     

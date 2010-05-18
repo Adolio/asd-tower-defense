@@ -7,17 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import vues.GestionnaireDesPolices;
-import models.outils.MeilleursScores;
 
 /**
  * Classe de gestion de l'animation d'un gain d'une étoile
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 4 mai 2010
+ * @version 1.0 | mai 2010
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class GainEtoile extends Animation
 {

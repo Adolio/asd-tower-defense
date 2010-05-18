@@ -11,6 +11,10 @@ import java.util.Vector;
  * aleger le processeur.
  * 
  * Toutes les animations tournent sous le meme clock.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
  */
 public class GestionnaireAnimations implements Runnable
 {
@@ -61,6 +65,7 @@ public class GestionnaireAnimations implements Runnable
             {
                 animation = eAnimations.nextElement();
                 
+                // seulement pour l'hauteur passée
                 if(animation.getHauteur() == hauteur)
                     animation.dessiner(g2);
             }

@@ -4,17 +4,13 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import models.outils.MeilleursScores;
 
 /**
  * Classe de gestion de l'animation d'une perte de vie
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 22 decembre 2009
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class PerteVie extends Animation
 {

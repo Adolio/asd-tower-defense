@@ -9,9 +9,7 @@ import models.outils.MeilleursScores;
 /**
  * Classe de gestion de l'animation d'un gain de pieces d'or
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 22 decembre 2009
  * @since jdk1.6.0_16
  * @see MeilleursScores

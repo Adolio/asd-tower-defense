@@ -17,18 +17,19 @@ import models.outils.Outils;
 public class TacheDeSang extends Animation
 {
 	// constantes statiques
-    private static final long serialVersionUID         = 1L;
-	private static final Image[] TACHES = new Image[2];
-	private static final long DUREE_DE_VIE = 2000;
-	private long tempsPasse = 0;
+    private static final long serialVersionUID = 1L;
+	private static final Image[] TACHES = new Image[3];
+	private static final long DUREE_DE_VIE = 3000;
 	
 	// attributs
 	private float alpha = 1.0f;
-	private int indiceAnim = 0;
     private Image image;
-	
+    private static final int DECALAGE = 4;
+    private long tempsPasse = 0;
+    
 	static
     { 
+	    // chargement des images
 	    for(int i=0;i<TACHES.length;i++)
 	        TACHES[i] = Toolkit.getDefaultToolkit().getImage("img/animations/tachesDeSang/"+i+".png");
     }
@@ -41,7 +42,8 @@ public class TacheDeSang extends Animation
 	 */
 	public TacheDeSang(int centerX, int centerY)
 	{
-		super(centerX + Outils.tirerNombrePseudoAleatoire(-2, 2), centerY +  Outils.tirerNombrePseudoAleatoire(-2, 2));
+	    super(centerX + Outils.tirerNombrePseudoAleatoire(-DECALAGE, DECALAGE), 
+		        centerY +  Outils.tirerNombrePseudoAleatoire(-DECALAGE, DECALAGE));
 		
 		hauteur = Animation.HAUTEUR_SOL;
 		
@@ -66,9 +68,11 @@ public class TacheDeSang extends Animation
     {
         this.tempsPasse += tempsPasse;
         
+        // temps de vie passé
         if(this.tempsPasse > DUREE_DE_VIE)
             estTerminee = true;
         else
+            // fondu
             alpha = 1.f - (float) this.tempsPasse / (float) DUREE_DE_VIE;
     }
 }
