@@ -137,12 +137,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 			System.out.println(joueur.getValue());
 	}
 
-	protected synchronized static void log(String msg)
-	{
-		System.out.print("[SERVEUR] ");
-		System.out.println(msg);
-	}
-
 	/**
 	 * Supprime un joueur de la partie
 	 * 
@@ -230,6 +224,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	protected synchronized static void log(String msg)
+	{
+		System.out.print("[SERVEUR] ");
+		System.out.println(msg);
 	}
 
 	private Joueur repererJoueur(int ID)
