@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.jeu.BadPosException;
@@ -194,7 +195,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 			// Chemin bloqué.
 			return PATH_BLOCK;
 		}
-		return 0;
+		return OK;
 	}
 
 	public synchronized int changementEtatJoueur(int iD, int nouvelEtat)
@@ -244,6 +245,27 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		}
 		return null;
 	}
+	
+	/**
+	 * Envoi l'état de tous les objets à tous les clients
+	 */
+	public void update(){
+		// Parcourt de toutes les tours sur le terrain
+		for(Tour t : serveurJeu.getTours()){
+			// Extraction des paramêtres
+			int ID = 0;//t.getID(); // FIXME
+			int x = (int) t.getX();
+			int y = (int )t.getY();
+			int etat = 0;// t.getEtat(); // FIXME
+			// On envoit les infos à chaque client
+			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+				joueur.getValue().afficherObjet(ID, x, y, etat);
+		}
+		
+		// TODO : Créatures
+	}
+	
+	/**************** NOTIFICATIONS **************/
 
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
@@ -277,11 +299,64 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 	public void partieTerminee()
 	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void vagueEntierementLancee(VagueDeCreatures vague)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void animationAjoutee(Animation animation)
+	{
+		// TODO Auto-generated method stub	
+	}
+
+	@Override
+	public void animationTerminee(Animation animation)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void creatureAjoutee(Creature creature)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void joueurAjoute(Joueur joueur)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partieDemarree()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tourAmelioree(Tour tour)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tourPosee(Tour tour)
+	{
+		update();
+	}
+
+	@Override
+	public void tourVendue(Tour tour)
 	{
 		// TODO Auto-generated method stub
 		
