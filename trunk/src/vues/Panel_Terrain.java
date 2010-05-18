@@ -1028,7 +1028,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	public int getPositionSurQuadrillage(int position)
 	{
-	    return Math.round(position/CADRILLAGE)*CADRILLAGE;
+	    // CADRILLAGE/2 pour adapter le pointage de la souris
+	    return Math.round((position-CADRILLAGE/2)/CADRILLAGE)*CADRILLAGE;
 	}
 	
 	/**
