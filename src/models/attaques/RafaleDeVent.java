@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Vector;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.outils.MeilleursScores;
 import models.tours.Tour;
 
 /**
@@ -15,12 +14,9 @@ import models.tours.Tour;
  * Cette classe est une animation qui dessine un suffle partant d'une
  * tour vers une creature.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.1 | 4 mai 2010
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class RafaleDeVent extends Attaque
 {
@@ -77,9 +73,10 @@ public class RafaleDeVent extends Attaque
     { 
         // rotation des créatures
         AffineTransform tx = new AffineTransform();
-        tx.translate((int) x + DIAMETRE_BOULE / 2, (int) y + DIAMETRE_BOULE / 2);
+        tx.translate((int) x, (int) y);
         tx.rotate(ANGLE);
-        
+        tx.translate((int) -DIAMETRE_BOULE / 2.0, (int) -DIAMETRE_BOULE / 2.0);
+
         // dessin de la boule de feu
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.drawImage(IMAGE_BOULE, tx, null);

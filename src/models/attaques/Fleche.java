@@ -2,6 +2,8 @@ package models.attaques;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.io.File;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -16,9 +18,8 @@ import models.tours.Tour;
  * Cette classe est une animation qui dessine une fleche partant d'une tour
  * vers une creature.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
+ * @author Romain Poulain
  * @version 1.0 | 30 decembre 2009
  * @since jdk1.6.0_16
  * @see MeilleursScores
@@ -90,9 +91,45 @@ public class Fleche extends Attaque
         xQueue = Math.cos(angle)*(distanceTeteTour - LONGUEUR_FLECHE) + xAttaquant; // x
         yQueue = Math.sin(angle)*(distanceTeteTour - LONGUEUR_FLECHE) + yAttaquant; // y
         
+        
+        
+        
+        int largeurPointe = 2;
+        
+        Polygon p = new Polygon();
+       
+        
+        // vecteur de la fleche
+        Point vecteur = new Point((int) (xTete - xQueue), (int) (yTete - yQueue));
+        
+       
+        Point vPiedPointe = new Point((int)(vecteur.x * 0.6), 
+                                      (int)(vecteur.y * 0.6));
+
+        
         // dessin de la fleche
         g2.setColor(COULEUR_FLECHE);
-        g2.drawLine((int) xTete,(int) yTete,(int) xQueue,(int) yQueue);
+        g2.drawLine((int) xQueue + vPiedPointe.x,(int) yQueue + vPiedPointe.y,(int) xQueue,(int) yQueue);
+        
+        
+        
+        
+        // perpendiculaire normalisée
+        Point vDroite = new Point((int)(vecteur.y / vecteur.distance(0.0, 0.0) * largeurPointe),
+                                  (int)( -vecteur.x / vecteur.distance(0.0, 0.0) * largeurPointe));
+        
+        Point vGauche = new Point((int)(vDroite.x * -1),
+                                  (int)(vDroite.y * -1));
+        
+        // construction du polygon
+        p.addPoint((int)xTete,(int)yTete);
+        p.addPoint((int)(xQueue + vPiedPointe.x + vDroite.x), (int)(yQueue + vPiedPointe.y + vDroite.y));
+        p.addPoint((int)(xQueue + vPiedPointe.x + vGauche.x), (int)(yQueue + vPiedPointe.y + vGauche.y));
+        
+        // dessin
+        g2.setColor(Color.GRAY);
+        g2.fillPolygon(p);
+        
     }
 
     @Override

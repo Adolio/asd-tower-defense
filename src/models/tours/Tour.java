@@ -21,9 +21,7 @@ import models.joueurs.Joueur;
  * <p>
  * Cette classe est abstraite et doit etre heritee pour etre ensuite instanciee.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
@@ -122,6 +120,12 @@ public abstract class Tour extends Rectangle
 	 */
 	protected double cadenceTir; // tir(s) / seconde
 
+	
+	/**
+	 * La tour est trournée ou non en direction de l'ennemi lorsqu'elle tire
+	 */
+	protected double angle = 0.0;
+	
 	// initialisation pour que la tour puisse tirer directement
     private long tempsDepuisDernierTir;
 	
@@ -556,6 +560,7 @@ public abstract class Tour extends Rectangle
         return tempsEcoule;
     }
     private long tempsDernierAppel;
+    
 
     /**
      * Permet de recuperer le propriétaire de la tour
@@ -575,5 +580,13 @@ public abstract class Tour extends Rectangle
     public void setProprietaire(Joueur proprietaire)
     {
         this.proprietaire = proprietaire;
+    }
+
+    /**
+     * Permet de recuperer l'angle de la tour
+     */
+    public double getAngle()
+    {
+        return angle;
     }
 }

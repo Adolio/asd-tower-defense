@@ -12,10 +12,8 @@ import models.creatures.Creature;
  * Le tour canon est une tour lente avec de bons degats de zone. 
  * De plus, elle n'attaque que les creatures terrestres
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
  * @see Tour
  */
@@ -85,6 +83,8 @@ public class TourCanon extends Tour
 	
 	public void tirer(Creature creature)
 	{
+	    angle = Math.PI/2+Math.atan2(creature.getCenterY() - getCenterY(), creature.getCenterX() - getCenterX());
+	    
 	    jeu.ajouterAnimation(new BouletDeCanon(jeu,this,creature,degats,RAYON_IMPACT));
 	}
 
