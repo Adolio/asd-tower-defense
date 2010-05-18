@@ -171,6 +171,9 @@ public abstract class Jeu implements EcouteurDeCreature,
         gestionnaireTours.demarrer();
         gestionnaireCreatures.demarrer();
         gestionnaireAnimations.demarrer();
+        
+        // notification
+        edj.partieDemarree();
     }
     
     /**
@@ -388,6 +391,10 @@ public abstract class Jeu implements EcouteurDeCreature,
             {              
                 // on tente l'ajout...
                 equipes.get(i).ajouterJoueur(joueur);
+                
+                // notification
+                edj.joueurAjoute(joueur);
+                
                 return; // équipe trouvée
             }
             catch(IllegalArgumentException iae)
@@ -522,11 +529,15 @@ public abstract class Jeu implements EcouteurDeCreature,
     public void ajouterCreature(Creature creature)
     {
         gestionnaireCreatures.ajouterCreature(creature);
+        
+        edj.creatureAjoutee(creature);
     }
 
     public void ajouterAnimation(Animation animation)
     {
         gestionnaireAnimations.ajouterAnimation(animation);
+        
+        edj.animationAjoutee(animation);
     }
 
     public void dessinerAnimations(Graphics2D g2)

@@ -1,5 +1,7 @@
 package models.jeu;
 
+import models.animations.Animation;
+import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.tours.Tour;
 
@@ -43,7 +45,7 @@ public class Jeu_Serveur extends Jeu
     
     
         // TODO [CONTACT CLIENTS]
-    
+        // serveurJeu.annoncerPoseDeTour(tour);
     }
 
     @Override
@@ -57,6 +59,7 @@ public class Jeu_Serveur extends Jeu
                 tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
     
         // TODO [CONTACT CLIENTS]
+        // serveurJeu.annoncerVenteDeTour(tour);
     }
 
     @Override
@@ -75,13 +78,30 @@ public class Jeu_Serveur extends Jeu
         tour.ameliorer();
         
         // TODO [CONTACT CLIENTS]
+        // serveurJeu.annoncerMiseAJourTour(tour);
     }
 
     @Override
     public void lancerVague(VagueDeCreatures vague)
     { 
         vague.lancerVague(this, joueur.getEquipe(), this, this);
+    }
+    
+    @Override
+    public void ajouterCreature(Creature creature)
+    {
+        gestionnaireCreatures.ajouterCreature(creature);
         
         // TODO [CONTACT CLIENTS]
+        // serveurJeu.annoncerAjoutDUneCreature(creature);
+    }
+    
+    @Override
+    public void ajouterAnimation(Animation animation)
+    {
+        gestionnaireAnimations.ajouterAnimation(animation);
+        
+        // TODO [CONTACT CLIENTS]
+        // serveurJeu.annoncerAjoutDUneAnimation(animation);
     }
 }

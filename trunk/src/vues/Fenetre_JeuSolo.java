@@ -745,5 +745,29 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     public void etoileGagnee()
     {
         jeu.ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;   
-    }   
+    }
+
+    @Override
+    public void tourAmelioree(Tour tour){}
+
+    @Override
+    public void tourPosee(Tour tour){}
+
+    @Override
+    public void tourVendue(Tour tour){}
+
+    @Override
+    public void animationAjoutee(Animation animation){}
+
+    @Override
+    public void animationTerminee(Animation animation){}
+
+    @Override
+    public void creatureAjoutee(Creature creature){}
+
+    @Override
+    public void joueurAjoute(Joueur joueur){}
+
+    @Override
+    public void partieDemarree(){}
 }

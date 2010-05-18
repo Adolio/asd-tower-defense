@@ -606,9 +606,29 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     }
 
     @Override
-    public void etoileGagnee()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void etoileGagnee(){}
+
+    @Override
+    public void tourAmelioree(Tour tour){}
+
+    @Override
+    public void tourPosee(Tour tour){}
+
+    @Override
+    public void tourVendue(Tour tour){}
+
+    @Override
+    public void animationAjoutee(Animation animation){}
+
+    @Override
+    public void animationTerminee(Animation animation){}
+
+    @Override
+    public void creatureAjoutee(Creature creature){}
+
+    @Override
+    public void joueurAjoute(Joueur joueur){}
+
+    @Override
+    public void partieDemarree(){}
 }
