@@ -78,6 +78,11 @@ public interface ConstantesServeurJeu
 	 */
 	public final int BAD_POS = 401;
 	/**
+	 * Code d'erreur : chemin bloqué
+	 */
+	public final int PATH_BLOCK = 402;
+
+	/**
 	 * Code d'erreur : erreur quelconque
 	 */
 	public final int ERROR = 404;

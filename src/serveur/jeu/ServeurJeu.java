@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import models.jeu.BadPosException;
 import models.jeu.Jeu_Serveur;
 import models.jeu.NoMoneyException;
+import models.jeu.PathBlockException;
 
 import reseau.Canal;
 import reseau.Port;
@@ -106,6 +108,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	 */
 	public synchronized void direATous(int IDFrom, String message)
 	{
+		log("[MESSAGE] "+IDFrom+" dit : "+message);
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 			joueur.getValue().envoyerMessageTexte(IDFrom, message);
 	}
@@ -171,9 +174,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 		{
 			// Si pas assez d'argent on retourne le code d'erreur correspondant
 			return NO_MONEY;
-		} catch (Exception e)
+		} catch (BadPosException e)
 		{
-			e.printStackTrace();
+			return BAD_POS;
+		} catch (PathBlockException e)
+		{
+			return PATH_BLOCK;
 		}
 		// TODO
 		return 0;
@@ -187,9 +193,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 
 	public synchronized int changementEtatPartie(int nouvelEtatPartie)
 	{
-		switch(nouvelEtatPartie){
-		case EN_PAUSE:break;
-		case EN_JEU:break;
+		switch (nouvelEtatPartie)
+		{
+		case EN_PAUSE:
+			break;
+		case EN_JEU:
+			break;
+		default:
+			break;
 		}
 		return 0;
 	}

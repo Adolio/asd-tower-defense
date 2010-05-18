@@ -7,7 +7,7 @@ public class Jeu_Serveur extends Jeu
 {
 
     @Override
-    public void poserTour(Tour tour) throws Exception
+    public void poserTour(Tour tour) throws NoMoneyException, BadPosException, PathBlockException
     {
         // c'est bien une tour valide ?
         if (tour == null)
@@ -19,11 +19,11 @@ public class Jeu_Serveur extends Jeu
         
         // si elle peut pas etre posee
         if (!laTourPeutEtrePosee(tour))
-            throw new Exception("Pose impossible : Zone non accessible");
+            throw new BadPosException("Pose impossible : Zone non accessible");
 
         // si elle bloque le chemin de A vers B
         if (terrain.laTourBloqueraLeChemin(tour))
-            throw new Exception("Pose impossible : Chemin bloqué");
+            throw new PathBlockException("Pose impossible : Chemin bloqué");
 
         // desactive la zone dans le maillage qui correspond a la tour
         terrain.desactiverZone(tour, true);
