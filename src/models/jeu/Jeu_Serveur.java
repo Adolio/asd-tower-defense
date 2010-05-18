@@ -1,6 +1,5 @@
 package models.jeu;
 
-import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.tours.Tour;
@@ -94,14 +93,5 @@ public class Jeu_Serveur extends Jeu
         
         // TODO [CONTACT CLIENTS]
         // serveurJeu.annoncerAjoutDUneCreature(creature);
-    }
-    
-    @Override
-    public void ajouterAnimation(Animation animation)
-    {
-        gestionnaireAnimations.ajouterAnimation(animation);
-        
-        // TODO [CONTACT CLIENTS]
-        // serveurJeu.annoncerAjoutDUneAnimation(animation);
     }
 }

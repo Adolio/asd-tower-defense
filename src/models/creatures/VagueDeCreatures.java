@@ -11,10 +11,8 @@ import models.maillage.PathNotFoundException;
  * 
  * Une vagues de creature contient un certain nombres de creatures du meme type.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @author Aurelien Da Campo
+ * @version 2.1 | mai 2010
  * @since jdk1.6.0_16
  * @see Creature
  */
@@ -424,6 +422,5 @@ public class VagueDeCreatures implements Runnable
             enPause = false;
             pause.notify(); 
         }
-    }
-    
+    } 
 }

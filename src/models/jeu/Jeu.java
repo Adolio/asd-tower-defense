@@ -28,10 +28,8 @@ import models.tours.Tour;
  * Elle gere egalement tout ce qui concerne les pieces d'or du joueur 
  * (achat, amelioration et vente des tours)
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 2.1 | mai 2010
  * @since jdk1.6.0_16
  * @see Tour
  */
