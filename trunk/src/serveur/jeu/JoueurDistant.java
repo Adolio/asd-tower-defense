@@ -326,6 +326,25 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			e.printStackTrace();
 		}
 	}
+	
+	public void afficherObjet(int ID_Objet, int x, int y, int etat){
+		// Message JSON
+		JSONObject message = new JSONObject();
+		try
+		{
+			// Construction de la structure JSON
+			message.put("TYPE", OBJECT);
+			message.put("OBJECT", ID_Objet);
+			message.put("ETAT", etat);
+			message.put("X",x);
+			message.put("Y",y);
+			// Envoit de la structure à travers le réseau
+			send(message.toString());
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Termine la liaison avec le client
