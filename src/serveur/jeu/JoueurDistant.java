@@ -106,7 +106,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private void finalStateMachin() throws JSONException
 	{
 		String str = "";
-		log("Passage dans l'état : " + nomEtat(etat));
 
 		switch (etat)
 		{
@@ -124,8 +123,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			break;
 		case EN_JEU:
 			// Interprétation de la chaine
-			str = getMessage();
-			parse(str);
+			parse(getMessage());
 			break;
 		case EN_PAUSE:
 			// La partie continue
@@ -170,17 +168,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		// Récéption d'un message texte
 		case MSG:
 			log("Message reçu de " + ID);
-			// Extraction de l'ID du client
-			int _ID = json.getInt("ID_Player");
-			if (ID != _ID)
-				log("Ooops, mauvaise ID du client");
 			// Extraction du message
-			JSONObject message = json.getJSONObject("message");
+			JSONObject message = json.getJSONObject("CONTENT");
 			// Extraction de la cible du message
-			int cible = message.getInt("cible");
+			int cible = message.getInt("CIBLE");
 			log("Message pour " + cible);
 			// Extraction du texte du message
-			String text = message.getString("message");
+			String text = message.getString("MESSAGE");
 			log("Texte : " + text);
 			if (cible == TO_ALL)
 			{
@@ -194,9 +188,20 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			break;
 		// Changement d'état d'un joueur
 		case PLAYER:
+			// Récupération du nouvel état
+			int nouvelEtat = json.getInt("ETAT");
+			// Appelle de la fonction de gestion des états et récupération du code d'état
+			int code = serveur.changementEtat(ID, nouvelEtat);
+			// Réponse du code d'état au client
+			repondreEtat(PLAYER,code);
 			break;
 		// Action sur une vague
 		case WAVE:
+			// Récupération pour la forme de l'ID du joueur
+			// Récupération du type de vague
+			int typeVague = json.getInt("TYPE_WAVE");
+			// Demande de lancement d'une vague
+			serveur.lancerVague(typeVague);
 			break;
 		// Changement d'état d'une partie
 		case PLAY:
@@ -217,6 +222,56 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	}
 
 	/**
+	 * Répond du client un code d'état pour une réponse donnée
+	 * @param player
+	 * @param code
+	 */
+	private void repondreEtat(int type, int code)
+	{
+		// Message JSON
+		JSONObject message = new JSONObject();
+		try
+		{
+			// Construction de la structure JSON
+			message.put("TYPE", type);
+			message.put("STATUS", code);
+			// Envoit de la structure à travers le réseau
+			send(message.toString());
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+
+	/**
+	 * Signal un changement d'état d'un joueur quelconque au joueur géré par le
+	 * module.
+	 * 
+	 * @param pseudoFrom
+	 * @param nouvelEtat
+	 */
+	public void signalerNouvelEtat(String pseudoFrom, int nouvelEtat)
+	{
+		// Message JSON
+		JSONObject message = new JSONObject();
+		try
+		{
+			// Construction de la structure JSON
+			message.put("TYPE", PLAYER);
+			message.put("PSEUDO", pseudoFrom);
+			message.put("ETAT", nouvelEtat);
+			// Envoit de la structure à travers le réseau
+			send(message.toString());
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Envoi un message texte au joueur géré par le module.
+	 * 
 	 * @param IDFrom
 	 * @param contenu
 	 */

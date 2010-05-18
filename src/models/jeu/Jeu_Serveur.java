@@ -15,7 +15,7 @@ public class Jeu_Serveur extends Jeu
 
         // suffisemment d'argent ?
         if(!laTourPeutEtreAchetee(tour))    
-            throw new Exception("Pose impossible : Pas assez d'argent");
+            throw new NoMoneyException("Pose impossible : Pas assez d'argent");
         
         // si elle peut pas etre posee
         if (!laTourPeutEtrePosee(tour))
