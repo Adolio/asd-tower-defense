@@ -9,6 +9,9 @@ import models.jeu.BadPosException;
 import models.jeu.Jeu_Serveur;
 import models.jeu.NoMoneyException;
 import models.jeu.PathBlockException;
+import models.joueurs.Joueur;
+import models.tours.Tour;
+import models.tours.TourArcher;
 
 import reseau.Canal;
 import reseau.Port;
@@ -41,11 +44,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	 * Liste des clients enregistrés sur le serveur
 	 */
 	private HashMap<Integer, JoueurDistant> clients = new HashMap<Integer, JoueurDistant>();
-
-	/**
-	 * Le numéros unique d'authentification des clients
-	 */
-	private static int IDClient = -1;
 
 	/**
 	 * Lien vers le module coté serveur du jeu
@@ -92,7 +90,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 			log("écoute sur le port " + _port);
 			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
-			IDClient++;
+			int IDClient = serveurJeu.getJoueurPrincipal().getId(); // FIXME
 			// On inscris le joueur à la partie
 			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
 		}
@@ -108,7 +106,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	 */
 	public synchronized void direATous(int IDFrom, String message)
 	{
-		log("[MESSAGE] "+IDFrom+" dit : "+message);
+		log("[MESSAGE] " + IDFrom + " dit : " + message);
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 			joueur.getValue().envoyerMessageTexte(IDFrom, message);
 	}
@@ -167,21 +165,38 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 
 	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
 	{
+		// Selection de la tour cible
+		Tour tour = null;
+		switch (typeTour)
+		{
+		case 0:
+			tour = new TourArcher();
+			break;
+		default:
+			log("Tour " + typeTour + " inconnue.");
+			return ERROR;
+		}
+		// Assignation des paramêtres
+		tour.x = x;
+		tour.y = y;
+		tour.setProprietaire(repererJoueur(IDJoueur));
 		try
 		{
-			serveurJeu.poserTour(null);
+			// Tentative de poser la tour
+			serveurJeu.poserTour(tour);
 		} catch (NoMoneyException e)
 		{
 			// Si pas assez d'argent on retourne le code d'erreur correspondant
 			return NO_MONEY;
 		} catch (BadPosException e)
 		{
+			// Mauvaise position
 			return BAD_POS;
 		} catch (PathBlockException e)
 		{
+			// Chemin bloqué.
 			return PATH_BLOCK;
 		}
-		// TODO
 		return 0;
 	}
 
@@ -215,5 +230,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	private Joueur repererJoueur(int ID)
+	{
+		for (Joueur joueur : serveurJeu.getJoueurs())
+		{
+			if (joueur.getId() == ID)
+				return joueur;
+		}
+		return null;
 	}
 }

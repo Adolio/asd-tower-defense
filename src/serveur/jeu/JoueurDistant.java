@@ -25,9 +25,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private Canal canal;
 	private int ID;
 	private ServeurJeu serveur;
-	private String pseudo = "unknown";
 	private int etat = 0;
-
+	
 	/**
 	 * Crée un lien avec un joueur distant.
 	 * 
@@ -113,7 +112,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Envoi de la version du serveur au client
 			send(ServeurJeu.VERSION);
 			// Attente du pseudo du joueur
-			pseudo = getMessage();
+			String pseudo = getMessage();
 			// Passage en état EN_JEU
 			etat = EN_ATTENTE;
 			break;
@@ -335,7 +334,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	@Override
 	public String toString()
 	{
-		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + pseudo + "\n"
+		// FIXME
+		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + "unknown" + "\n"
 				+ "IP : " + canal.getIpClient() + "\n" + "Etat : "
 				+ nomEtat(etat);
 	}
