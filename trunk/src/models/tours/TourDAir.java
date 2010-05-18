@@ -10,9 +10,7 @@ import models.creatures.Creature;
  * Classe de gestion d'une tour d'air
  * <p>
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
  * @version 2.0 | 10 mai 2009
  * @since jdk1.6.0_16
  * @see Tour

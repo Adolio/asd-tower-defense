@@ -14,10 +14,9 @@ import models.tours.Tour;
  * Cette classe est une animation qui dessine un arc électrique partant d'une tour
  * vers une creature.
  * 
- * @author Pierre-Dominique Putallaz
+ * @author Romain Poulain
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 30 decembre 2009
+ * @version 1.0 | mai 2010
  * @since jdk1.6.0_16
  * @see MeilleursScores
  */

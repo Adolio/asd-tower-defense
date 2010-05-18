@@ -20,8 +20,8 @@ import models.tours.Tour;
  * Celle-ci affichera les tours avec les créatures et gèrera le positionnement
  * des tours et la selection des tours.
  * 
- * @author Aurélien Da Campo
- * @version 1.1 | 17 mai 2010
+ * @author Aurelien Da Campo
+ * @version 2.2 | mai 2010
  * @since jdk1.6.0_16
  * @see JPanel
  * @see Runnable
@@ -614,20 +614,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    {
 	        // rotation des créatures
 	        AffineTransform tx = new AffineTransform();
-	        tx.translate(creature.getX()+creature.getWidth()/2, creature.getY()+creature.getHeight()/2);
+	        tx.translate(creature.getCenterX(), creature.getCenterY());
 	        tx.rotate(creature.getAngle()+Math.PI/2);
 	        tx.translate(-creature.getWidth()/2, -creature.getHeight()/2);
 	        
 	        // dessin de la créature avec rotation
 	        g2.drawImage(creature.getImage(), tx, this);
-	        
-	        /*
-	        // affichage de l'image de la creature au centre de sa position
-            g2.drawImage(creature.getImage(),
-                    (int) creature.getX(), 
-                    (int) creature.getY(), 
-                    (int) creature.getWidth(), 
-                    (int) creature.getHeight(), null);*/
 	    }
         else
         {
@@ -726,9 +718,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 		// dessin de l'image
 		if(tour.getImage() != null)
-			g2.drawImage(tour.getImage(), tour.getXi(), tour.getYi(), 
-					(int)tour.getWidth(), 
-					(int)tour.getHeight(),null);
+		{
+		    AffineTransform tx = new AffineTransform();
+	        tx.translate(tour.getCenterX(), tour.getCenterY());
+	        tx.rotate(tour.getAngle());
+	        tx.translate((int) -tour.getWidth()/2.0, (int) -tour.getHeight()/2.0);
+
+		    g2.drawImage(tour.getImage(), tx ,null);
+		}
 		// dessin d'un forme de couleur
 		else
 		{	 

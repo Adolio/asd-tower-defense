@@ -13,10 +13,8 @@ import models.creatures.Creature;
  * La tour de glace est une tour qui est rapide et qui ralenti les creatures.
  * Cette tour attaque tous types de creatures
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
  * @see Tour
  */
