@@ -163,6 +163,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		JSONObject json = new JSONObject(str);
 		// Extraction du type du message
 		int type = json.getInt("TYPE");
+		int code;
 		switch (type)
 		{
 		// Récéption d'un message texte
@@ -191,32 +192,62 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Récupération du nouvel état
 			int nouvelEtat = json.getInt("ETAT");
 			// Appelle de la fonction de gestion des états et récupération du code d'état
-			int code = serveur.changementEtat(ID, nouvelEtat);
+			code = serveur.changementEtatJoueur(ID, nouvelEtat);
 			// Réponse du code d'état au client
 			repondreEtat(PLAYER,code);
 			break;
 		// Action sur une vague
 		case WAVE:
-			// Récupération pour la forme de l'ID du joueur
 			// Récupération du type de vague
 			int typeVague = json.getInt("TYPE_WAVE");
 			// Demande de lancement d'une vague
-			serveur.lancerVague(typeVague);
+			code  = serveur.lancerVague(typeVague);
+			// Retour au client de l'information
+			repondreEtat(WAVE,code);
 			break;
 		// Changement d'état d'une partie
 		case PLAY:
+			// Récupération du nouvel état
+			int nouvelEtatPartie = json.getInt("ETAT");
+			// Envoi de l'information au serveur principal
+			code = serveur.changementEtatPartie(nouvelEtatPartie);
+			// Retour du code au client
+			repondreEtat(PLAY,code);
 			break;
 		// Requête de création d'une tour
 		case TOWER:
+			// Extraction des coordonnées
+			int x = json.getInt("X");
+			int y = json.getInt("X");
+			// Extraction du type de tour
+			int typeTour = json.getInt("TYPE");
+			// Demande d'ajout au serveur
+			code = serveur.poserTour(ID, typeTour, x, y);
+			// Retour au client du code
+			repondreEtat(TOWER,code);
 			break;
 		// Requête d'amélioration d'une tour
 		case TOWER_UP:
+			// Récupération de la tour cible
+			int tourCible = json.getInt("ID_TOUR");
+			// Demande au serveur de l'opération
+			code = serveur.ameliorerTour(tourCible);
+			// Retour au client de code
+			repondreEtat(TOWER_UP,code);
 			break;
 		// Requete de suppresion d'une tour
 		case TOWER_DEL:
+			// Récupération de la tour cible
+			int tourCibleDel = json.getInt("ID_TOUR");
+			// Demande au serveur de l'opération
+			code = serveur.supprimerTour(tourCibleDel);
+			// Retour au client de code
+			repondreEtat(TOWER_UP,code);
 			break;
 		default:
 			log("ERROR action inconnue : " + type);
+			// Signaler au client qu'il envoi quelque chose d'incorecte
+			repondreEtat(ERROR,ERROR);
 			break;
 		}
 	}
@@ -317,6 +348,20 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private void desenregistrement()
 	{
 		serveur.supprimerJoueur(ID);
+	}
+	
+	/**
+	 * Met le client en pause
+	 */
+	public void mettreEnPause(){
+		etat = EN_PAUSE;
+	}
+	
+	/**
+	 * Reprend la partie
+	 */
+	public void reprendre(){
+		etat = EN_JEU;
 	}
 
 	/**
