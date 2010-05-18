@@ -132,7 +132,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * Permet de savoir si la prochaine vague peut etre lancée
 	 */
     private boolean vaguePeutEtreLancee = true;
-    private boolean scoreSauve;
+    private boolean demandeDEnregistrementDuScoreEffectuee;
 
 	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
@@ -376,13 +376,15 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void demanderEnregistrementDuScore()
 	{
 	    // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
-	    if(joueur.getScore() > 0 && !scoreSauve)
+	    if(joueur.getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
-            if(JOptionPane.showConfirmDialog(this, 
+            
+	        demandeDEnregistrementDuScoreEffectuee = true;
+	        
+	        if(JOptionPane.showConfirmDialog(this, 
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-                scoreSauve = true;
                 new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
             }
         }
@@ -570,6 +572,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	public void creatureBlessee(Creature creature)
 	{
 	    panelInfoCreature.miseAJourInfosVariables();
+	    
+	    
+	    jeu.ajouterAnimation(new TacheDeSang((int)creature.getCenterX(),(int) creature.getCenterY()));
 	}
 
 	/**
@@ -734,9 +739,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bLancerVagueSuivante.setIcon(I_RETOUR);
 
         // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
-        if(joueur.getScore() > 0 && !scoreSauve)
+        if(joueur.getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
-            scoreSauve = true;
+            demandeDEnregistrementDuScoreEffectuee = true;
             new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
         }
     }

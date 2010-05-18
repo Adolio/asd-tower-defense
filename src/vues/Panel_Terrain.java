@@ -6,6 +6,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
+
+import models.animations.Animation;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
@@ -383,6 +385,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		}
 
+		//-------------------------------------
+        //-- affichage des animations au sol --
+        //-------------------------------------
+        jeu.dessinerAnimations(g2, Animation.HAUTEUR_SOL);
+		
+		
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
@@ -548,10 +556,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			for(Tour tour : jeu.getTours())
 				dessinerPortee(tour,g2,COULEUR_RAYON_PORTEE);
 		
-		//------------------------------
-		//-- affichage des animations --
-		//------------------------------
-		jeu.dessinerAnimations(g2);
+		//------------------------------------------------
+		//-- affichage des animations au-dessus de tout --
+		//------------------------------------------------
+		jeu.dessinerAnimations(g2, Animation.HAUTEUR_AIR);
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --

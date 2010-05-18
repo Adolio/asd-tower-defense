@@ -51,7 +51,7 @@ public class GestionnaireAnimations implements Runnable
     /**
      * Permet de dessiner toutes les animations
      */
-    public void dessinerAnimations(Graphics2D g2)
+    public void dessinerAnimations(Graphics2D g2, int hauteur)
     {
         synchronized (animations)
         {
@@ -60,7 +60,9 @@ public class GestionnaireAnimations implements Runnable
             while(eAnimations.hasMoreElements())
             {
                 animation = eAnimations.nextElement();
-                animation.dessiner(g2);
+                
+                if(animation.getHauteur() == hauteur)
+                    animation.dessiner(g2);
             }
         }
     }

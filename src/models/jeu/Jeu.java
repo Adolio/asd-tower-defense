@@ -540,8 +540,8 @@ public abstract class Jeu implements EcouteurDeCreature,
         edj.animationAjoutee(animation);
     }
 
-    public void dessinerAnimations(Graphics2D g2)
+    public void dessinerAnimations(Graphics2D g2, int hauteur)
     {
-        gestionnaireAnimations.dessinerAnimations(g2);
+        gestionnaireAnimations.dessinerAnimations(g2,hauteur);
     }
 }
