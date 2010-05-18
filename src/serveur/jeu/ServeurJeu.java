@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import models.creatures.Creature;
+import models.creatures.VagueDeCreatures;
 import models.jeu.BadPosException;
+import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu_Serveur;
 import models.jeu.NoMoneyException;
 import models.jeu.PathBlockException;
@@ -23,7 +26,7 @@ import reseau.Port;
  * @author Pierre-Do
  * 
  */
-public class ServeurJeu extends Observable implements ConstantesServeurJeu
+public class ServeurJeu extends Observable implements ConstantesServeurJeu, EcouteurDeJeu
 {
 	/**
 	 * La version courante du serveur
@@ -240,5 +243,47 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 				return joueur;
 		}
 		return null;
+	}
+
+	@Override
+	public void creatureArriveeEnZoneArrivee(Creature creature)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void creatureBlessee(Creature creature)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void creatureTuee(Creature creature)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void etoileGagnee()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partieTerminee()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void vagueEntierementLancee(VagueDeCreatures vague)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
