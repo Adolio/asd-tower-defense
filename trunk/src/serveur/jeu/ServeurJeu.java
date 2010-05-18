@@ -156,16 +156,19 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 		notifyObservers();
 	}
 
-	public synchronized void lancerVague(int typeVague)
+	public synchronized int lancerVague(int typeVague)
 	{
 		// TODO
+		return 0;
 	}
 
 	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
 	{
-		try{
+		try
+		{
 			serveurJeu.poserTour(null);
-		}catch (NoMoneyException e){
+		} catch (NoMoneyException e)
+		{
 			// Si pas assez d'argent on retourne le code d'erreur correspondant
 			return NO_MONEY;
 		} catch (Exception e)
@@ -176,7 +179,28 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 		return 0;
 	}
 
-	public synchronized int changementEtat(int iD, int nouvelEtat)
+	public synchronized int changementEtatJoueur(int iD, int nouvelEtat)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public synchronized int changementEtatPartie(int nouvelEtatPartie)
+	{
+		switch(nouvelEtatPartie){
+		case EN_PAUSE:break;
+		case EN_JEU:break;
+		}
+		return 0;
+	}
+
+	public synchronized int ameliorerTour(int tourCible)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public synchronized int supprimerTour(int tourCibleDel)
 	{
 		// TODO Auto-generated method stub
 		return 0;

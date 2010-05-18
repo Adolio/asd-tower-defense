@@ -77,4 +77,16 @@ public interface ConstantesServeurJeu
 	 * Code d'erreur : mauvaise position de l'objet
 	 */
 	public final int BAD_POS = 401;
+	/**
+	 * Code d'erreur : erreur quelconque
+	 */
+	public final int ERROR = 404;
+	/**
+	 * Changement d'état de la partie : en pause
+	 */
+	public final int EN_PAUSE = 501;
+	/**
+	 * Changement d'état de la partie : en jeu
+	 */
+	public final int EN_JEU = 502;
 }
