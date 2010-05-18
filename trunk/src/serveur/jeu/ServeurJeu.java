@@ -38,7 +38,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -90,7 +90,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu
 			log("écoute sur le port " + _port);
 			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
-			int IDClient = serveurJeu.getJoueurPrincipal().getId(); // FIXME
+			int IDClient = 0;// = serveurJeu.getJoueurPrincipal().getId(); // FIXME
 			// On inscris le joueur à la partie
 			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
 		}

@@ -1,5 +1,7 @@
 package serveur.jeu;
 
+import java.net.SocketException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import reseau.Canal;
@@ -25,7 +27,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private Canal canal;
 	private int ID;
 	private ServeurJeu serveur;
-	private int etat = 0;
+	private int etat = EN_JEU;
+	// Message du client;
+	private String str = "";
 	
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -60,8 +64,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	@Override
 	public void run()
 	{
-		// Message du client;
-		String str = "";
 		// Envoi de la version du serveur au client
 		canal.envoyerString(ServeurJeu.VERSION);
 		while (true)
@@ -71,11 +73,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				finalStateMachin();
 			} catch (JSONException e)
 			{
-				log("ERROR : récéption inconnue " + str);
+				log("ERROR : récéption inconnue \"" + str+"\"");
 			} catch (CanalException e)
 			{
 				log("ERROR : une erreur est survenue durant la connexion");
-			}
+				desenregistrement();
+				return;
+			}	
 		}
 	}
 
@@ -89,7 +93,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		// Récéption du message du client
 		synchronized (canal)
 		{
-			String str = canal.recevoirString();
+			str = canal.recevoirString();
 			log("Récéption de " + str);
 			return str;
 		}
