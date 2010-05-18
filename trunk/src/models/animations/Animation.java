@@ -9,18 +9,21 @@ import java.awt.*;
  * <p>
  * Elle est abstraite et doit etre heritee pour etre ensuite instanciee.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 10 decembre 2009
+ * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
  */
 public abstract class Animation extends Point
 {
-	private static final long serialVersionUID = 1L;
+	
+    public static final int HAUTEUR_SOL = 0;
+    public static final int HAUTEUR_AIR = 1;
+    
+    private static final long serialVersionUID = 1L;
 	protected boolean estTerminee;
     protected boolean enJeu;
-	
+    protected int hauteur = HAUTEUR_AIR;
+    
 	/**
 	 * Constructeur de l'animation.
 	 * 
@@ -63,5 +66,10 @@ public abstract class Animation extends Point
     public void arreter()
     {
         enJeu = false;
+    }
+
+    public int getHauteur()
+    {
+        return hauteur;
     }
 }
