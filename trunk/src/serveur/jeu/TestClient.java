@@ -17,19 +17,28 @@ public class TestClient implements ConstantesServeurJeu
 	{
 		try
 		{
-			Canal canal = new Canal("localhost",2357,false);
-			System.out.println("Envoi de l'ID");
-			canal.envoyerString("12");
+			Canal canal = new Canal("localhost",2357,true);
+			
+			// Envoi de l'ID du clietn
+			canal.envoyerInt(12);
+			// Récéption de la version du serveur
 			System.out.println("Récéption : "+canal.recevoirString());
+			
 			JSONObject json = new JSONObject();
 			json.put("TYPE", MSG);
 			JSONObject content = new JSONObject();
 			content.put("CIBLE", TO_ALL);
 			content.put("MESSAGE","foo bar");
-			json.put("CONTENT", content);
+			json.put("CONTENU", content);
+			
 			canal.envoyerString(json.toString());
-			System.out.println("Récéption : "+canal.recevoirString());
+			
+			String rcp = canal.recevoirString();
+			System.out.println("Récéption : "+rcp);
+			json = new JSONObject(rcp);
+			System.out.println(json.getString("MESSAGE"));
 			System.out.println("Fermeture");
+			
 			canal.fermer();
 		} catch (ConnectException e)
 		{
@@ -39,7 +48,6 @@ public class TestClient implements ConstantesServeurJeu
 			e.printStackTrace();
 		} catch (JSONException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

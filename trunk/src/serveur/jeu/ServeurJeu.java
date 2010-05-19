@@ -89,15 +89,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Canal d'écoute
 		Canal canal;
 		// Boucle d'attente de connections
-		while (true)
+		//while (true)
 		{
 			// On attend qu'un joueur se présente
 			log("écoute sur le port " + _port);
 			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
-			int IDClient = Integer.parseInt(canal.recevoirString()); //FIXME
+			int IDClient = canal.recevoirInt();
 			log("Nouveau joueur ! ID : "+IDClient);
-			// On inscris le joueur à la partie
+			// On inscrit le joueur à la partie
 			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
 		}
 	}
@@ -268,7 +268,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 
 	protected synchronized static void log(String msg)
 	{
-		System.out.print("[SERVEUR] ");
+		System.out.print("[SERVEUR]");
 		System.out.println(msg);
 	}
 

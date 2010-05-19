@@ -65,7 +65,7 @@ public class Canal
                   }
                }
             }
-            System.out.println("[127.0.0.1]\n");
+            System.out.println("[127.0.0.1]");
          }
          
          // Accepter une connexion, c'est-à-dire soit prendre une connexion

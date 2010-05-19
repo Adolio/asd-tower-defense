@@ -41,12 +41,11 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 */
 	protected JoueurDistant(int ID, Canal canal, ServeurJeu serveur)
 	{
-		log("Nouveau client");
-
 		this.canal = canal;
 		this.ID = ID;
 		this.serveur = serveur;
-
+		
+		log("Nouveau client");
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -62,8 +61,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	@Override
 	public void run()
 	{
-		// Envoi de la version du serveur au client
-		canal.envoyerString(ServeurJeu.VERSION);
 		while (true)
 		{
 			try
@@ -72,6 +69,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			} catch (JSONException e)
 			{
 				log("ERROR : récéption inconnue \"" + str + "\"");
+				e.printStackTrace();
 			} catch (CanalException e)
 			{
 				log("ERROR : une erreur est survenue durant la connexion");
@@ -108,6 +106,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		String str = "";
 
+		log("Etat : "+nomEtat(etat));
 		switch (etat)
 		{
 		case VALIDATION:
@@ -163,8 +162,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		synchronized (canal)
 		{
-			log("Envoi de " + msg);
+			log("Envoi du String " + msg);
 			canal.envoyerString(msg);
+		}
+	}
+	
+	public void send(final int msg){
+		synchronized (canal)
+		{
+			log("Envoi de l'int " + msg);
+			canal.envoyerInt(msg);
 		}
 	}
 
@@ -174,6 +181,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		JSONObject json = new JSONObject(str);
 		// Extraction du type du message
 		int type = json.getInt("TYPE");
+		log("Récéption d'un message de type "+type);
 		int code;
 		switch (type)
 		{
@@ -181,7 +189,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case MSG:
 			log("Message reçu de " + ID);
 			// Extraction du message
-			JSONObject message = json.getJSONObject("CONTENT");
+			JSONObject message = json.getJSONObject("CONTENU");
 			// Extraction de la cible du message
 			int cible = message.getInt("CIBLE");
 			log("Message pour " + cible);
@@ -335,8 +343,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		{
 			// Construction de la structure JSON
 			message.put("TYPE", MSG);
-			message.put("ID_Player", IDFrom);
-			message.put("message", contenu);
+			message.put("ID_PLAYER", IDFrom);
+			message.put("MESSAGE", contenu);
 			// Envoi de la structure à travers le réseau
 			send(message.toString());
 		} catch (JSONException e)
@@ -384,7 +392,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void log(String msg)
 	{
-		ServeurJeu.log("[CLIENT " + ID + "] " + msg);
+		ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
 	}
 
 	private void desenregistrement()
