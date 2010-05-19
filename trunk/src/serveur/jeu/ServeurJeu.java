@@ -27,7 +27,8 @@ import reseau.Port;
  * @author Pierre-Do
  * 
  */
-public class ServeurJeu extends Observable implements ConstantesServeurJeu, EcouteurDeJeu
+public class ServeurJeu extends Observable implements ConstantesServeurJeu,
+		EcouteurDeJeu
 {
 	/**
 	 * La version courante du serveur
@@ -94,7 +95,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 			log("écoute sur le port " + _port);
 			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
-			int IDClient = 0;// = serveurJeu.getJoueurPrincipal().getId(); // FIXME
+			int IDClient = Integer.parseInt(canal.recevoirString()); //FIXME
+			log("Nouveau joueur ! ID : "+IDClient);
 			// On inscris le joueur à la partie
 			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
 		}
@@ -155,12 +157,25 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		notifyObservers();
 	}
 
+	/**
+	 * 
+	 * @param typeVague
+	 * @return
+	 */
 	public synchronized int lancerVague(int typeVague)
 	{
 		// TODO
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param IDJoueur
+	 * @param typeTour
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
 	{
 		// Selection de la tour cible
@@ -198,12 +213,23 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		return OK;
 	}
 
+	/**
+	 * 
+	 * @param iD
+	 * @param nouvelEtat
+	 * @return
+	 */
 	public synchronized int changementEtatJoueur(int iD, int nouvelEtat)
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param nouvelEtatPartie
+	 * @return
+	 */
 	public synchronized int changementEtatPartie(int nouvelEtatPartie)
 	{
 		switch (nouvelEtatPartie)
@@ -218,12 +244,22 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param tourCible
+	 * @return
+	 */
 	public synchronized int ameliorerTour(int tourCible)
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param tourCibleDel
+	 * @return
+	 */
 	public synchronized int supprimerTour(int tourCibleDel)
 	{
 		// TODO Auto-generated method stub
@@ -236,7 +272,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		System.out.println(msg);
 	}
 
-	private Joueur repererJoueur(int ID)
+	private synchronized Joueur repererJoueur(int ID)
 	{
 		for (Joueur joueur : serveurJeu.getJoueurs())
 		{
@@ -245,108 +281,106 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Envoi l'état de tous les objets à tous les clients
 	 */
-	public void update(){
+	public void update()
+	{
 		// Parcourt de toutes les tours sur le terrain
-		for(Tour t : serveurJeu.getTours()){
+		for (Tour t : serveurJeu.getTours())
+		{
 			// Extraction des paramêtres
-			int ID = 0;//t.getID(); // FIXME
+			int ID = 0;// t.getID(); // FIXME
 			int x = (int) t.getX();
-			int y = (int )t.getY();
+			int y = (int) t.getY();
 			int etat = 0;// t.getEtat(); // FIXME
-			// On envoit les infos à chaque client
+			// On envoi les infos à chaque client
 			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 				joueur.getValue().afficherObjet(ID, x, y, etat);
 		}
-		
+
 		// TODO : Créatures
 	}
-	
+
 	/**************** NOTIFICATIONS **************/
 
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 
 	@Override
 	public void etoileGagnee()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void partieTerminee()
 	{
-		// TODO Auto-generated method stub
+		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+			joueur.getValue().partieTerminee();
 	}
 
 	@Override
 	public void vagueEntierementLancee(VagueDeCreatures vague)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void animationAjoutee(Animation animation)
 	{
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void animationTerminee(Animation animation)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 
 	@Override
 	public void joueurAjoute(Joueur joueur)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void partieDemarree()
 	{
-		// TODO Auto-generated method stub
-		
+		// Notification aux joueurs que la partie débutte
+		notifyAll();
 	}
 
 	@Override
 	public void tourAmelioree(Tour tour)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 
 	@Override
@@ -358,7 +392,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu, Ecou
 	@Override
 	public void tourVendue(Tour tour)
 	{
-		// TODO Auto-generated method stub
-		
+		update();
 	}
 }

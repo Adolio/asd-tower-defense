@@ -1,7 +1,5 @@
 package serveur.jeu;
 
-import java.net.SocketException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import reseau.Canal;
@@ -15,22 +13,22 @@ import reseau.CanalException;
 public class JoueurDistant implements Runnable, ConstantesServeurJeu
 {
 	// Constantes pour les états de la connexion avec le joueur distant
-
 	private final static int EN_ATTENTE = 0;
 	private final static int VALIDATION = 1;
 	private final static int EN_JEU = 2;
 	private final static int EN_PAUSE = 3;
 	private final static int QUITTE = 4;
+	private final static int PARTIE_TERMINEE = 5;
 
 	// Variables d'instance
 	private Thread thread;
 	private Canal canal;
 	private int ID;
 	private ServeurJeu serveur;
-	private int etat = EN_JEU;
+	private int etat = VALIDATION;
 	// Message du client;
 	private String str = "";
-	
+
 	/**
 	 * Crée un lien avec un joueur distant.
 	 * 
@@ -73,13 +71,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				finalStateMachin();
 			} catch (JSONException e)
 			{
-				log("ERROR : récéption inconnue \"" + str+"\"");
+				log("ERROR : récéption inconnue \"" + str + "\"");
 			} catch (CanalException e)
 			{
 				log("ERROR : une erreur est survenue durant la connexion");
 				desenregistrement();
 				return;
-			}	
+			}
 		}
 	}
 
@@ -115,12 +113,18 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case VALIDATION:
 			// Envoi de la version du serveur au client
 			send(ServeurJeu.VERSION);
-			// Attente du pseudo du joueur
-			String pseudo = getMessage();
 			// Passage en état EN_JEU
 			etat = EN_ATTENTE;
 			break;
 		case EN_ATTENTE:
+			// Le thread se met en attente sur le serveur de jeu
+			/*try // FIXME
+			{
+				serveur.wait();
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}*/
 			// Début de la partie
 			etat = EN_JEU;
 			break;
@@ -131,6 +135,10 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case EN_PAUSE:
 			// La partie continue
 			etat = EN_JEU;
+			break;
+		case PARTIE_TERMINEE:
+			// TODO
+
 			break;
 		case QUITTE:
 			log("Terminaison de la liaison avec le client");
@@ -186,7 +194,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				serveur.direATous(ID, text);
 			} else
 			{
-				// On envoit un message à un client en particulier
+				// On envoi un message à un client en particulier
 				serveur.direAuClient(ID, cible, text);
 			}
 			break;
@@ -194,19 +202,28 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case PLAYER:
 			// Récupération du nouvel état
 			int nouvelEtat = json.getInt("ETAT");
-			// Appelle de la fonction de gestion des états et récupération du code d'état
-			code = serveur.changementEtatJoueur(ID, nouvelEtat);
-			// Réponse du code d'état au client
-			repondreEtat(PLAYER,code);
+			// Le le nouvelEtat n'est pas une commanque QUITTER
+			if (nouvelEtat == QUITTER)
+			{
+				couperLeCanal();
+				desenregistrement();
+			} else
+			{
+				// Appelle de la fonction de gestion des états et récupération du
+				// code d'état
+				code = serveur.changementEtatJoueur(ID, nouvelEtat);
+				// Réponse du code d'état au client
+				repondreEtat(PLAYER, code);
+			}
 			break;
 		// Action sur une vague
 		case WAVE:
 			// Récupération du type de vague
 			int typeVague = json.getInt("TYPE_WAVE");
 			// Demande de lancement d'une vague
-			code  = serveur.lancerVague(typeVague);
+			code = serveur.lancerVague(typeVague);
 			// Retour au client de l'information
-			repondreEtat(WAVE,code);
+			repondreEtat(WAVE, code);
 			break;
 		// Changement d'état d'une partie
 		case PLAY:
@@ -215,7 +232,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Envoi de l'information au serveur principal
 			code = serveur.changementEtatPartie(nouvelEtatPartie);
 			// Retour du code au client
-			repondreEtat(PLAY,code);
+			repondreEtat(PLAY, code);
 			break;
 		// Requête de création d'une tour
 		case TOWER:
@@ -227,7 +244,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Demande d'ajout au serveur
 			code = serveur.poserTour(ID, typeTour, x, y);
 			// Retour au client du code
-			repondreEtat(TOWER,code);
+			repondreEtat(TOWER, code);
 			break;
 		// Requête d'amélioration d'une tour
 		case TOWER_UP:
@@ -236,7 +253,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Demande au serveur de l'opération
 			code = serveur.ameliorerTour(tourCible);
 			// Retour au client de code
-			repondreEtat(TOWER_UP,code);
+			repondreEtat(TOWER_UP, code);
 			break;
 		// Requete de suppresion d'une tour
 		case TOWER_DEL:
@@ -245,18 +262,19 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Demande au serveur de l'opération
 			code = serveur.supprimerTour(tourCibleDel);
 			// Retour au client de code
-			repondreEtat(TOWER_UP,code);
+			repondreEtat(TOWER_UP, code);
 			break;
 		default:
 			log("ERROR action inconnue : " + type);
 			// Signaler au client qu'il envoi quelque chose d'incorecte
-			repondreEtat(ERROR,ERROR);
+			repondreEtat(ERROR, ERROR);
 			break;
 		}
 	}
 
 	/**
 	 * Répond du client un code d'état pour une réponse donnée
+	 * 
 	 * @param player
 	 * @param code
 	 */
@@ -269,13 +287,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Construction de la structure JSON
 			message.put("TYPE", type);
 			message.put("STATUS", code);
-			// Envoit de la structure à travers le réseau
+			// Envoi de la structure à travers le réseau
 			send(message.toString());
 		} catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -295,7 +313,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			message.put("TYPE", PLAYER);
 			message.put("PSEUDO", pseudoFrom);
 			message.put("ETAT", nouvelEtat);
-			// Envoit de la structure à travers le réseau
+			// Envoi de la structure à travers le réseau
 			send(message.toString());
 		} catch (JSONException e)
 		{
@@ -319,15 +337,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			message.put("TYPE", MSG);
 			message.put("ID_Player", IDFrom);
 			message.put("message", contenu);
-			// Envoit de la structure à travers le réseau
+			// Envoi de la structure à travers le réseau
 			send(message.toString());
 		} catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	public void afficherObjet(int ID_Objet, int x, int y, int etat){
+
+	public void afficherObjet(int ID_Objet, int x, int y, int etat)
+	{
 		// Message JSON
 		JSONObject message = new JSONObject();
 		try
@@ -336,9 +355,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			message.put("TYPE", OBJECT);
 			message.put("OBJECT", ID_Objet);
 			message.put("ETAT", etat);
-			message.put("X",x);
-			message.put("Y",y);
-			// Envoit de la structure à travers le réseau
+			message.put("X", x);
+			message.put("Y", y);
+			// Envoi de la structure à travers le réseau
 			send(message.toString());
 		} catch (JSONException e)
 		{
@@ -358,8 +377,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	public String toString()
 	{
 		// FIXME
-		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + "unknown" + "\n"
-				+ "IP : " + canal.getIpClient() + "\n" + "Etat : "
+		return "[CLIENT]\n" + "ID : " + ID + "\n" + "Pseudo : " + "unknown"
+				+ "\n" + "IP : " + canal.getIpClient() + "\n" + "Etat : "
 				+ nomEtat(etat);
 	}
 
@@ -372,18 +391,20 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		serveur.supprimerJoueur(ID);
 	}
-	
+
 	/**
 	 * Met le client en pause
 	 */
-	public void mettreEnPause(){
+	public void mettreEnPause()
+	{
 		etat = EN_PAUSE;
 	}
-	
+
 	/**
 	 * Reprend la partie
 	 */
-	public void reprendre(){
+	public void reprendre()
+	{
 		etat = EN_JEU;
 	}
 
@@ -407,10 +428,17 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			return "En pause";
 		case VALIDATION:
 			return "Validation";
+		case PARTIE_TERMINEE:
+			return "Partie terminée";
 		case QUITTE:
 			return "Quitte la partie";
 		default:
 			return "<BAD>";
 		}
+	}
+
+	public void partieTerminee()
+	{
+		etat = PARTIE_TERMINEE;
 	}
 }
