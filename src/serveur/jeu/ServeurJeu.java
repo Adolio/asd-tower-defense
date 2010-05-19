@@ -10,6 +10,7 @@ import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.jeu.BadPosException;
 import models.jeu.EcouteurDeJeu;
+import models.jeu.Jeu;
 import models.jeu.Jeu_Serveur;
 import models.jeu.NoMoneyException;
 import models.jeu.PathBlockException;
@@ -53,7 +54,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Lien vers le module coté serveur du jeu
 	 */
-	private Jeu_Serveur serveurJeu;
+	private Jeu serveurJeu;
 
 	/**
 	 * Méthode MAIN : entrée dans le programme en cas de lancement en standalone
@@ -79,7 +80,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * @param serveurJeu
 	 * @throws IOException
 	 */
-	public ServeurJeu(Jeu_Serveur serveurJeu) throws IOException
+	public ServeurJeu(Jeu serveurJeu) throws IOException
 	{
 		// Assignation du serveur
 		this.serveurJeu = serveurJeu;
@@ -182,7 +183,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		Tour tour = null;
 		switch (typeTour)
 		{
-		case 0:
+		case 0: // FIXME
 			tour = new TourArcher();
 			break;
 		default:
@@ -209,6 +210,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		{
 			// Chemin bloqué.
 			return PATH_BLOCK;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		return OK;
 	}

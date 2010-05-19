@@ -246,7 +246,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case TOWER:
 			// Extraction des coordonnées
 			int x = json.getInt("X");
-			int y = json.getInt("X");
+			int y = json.getInt("Y");
 			// Extraction du type de tour
 			int typeTour = json.getInt("TYPE");
 			// Demande d'ajout au serveur
