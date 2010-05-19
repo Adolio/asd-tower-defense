@@ -89,7 +89,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Canal d'écoute
 		Canal canal;
 		// Boucle d'attente de connections
-		//while (true)
+		while (true)
 		{
 			// On attend qu'un joueur se présente
 			log("écoute sur le port " + _port);

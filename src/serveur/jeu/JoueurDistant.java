@@ -343,7 +343,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		{
 			// Construction de la structure JSON
 			message.put("TYPE", MSG);
-			message.put("ID_PLAYER", IDFrom);
+			message.put("PSEUDO", IDFrom);
 			message.put("MESSAGE", contenu);
 			// Envoi de la structure à travers le réseau
 			send(message.toString());
