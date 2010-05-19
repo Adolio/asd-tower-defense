@@ -30,6 +30,10 @@ public interface ConstantesServeurJeu
 	 */
 	public final int OK = 200;
 	/**
+	 * Code pour quitter la partie
+	 */
+	public final int QUITTER = 201;
+	/**
 	 * Type de message : un message texte
 	 */
 	public final int MSG = 301;
