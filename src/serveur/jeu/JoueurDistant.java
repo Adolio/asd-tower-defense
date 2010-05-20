@@ -28,6 +28,10 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private int etat = VALIDATION;
 	// Message du client;
 	private String str = "";
+	/**
+	 *  Niveau d'affichage des messages
+	 */
+	public static int verboseMode = 0;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -44,7 +48,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		this.canal = canal;
 		this.ID = ID;
 		this.serveur = serveur;
-		
+
 		log("Nouveau client");
 		thread = new Thread(this);
 		thread.start();
@@ -72,7 +76,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				e.printStackTrace();
 			} catch (CanalException e)
 			{
-				log("ERROR : une erreur est survenue durant la connexion");
+				ServeurJeu.log("ERROR : une erreur est survenue durant la connexion");
+				ServeurJeu.log("ERROR : Déconexion du client "+ID);
 				desenregistrement();
 				return;
 			}
@@ -106,7 +111,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		String str = "";
 
-		log("Etat : "+nomEtat(etat));
+		log("Etat : " + nomEtat(etat));
 		switch (etat)
 		{
 		case VALIDATION:
@@ -117,13 +122,10 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			break;
 		case EN_ATTENTE:
 			// Le thread se met en attente sur le serveur de jeu
-			/*try // FIXME
-			{
-				serveur.wait();
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}*/
+			/*
+			 * try // FIXME { serveur.wait(); } catch (InterruptedException e) {
+			 * e.printStackTrace(); }
+			 */
 			// Début de la partie
 			etat = EN_JEU;
 			break;
@@ -158,16 +160,14 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param msg
 	 *            Le message à envoyer.
 	 */
-	public void send(final String msg)
+	public synchronized void send(final String msg)
 	{
-		synchronized (canal)
-		{
 			log("Envoi du String " + msg);
 			canal.envoyerString(msg);
-		}
 	}
-	
-	public void send(final int msg){
+
+	public void send(final int msg)
+	{
 		synchronized (canal)
 		{
 			log("Envoi de l'int " + msg);
@@ -181,7 +181,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		JSONObject json = new JSONObject(str);
 		// Extraction du type du message
 		int type = json.getInt("TYPE");
-		log("Récéption d'un message de type "+type);
+		log("Récéption d'un message de type " + type);
 		int code;
 		switch (type)
 		{
@@ -217,7 +217,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				desenregistrement();
 			} else
 			{
-				// Appelle de la fonction de gestion des états et récupération du
+				// Appelle de la fonction de gestion des états et récupération
+				// du
 				// code d'état
 				code = serveur.changementEtatJoueur(ID, nouvelEtat);
 				// Réponse du code d'état au client
@@ -229,7 +230,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Récupération du type de vague
 			int typeVague = json.getInt("TYPE_WAVE");
 			// Demande de lancement d'une vague
-			code = serveur.lancerVague(typeVague);
+			code = serveur.lancerVague(ID, typeVague);
 			// Retour au client de l'information
 			repondreEtat(WAVE, code);
 			break;
@@ -238,7 +239,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Récupération du nouvel état
 			int nouvelEtatPartie = json.getInt("ETAT");
 			// Envoi de l'information au serveur principal
-			code = serveur.changementEtatPartie(nouvelEtatPartie);
+			code = serveur.changementEtatPartie(ID, nouvelEtatPartie);
 			// Retour du code au client
 			repondreEtat(PLAY, code);
 			break;
@@ -259,7 +260,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Récupération de la tour cible
 			int tourCible = json.getInt("ID_TOUR");
 			// Demande au serveur de l'opération
-			code = serveur.ameliorerTour(tourCible);
+			code = serveur.ameliorerTour(ID, tourCible);
 			// Retour au client de code
 			repondreEtat(TOWER_UP, code);
 			break;
@@ -268,7 +269,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Récupération de la tour cible
 			int tourCibleDel = json.getInt("ID_TOUR");
 			// Demande au serveur de l'opération
-			code = serveur.supprimerTour(tourCibleDel);
+			code = serveur.supprimerTour(ID, tourCibleDel);
 			// Retour au client de code
 			repondreEtat(TOWER_UP, code);
 			break;
@@ -392,11 +393,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void log(String msg)
 	{
-		ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
+		if (verboseMode > 0)
+			ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
 	}
 
 	private void desenregistrement()
 	{
+		log("Suppression du joueur "+ID);
 		serveur.supprimerJoueur(ID);
 	}
 

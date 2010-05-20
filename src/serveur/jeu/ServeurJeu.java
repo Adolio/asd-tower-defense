@@ -11,7 +11,6 @@ import models.creatures.VagueDeCreatures;
 import models.jeu.BadPosException;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
-import models.jeu.Jeu_Serveur;
 import models.jeu.NoMoneyException;
 import models.jeu.PathBlockException;
 import models.joueurs.Joueur;
@@ -44,7 +43,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -64,7 +63,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	public static void main(String[] args)
 	{
-		System.out.println("Lancement du serveur sur le port " + _port);
 		try
 		{
 			// Création d'un serveur de jeu en standalone
@@ -84,6 +82,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		// Assignation du serveur
 		this.serveurJeu = serveurJeu;
+		// Réglage du niveau d'affichage des messages clients
+		JoueurDistant.verboseMode = 0;
 		// Réservation du port d'écoute
 		Port port = new Port(_port);
 		port.reserver();
@@ -97,40 +97,24 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			canal = new Canal(port, DEBUG);
 			log("Récéption de " + canal.getIpClient());
 			int IDClient = canal.recevoirInt();
-			log("Nouveau joueur ! ID : "+IDClient);
-			// On inscrit le joueur à la partie
-			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
+			log("Nouveau joueur ! ID : " + IDClient);
+			enregistrerClient(IDClient, canal);
 		}
 	}
 
-	/**
-	 * Envoi un message texte à l'ensemble des clients connectés.
-	 * 
-	 * @param IDFrom
-	 *            L'ID de l'expéditeur.
-	 * @param message
-	 *            Le message à envoyer.
-	 */
-	public synchronized void direATous(int IDFrom, String message)
+	private void enregistrerClient(int IDClient, Canal canal)
 	{
-		log("[MESSAGE] " + IDFrom + " dit : " + message);
-		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-			joueur.getValue().envoyerMessageTexte(IDFrom, message);
-	}
-
-	/**
-	 * Envoi un message texte à un client en particulier.
-	 * 
-	 * @param IDFrom
-	 *            L'ID de l'expéditeur
-	 * @param IDTo
-	 *            L'ID du destinataire
-	 * @param message
-	 *            Le message à envoyer.
-	 */
-	public synchronized void direAuClient(int IDFrom, int IDTo, String message)
-	{
-		clients.get(IDTo).envoyerMessageTexte(IDFrom, message);
+		// On vérifie que l'ID passé en paramêtre soit bien unique
+		if (clients.containsKey(IDClient))
+		{
+			log("ERROR : Le client " + IDClient + " est déjà dans la partie");
+			// On déconnecte le client; // FIXME
+			canal.fermer();
+		} else
+		{
+			// On inscrit le joueur à la partie
+			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
+		}
 	}
 
 	/**
@@ -142,132 +126,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		System.out.println("Nombre de joueurs : " + clients.size());
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 			System.out.println(joueur.getValue());
-	}
-
-	/**
-	 * Supprime un joueur de la partie
-	 * 
-	 * @param ID
-	 *            l'ID du joueur à supprimer
-	 */
-	public synchronized void supprimerJoueur(int ID)
-	{
-		clients.remove(ID);
-		// TODO
-		setChanged();
-		notifyObservers();
-	}
-
-	/**
-	 * 
-	 * @param typeVague
-	 * @return
-	 */
-	public synchronized int lancerVague(int typeVague)
-	{
-		// TODO
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param IDJoueur
-	 * @param typeTour
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
-	{
-		// Selection de la tour cible
-		Tour tour = null;
-		switch (typeTour)
-		{
-		case 0: // FIXME
-			tour = new TourArcher();
-			break;
-		default:
-			log("Tour " + typeTour + " inconnue.");
-			return ERROR;
-		}
-		// Assignation des paramêtres
-		tour.x = x;
-		tour.y = y;
-		tour.setProprietaire(repererJoueur(IDJoueur));
-		try
-		{
-			// Tentative de poser la tour
-			serveurJeu.poserTour(tour);
-		} catch (NoMoneyException e)
-		{
-			// Si pas assez d'argent on retourne le code d'erreur correspondant
-			return NO_MONEY;
-		} catch (BadPosException e)
-		{
-			// Mauvaise position
-			return BAD_POS;
-		} catch (PathBlockException e)
-		{
-			// Chemin bloqué.
-			return PATH_BLOCK;
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return OK;
-	}
-
-	/**
-	 * 
-	 * @param iD
-	 * @param nouvelEtat
-	 * @return
-	 */
-	public synchronized int changementEtatJoueur(int iD, int nouvelEtat)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param nouvelEtatPartie
-	 * @return
-	 */
-	public synchronized int changementEtatPartie(int nouvelEtatPartie)
-	{
-		switch (nouvelEtatPartie)
-		{
-		case EN_PAUSE:
-			break;
-		case EN_JEU:
-			break;
-		default:
-			break;
-		}
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param tourCible
-	 * @return
-	 */
-	public synchronized int ameliorerTour(int tourCible)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param tourCibleDel
-	 * @return
-	 */
-	public synchronized int supprimerTour(int tourCibleDel)
-	{
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	protected synchronized static void log(String msg)
@@ -397,5 +255,171 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public void tourVendue(Tour tour)
 	{
 		update();
+	}
+
+	/**
+	 * Supprime un joueur de la partie
+	 * 
+	 * @param ID
+	 *            l'ID du joueur à supprimer
+	 */
+	public synchronized void supprimerJoueur(int ID)
+	{
+		clients.remove(ID);
+		// TODO
+		setChanged();
+		notifyObservers();
+	}
+
+	/************************** ACTIONS DES JOUEURS ************************/
+
+	/**
+	 * 
+	 * @param typeVague
+	 * @return
+	 */
+	public synchronized int lancerVague(int IDPlayer, int typeVague)
+	{
+		log("Le joueur " + IDPlayer + " désire lancer une vague de type"
+				+ typeVague);
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param IDJoueur
+	 * @param typeTour
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
+	{
+		log("Le joueur " + IDJoueur + " veut poser une tour de type "
+				+ typeTour);
+		// Selection de la tour cible
+		Tour tour = null;
+		switch (typeTour)
+		{
+		case 0: // FIXME
+			tour = new TourArcher();
+			break;
+		default:
+			log("Tour " + typeTour + " inconnue.");
+			return ERROR;
+		}
+		// Assignation des paramêtres
+		tour.x = x;
+		tour.y = y;
+		tour.setProprietaire(repererJoueur(IDJoueur));
+		try
+		{
+			// Tentative de poser la tour
+			serveurJeu.poserTour(tour);
+		} catch (NoMoneyException e)
+		{
+			// Si pas assez d'argent on retourne le code d'erreur correspondant
+			return NO_MONEY;
+		} catch (BadPosException e)
+		{
+			// Mauvaise position
+			return BAD_POS;
+		} catch (PathBlockException e)
+		{
+			// Chemin bloqué.
+			return PATH_BLOCK;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return OK;
+	}
+
+	/**
+	 * 
+	 * @param IDPlayer
+	 * @param nouvelEtat
+	 * @return
+	 */
+	public synchronized int changementEtatJoueur(int IDPlayer, int nouvelEtat)
+	{
+		log("Le joueur " + IDPlayer + " désire passer en état " + nouvelEtat);
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param nouvelEtatPartie
+	 * @return
+	 */
+	public synchronized int changementEtatPartie(int IDPlayer, int nouvelEtat)
+	{
+		log("Le joueur " + IDPlayer + " désire passer la partie en état "
+				+ nouvelEtat);
+
+		switch (nouvelEtat)
+		{
+		case EN_PAUSE:
+			break;
+		case EN_JEU:
+			break;
+		default:
+			break;
+		}
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param tourCible
+	 * @return
+	 */
+	public synchronized int ameliorerTour(int IDPlayer, int tourCible)
+	{
+		log("Le joueur " + IDPlayer + " désire améliorer la tour" + tourCible);
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param tourCibleDel
+	 * @return
+	 */
+	public synchronized int supprimerTour(int IDPlayer, int tourCible)
+	{
+		log("Le joueur " + IDPlayer + " désire supprimer la tour" + tourCible);
+		return 0;
+	}
+
+	/**
+	 * Envoi un message texte à l'ensemble des clients connectés.
+	 * 
+	 * @param IDFrom
+	 *            L'ID de l'expéditeur.
+	 * @param message
+	 *            Le message à envoyer.
+	 */
+	public synchronized void direATous(int IDPlayer, String message)
+	{
+		log("Le joueur " + IDPlayer + " dit : " + message);
+		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+			joueur.getValue().envoyerMessageTexte(IDPlayer, message);
+	}
+
+	/**
+	 * Envoi un message texte à un client en particulier.
+	 * 
+	 * @param IDFrom
+	 *            L'ID de l'expéditeur
+	 * @param IDTo
+	 *            L'ID du destinataire
+	 * @param message
+	 *            Le message à envoyer.
+	 */
+	public synchronized void direAuClient(int IDPlayer, int IDTo, String message)
+	{
+		log("Le joueur " + IDPlayer + " désire envoyer un message à " + IDTo
+				+ "(" + message + ")");
+		clients.get(IDTo).envoyerMessageTexte(IDPlayer, message);
 	}
 }
