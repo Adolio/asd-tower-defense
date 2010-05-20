@@ -8,7 +8,8 @@ package reseau;
  * @author lazhar
  * 
  */
-public class Paquet implements java.io.Serializable {
+public class Paquet implements java.io.Serializable
+{
    
    private static final long serialVersionUID = 1L;
    private int enTete;
@@ -16,16 +17,11 @@ public class Paquet implements java.io.Serializable {
    
    /**
     * 
-    */
-   public Paquet() {
-   }
-   
-   /**
-    * 
     * @param enTete
     * @param octets
     */
-   public Paquet(int enTete, byte[] octets) {
+   public Paquet(int enTete, byte[] octets)
+   {
       this.enTete = enTete;
       this.octets = octets;
    }
@@ -34,7 +30,8 @@ public class Paquet implements java.io.Serializable {
     * 
     * @return
     */
-   public byte[] getOctets() {
+   public byte[] getOctets()
+   {
       return octets;
    }
    
@@ -42,12 +39,21 @@ public class Paquet implements java.io.Serializable {
     * @see java.io.Serializable#toString()
     */
    @Override
-   public String toString() {
-      if (octets != null) {
-         return "Paquet avec en-tête " + enTete + " et " + octets.length
-               + " octets.";
+   public String toString()
+   {
+      if (octets != null)
+      {
+         return "Paquet avec en-tête " + enTete + " et " + octets.length + " octets.";
       }
       
       return "Paquet avec en-tête " + enTete + " et 0 octets (paquet vide).";
+   }
+   
+   /**
+    * @return the enTete
+    */
+   public int getEnTete()
+   {
+      return enTete;
    }
 }

@@ -15,11 +15,11 @@ public class Canal
 {
    
    // La socket qui est associée à ce côté du canal.
-   private Socket socket = null;
+   private Socket socket;
    
    // Les flux In/Out sont utilisés pour lire/écrire depuis/sur le canal.
-   private ObjectInputStream canalIn = null;
-   private ObjectOutputStream canalOut = null;
+   private ObjectInputStream canalIn;
+   private ObjectOutputStream canalOut;
    
    // Pour savoir si on affiche les messages de debug dans la console
    // (pratique...).
@@ -51,6 +51,7 @@ public class Canal
             System.out
                   .print("     Canal: en attente de connexion sur le port <"
                         + port.getNumeroPort() + "> à l'adresse ");
+            // Afficher toutes les IP candidates.
             for (NetworkInterface netint : Collections.list(NetworkInterface
                   .getNetworkInterfaces()))
             {
@@ -173,7 +174,7 @@ public class Canal
     * @throws CanalException
     *            Si un problème de flux survient.
     */
-   public void configurerFlux() throws CanalException
+   private void configurerFlux() throws CanalException
    {
       try
       {
@@ -555,5 +556,37 @@ public class Canal
          e.printStackTrace();
          throw new CanalException(e);
       }
+   }
+
+   /**
+    * @return the socket
+    */
+   public Socket getSocket()
+   {
+      return socket;
+   }
+
+   /**
+    * @return the canalIn
+    */
+   public ObjectInputStream getCanalIn()
+   {
+      return canalIn;
+   }
+
+   /**
+    * @return the canalOut
+    */
+   public ObjectOutputStream getCanalOut()
+   {
+      return canalOut;
+   }
+
+   /**
+    * @return the afficherMessagesDebug
+    */
+   public boolean isAfficherMessagesDebug()
+   {
+      return afficherMessagesDebug;
    }
 }
