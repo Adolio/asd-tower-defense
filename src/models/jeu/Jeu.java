@@ -104,6 +104,11 @@ public abstract class Jeu implements EcouteurDeCreature,
      * Joueur principal  
      */
     protected Joueur joueur;
+
+    /**
+     * Permet de savoir si la partie est à été démarrée
+     */
+    private boolean partieDemarree;
     
     /**
      * Constructeur
@@ -169,6 +174,8 @@ public abstract class Jeu implements EcouteurDeCreature,
         gestionnaireTours.demarrer();
         gestionnaireCreatures.demarrer();
         gestionnaireAnimations.demarrer();
+        
+        partieDemarree = true;
         
         // notification
         edj.partieDemarree();
@@ -435,9 +442,15 @@ public abstract class Jeu implements EcouteurDeCreature,
      * Permet d'ajouter un joueur dans le premier emplacement disponible
      * 
      * @param joueur le joueur
+     * @exception IllegalStateException Si la partie à déjà démarrée
+     * @exception IllegalStateException Aucune place disponible dans les équipes.
      */
     public void ajouterJoueur(Joueur joueur)
     {
+        // si la partie est en court
+        if(partieDemarree)
+            throw new IllegalStateException("La partie à déjà démarrée");
+        
         // ajout du joueur dans le premier emplacement disponible
         for(int i=0;i<equipes.size();i++)
         {
