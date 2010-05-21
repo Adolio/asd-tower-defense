@@ -391,7 +391,8 @@ public abstract class Jeu implements EcouteurDeCreature,
                 equipes.get(i).ajouterJoueur(joueur);
                 
                 // notification
-                edj.joueurAjoute(joueur);
+                if(edj != null)
+                    edj.joueurAjoute(joueur);
                 
                 return; // équipe trouvée
             }
