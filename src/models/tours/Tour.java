@@ -39,6 +39,12 @@ public abstract class Tour extends Rectangle
 	private static final double COEFF_PRIX_VENTE = 0.6;
 
 	/**
+     * Identificateur de la tour
+     */
+    private final int ID;
+    private static int idCourant = 0;
+    
+	/**
 	 * couleur de fond de la tour
 	 */
 	private final Color COULEUR_DE_FOND;
@@ -128,6 +134,7 @@ public abstract class Tour extends Rectangle
 	
 	// initialisation pour que la tour puisse tirer directement
     private long tempsDepuisDernierTir;
+    
 	
 	/**
 	 * Constructeur de la tour.
@@ -151,6 +158,7 @@ public abstract class Tour extends Rectangle
 			String nom, int prixAchat, long degats, double rayonPortee, 
 			double cadenceTir, int type, Image image, Image icone)
 	{
+	    this.ID             = ++idCourant;
 	    this.x              = x;
 	    this.y              = y;
 		width               = largeur;
@@ -230,6 +238,15 @@ public abstract class Tour extends Rectangle
 	}
 
 	/**
+	 * Permet de récupérer l'identifiacteur de la tour
+	 * @return l'identifiacteur de la tour
+	 */
+	public int getId()
+    {
+        return ID;
+    }
+	
+	/**
 	 * Permet de recuperer la couleur de fond d'une tour
 	 * 
 	 * @return la couleur de fond
@@ -239,7 +256,7 @@ public abstract class Tour extends Rectangle
 		return COULEUR_DE_FOND;
 	}
 
-	/**
+    /**
 	 * Permet de recuperer le nom de la tour
 	 * 
 	 * @return

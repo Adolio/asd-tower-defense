@@ -30,6 +30,14 @@ public abstract class Creature extends Rectangle
 {
 	private static final long serialVersionUID = 1L;
 	
+	
+	/**
+     * Identificateur unique de la créature
+     */
+    private final int ID;
+    private static int idCourant = 0;
+	
+	
 	/**
 	 * Permet de stocker sous la forme reelle la position de la creature pour rendre 
 	 * fluide les mouvements
@@ -141,6 +149,7 @@ public abstract class Creature extends Rectangle
 		xReel = x;
 		yReel = y;
 		
+		this.ID             = ++idCourant;
 		this.nbPiecesDOr 	= nbPiecesDOr;
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
@@ -172,6 +181,15 @@ public abstract class Creature extends Rectangle
 		return chemin;
 	}
 
+	/**
+     * Permet de récupérer l'identificateur de la créature
+     * @return l'identifiacteur de la créature
+     */
+    public int getId()
+    {
+        return ID;
+    }
+	
 	/**
 	 * Permet de recuperer le type de la creature.
 	 * 
