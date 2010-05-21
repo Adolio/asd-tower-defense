@@ -1,97 +1,111 @@
 package models.jeu;
 
-import models.creatures.Creature;
-import models.creatures.VagueDeCreatures;
-import models.tours.Tour;
+import java.net.ConnectException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import outils.fichierDeConfiguration;
+import reseau.Canal;
+import reseau.CanalException;
+import serveur.enregistrement.CodeEnregistrement;
+import serveur.enregistrement.RequeteEnregistrement;
+import serveur.jeu.ServeurJeu;
 
 public class Jeu_Serveur extends Jeu
 {
 
-    @Override
-    public void poserTour(Tour tour) throws NoMoneyException, BadPosException, PathBlockException
-    {
-        // c'est bien une tour valide ?
-        if (tour == null)
-            throw new IllegalArgumentException("Tour nulle");
-
-        // suffisemment d'argent ?
-        if(!laTourPeutEtreAchetee(tour))    
-            throw new NoMoneyException("Pose impossible : Pas assez d'argent");
-        
-        // si elle peut pas etre posee
-        if (!laTourPeutEtrePosee(tour))
-            throw new BadPosException("Pose impossible : Zone non accessible");
-
-        // si elle bloque le chemin de A vers B
-        if (terrain.laTourBloqueraLeChemin(tour))
-            throw new PathBlockException("Pose impossible : Chemin bloqué");
-
-        // desactive la zone dans le maillage qui correspond a la tour
-        terrain.desactiverZone(tour, true);
-
-        // ajout de la tour
-        gestionnaireTours.ajouterTour(tour);
-        
-        // mise a jour du jeu de la tour
-        tour.setJeu(this);
-        
-        // mise en jeu de la tour
-        tour.mettreEnJeu();
-        
-        // debit des pieces d'or
-        tour.getPrioprietaire().setNbPiecesDOr(
-                tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat()); 
+    private Canal canalServeurEnregistrement;
+    private ServeurJeu serveurDeJeu;
     
+    private boolean enregistrementReussie = false;
     
-        // TODO [CONTACT CLIENTS]
-        // serveurJeu.annoncerPoseDeTour(tour);
-    }
-
-    @Override
-    public void vendreTour(Tour tour)
+    /**
+     * TODO
+     */
+    public boolean enregistrerSurSE(String nomServeur, int nbJoueurs, String nomTerrain, int mode)
     {
-        // supprime la tour
-        gestionnaireTours.supprimerTour(tour);
+        // recuperation des configurations
+        fichierDeConfiguration config = new fichierDeConfiguration("cfg/config.cfg");
+        String IP_SE = config.getProprety("IP_SE");
+        int PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
+        int PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
+        // IP idael : "188.165.41.224";
+        // IP lazhar : "10.192.51.161";
         
-        // debit des pieces d'or
-        tour.getPrioprietaire().setNbPiecesDOr(
-                tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
-    
-        // TODO [CONTACT CLIENTS]
-        // serveurJeu.annoncerVenteDeTour(tour);
-    }
+        try
+        {
+            canalServeurEnregistrement = new Canal(IP_SE, PORT_SE, true);
+            
+            // Création de la requete d'enregistrement
+            String requete = RequeteEnregistrement.getRequeteEnregistrer(
+                    nomServeur, PORT_SJ, nbJoueurs, nomTerrain, ModeDeJeu.getNomMode(mode));
 
-    @Override
-    public void ameliorerTour(Tour tour) throws Exception
-    {
-        if(!tour.peutEncoreEtreAmelioree())
-            throw new Exception("Amélioration impossible : Niveau max atteint");
+            // Envoie de la requete
+            canalServeurEnregistrement.envoyerString(requete);
+            
+            // Attente du résultat
+            String resultat = canalServeurEnregistrement.recevoirString();
+            
+            try
+            {
+                // Analyse de la réponse du serveur d'enregistrement
+                JSONObject jsonResultat = new JSONObject(resultat);
+                
+                if(jsonResultat.getInt("status") == CodeEnregistrement.OK)
+                {
+                    enregistrementReussie = true;
+                    return true;
+                }
+                else
+                    return false;
+            } 
+            catch (JSONException e1)
+            {
+                e1.printStackTrace();
+            }
+        } 
+        catch (ConnectException e)
+        {
+            e.printStackTrace();
+        } 
+        catch (CanalException e)
+        {
+            e.printStackTrace();
+        }
         
-        if(tour.getPrioprietaire().getNbPiecesDOr() < tour.getPrixAchat())
-            throw new Exception("Amélioration impossible : Pas assez d'argent");
-
-        // debit des pieces d'or
-        tour.getPrioprietaire().setNbPiecesDOr(tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());
-     
-        // amelioration de la tour
-        tour.ameliorer();
-        
-        // TODO [CONTACT CLIENTS]
-        // serveurJeu.annoncerMiseAJourTour(tour);
-    }
-
-    @Override
-    public void lancerVague(VagueDeCreatures vague)
-    { 
-        vague.lancerVague(this, joueur.getEquipe(), this, this);
+        return false;
     }
     
-    @Override
-    public void ajouterCreature(Creature creature)
+    /**
+     * TODO
+     */
+    public void desenregistrerSurSE()
     {
-        gestionnaireCreatures.ajouterCreature(creature);
-        
-        // TODO [CONTACT CLIENTS]
-        // serveurJeu.annoncerAjoutDUneCreature(creature);
+        // fermeture du canal s'il est ouvert
+        if (canalServeurEnregistrement != null)
+        {
+            try
+            {
+                // désenregistrement du serveur
+                canalServeurEnregistrement.envoyerString(RequeteEnregistrement.DESENREGISTRER);
+                canalServeurEnregistrement.recevoirString();
+
+                // fermeture propre du canal
+                //canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
+                //canalServeurEnregistrement.recevoirString();
+            }
+            // il y a eu une erreur... on quitte tout de même
+            catch (CanalException ce)
+            {
+                ce.printStackTrace();
+            }
+
+            canalServeurEnregistrement.fermer();
+        }
+    }
+
+    // TODO
+    public boolean getEnregistrementReussie()
+    {
+        return enregistrementReussie;
     }
 }
