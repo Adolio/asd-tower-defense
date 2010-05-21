@@ -480,6 +480,7 @@ public abstract class Terrain implements Serializable
         {
             Equipe e = tour.getPrioprietaire().getEquipe();
             
+           
             // on part du principe que le joueur ne peu blocker que son chemin
             // car il contruit sur son troncon... A VOIR!
             
@@ -489,11 +490,18 @@ public abstract class Terrain implements Serializable
             
             // calcul du chemin et attente une exception
             // PathNotFoundException s'il y a un probleme
-            getCheminLePlusCourt((int) zoneDepart.getCenterX(),
+            ArrayList<Point> chemin = getCheminLePlusCourt((int) zoneDepart.getCenterX(),
                     (int) zoneDepart.getCenterY(), (int) zoneArrivee
                             .getCenterX(), (int) zoneArrivee.getCenterY(),
                     Creature.TYPE_TERRIENNE);
 
+            double longueur = Maillage.getLongueurChemin(chemin);
+            
+            
+            // mise a jour du chemin
+            e.setLongueurChemin(longueur);
+            
+            
             // il existe un chemin, donc elle ne bloque pas.
             activerZone(tour, false); // on reactive la zone
             return false;

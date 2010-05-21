@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
@@ -500,4 +501,35 @@ public class Maillage
 			throw new IllegalArgumentException("Valeur invalide (négative) : "
 					+ valeur);
 	}
+
+	/**
+	 * Calcul la distance entre chaque point
+	 * 
+	 * @param chemin une collection de point
+	 * @return la longueur du chemin
+	 */
+    public static double getLongueurChemin(ArrayList<Point> chemin)
+    {
+        double longueur = 0.0;
+        
+        Point pCourant;
+        Iterator<Point> i = chemin.iterator();
+        
+        // premier point
+        if(i.hasNext())
+            pCourant = i.next();
+        else
+            return 0;
+        
+        // pour tous les autres...
+        Point pSuivant;
+        while(i.hasNext())
+        {
+            pSuivant = i.next();
+            longueur += pCourant.distance(pSuivant);
+            pCourant = pSuivant;
+        }
+        
+        return longueur;
+    }
 }

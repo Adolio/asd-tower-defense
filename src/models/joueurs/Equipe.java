@@ -54,6 +54,10 @@ public class Equipe implements Serializable
     */
    private ArrayList<EmplacementJoueur> emplacementsJoueur = new ArrayList<EmplacementJoueur>();
    
+   /**
+    * TODO
+    */
+   private double longueurChemin = 0.0;
    
    /**
     * Constucteur
@@ -299,5 +303,17 @@ public class Equipe implements Serializable
     public String toString()
     {
         return nom;
+    }
+
+    /**
+     * Permet de modifier la longueur du chemin
+     * 
+     * @param longueur
+     */
+    public void setLongueurChemin(double longueur)
+    {
+        this.longueurChemin = longueur;
+        
+        System.out.println(longueur);
     }
 }
