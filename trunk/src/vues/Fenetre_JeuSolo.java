@@ -594,6 +594,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         panelMenuInteraction.miseAJourNbPiecesOr();
         panelMenuInteraction.miseAJourScore();
 
+        // TODO A METTRE OU PAS
+        //jeu.ajouterAnimation(new Disparition((int) creature.getCenterX(), (int) creature.getCenterY(), creature.getImage(), 400));
+        
         jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
                 creature.getNbPiecesDOr()));	
