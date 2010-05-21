@@ -3,6 +3,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -16,6 +17,7 @@ import org.json.*;
 import outils.*;
 import reseau.*;
 import serveur.enregistrement.*;
+import serveur.jeu.ServeurJeu;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
@@ -380,6 +382,9 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 return;
             }
   
+            
+            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
+            
             // TODO connexion au serveur, demande de création de la partie...
             // ---------------------------------------------------------------
             // -- Enregistrement du serveur sur le serveur d'enregistrement --
@@ -392,13 +397,11 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
                 // Création du canal avec le serveur d'enregistrement
                 canalServeurEnregistrement = new Canal(IP_SE, PORT_SE, true);
-
+ 
                 // Création de la requete d'enregistrement
                 String requete = RequeteEnregistrement.getRequeteEnregistrer(
-                        tfNomServeur.getText(), PORT_SJ, Integer
-                                .parseInt((String) cbNbJoueurs
-                                        .getSelectedItem()), (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
-                        (String) cbMode.getSelectedItem());
+                        tfNomServeur.getText(), PORT_SJ, terrain.getNbJoueursMax(), (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
+                        ModeDeJeu.getNomMode(terrain.getMode()));
 
                 // Envoie de la requete
                 canalServeurEnregistrement.envoyerString(requete);
@@ -438,11 +441,23 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             //---------------------
             //-- Création du jeu --
             //---------------------
-            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
             terrain.initialiser();
             
-            Jeu jeu = new Jeu_Solo();
+            Jeu_Serveur jeu = new Jeu_Serveur();
             jeu.setTerrain(terrain);
+            
+           /*
+            try
+            {
+                ServeurJeu srvJeu = new ServeurJeu(jeu);
+                
+                //srvJeu.
+                
+            } 
+            catch (IOException e1)
+            {
+                e1.printStackTrace();
+            }*/
             
             terrain.setJeu(jeu);
             
