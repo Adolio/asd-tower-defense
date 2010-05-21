@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import models.jeu.Jeu_Client;
 import models.joueurs.Joueur;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -557,9 +559,14 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // TODO dans le try !!!
         Joueur joueur = new Joueur(lblPseudo.getText());
         
+        
+        Jeu_Client jeu = new Jeu_Client();
+        
+        
+        
         // connexion réussie
         parent.getContentPane().removeAll();
-        parent.getContentPane().add(new Panel_AttendreJoueurs(parent, null, false, joueur),
+        parent.getContentPane().add(new Panel_AttendreJoueurs(parent,jeu, joueur),
                 BorderLayout.CENTER);
         parent.getContentPane().validate();
         

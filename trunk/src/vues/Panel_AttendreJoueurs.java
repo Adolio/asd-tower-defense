@@ -12,16 +12,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import models.jeu.Jeu;
+import models.jeu.Jeu_Client;
 import models.jeu.Jeu_Serveur;
-import models.jeu.Jeu_Solo;
+import models.jeu.ModeDeJeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
-import models.terrains.ElementTD_Coop;
-import models.terrains.Terrain;
-import reseau.Canal;
-import serveur.enregistrement.RequeteEnregistrement;
 
 @SuppressWarnings("serial")
 public class Panel_AttendreJoueurs extends JPanel implements ActionListener
@@ -33,49 +29,53 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
 
-    private Jeu_Serveur jeu;
-    private Canal canalServeurEnregistrement;
-    private Canal canalServeurJeu;
+    
+    private JButton bTmpJConn = new JButton("...Un joueur se connect");
+    
+    private Panel_GridBag pJoueurs;
+    private Jeu_Serveur jeuServeur;
+    private Jeu_Client jeuClient;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
     private JLabel lEtat = new JLabel();
     private JLabel lIPs = new JLabel();
     private Joueur joueur;
+    private int nbJoueurs = 0;
     
-    public Panel_AttendreJoueurs(JFrame parent, Canal canal, boolean admin, Joueur joueur)
-    {
-        this.parent = parent;
-        this.ADMIN = admin;
-        this.joueur = joueur;
-        
-        if (admin)
-            this.canalServeurEnregistrement = canal;
-        else
-        {
-            this.canalServeurJeu = canal;
-            
-            // TODO [CONTACT SERVEUR] demande les info du jeu
-            jeu = new Jeu_Serveur();
-            Terrain terrain = new ElementTD_Coop(jeu);
-            jeu.setTerrain(terrain);
-            
-            jeu.getEquipes().get(0).ajouterJoueur(new Joueur("LEONARD"));
-            jeu.getEquipes().get(0).ajouterJoueur(joueur);
-            
-        }
-            
-        initialiserForm();
-    }
-
+    /**
+     * Constructeur de créateur de partie
+     * 
+     * @param parent la fenetre parent
+     * @param jeu le jeu
+     * @param joueur le joueur
+     */
     public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeu, Joueur joueur)
     {
         this.parent = parent;
-        this.ADMIN = true;
-        this.jeu = jeu;
+        this.ADMIN  = true;
+        this.jeuServeur    = jeu;
         this.joueur = joueur;
 
         initialiserForm();
     }
 
+    /**
+     * Constructeur du joueur qui rejoint
+     * 
+     * @param parent la fenetre parent
+     * @param jeu le jeu du client
+     * @param joueur le joueur
+     */
+    public Panel_AttendreJoueurs(JFrame parent, Jeu_Client jeu, Joueur joueur)
+    {
+        this.parent = parent;
+        this.ADMIN  = false;
+        this.jeuClient = jeu;
+        this.joueur = joueur;
+    }
+
+    /**
+     * Permet d'initialiser le formulaire
+     */
     private void initialiserForm()
     {
         // initialisation
@@ -101,142 +101,14 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         // ------------
         // -- CENTER --
         // ------------
-        if (jeu != null)
+        if (jeuServeur != null)
         {
-            ArrayList<Joueur> joueurs = jeu.getJoueurs();
-            ArrayList<Equipe> equipes = jeu.getEquipes();
-
-            int maxJoueurs = jeu.getTerrain().getNbJoueursMax();
-
-            Panel_GridBag pJoueurs = new Panel_GridBag(new Insets(2, 2, 2, 2));
-            pJoueurs.setBackground(LookInterface.COULEUR_DE_FOND);
-            pJoueurs.setPreferredSize(new Dimension(350, 150));
-
-            for (int i = 0; i < maxJoueurs; i++)
-            {
-
-                /*JLabel lNo = new JLabel((i + 1) + ". ");
-                lNo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-                pJoueurs.add(lNo, 0, i, 1);*/
-
-                // joueur trouvé
-                if (i < joueurs.size())
-                {
-                    final Joueur joueur = joueurs.get(i);
-                    final JComboBox cbEmplacements = new JComboBox();
-                    final JComboBox cbEquipes = new JComboBox();
-
-                    // styles
-                    GestionnaireDesPolices.setStyle(cbEmplacements);
-                    GestionnaireDesPolices.setStyle(cbEquipes);
-                    
-                    final JLabel lPseudo = new JLabel(joueur.getPseudo());
-                    lPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-                    pJoueurs.add(lPseudo, 1, i, 1);
-                    lPseudo.setForeground(joueur.getEquipe().getCouleur());
-
-                    if(ADMIN || this.joueur == joueur)
-                    {
-                        // Liste des équipes
-      
-                        // Remplissage
-                        for (int j = 0; j < equipes.size(); j++)
-                        {
-                            Equipe tmpEquipe = equipes.get(j);
-    
-                            // ajout de l'equipe
-                            cbEquipes.addItem(tmpEquipe);
-    
-                            if (joueur.getEquipe() == tmpEquipe)
-                                cbEquipes.setSelectedIndex(j);
-                        }
-    
-                        // Action de la liste des équipes
-                        cbEquipes.addActionListener(new ActionListener()
-                        {
-                            @Override
-                            public void actionPerformed(ActionEvent e)
-                            {
-                                try
-                                {
-                                    lEtat.setText("");
-                                    Equipe equipe = (Equipe) cbEquipes
-                                            .getSelectedItem();
-                                    
-                                    equipe.ajouterJoueur(joueur);
-                                    
-                                    // mise a jour de la liste des emplacements
-                                    remplirCombo(cbEmplacements,joueur);
-    
-                                    lPseudo.setForeground(joueur.getEquipe().getCouleur());
-                                } 
-                                catch (IllegalArgumentException iae)
-                                {
-                                    // on reselectionne l'ancienne sélection
-                                    cbEquipes.setSelectedItem(joueur.getEquipe());
-     
-                                    lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                                    lEtat.setText(iae.getMessage());
-                                }
-    
-                                pEmplacementsTerrain.repaint();
-                            }
-                        });
-    
-                        pJoueurs.add(cbEquipes, 2, i, 1);
-    
-                        // remplissage de la combobox
-                        remplirCombo(cbEmplacements,joueur);
-    
-                        // Action de la liste des emplacements
-                        cbEmplacements.addActionListener(new ActionListener()
-                        {
-                            
-    
-                            @Override
-                            public void actionPerformed(ActionEvent e)
-                            {
-                                try
-                                {
-                                    lEtat.setText("");
-                                    
-                                    if(cbEmplacements.getSelectedIndex() != -1)
-                                    {
-                                        EmplacementJoueur ej = joueur.getEquipe().getEmplacementsJoueur().get(cbEmplacements.getSelectedIndex());
-                                        
-                                        joueur.setEmplacementJoueur(ej);
-                                        pEmplacementsTerrain.repaint();
-                                    }
-                                } 
-                                catch (IllegalArgumentException iae)
-                                {
-                                    // on reselectionne l'ancienne sélection
-                                    for(int i=0;i<cbEmplacements.getItemCount();i++)
-                                        if(joueur.getEmplacement().toString().equals(cbEmplacements.getItemAt(i)))
-                                            cbEmplacements.setSelectedIndex(i);
-                                    
-                                    lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                                    lEtat.setText(iae.getMessage());
-                                }
-                            }
-                        });
-    
-                        // ajout de l'emplacement
-                        pJoueurs.add(cbEmplacements, 3, i, 1);
-                    }
-                } 
-                else// personne
-                {
-                    JLabel lInconnu = new JLabel("???");
-                    lInconnu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-                    pJoueurs.add(lInconnu, 1, i, 1);
-                }
-            }
+            contruireEmplacementsJoueur();
 
             JPanel pCenter = new JPanel(new BorderLayout());
             pCenter.setOpaque(false);
 
-            pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeu.getTerrain(),0.7);
+            pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeuServeur.getTerrain(),0.7);
            
             
             JScrollPane spEmplacement = new JScrollPane(pEmplacementsTerrain);
@@ -261,6 +133,9 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             js.setBorder(null);
 
             pTmp.add(js, BorderLayout.NORTH);
+            pTmp.add(bTmpJConn, BorderLayout.SOUTH);
+            bTmpJConn.addActionListener(this);
+            
             
             pJoueursEtat.add(pTmp, BorderLayout.NORTH);
             
@@ -311,17 +186,17 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         pBottom.add(bDeconnecter, BorderLayout.WEST);
 
         if (ADMIN)
-            if (canalServeurEnregistrement == null)
-            {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
-                lblEtat
-                        .setText("La connexion avec le serveur central à échouée, "
-                                + "votre serveur n'apparaitra pas dans la liste des serveurs");
-            } else
+            if (jeuServeur.getEnregistrementReussie())
             {
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
-                lblEtat
-                        .setText("La connexion avec le serveur central à réussie");
+                lblEtat.setText("La connexion avec le serveur central à réussie"); 
+            } 
+            else
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+                lblEtat.setText("La connexion avec le serveur central à échouée, "+
+                                "votre serveur n'apparaitra pas dans la liste " +
+                               	"des serveurs");
             }
 
         pBottom.add(lblEtat, BorderLayout.SOUTH);
@@ -368,35 +243,186 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         if (src == bDemarrerMaintenant)
         {
             if (ADMIN)
-            {
-                if (canalServeurEnregistrement != null)
-                {
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.DESENREGISTRER);
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.STOP); 
-                } 
-            }
+                jeuServeur.desenregistrerSurSE();
             
-            jeu.initialiser(joueur);
-            new Fenetre_JeuVersus(jeu);
+            
+            jeuServeur.initialiser(joueur);
+            switch(jeuServeur.getTerrain().getMode())
+            {
+                case ModeDeJeu.MODE_VERSUS :
+                    new Fenetre_JeuVersus(jeuServeur);
+                    break;
+                
+                case ModeDeJeu.MODE_COOP :
+                    new Fenetre_JeuVersus(jeuServeur); // FIXME
+                    break;
+            }
             parent.dispose();
+            
         }
         else if (src == bDeconnecter)
         {
             if (ADMIN)
             {
-                jeu.desenregistrerSurSE();
-            } 
-            else if (canalServeurJeu != null)
-            {
-                canalServeurJeu.envoyerString(RequeteEnregistrement.STOP);
+                jeuServeur.desenregistrerSurSE();
+                jeuServeur.stopperServeurDeJeu();
             }
 
+            // retour
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
         }
+        else if(src == bTmpJConn)
+        {  
+            Joueur j = new Joueur("J"+this.nbJoueurs);
+            
+            jeuServeur.ajouterJoueur(j);
+            
+            ajouterJoueur(j);
+            
+            jeuServeur.miseAJourSE();
+        }
     }
+
+    private void ajouterJoueur(final Joueur joueur)
+    {
+        final JComboBox cbEmplacements = new JComboBox();
+        final JComboBox cbEquipes = new JComboBox();
+
+        // styles
+        GestionnaireDesPolices.setStyle(cbEmplacements);
+        GestionnaireDesPolices.setStyle(cbEquipes);
+        
+        final JLabel lPseudo = new JLabel(joueur.getPseudo());
+        lPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        pJoueurs.add(lPseudo, 1, nbJoueurs, 1);
+        lPseudo.setForeground(joueur.getEquipe().getCouleur());
+
+        ArrayList<Equipe> equipes = jeuServeur.getEquipes();
+        
+        if(ADMIN || this.joueur == joueur)
+        {
+            // Liste des équipes
+
+            // Remplissage
+            for (int j = 0; j < equipes.size(); j++)
+            {
+                Equipe tmpEquipe = equipes.get(j);
+
+                // ajout de l'equipe
+                cbEquipes.addItem(tmpEquipe);
+
+                if (joueur.getEquipe() == tmpEquipe)
+                    cbEquipes.setSelectedIndex(j);
+            }
+
+            // Action de la liste des équipes
+            cbEquipes.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    try
+                    {
+                        lEtat.setText("");
+                        Equipe equipe = (Equipe) cbEquipes
+                                .getSelectedItem();
+                        
+                        equipe.ajouterJoueur(joueur);
+                        
+                        // mise a jour de la liste des emplacements
+                        remplirCombo(cbEmplacements,joueur);
+
+                        lPseudo.setForeground(joueur.getEquipe().getCouleur());
+                    } 
+                    catch (IllegalArgumentException iae)
+                    {
+                        // on reselectionne l'ancienne sélection
+                        cbEquipes.setSelectedItem(joueur.getEquipe());
+
+                        lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lEtat.setText(iae.getMessage());
+                    }
+
+                    pEmplacementsTerrain.repaint();
+                }
+            });
+
+            pJoueurs.add(cbEquipes, 2, nbJoueurs, 1);
+
+            // remplissage de la combobox
+            remplirCombo(cbEmplacements,joueur);
+
+            // Action de la liste des emplacements
+            cbEmplacements.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    try
+                    {
+                        lEtat.setText("");
+                        
+                        if(cbEmplacements.getSelectedIndex() != -1)
+                        {
+                            EmplacementJoueur ej = joueur.getEquipe().getEmplacementsJoueur().get(cbEmplacements.getSelectedIndex());
+                            
+                            joueur.setEmplacementJoueur(ej);
+                            pEmplacementsTerrain.repaint();
+                        }
+                    } 
+                    catch (IllegalArgumentException iae)
+                    {
+                        // on reselectionne l'ancienne sélection
+                        for(int i=0;i<cbEmplacements.getItemCount();i++)
+                            if(joueur.getEmplacement().toString().equals(cbEmplacements.getItemAt(i)))
+                                cbEmplacements.setSelectedIndex(i);
+                        
+                        lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lEtat.setText(iae.getMessage());
+                    }
+                }
+            });
+
+            // ajout de l'emplacement
+            pJoueurs.add(cbEmplacements, 3, nbJoueurs, 1);
+            
+            nbJoueurs++;
+        }
+    }
+    
+    public void contruireEmplacementsJoueur()
+    {
+        ArrayList<Joueur> joueurs = jeuServeur.getJoueurs();
+        
+
+        int maxJoueurs = jeuServeur.getTerrain().getNbJoueursMax();
+
+        pJoueurs = new Panel_GridBag(new Insets(2, 2, 2, 2));
+        pJoueurs.setBackground(LookInterface.COULEUR_DE_FOND);
+        pJoueurs.setPreferredSize(new Dimension(350, 150));
+
+        for (int i = 0; i < maxJoueurs; i++)
+        {
+            /*JLabel lNo = new JLabel((i + 1) + ". ");
+            lNo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            pJoueurs.add(lNo, 0, i, 1);*/
+
+            // joueur trouvé
+            if (i < joueurs.size())
+            {
+                // TODO
+                ajouterJoueur(joueurs.get(i));
+            } 
+            else// personne
+            {
+                JLabel lInconnu = new JLabel("???");
+                lInconnu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+                pJoueurs.add(lInconnu, 1, i, 1);
+            }
+        }
+    }
+    
 }

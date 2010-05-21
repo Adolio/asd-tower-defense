@@ -458,7 +458,7 @@ public abstract class Jeu implements EcouteurDeCreature,
             }
         }
         
-       throw new IllegalStateException("Aucun place disponible.");
+       throw new IllegalStateException("Aucune place disponible.");
     }
 
     /**
