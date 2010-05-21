@@ -19,6 +19,8 @@ public class ClientJeu implements ConstantesServeurJeu {
 		try
 		{
 			canal = new Canal(IP_SERVEUR, 2357, true);
+			canal.envoyerInt(ID);
+			canal.recevoirString();
 		} catch (ConnectException e)
 		{
 			// TODO Auto-generated catch block

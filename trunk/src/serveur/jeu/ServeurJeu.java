@@ -114,6 +114,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		{
 			// On inscrit le joueur à la partie
 			clients.put(IDClient, new JoueurDistant(IDClient, canal, this));
+			setChanged();
+			notifyObservers(clients);
 		}
 	}
 
@@ -268,7 +270,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		clients.remove(ID);
 		// TODO
 		setChanged();
-		notifyObservers();
+		notifyObservers(clients);
 	}
 
 	/************************** ACTIONS DES JOUEURS ************************/
