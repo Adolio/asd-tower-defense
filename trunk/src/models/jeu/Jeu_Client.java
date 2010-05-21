@@ -7,7 +7,7 @@ public class Jeu_Client extends Jeu
 {
 
     @Override
-    public void poserTour(Tour tour) throws Exception
+    public void poserTour(Tour tour)
     {
         // TODO [CONTACT SERVEUR]
     }

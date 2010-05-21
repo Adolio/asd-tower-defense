@@ -3,8 +3,6 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -13,30 +11,19 @@ import javax.swing.table.DefaultTableModel;
 import models.jeu.*;
 import models.joueurs.Joueur;
 import models.terrains.*;
-import org.json.*;
 import outils.*;
 import reseau.*;
 import serveur.enregistrement.*;
-import serveur.jeu.ServeurJeu;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
-    private static int PORT_SE;
-    private static int PORT_SJ;
-    // IP idael : "188.165.41.224";
-    // IP lazhar : "10.192.51.161";
-    private static String IP_SE;
     private final int MARGES_PANEL = 40;
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
     private JFrame parent;
 
     // form
-    //private JLabel lblNbJoueurs = new JLabel("Nb Joueurs :");
-    private JComboBox cbNbJoueurs = new JComboBox();
-    //private JLabel lblMode = new JLabel("Mode de jeu :");
-    private JComboBox cbMode = new JComboBox();
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Serveur de test");
     private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
@@ -54,10 +41,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private DefaultTableModel model = new DefaultTableModel();
     private JTable tbTerrains;
     Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(0.35);
-    
-    // reseau
-    private Canal canalServeurEnregistrement;
-    private fichierDeConfiguration config;
+   
     
     /**
      * Constructeur
@@ -74,12 +58,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 MARGES_PANEL, MARGES_PANEL)));
 
         setBackground(LookInterface.COULEUR_DE_FOND);
-
-        // recuperation des configurations
-        config = new fichierDeConfiguration("cfg/config.cfg");
-        IP_SE = config.getProprety("IP_SE");
-        PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
-        PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
 
         // ---------
         // -- TOP --
@@ -383,68 +361,43 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             }
   
             
-            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
-            
-            // TODO connexion au serveur, demande de création de la partie...
-            // ---------------------------------------------------------------
-            // -- Enregistrement du serveur sur le serveur d'enregistrement --
-            // ---------------------------------------------------------------
-            try
-            {
-                // Information
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
-                lblEtat.setText("Enregistrement au serveur central...");
-
-                // Création du canal avec le serveur d'enregistrement
-                canalServeurEnregistrement = new Canal(IP_SE, PORT_SE, true);
- 
-                // Création de la requete d'enregistrement
-                String requete = RequeteEnregistrement.getRequeteEnregistrer(
-                        tfNomServeur.getText(), PORT_SJ, terrain.getNbJoueursMax(), (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
-                        ModeDeJeu.getNomMode(terrain.getMode()));
-
-                // Envoie de la requete
-                canalServeurEnregistrement.envoyerString(requete);
-
-                // Attente du résultat
-                String resultat = canalServeurEnregistrement.recevoirString();
-
-                try
-                {
-                    // Analyse de la réponse du serveur d'enregistrement
-                    JSONObject jsonResultat = new JSONObject(resultat);
-                    if (jsonResultat.getInt("status") == CodeEnregistrement.OK)
-                    {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
-                        lblEtat
-                                .setText("Enregistrement au serveur central réussi!");
-                    } else
-                    {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                        lblEtat.setText("Réponse du serveur central invalide!");
-                    }
-                } catch (JSONException e1)
-                {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                    lblEtat.setText("Réponse du serveur central invalide!");
-                }
-            } catch (ConnectException e1)
-            {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                lblEtat.setText("Enregistrement au serveur central échoué!");
-            } catch (CanalException e1)
-            {
-                e1.printStackTrace();
-            }
-
-            
             //---------------------
             //-- Création du jeu --
             //---------------------
-            terrain.initialiser();
             
+            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
+            terrain.initialiser();
             Jeu_Serveur jeu = new Jeu_Serveur();
             jeu.setTerrain(terrain);
+            terrain.setJeu(jeu);
+            
+            
+            // ---------------------------------------------------------------
+            // -- Enregistrement du serveur sur le serveur d'enregistrement --
+            // ---------------------------------------------------------------
+        
+            // Information
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
+            lblEtat.setText("Enregistrement au serveur central...");
+
+            if (jeu.enregistrerSurSE(tfNomServeur.getText(),
+                    terrain.getNbJoueursMax(),
+                    (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
+                    terrain.getMode()))
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setText("Enregistrement au serveur central réussi!");
+            } 
+            else
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Enregistrement au serveur central échoué!");
+            }
+
+            
+            // --------------------------------
+            // -- Création du serveur de jeu --
+            // --------------------------------
             
            /*
             try
@@ -459,7 +412,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 e1.printStackTrace();
             }*/
             
-            terrain.setJeu(jeu);
+           
             
  
             // ajout du joueur dans le premier emplacement
@@ -481,35 +434,13 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
 
-        } else if (src == bAnnuler)
+        } 
+        else if (src == bAnnuler)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
-
-            // fermeture du canal s'il est ouvert
-            if (canalServeurEnregistrement != null)
-            {
-                try
-                {
-                    // désenregistrement du serveur
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.DESENREGISTRER);
-                    canalServeurEnregistrement.recevoirString();
-
-                    // fermeture propre du canal
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.STOP);
-                    canalServeurEnregistrement.recevoirString();
-                }
-                // il y a eu une erreur... on quitte tout de même
-                catch (CanalException ce)
-                {
-                }
-
-                canalServeurEnregistrement.fermer();
-            }
         }
     }
 }

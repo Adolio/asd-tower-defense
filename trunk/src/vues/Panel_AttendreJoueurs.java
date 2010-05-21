@@ -13,6 +13,7 @@ import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
+import models.jeu.Jeu_Serveur;
 import models.jeu.Jeu_Solo;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -32,7 +33,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
 
-    private Jeu jeu;
+    private Jeu_Serveur jeu;
     private Canal canalServeurEnregistrement;
     private Canal canalServeurJeu;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
@@ -53,7 +54,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             this.canalServeurJeu = canal;
             
             // TODO [CONTACT SERVEUR] demande les info du jeu
-            jeu = new Jeu_Solo();
+            jeu = new Jeu_Serveur();
             Terrain terrain = new ElementTD_Coop(jeu);
             jeu.setTerrain(terrain);
             
@@ -65,7 +66,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         initialiserForm();
     }
 
-    public Panel_AttendreJoueurs(JFrame parent, Jeu jeu, Joueur joueur)
+    public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeu, Joueur joueur)
     {
         this.parent = parent;
         this.ADMIN = true;
@@ -385,14 +386,9 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         {
             if (ADMIN)
             {
-                if (canalServeurEnregistrement != null)
-                {
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.DESENREGISTRER);
-                    canalServeurEnregistrement
-                            .envoyerString(RequeteEnregistrement.STOP);
-                }
-            } else if (canalServeurJeu != null)
+                jeu.desenregistrerSurSE();
+            } 
+            else if (canalServeurJeu != null)
             {
                 canalServeurJeu.envoyerString(RequeteEnregistrement.STOP);
             }
