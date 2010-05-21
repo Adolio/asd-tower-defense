@@ -33,4 +33,15 @@ public class RequeteEnregistrement
                 + nomTerrain + "\"," + "\"mode\" :\"" + mode + "\"" + "}}}";
     }
 
+    /**
+     * Permet de generer la requete d'enregistrement
+     * 
+     * @return la requete
+     */
+    public static String getRequeteMiseAJour(int placesRestantes)
+    {
+        // Création de la requete de mise a jour
+        return "{\"donnees\" :{\"code\" : " + CodeEnregistrement.MISE_A_JOUR
+                + ",\"contenu\" : { \"placesRestantes\" :" + placesRestantes+ "}}}";
+    }
 }

@@ -1,5 +1,6 @@
 package models.jeu;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +13,6 @@ import serveur.jeu.ServeurJeu;
 
 public class Jeu_Serveur extends Jeu
 {
-
     private Canal canalServeurEnregistrement;
     private ServeurJeu serveurDeJeu;
     
@@ -63,14 +63,8 @@ public class Jeu_Serveur extends Jeu
                 e1.printStackTrace();
             }
         } 
-        catch (ConnectException e)
-        {
-            e.printStackTrace();
-        } 
-        catch (CanalException e)
-        {
-            e.printStackTrace();
-        }
+        catch (ConnectException e){} 
+        catch (CanalException e){}
         
         return false;
     }
@@ -107,5 +101,46 @@ public class Jeu_Serveur extends Jeu
     public boolean getEnregistrementReussie()
     {
         return enregistrementReussie;
+    }
+    
+    
+    /**
+     * TODO
+     * @return
+     */
+    public boolean etablissementDuServeur()
+    {
+        try
+        {
+            serveurDeJeu = new ServeurJeu(this);
+            
+            return true;
+        } 
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    public void stopperServeurDeJeu()
+    {
+        // TODO
+    }
+
+    public void miseAJourSE()
+    {
+        if(enregistrementReussie)
+        {
+            // Création de la requete d'enregistrement
+            String requete = RequeteEnregistrement.getRequeteMiseAJour(terrain.getNbJoueursMax() - getJoueurs().size());
+    
+            // Envoie de la requete 
+            canalServeurEnregistrement.envoyerString(requete);
+            
+            // Attente du résultat
+            canalServeurEnregistrement.recevoirString();
+        }
     }
 }

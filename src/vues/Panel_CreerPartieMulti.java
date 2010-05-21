@@ -371,6 +371,17 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             jeu.setTerrain(terrain);
             terrain.setJeu(jeu);
             
+            // ajout du joueur dans le premier emplacement
+            Joueur joueur1 = new Joueur(tfPseudo.getText());
+            jeu.ajouterJoueur(joueur1);
+            
+            /* TODO a effacer
+            Joueur joueur2 = new Joueur("fictiveBoy");
+            jeu.ajouterJoueur(joueur2);
+            
+            Joueur joueur3 = new Joueur("fictiveGirl");
+            jeu.ajouterJoueur(joueur3);
+            */
             
             // ---------------------------------------------------------------
             // -- Enregistrement du serveur sur le serveur d'enregistrement --
@@ -398,41 +409,16 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             // --------------------------------
             // -- Création du serveur de jeu --
             // --------------------------------
-            
-           /*
-            try
-            {
-                ServeurJeu srvJeu = new ServeurJeu(jeu);
-                
-                //srvJeu.
-                
-            } 
-            catch (IOException e1)
-            {
-                e1.printStackTrace();
-            }*/
-            
-           
-            
- 
-            // ajout du joueur dans le premier emplacement
-            Joueur joueur1 = new Joueur(tfPseudo.getText());
-            jeu.ajouterJoueur(joueur1);
-            
-            // TODO test
-            Joueur joueur2 = new Joueur("fictiveBoy");
-            jeu.ajouterJoueur(joueur2);
-            
-            Joueur joueur3 = new Joueur("fictiveGirl");
-            jeu.ajouterJoueur(joueur3);
-            
-            
+
+            //if(jeu.etablissementDuServeur())
+            //{
             // connexion réussie
             parent.getContentPane().removeAll();
             parent.getContentPane().add(
                     new Panel_AttendreJoueurs(parent, jeu, joueur1),
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
+            //}
 
         } 
         else if (src == bAnnuler)
