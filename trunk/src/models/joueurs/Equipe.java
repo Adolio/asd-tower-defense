@@ -306,14 +306,22 @@ public class Equipe implements Serializable
     }
 
     /**
+     * Permet de récupérer la longueur du chemin
+     *
+     * @return la longueur du chemin
+     */
+    public double getLongueurChemin()
+    {
+        return longueurChemin;
+    }
+    
+    /**
      * Permet de modifier la longueur du chemin
      * 
-     * @param longueur
+     * @param longueur la longueur du chemin
      */
     public void setLongueurChemin(double longueur)
     {
         this.longueurChemin = longueur;
-        
-        System.out.println(longueur);
     }
 }
