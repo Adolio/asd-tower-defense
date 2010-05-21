@@ -7,7 +7,7 @@ public class Joueur
     /**
      * Compteur pour générer les identificateurs.
      */
-    private static int cmpId = 0;
+    private static int idCourant = 0;
     
     /**
      * Identificateur du joueur
@@ -51,7 +51,7 @@ public class Joueur
     public Joueur(String pseudo)
     {
         this.pseudo = pseudo;
-        this.id = ++cmpId;
+        this.id = ++idCourant;
     }
 
     /**
