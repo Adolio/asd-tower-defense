@@ -559,8 +559,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // TODO dans le try !!!
         Joueur joueur = new Joueur(lblPseudo.getText());
         
-        
-        Jeu_Client jeu = new Jeu_Client();
+        Jeu_Client jeu = new Jeu_Client(joueur);
         
         
         

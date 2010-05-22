@@ -1,32 +1,41 @@
 package models.jeu;
 
+import client.jeu.ClientJeu;
 import models.creatures.VagueDeCreatures;
+import models.joueurs.Joueur;
 import models.tours.Tour;
 
 public class Jeu_Client extends Jeu
 {
+    ClientJeu clientJeu;
+    
+    public Jeu_Client(Joueur joueur)
+    {
+        clientJeu = new ClientJeu(joueur.getId());
+    }
 
     @Override
     public void poserTour(Tour tour)
     {
-        // TODO [CONTACT SERVEUR]
+        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(), 1);
     }
 
     @Override
     public void vendreTour(Tour tour)
     {
-        // TODO [CONTACT SERVEUR]
+        clientJeu.venteTour(tour.getId());
     }
 
     @Override
     public void ameliorerTour(Tour tour)
     {
-        // TODO [CONTACT SERVEUR]
+        clientJeu.demanderAmeliorationTour(tour.getId());
     }
 
     @Override
     public void lancerVague(VagueDeCreatures vague)
     {
         // TODO [CONTACT SERVEUR]
+        //clientJeu.envoyerVague(vague);
     }
 }

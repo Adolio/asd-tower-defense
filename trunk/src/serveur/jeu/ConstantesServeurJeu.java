@@ -1,5 +1,8 @@
 package serveur.jeu;
 
+
+// FIXME (DE AURELIEN) TOUT EN FRANCAIS S'IL VOUS PLAIT !!!
+
 /**
  * Cet interface contient l'ensemble des constantes necessaires au protocole de
  * dialogue entre le client et le serveur de jeu.

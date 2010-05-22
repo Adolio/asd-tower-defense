@@ -172,19 +172,22 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
@@ -224,7 +227,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
@@ -244,19 +248,22 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void tourAmelioree(Tour tour)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
 	public void tourPosee(Tour tour)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	@Override
 	public void tourVendue(Tour tour)
 	{
-		update();
+	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
+	    update();
 	}
 
 	/**
