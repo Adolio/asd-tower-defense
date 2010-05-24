@@ -26,9 +26,8 @@ import org.json.*;
  * ELLE EST POSABLE... ON EN A BESOINS POUR LA SUITE.
  */
 public class ClientJeu implements ConstantesServeurJeu {
-	final int ID;
+	//TODO final int ID;
 	Canal canal;
-	private final static String IP_SERVEUR = "localhost";
 	
 	
 	/*
@@ -39,14 +38,15 @@ public class ClientJeu implements ConstantesServeurJeu {
 	 * IP_SERVEUR SERA UN PARAMETRE...
 	 * PORT_SERVEUR SERA UN PARAMETRE...
 	 */
-	public ClientJeu(int ID) {
-		this.ID = ID;
+	public ClientJeu(String IPServeur, int portServeur) {
 		
 		try
 		{
-			canal = new Canal(IP_SERVEUR, 2357, true);
-			canal.envoyerInt(ID);
+			canal = new Canal(IPServeur, portServeur, true);
+			//canal.envoyerInt(ID);
 			canal.recevoirString();
+			
+			//TODO Recevoir l'id! :D
 		} catch (ConnectException e)
 		{
 			// TODO Auto-generated catch block
@@ -63,7 +63,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public static void main(String[] args)
 	{
 		System.out.println("Creation du client");
-		ClientJeu client = new ClientJeu(1);
+		ClientJeu client = new ClientJeu("localhost", 2357);
 		for(int i = 0; i < 5; i++){
 			
 			
@@ -115,26 +115,20 @@ public class ClientJeu implements ConstantesServeurJeu {
 	// (DE AURELIEN) PARAMETRES :
 	// int nbCreatures
 	// int typeCreature
-	public int envoyerVague(int typeVague){
+	public void envoyerVague(int nbCreature, int typeCreature){
 		try{
 			JSONObject json = new JSONObject();
 			json.put("TYPE", WAVE);
-			json.put("TYPE_WAVE", typeVague);
+			json.put("TYPE_WAVE", typeCreature);
+			json.put("SIZE_WAVE", nbCreature);
 			
 			canal.envoyerString(json.toString());
-			
-			// (DE AURELIEN) LES REPONSES VIENNENT SUR UN AUTRE THREAD...
-			String reponse = canal.recevoirString();
-			json = new JSONObject(reponse);
-			return json.getInt("STATUS");
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//TODO quel val retourner si erreur
-		return -1;
+
 	}
 	
 	public void envoyerEtatPartie(int etat){
@@ -196,5 +190,28 @@ public class ClientJeu implements ConstantesServeurJeu {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	//TODO transformer en thread
+	public void receptionMessages(){
+		JSONObject mes;
+		try {
+			mes = new JSONObject(canal.recevoirString());
+			
+			switch(mes.getInt("TYPE")){
+				case CHEM_BLOQUE :
+					break;
+				default :
+						
+			}
+		} catch (CanalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
