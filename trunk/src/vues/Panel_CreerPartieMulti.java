@@ -26,8 +26,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     // form
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Serveur de test");
-    private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
-    private JCheckBox cbEquipeAleatoire = new JCheckBox();
+    //private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
+    //private JCheckBox cbEquipeAleatoire = new JCheckBox();
     private JLabel lblTitreTerrains = new JLabel("Choisissez votre terrain");
     private JLabel lblEtat = new JLabel();
     
@@ -112,7 +112,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         c.gridx = 2;
         c.gridy = ligne;
-
+        
+        /*
         lblEquipeAleatoire.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lblEquipeAleatoire.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pCentre.add(lblEquipeAleatoire, c);
@@ -121,8 +122,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         c.gridy = ligne;
 
         pCentre.add(cbEquipeAleatoire, c);
+        */
 
-        
         // changement de ligne
         ligne++;
         
@@ -172,9 +173,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     pEmplacementTerrain.setTerrain(terrains.get(ligneSelectionnee));
                 }
             }});
-     
-        
-        
 
         // Simple selection
         tbTerrains.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -182,8 +180,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // nom de colonnes
         model.addColumn("Nom");
         model.addColumn("Mode");
-        model.addColumn("Joueurs");
-        model.addColumn("Equipes");
+        model.addColumn("Joueurs Max.");
+        model.addColumn("Equipes Max.");
         model.addColumn("Apercu");
 
         
@@ -239,54 +237,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         
         // changement de ligne
         ligne++;
-        
-        // TODO amélioration
-        /*
-        // ----------------
-        // -- Nb Joueurs --
-        // ----------------
-        
-        c.gridx = 0;
-        c.gridy = ligne;
-        
-        lblNbJoueurs.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblNbJoueurs.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
-        pCentre.add(lblNbJoueurs, c);
-
-        cbNbJoueurs.addItem("2");
-        cbNbJoueurs.addItem("3");
-        cbNbJoueurs.addItem("4");
-        cbNbJoueurs.addItem("5");
-        cbNbJoueurs.addItem("6");
-        cbNbJoueurs.addItem("7");
-        cbNbJoueurs.addItem("8");
-        cbNbJoueurs.setPreferredSize(DEFAULT_DIMENTION_COMP);
-
-        c.gridx = 1;
-        c.gridy = ligne;
-
-        pCentre.add(cbNbJoueurs, c);
-
-        // ----------
-        // -- mode --
-        // ----------
-
-        c.gridx = 2;
-        c.gridy = ligne;
-
-        lblMode.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblMode.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
-        pCentre.add(lblMode, c);
-
-        c.gridx = 3;
-        c.gridy = ligne;
-
-        cbMode.addItem("Versus");
-        cbMode.addItem("Coopération");
-        cbMode.setPreferredSize(DEFAULT_DIMENTION_COMP);
-
-        pCentre.add(cbMode, c);
-        */
         
         // ajout du panel central
         add(pCentre, BorderLayout.CENTER);
@@ -419,7 +369,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             // --------------------------------
             // -- Création du serveur de jeu --
             // --------------------------------
-
+            
             if(jeu.etablissementDuServeur())
             {
                 // connexion réussie

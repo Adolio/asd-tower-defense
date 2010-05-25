@@ -518,8 +518,6 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             return PORT_SJ;
     } 
     
-    
-
     /**
      * Etablisssement d'une connexion avec le serveur
      * 
@@ -530,14 +528,22 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRejoindre.setText("Connexion...");
         bRejoindre.setEnabled(false);
 
+        Joueur joueur = new Joueur(lblPseudo.getText());
+        
+        Jeu_Client jeu = new Jeu_Client(joueur);
         try
         {
             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
-            // TODO [CONTACT SERVEUR] demande d'acceptation dans la partie...
-            CanalTCP canalServeurJeu = new CanalTCP(IP,port,true);
-        } 
+            jeu.connexionAvecLeServeur(IP,port);
+        
+            // connexion réussie
+            parent.getContentPane().removeAll();
+            parent.getContentPane().add(new Panel_AttendreJoueurs(parent, jeu, joueur),
+                    BorderLayout.CENTER);
+            parent.getContentPane().validate();
+        }
         catch (ConnectException e)
         {
             bRejoindre.setText("Rejoindre");
@@ -553,22 +559,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             
             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
             lblEtat.setText("Connection au serveur de jeu impossible");
-        }
-        
-        
-        // TODO dans le try !!!
-        Joueur joueur = new Joueur(lblPseudo.getText());
-        
-        Jeu_Client jeu = new Jeu_Client(joueur);
-        
-        
-        
-        // connexion réussie
-        parent.getContentPane().removeAll();
-        parent.getContentPane().add(new Panel_AttendreJoueurs(parent,jeu, joueur),
-                BorderLayout.CENTER);
-        parent.getContentPane().validate();
-        
+        } 
     }
 
     @Override
