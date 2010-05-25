@@ -39,7 +39,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static int verboseMode = 0;
+	public static int verboseMode = 1;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -132,7 +132,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Envoi du numéro de port utilisé
 			send(port.getNumeroPort());
 			// Création du canal de mise à jour et attente de la connexion
+			log("Création du canal de synchronisation");
 			canal_update = new CanalTCP(port, DEBUG);
+			log("Canal crée");
 			// Passage en état EN_ATTENTE
 			etat = EN_ATTENTE;
 			break;
@@ -147,6 +149,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			break;
 		case EN_JEU:
 			// Interprétation de la chaine
+			log("Attente d'un message sur le canal global");
 			parse(getMessage());
 			break;
 		case EN_PAUSE:
@@ -409,7 +412,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void log(String msg)
 	{
-		if (verboseMode > 0)
+		if (DEBUG)
 			ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
 	}
 
