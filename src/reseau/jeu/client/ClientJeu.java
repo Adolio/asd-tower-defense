@@ -53,7 +53,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			canal1.recevoirString();
 			port2 = canal1.recevoirInt();
 			canal2 = new CanalTCP(IPServeur, port2, true);
-			
+
+			(new Thread(this)).start();
 			
 			//TODO Recevoir l'id! :D
 		} catch (ConnectException e)
