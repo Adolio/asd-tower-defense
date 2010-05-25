@@ -42,10 +42,15 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	 * IP_SERVEUR SERA UN PARAMETRE...
 	 * PORT_SERVEUR SERA UN PARAMETRE...
 	 */
-	public ClientJeu(Jeu_Client jeu, String IPServeur, int portServeur, String pseudo) throws ConnectException, CanalException {
-		int port2;
+	public ClientJeu(Jeu_Client jeu, 
+	                 String IPServeur, 
+	                 int portServeur, 
+	                 String pseudo) 
+	                 throws ConnectException, CanalException 
+	{
 		this.jeu = jeu;
 
+		// création du canal 1 (Requête / réponse)
 		canal1 = new CanalTCP(IPServeur, portServeur, true);
 		
 		// demande de connexion au serveur (canal 1)
@@ -54,38 +59,23 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		// le serveur nous retourne notre identificateur
 		ID = canal1.recevoirInt();
 		
-		// 
-		canal1.recevoirString();
-		port2 = canal1.recevoirInt();
-		canal2 = new CanalTCP(IPServeur, port2, true);
-
-		(new Thread(this)).start();
+		// reception de la version du serveur
+		String version = canal1.recevoirString();
 		
-		//TODO Recevoir l'id! :D
+		// reception du port du canal 2
+		int portCanal2 = canal1.recevoirInt();
+		
+		// création du canal 2 (Reception asynchrone)
+		canal2 = new CanalTCP(IPServeur, portCanal2, true);
+
+		// lancement de la tache d'écoute du canal 2
+		(new Thread(this)).start();
 	}
 	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		System.out.println("Creation du client");
-		//ClientJeu client = new ClientJeu("localhost", 2357, "Tux");
-		for(int i = 0; i < 5; i++){
-			
-			
-			System.out.println("Envoi de PING");
-		//T	client.envoyerMessage("PING!", TO_ALL);
-//			
-//			System.out.println("Récéption : "+canal.recevoirString());
-//			System.out.println("Fermeture");
-//			canal.fermer();
-
-		}
-	}
 	
 	//TODO controler les betises de l'expediteur (guillemets, etc..)
-	public void envoyerMessage(String message, int cible){
+	public void envoyerMessage(String message, int cible)
+	{
 		try 
 		{
 			JSONObject json = new JSONObject();
@@ -97,10 +87,10 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			
 			canal1.envoyerString(json.toString());
 		} 
-		catch (JSONException e){
+		catch (JSONException e)
+		{
 			e.printStackTrace();
 		}
-		
 	}
 	
 	
@@ -164,8 +154,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			//TODO regarder pour le doublon
 			json.put("SORT", type);
 			
-			if(DEBUG)
-			    System.out.println("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de tour");
+		    if(DEBUG)
+                afficherMessage("Envoye d'une demande de pose d'une tour");
 			
 			canal1.envoyerString(json.toString());
 			
@@ -196,10 +186,9 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			json.put("ID_TOWER", idTour);
 			
 			if(DEBUG)
-                System.out.println("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de vente d'une tour");
-
+			    afficherMessage("Envoye d'une demande de vente d'une tour");
+                
 			canal1.envoyerString(json.toString());
-			
 			
 			canal1.recevoirString(); // pas d'erreur possible...
 
@@ -240,7 +229,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	    throws TypeDeTourInvalideException, JSONException
 	{
 	    if(DEBUG)
-            System.out.println("Tour");
+	        afficherMessage("Réception d'un objet de type : Tour.");
 	    
 	    Tour tour = null;
 
@@ -299,13 +288,16 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
                     receptionTour(resultat);
                     break;
                 
+                
+                    
+                    
                 case CREATURE :    
                     receptionCreature(resultat);
                     break;
                     
                 default :
                     if(DEBUG)
-                        System.out.println("Inconnu");
+                        afficherMessage("Réception d'un objet de type : Inconnu.");
                         
             }
         } 
@@ -323,6 +315,13 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
     private void receptionCreature(JSONObject resultat)
     {
         if(DEBUG)
-            System.out.println("Creature");
+            afficherMessage("Réception d'un objet de type : Créature.");
     }
+    
+    
+    public void afficherMessage(String msg)
+    {
+        System.out.println("[CLIENT][JOUEUR "+ID+"] "+msg);
+    }
+    
 }

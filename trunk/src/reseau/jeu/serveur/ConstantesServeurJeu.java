@@ -3,6 +3,7 @@ package reseau.jeu.serveur;
 
 // FIXME (DE AURELIEN) TOUT EN FRANCAIS S'IL VOUS PLAIT !!!
 // (DE ROMAIN) T'es content maintenant? :P
+// NON ! REFACTORING ... C'EST MIEUX!
 
 /**
  * Cet interface contient l'ensemble des constantes necessaires au protocole de
