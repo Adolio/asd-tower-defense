@@ -56,7 +56,6 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		(new Thread(this)).start();
 		
 		//TODO Recevoir l'id! :D
-		
 	}
 	
 	/**
