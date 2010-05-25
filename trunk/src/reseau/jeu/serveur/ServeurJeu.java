@@ -404,6 +404,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			e.printStackTrace();
 			return ERREUR;
 		}
+		setChanged();
+		notifyObservers();
 		return OK;
 	}
 
