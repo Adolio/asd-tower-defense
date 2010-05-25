@@ -6,7 +6,7 @@ import java.net.ConnectException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.CanalException;
 
 public class TestClient implements ConstantesServeurJeu
@@ -35,7 +35,7 @@ public class TestClient implements ConstantesServeurJeu
 		try
 		{
 
-			Canal canal = new Canal(addr, 2357, false);
+			CanalTCP canal = new CanalTCP(addr, 2357, false);
 			Thread reception = new Thread(new Reception(canal));
 			Thread emission = new Thread(new Emission(canal));
 
@@ -57,7 +57,7 @@ public class TestClient implements ConstantesServeurJeu
 		}
 	}
 
-	String recevoirMessage(Canal canal) throws JSONException
+	String recevoirMessage(CanalTCP canal) throws JSONException
 	{
 		String rcp = canal.recevoirString();
 		JSONObject json = new JSONObject(rcp);
@@ -65,7 +65,7 @@ public class TestClient implements ConstantesServeurJeu
 				+ json.getString("MESSAGE");
 	}
 
-	void envoyerMessage(Canal canal, String msg) throws JSONException
+	void envoyerMessage(CanalTCP canal, String msg) throws JSONException
 	{
 		JSONObject json = new JSONObject();
 		json.put("TYPE", MSG);
@@ -81,9 +81,9 @@ public class TestClient implements ConstantesServeurJeu
 	private class Emission implements Runnable
 	{
 
-		private Canal canal;
+		private CanalTCP canal;
 
-		public Emission(Canal canal)
+		public Emission(CanalTCP canal)
 		{
 			this.canal = canal;
 		}
@@ -109,9 +109,9 @@ public class TestClient implements ConstantesServeurJeu
 
 	private class Reception implements Runnable
 	{
-		private Canal canal;
+		private CanalTCP canal;
 
-		public Reception(Canal canal)
+		public Reception(CanalTCP canal)
 		{
 			this.canal = canal;
 		}

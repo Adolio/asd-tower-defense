@@ -2,7 +2,7 @@ package serveur.jeu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.CanalException;
 
 /**
@@ -22,7 +22,10 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	// Variables d'instance
 	private Thread thread;
-	private Canal canal;
+	// Canal de dialogue commun
+	private CanalTCP canal;
+	// Canal de mise à jour
+	private CanalTCP canal_update;
 	private int ID;
 	private ServeurJeu serveur;
 	private int etat = VALIDATION;
@@ -43,7 +46,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param serveur
 	 *            Le serveur de jeu associé au joueur.
 	 */
-	protected JoueurDistant(int ID, Canal canal, ServeurJeu serveur)
+	protected JoueurDistant(int ID, CanalTCP canal, ServeurJeu serveur)
 	{
 		this.canal = canal;
 		this.ID = ID;

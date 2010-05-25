@@ -3,7 +3,7 @@ package client.jeu;
 import java.net.ConnectException;
 import serveur.jeu.ConstantesServeurJeu;
 
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.CanalException;
 
 import org.json.*;
@@ -27,7 +27,7 @@ import org.json.*;
  */
 public class ClientJeu implements ConstantesServeurJeu {
 	//TODO final int ID;
-	Canal canal;
+	CanalTCP canal;
 	
 	
 	/*
@@ -42,7 +42,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 		
 		try
 		{
-			canal = new Canal(IPServeur, portServeur, true);
+			canal = new CanalTCP(IPServeur, portServeur, true);
 			//canal.envoyerInt(ID);
 			canal.recevoirString();
 			

@@ -12,7 +12,7 @@ import reseau.*;
  */
 public class SEConnexion implements Runnable, CodeEnregistrement {
    
-   private Canal canal;
+   private CanalTCP canal;
    private Enregistrement enregisrementCourant;
    private JSONObject messageJsonRecu;
    private JSONObject contenu;
@@ -25,7 +25,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
     * @param canal
     * @param SEInscription
     */
-   public SEConnexion(Canal canal)
+   public SEConnexion(CanalTCP canal)
    {
       this.canal = canal;
    }
@@ -156,7 +156,7 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
       for (Enregistrement e : SEInscription.getJeuxEnregistres())
       {
          try {
-            Canal c = new Canal(e.getAdresseIp(), e.getPort().getNumeroPort(), true);
+            CanalTCP c = new CanalTCP(e.getAdresseIp(), e.getPort().getNumeroPort(), true);
             //c.envoyerString("TEST");
             c.fermer();
          }

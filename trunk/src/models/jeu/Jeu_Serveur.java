@@ -5,7 +5,7 @@ import java.net.ConnectException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.fichierDeConfiguration;
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
@@ -13,7 +13,7 @@ import serveur.jeu.ServeurJeu;
 
 public class Jeu_Serveur extends Jeu
 {
-    private Canal canalServeurEnregistrement;
+    private CanalTCP canalServeurEnregistrement;
     private ServeurJeu serveurDeJeu;
     
     private boolean enregistrementReussie = false;
@@ -33,7 +33,7 @@ public class Jeu_Serveur extends Jeu
         
         try
         {
-            canalServeurEnregistrement = new Canal(IP_SE, PORT_SE, true);
+            canalServeurEnregistrement = new CanalTCP(IP_SE, PORT_SE, true);
             
             // Création de la requete d'enregistrement
             String requete = RequeteEnregistrement.getRequeteEnregistrer(

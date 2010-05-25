@@ -21,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.fichierDeConfiguration;
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.CanalException;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
@@ -58,7 +58,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
     private JButton bAnnuler = new JButton("Annuler");
 
-    private Canal canalServeurEnregistrement;
+    private CanalTCP canalServeurEnregistrement;
     
     private fichierDeConfiguration config;
     
@@ -208,7 +208,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // Création du canal avec le serveur d'enregistrement
         try
         {
-            canalServeurEnregistrement = new Canal(IP_SE,PORT_SE,true);
+            canalServeurEnregistrement = new CanalTCP(IP_SE,PORT_SE,true);
             
             mettreAJourListeDesServeurs();
         } 
@@ -536,7 +536,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
             // TODO [CONTACT SERVEUR] demande d'acceptation dans la partie...
-            Canal canalServeurJeu = new Canal(IP,port,true);
+            CanalTCP canalServeurJeu = new CanalTCP(IP,port,true);
         } 
         catch (ConnectException e)
         {

@@ -29,7 +29,7 @@ import models.tours.TourDeFeu;
 import models.tours.TourDeGlace;
 import models.tours.TourElectrique;
 
-import reseau.Canal;
+import reseau.CanalTCP;
 import reseau.Port;
 
 /**
@@ -106,7 +106,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		Port port = new Port(_port);
 		port.reserver();
 		// Canal d'écoute
-		Canal canal;
+		CanalTCP canal;
 		// Lancement de l'horloge interne
 		notifieur = new Thread(this);
 		notifieur.start();
@@ -116,7 +116,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			// On attend qu'un joueur se présente
 			log("écoute sur le port " + _port);
 			// Nouveau joueur !!
-			canal = new Canal(port, DEBUG);
+			canal = new CanalTCP(port, DEBUG);
 			// Log
 			log("Récéption de " + canal.getIpClient());
 			// Récéption du pseudo du joueur
@@ -145,7 +145,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		}
 	}
 
-	private void enregistrerClient(int IDClient, Canal canal)
+	private void enregistrerClient(int IDClient, CanalTCP canal)
 	{
 		// On vérifie que l'ID passé en paramêtre soit bien unique
 		if (clients.containsKey(IDClient))
