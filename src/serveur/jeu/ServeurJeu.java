@@ -1,11 +1,14 @@
 package serveur.jeu;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import exceptions.AucunePlaceDisponibleException;
 import exceptions.BadPosException;
+import exceptions.JeuEnCoursException;
 import exceptions.NoMoneyException;
 import exceptions.PathBlockException;
 
@@ -111,16 +114,25 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			String pseudo = canal.recevoirString();
 			// Création du joueur
 			Joueur joueur = new Joueur(pseudo);
-			// Ajout du joueur à l'ensemble des joueurs
-			serveurJeu.ajouterJoueur(joueur);
-			// Extraction de l'ID du joueur
-			int IDClient = joueur.getId();
-			// Envoi de l'ID du joueur au client
-			canal.envoyerInt(joueur.getId());
-			// Log
-			log("Nouveau joueur ! ID : " + IDClient);
-			// Enregistrement de l'ID et du canal dans la base interne
-			enregistrerClient(IDClient, canal);
+			try
+			{
+				// Ajout du joueur à l'ensemble des joueurs
+				serveurJeu.ajouterJoueur(joueur);
+				// Extraction de l'ID du joueur
+				int IDClient = joueur.getId();
+				// Envoi de l'ID du joueur au client
+				canal.envoyerInt(joueur.getId());
+				// Log
+				log("Nouveau joueur ! ID : " + IDClient);
+				// Enregistrement de l'ID et du canal dans la base interne
+				enregistrerClient(IDClient, canal);
+			} catch (JeuEnCoursException e)
+			{
+				e.printStackTrace();
+			} catch (AucunePlaceDisponibleException e)
+			{
+				e.printStackTrace();
+			}	
 		}
 	}
 
@@ -168,25 +180,16 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		throw new IllegalArgumentException("ID " + ID + " non trouvé");
 	}
 
-	/**
-	 * Envoi l'état de tous les objets à tous les clients
-	 */
-	public void update()
+	public synchronized void lancerPartie()
 	{
-		// Parcourt de toutes les tours sur le terrain
-		for (Tour t : serveurJeu.getTours())
+		// Lancement du thread de rafraichisement
+		Updater updater = new Updater(clients);
+		addObserver(updater);
+		// Signalisation aux clients que la partie à commencé
+		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 		{
-			// Extraction des paramêtres
-			int ID = 0;// t.getID(); // FIXME
-			int x = (int) t.getX();
-			int y = (int) t.getY();
-			int etat = 0;// t.getEtat(); // FIXME
-			// On envoi les infos à chaque client
-			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-				joueur.getValue().afficherObjet(ID, x, y, etat);
+			joueur.getValue().lancerPartie();
 		}
-
-		// TODO : Créatures
 	}
 
 	/**************** NOTIFICATIONS **************/
@@ -383,8 +386,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			e.printStackTrace();
 			return ERREUR;
 		}
-		setChanged();
-		notifyObservers();
 		return OK;
 	}
 
@@ -474,5 +475,20 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		log("Le joueur " + IDPlayer + " désire envoyer un message à " + IDTo
 				+ "(" + message + ")");
 		clients.get(IDTo).envoyerMessageTexte(IDPlayer, message);
+	}
+
+	public synchronized ArrayList<Creature> getCreatures()
+	{
+		return new ArrayList<Creature>(serveurJeu.getCreatures());
+	}
+
+	public synchronized ArrayList<Tour> getTours()
+	{
+		return new ArrayList<Tour>(serveurJeu.getTours());
+	}
+
+	public synchronized ArrayList<Animation> getAnimations()
+	{
+		return new ArrayList<Animation>();
 	}
 }

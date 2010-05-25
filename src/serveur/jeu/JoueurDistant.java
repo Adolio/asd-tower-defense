@@ -414,8 +414,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Reprend la partie
 	 */
-	public void reprendre()
+	public void lancerPartie()
 	{
+		// Mise en place de l'état de la partie
 		etat = EN_JEU;
 	}
 
