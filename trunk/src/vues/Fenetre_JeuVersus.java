@@ -1,7 +1,6 @@
 package vues;
 
 import models.animations.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -14,7 +13,6 @@ import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
-import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
