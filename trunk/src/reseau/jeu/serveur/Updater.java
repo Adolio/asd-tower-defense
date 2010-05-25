@@ -71,7 +71,6 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 				}
 			} else
 			{
-				System.out.println("Broadcast something");
 				// Signalisation aux clients du message
 				for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 					joueur.getValue().update(message.toString());

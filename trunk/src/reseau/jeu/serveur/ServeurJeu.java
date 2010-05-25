@@ -132,6 +132,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			String pseudo = canal.recevoirString();
 			// Création du joueur
 			Joueur joueur = new Joueur(pseudo);
+			// FIXME On met de la thune au joueur par defaut
+			joueur.setNbPiecesDOr(1000);
 			try
 			{
 				// Ajout du joueur à l'ensemble des joueurs
