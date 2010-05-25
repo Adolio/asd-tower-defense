@@ -3,8 +3,8 @@ package models.jeu;
 import reseau.jeu.client.ClientJeu;
 import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
-import models.tours.*;
-
+import models.tours.IDTours;
+import models.tours.Tour;
 
 public class Jeu_Client extends Jeu
 {
@@ -18,7 +18,7 @@ public class Jeu_Client extends Jeu
     @Override
     public void poserTour(Tour tour)
     {
-        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(),1);
+        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(),IDTours.TOUR_ARCHER);
     }
 
     @Override

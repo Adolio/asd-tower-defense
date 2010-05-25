@@ -420,15 +420,15 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             // -- Création du serveur de jeu --
             // --------------------------------
 
-            //if(jeu.etablissementDuServeur())
-            //{
-            // connexion réussie
-            parent.getContentPane().removeAll();
-            parent.getContentPane().add(
-                    new Panel_AttendreJoueurs(parent, jeu, joueur1),
-                    BorderLayout.CENTER);
-            parent.getContentPane().validate();
-            //}
+            if(jeu.etablissementDuServeur())
+            {
+                // connexion réussie
+                parent.getContentPane().removeAll();
+                parent.getContentPane().add(
+                        new Panel_AttendreJoueurs(parent, jeu, joueur1),
+                        BorderLayout.CENTER);
+                parent.getContentPane().validate();
+            }
 
         } 
         else if (src == bAnnuler)
