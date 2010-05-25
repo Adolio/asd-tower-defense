@@ -1,4 +1,4 @@
-package serveur.jeu;
+package outils;
 
 // classe fournissant des fonctions de lecture au clavier
 import java.io.*;

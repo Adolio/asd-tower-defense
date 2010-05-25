@@ -1,4 +1,4 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 
 // FIXME (DE AURELIEN) TOUT EN FRANCAIS S'IL VOUS PLAIT !!!

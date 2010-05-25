@@ -1,10 +1,12 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 import java.io.IOException;
 import java.net.ConnectException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import outils.Clavier;
 
 import reseau.CanalTCP;
 import reseau.CanalException;

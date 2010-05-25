@@ -1,10 +1,10 @@
 package client.jeu;
 
 import java.net.ConnectException;
-import serveur.jeu.ConstantesServeurJeu;
 
 import reseau.CanalTCP;
 import reseau.CanalException;
+import reseau.jeu.serveur.ConstantesServeurJeu;
 
 import org.json.*;
 

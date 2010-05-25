@@ -1,4 +1,4 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 import org.json.JSONException;
 import org.json.JSONObject;
