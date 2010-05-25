@@ -55,7 +55,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -116,6 +116,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		CanalTCP canal;
 		// Lancement de l'horloge interne
 		notifieur = new Watchdog(this, ATTENTE);
+		// Lancement du thread de rafraichisement
+		Updater updater = new Updater(clients);
+		addObserver(updater);
 		// Boucle d'attente de connections
 		while (true)
 		{
@@ -199,9 +202,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 
 	public synchronized void lancerPartie()
 	{
-		// Lancement du thread de rafraichisement
-		Updater updater = new Updater(clients);
-		addObserver(updater);
 		// Signalisation aux clients que la partie à commencé
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 		{
@@ -277,6 +277,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		// Notification aux joueurs que la partie débutte
 		notifyAll();
+		lancerPartie();
 	}
 
 	@Override
@@ -404,8 +405,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			e.printStackTrace();
 			return ERREUR;
 		}
-		setChanged();
-		notifyObservers();
+		setChanged();notifyObservers();
 		return OK;
 	}
 

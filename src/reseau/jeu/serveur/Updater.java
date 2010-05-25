@@ -43,7 +43,10 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 		parseCreatures(srv.getCreatures());
 		parseTours(srv.getTours());
 		// Réveille le thread s'il dort
-		this.notify();
+		synchronized (this)
+		{
+			notify();
+		}
 	}
 
 	@Override
@@ -51,22 +54,28 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 	{
 		while (true)
 		{
+			// Itération sur le prochain message en attente
+			Message message = buffer.poll();
 			// Bloque le thread si le buffer est vide
-			if (buffer.size() == 0)
+			if (message == null)
 			{
 				try
 				{
-					this.wait();
+					synchronized (this)
+					{
+						this.wait();
+					}
 				} catch (InterruptedException e)
 				{
 					e.printStackTrace();
 				}
+			} else
+			{
+				System.out.println("Broadcast something");
+				// Signalisation aux clients du message
+				for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+					joueur.getValue().update(message.toString());
 			}
-			// Itération sur le prochain message en attente
-			Message message = buffer.poll();
-			// Signalisation aux clients du message
-			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-				joueur.getValue().update(message.toString());
 
 		}
 	}
