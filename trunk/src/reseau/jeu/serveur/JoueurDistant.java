@@ -25,7 +25,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private Thread thread;
 	// Canal de dialogue commun
 	private CanalTCP canal;
-	// Canal de mise à jour 
+	// Canal de mise à jour
 	private CanalTCP canal_update;
 	private int ID;
 	private ServeurJeu serveur;
@@ -35,7 +35,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	// Offset pour les ports temporaires
 	private static int offset_port = 5000;
 	// Debug
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 	/**
 	 * Niveau d'affichage des messages
 	 */
@@ -412,8 +412,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void log(String msg)
 	{
-		if (DEBUG)
-			ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
+		ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
 	}
 
 	private void desenregistrement()
