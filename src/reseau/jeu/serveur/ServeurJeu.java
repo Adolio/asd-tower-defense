@@ -74,24 +74,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	private final static long ATTENTE = 1000;
 
 	/**
-	 * Méthode MAIN : entrée dans le programme en cas de lancement en standalone
-	 * du serveur
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		try
-		{
-			// Création d'un serveur de jeu en standalone
-			new ServeurJeu(null);
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * 
 	 * @param serveurJeu
 	 * @throws IOException
@@ -103,7 +85,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Lancement du thread serveur.
 		(new Thread(this)).start();
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -407,7 +389,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			e.printStackTrace();
 			return ERREUR;
 		}
-		setChanged();notifyObservers();
+		setChanged();
 		return OK;
 	}
 
@@ -453,7 +435,19 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized int ameliorerTour(int IDPlayer, int tourCible)
 	{
 		log("Le joueur " + IDPlayer + " désire améliorer la tour" + tourCible);
-		return 0;
+		// Repérate de la tour à améliorer
+		Tour tour = repererTour(tourCible);
+		if (tour == null)
+			return ERROR;
+		// On effectue l'action
+		try
+		{
+			serveurJeu.ameliorerTour(tour);
+		} catch (Exception e)
+		{
+			return NO_MONEY;
+		}
+		return OK;
 	}
 
 	/**
@@ -464,7 +458,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized int supprimerTour(int IDPlayer, int tourCible)
 	{
 		log("Le joueur " + IDPlayer + " désire supprimer la tour" + tourCible);
-		return 0;
+		// Repérage de la tour à supprimer
+		Tour tour = repererTour(tourCible);
+		if (tour == null)
+			return ERROR;
+		// On effectue l'action
+		serveurJeu.vendreTour(tour);
+		return OK;
 	}
 
 	/**
@@ -512,5 +512,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized ArrayList<Animation> getAnimations()
 	{
 		return new ArrayList<Animation>();
+	}
+
+	private Tour repererTour(int ID)
+	{
+		for (Tour t : serveurJeu.getTours())
+		{
+			if (t.getId() == ID)
+				return t;
+		}
+		return null;
 	}
 }
