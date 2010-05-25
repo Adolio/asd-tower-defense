@@ -128,6 +128,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			send(ServeurJeu.VERSION);
 			// Réservation du port pour le canal temporaire
 			Port port = new Port(offset_port++);
+			port.reserver();
 			// Envoi du numéro de port utilisé
 			send(port.getNumeroPort());
 			// Création du canal de mise à jour et attente de la connexion
