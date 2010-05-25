@@ -264,7 +264,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			int x = json.getInt("X");
 			int y = json.getInt("Y");
 			// Extraction du type de tour
-			int typeTour = json.getInt("TYPE");
+			int typeTour = json.getInt("SORT");
 			// Demande d'ajout au serveur
 			code = serveur.poserTour(ID, typeTour, x, y);
 			// Retour au client du code
