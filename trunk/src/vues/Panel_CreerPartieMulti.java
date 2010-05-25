@@ -8,15 +8,12 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-
 import exceptions.AucunePlaceDisponibleException;
 import exceptions.JeuEnCoursException;
 import models.jeu.*;
 import models.joueurs.Joueur;
 import models.terrains.*;
 import outils.*;
-import reseau.*;
-import serveur.enregistrement.*;
 
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
@@ -43,9 +40,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
     private DefaultTableModel model = new DefaultTableModel();
     private JTable tbTerrains;
-    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(0.35);
+    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(150, 150);
    
-    
     /**
      * Constructeur
      * 

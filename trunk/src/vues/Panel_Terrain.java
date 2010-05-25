@@ -136,6 +136,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final int TEMPS_REPOS_THREAD = 40;
 
 	/**
+	 * Marge autour du terrain pour éviter des bugs de déplacements en 
+	 * dehors de la zone de dessin
+	 */
+    private static final int MARGE_UNIVERS = 2000;
+
+	/**
 	 * Position exacte de la souris sur le terrain
 	 */
 	private int sourisX, sourisY;
@@ -215,6 +221,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private final double ETAPE_ZOOM = 0.2;
 
 	/**
+     * Min zoom
+     */
+    private final double ZOOM_MIN = 0.2;
+	
+	/**
 	 * Stockage du bouton lors d'un aggripement
 	 */
     private int boutonDragg;
@@ -247,35 +258,35 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    curMainAgripper = Toolkit.getDefaultToolkit().createCustomCursor
         (iHandGrab,  new Point(0, 0), "grab"); 
 	}
-	
-	
+
 	/**
 	 * Constructeur du panel du terrain
 	 * 
 	 * @param jeu Le jeu a gerer
 	 */
 	public Panel_Terrain(Jeu jeu, EcouteurDePanelTerrain edpt, Joueur joueur)
-	{
-		// sauvegarde du jeu
-		this.jeu 	  = jeu;
-		this.edpt     = edpt;
-		this.joueur   = joueur;
-		
-		// proprietes du panel
-		LARGEUR = jeu.getTerrain().getLargeur();
-		HAUTEUR = jeu.getTerrain().getHauteur();
-		setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
-		setFocusable(true);
-		
-		// ajout des ecouteurs
-		addKeyListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		addMouseWheelListener(this);
-		
-		// demarrage du thread de rafraichissement de l'affichage
-		thread = new Thread(this);
-		thread.start();
+	{ 
+	    // sauvegarde du jeu
+        this.jeu      = jeu;
+        this.edpt     = edpt;
+        this.joueur   = joueur;
+        
+        // proprietes du panel
+        LARGEUR = jeu.getTerrain().getLargeur();
+        HAUTEUR = jeu.getTerrain().getHauteur();
+        
+        setPreferredSize(jeu.getTerrain().getTaillePanelTerrain());
+        setFocusable(true);
+        
+        // ajout des ecouteurs
+        addKeyListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addMouseWheelListener(this);
+        
+        // demarrage du thread de rafraichissement de l'affichage
+        thread = new Thread(this);
+        thread.start();
 	}
 	
 	/**
@@ -370,8 +381,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
         //-- affichage de l'espace --
         //---------------------------
 	    g2.setColor(LookInterface.COULEUR_DE_FOND_2);
-	    g2.fillRect(-1000, -1000, 2000, 2000);
-	     
+	    
+	    g2.fillRect(
+	            -MARGE_UNIVERS, 
+	            -MARGE_UNIVERS, 
+	            jeu.getTerrain().getLargeur()+2*MARGE_UNIVERS, 
+	            jeu.getTerrain().getHauteur()+2*MARGE_UNIVERS);
+
 		//--------------------------
 		//-- affichage du terrain --
 		//--------------------------
@@ -1149,13 +1165,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
         // adaptation de l'echelle
         coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
         
+   
         // pas de dézoom
-        if(coeffTaille < 1.0)
+        if(coeffTaille < ZOOM_MIN)
         {
-            coeffTaille = 1.0;
+            coeffTaille = ZOOM_MIN;
             
             // centrer sur le milieu du terrain
-            centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
+            //centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
         }
         else
         {

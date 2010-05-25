@@ -2,6 +2,7 @@ import java.io.File;
 import javax.swing.UIManager;
 import models.jeu.Jeu_Solo;
 import models.terrains.ElementTD_Coop;
+import models.terrains.ElementTD_Versus_4;
 import models.terrains.SimpleFiveVersus;
 import models.terrains.Terrain;
 import vues.Fenetre_MenuPrincipal;
@@ -53,6 +54,10 @@ public class Main
       Terrain t2 = new SimpleFiveVersus(new Jeu_Solo());      
       Terrain.serialiser(t2,new File("maps/SimpleFiveVersus.map"));
 
+      Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
+      Terrain.serialiser(t3,new File("maps/ElementTD_Versus_4.map"));
+      
+      
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }

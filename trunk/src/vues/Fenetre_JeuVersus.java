@@ -195,7 +195,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 
         taConsole.setEditable(false);
         JScrollPane scrollConsole = new JScrollPane(taConsole);
-        scrollConsole.setPreferredSize(new Dimension(jeu.getTerrain().getLargeur(),50));
+        scrollConsole.setPreferredSize(new Dimension(
+                (int) jeu.getTerrain().getTaillePanelTerrain().getWidth(),50));
         pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
         
         // panel de création de vagues
