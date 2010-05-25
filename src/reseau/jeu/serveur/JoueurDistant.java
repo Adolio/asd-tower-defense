@@ -33,7 +33,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	// Message du client;
 	private String str = "";
 	// Offset pour les ports temporaires
-	private static int offset_port = 101010;
+	private static int offset_port = 5000;
 	// Debug
 	private final static boolean DEBUG = true;
 	/**
