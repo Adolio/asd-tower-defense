@@ -42,30 +42,21 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	 * IP_SERVEUR SERA UN PARAMETRE...
 	 * PORT_SERVEUR SERA UN PARAMETRE...
 	 */
-	public ClientJeu(Jeu_Client jeu, String IPServeur, int portServeur, String pseudo) {
+	public ClientJeu(Jeu_Client jeu, String IPServeur, int portServeur, String pseudo) throws ConnectException, CanalException {
 		int port2;
 		this.jeu = jeu;
-		try
-		{
-			canal1 = new CanalTCP(IPServeur, portServeur, true);
-			canal1.envoyerString(pseudo);
-			ID = canal1.recevoirInt();
-			canal1.recevoirString();
-			port2 = canal1.recevoirInt();
-			canal2 = new CanalTCP(IPServeur, port2, true);
 
-			(new Thread(this)).start();
-			
-			//TODO Recevoir l'id! :D
-		} catch (ConnectException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CanalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		canal1 = new CanalTCP(IPServeur, portServeur, true);
+		canal1.envoyerString(pseudo);
+		ID = canal1.recevoirInt();
+		canal1.recevoirString();
+		port2 = canal1.recevoirInt();
+		canal2 = new CanalTCP(IPServeur, port2, true);
+
+		(new Thread(this)).start();
+		
+		//TODO Recevoir l'id! :D
+		
 	}
 	
 	/**
