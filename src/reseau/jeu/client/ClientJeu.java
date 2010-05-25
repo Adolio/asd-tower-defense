@@ -47,8 +47,14 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		this.jeu = jeu;
 
 		canal1 = new CanalTCP(IPServeur, portServeur, true);
+		
+		// demande de connexion au serveur (canal 1)
 		canal1.envoyerString(pseudo);
+		
+		// le serveur nous retourne notre identificateur
 		ID = canal1.recevoirInt();
+		
+		// 
 		canal1.recevoirString();
 		port2 = canal1.recevoirInt();
 		canal2 = new CanalTCP(IPServeur, port2, true);
@@ -80,7 +86,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	
 	//TODO controler les betises de l'expediteur (guillemets, etc..)
 	public void envoyerMessage(String message, int cible){
-		try {
+		try 
+		{
 			JSONObject json = new JSONObject();
 			json.put("TYPE", MSG);
 			JSONObject content = new JSONObject();
@@ -89,8 +96,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			json.put("CONTENU", content);
 			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e){
 			e.printStackTrace();
 		}
 		
@@ -100,22 +107,20 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	//TODO ID reelement necessaire? 
 	// (DE AURELIEN) ... NON CAR LE SERVEUR CONNAIT LE CLIENT AVEC LEQUEL IL COMMUNIQUE
 	public void envoyerEtatJoueur(int etat){
-		try{
+		try
+		{
 			JSONObject json = new JSONObject();
 			json.put("TYPE", PLAYER);
 			json.put("ETAT", etat);
 			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	//TODO revoir le nom des parametres
-	// (DE AURELIEN) PARAMETRES :
-	// int nbCreatures
-	// int typeCreature
+	
 	public void envoyerVague(int nbCreature, int typeCreature){
 		try{
 			JSONObject json = new JSONObject();
@@ -124,23 +129,24 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			json.put("SIZE_WAVE", nbCreature);
 			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 	}
 	
 	public void envoyerEtatPartie(int etat){
-		try {
+		try 
+		{
 			JSONObject json = new JSONObject();
 			//TODO GAME au lieu de PLAY?
 			json.put("TYPE", PLAY);
 			json.put("ETAT", etat);
 			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
@@ -159,7 +165,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			json.put("SORT", type);
 			
 			if(DEBUG)
-			    System.out.print("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de tour");
+			    System.out.println("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de tour");
 			
 			canal1.envoyerString(json.toString());
 			
@@ -176,26 +182,34 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
                     throw new BadPosException("La tour bloque le chemin");
 			}
 		} 
-		catch (JSONException e) 
-		{
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void demanderAmeliorationTour(int idTour){
-		try {
-			JSONObject json = new JSONObject();
+		try 
+		{
+		    // envoye de la requete de vente
+		    JSONObject json = new JSONObject();
 			json.put("TYPE", TOWER_UP);
 			json.put("ID_TOWER", idTour);
 			
+			if(DEBUG)
+                System.out.println("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de vente d'une tour");
+
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			
+			
+			canal1.recevoirString(); // pas d'erreur possible...
+
+		} 
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	//TODO suppressionTour ou venteTour?
+	// TODO suppressionTour ou venteTour?
 	// (DE AURELIEN) ... VENTE CAR ON REGAGNE DE LA TUNE COTE SERVEUR!
 	// PAR CONTRE TU RECEVERA UNE SUPPRESSION DE TOUR DE LA PART SERVEUR.
 	public void venteTour(int idTour)
@@ -210,105 +224,105 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			
 			canal1.envoyerString(json.toString());
 		} 
-		catch (JSONException e) 
-		{
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	// TODO commenter
-	public void receptionMessages()
+	/**
+	 * initialise et pose la tour
+	 * 
+	 * @param tourInfo le JSON des infos de la tour
+	 * @throws JSONException 
+	 * @throws TypeDeTourInvalideException 
+	 */
+	private void receptionTour(JSONObject tourInfo) 
+	    throws TypeDeTourInvalideException, JSONException
 	{
-		JSONObject resultat;
-		try 
-		{
-		    if(DEBUG)
-		        System.out.print("[CLIENT][JOUEUR "+ID+"]");
-		    
-		    resultat = new JSONObject(canal2.recevoirString());
-			
-			switch(resultat.getInt("TYPE"))
-			{
-			    case TOUR :
-			        
-			        if(DEBUG)
-			            System.out.println("Réception d'une tour");
-			        
-					Tour t = null;
-				
-					switch(resultat.getInt("SORT"))
-					{
-						case TOUR_ARCHER : 
-							t = new TourArcher();
-							break;
-						case TOUR_AA : 
-							t = new TourAntiAerienne();
-							break;
-						/*case TOUR_BALISTIQUE :
-							t = new TourBalistique();
-							break;*/
-						case TOUR_CANON :
-							t = new TourCanon();
-							break;
-						case TOUR_D_AIR :
-							t = new TourDAir();
-							break;
-						case TOUR_DE_FEU : 
-							t = new TourDeFeu();
-							break;
-						case TOUR_DE_GLACE : 
-							t = new TourDeGlace();
-							break;
-						case TOUR_ELECTRIQUE :
-							t = new TourElectrique();
-							break;
-						default : 
-							throw new TypeDeTourInvalideException("Le type " 
-									+ resultat.getString("SORT") + " est invalide");
-						
-					}
-					placerTour(t, resultat);
-					break;
-					
-				default :
-						
-			}
-		} 
-		catch (CanalException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (JSONException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (TypeDeTourInvalideException e) 
-		{
-			e.printStackTrace();
-		}
+	    if(DEBUG)
+            System.out.println("Tour");
+	    
+	    Tour tour = null;
 
+	    // création de la tour en fonction de son type
+        switch(tourInfo.getInt("TYPE_TOUR"))
+        {
+            case TOUR_ARCHER : 
+                tour = new TourArcher();
+                break;
+            case TOUR_AA : 
+                tour = new TourAntiAerienne();
+                break;
+            case TOUR_CANON :
+                tour = new TourCanon();
+                break;
+            case TOUR_D_AIR :
+                tour = new TourDAir();
+                break;
+            case TOUR_DE_FEU : 
+                tour = new TourDeFeu();
+                break;
+            case TOUR_DE_GLACE : 
+                tour = new TourDeGlace();
+                break;
+            case TOUR_ELECTRIQUE :
+                tour = new TourElectrique();
+                break;
+            default : 
+                throw new TypeDeTourInvalideException("Le type " 
+                        + tourInfo.getString("SORT") + " est invalide");
+            
+        }
+        
+        tour.x = tourInfo.getInt("X");
+        tour.y = tourInfo.getInt("Y");
+        
+        jeu.poserTourDirect(tour);
 	}
-	
-	private void placerTour(Tour t, JSONObject mes)
+
+	/**
+	 * Tache de gestion du canal de réception des messages asynchrones
+	 */
+	public void run() 
 	{
-		try 
-		{
-			t.x = mes.getInt("X");
-			t.y = mes.getInt("Y");
-			
-			System.out.println("-----------------AHAHAHAHAAHAHAHAHAAH");
-			jeu.poserTourDirect(t);
-		} 
-		catch (JSONException e) 
-		{
-			e.printStackTrace();
-		}
+	    JSONObject resultat;
+        try 
+        {
+            if(DEBUG)
+                System.out.print("[CLIENT][JOUEUR "+ID+"] Réception d'un objet de type :");
+            
+            resultat = new JSONObject(canal2.recevoirString());
+            
+            switch(resultat.getInt("TYPE"))
+            {
+                case TOUR :
+                    receptionTour(resultat);
+                    break;
+                
+                case CREATURE :    
+                    receptionCreature(resultat);
+                    break;
+                    
+                default :
+                    if(DEBUG)
+                        System.out.println("Inconnu");
+                        
+            }
+        } 
+        catch (CanalException e) {
+            e.printStackTrace();
+        } 
+        catch (JSONException e) {
+            e.printStackTrace();
+        } 
+        catch (TypeDeTourInvalideException e) {
+            e.printStackTrace();
+        }
 	}
 
-	@Override
-	//Canal1
-	public void run() {
-		// TODO Auto-generated method stub
-		receptionMessages();
-	}
+    private void receptionCreature(JSONObject resultat)
+    {
+        if(DEBUG)
+            System.out.println("Creature");
+    }
 }
