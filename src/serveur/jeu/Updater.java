@@ -58,7 +58,7 @@ public class Updater implements Observer, Runnable
 			Message message = buffer.poll();
 			// Signalisation aux clients du message
 			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-				joueur.getValue().send(message.toString());
+				joueur.getValue().update(message.toString());
 			
 		}
 	}
