@@ -40,7 +40,7 @@ import reseau.Port;
  * 
  */
 public class ServeurJeu extends Observable implements ConstantesServeurJeu,
-		EcouteurDeJeu, IDTours
+		EcouteurDeJeu, IDTours, Runnable
 {
 	/**
 	 * La version courante du serveur
@@ -66,6 +66,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * Lien vers le module coté serveur du jeu
 	 */
 	private Jeu serveurJeu;
+
+	/**
+	 * Thead de rafraichissement pour les messages
+	 */
+	private Thread notifieur;
+	private final static long ATTENTE = 1000;
 
 	/**
 	 * Méthode MAIN : entrée dans le programme en cas de lancement en standalone
@@ -101,6 +107,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		port.reserver();
 		// Canal d'écoute
 		Canal canal;
+		// Lancement de l'horloge interne
+		notifieur = new Thread(this);
+		notifieur.start();
 		// Boucle d'attente de connections
 		while (true)
 		{
@@ -132,7 +141,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			} catch (AucunePlaceDisponibleException e)
 			{
 				e.printStackTrace();
-			}	
+			}
 		}
 	}
 
@@ -490,5 +499,27 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized ArrayList<Animation> getAnimations()
 	{
 		return new ArrayList<Animation>();
+	}
+
+	@Override
+	public void run()
+	{
+		while (true)
+		{
+			// Met à jour
+			notifyObservers();
+			// Attente un nombre donné de temps
+			try
+			{
+				synchronized (this)
+				{					
+					wait(ATTENTE);
+				}
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 }
