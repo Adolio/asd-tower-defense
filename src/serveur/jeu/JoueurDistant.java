@@ -258,7 +258,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		// Requête d'amélioration d'une tour
 		case TOWER_UP:
 			// Récupération de la tour cible
-			int tourCible = json.getInt("ID_TOUR");
+			int tourCible = json.getInt("ID_TOWER");
 			// Demande au serveur de l'opération
 			code = serveur.ameliorerTour(ID, tourCible);
 			// Retour au client de code
@@ -267,7 +267,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		// Requete de suppresion d'une tour
 		case TOWER_DEL:
 			// Récupération de la tour cible
-			int tourCibleDel = json.getInt("ID_TOUR");
+			int tourCibleDel = json.getInt("ID_TOWER");
 			// Demande au serveur de l'opération
 			code = serveur.supprimerTour(ID, tourCibleDel);
 			// Retour au client de code
