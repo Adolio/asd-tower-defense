@@ -45,12 +45,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * La version courante du serveur
 	 */
-	public static final String VERSION = "0.1";
+	public static final String VERSION = "0.2";
 
 	/**
 	 * Le port sur lequel le serveur écoute par defaut
 	 */
-	public final static int _port = 2357;
+	public final static int PORT = 2357;
 
 	/**
 	 * Fanion pour le mode debug
@@ -103,7 +103,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Réglage du niveau d'affichage des messages clients
 		JoueurDistant.verboseMode = 0;
 		// Réservation du port d'écoute
-		Port port = new Port(_port);
+		Port port = new Port(PORT);
 		port.reserver();
 		// Canal d'écoute
 		CanalTCP canal;
@@ -114,7 +114,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		while (true)
 		{
 			// On attend qu'un joueur se présente
-			log("écoute sur le port " + _port);
+			log("écoute sur le port " + PORT);
 			// Nouveau joueur !!
 			canal = new CanalTCP(port, DEBUG);
 			// Log
