@@ -265,7 +265,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours{
 		try {
 			t.x = mes.getInt("X");
 			t.y = mes.getInt("Y");
-			jeu.poserTour(t);
+			jeu.poserTourDirect(t);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
