@@ -81,7 +81,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			JSONObject json = new JSONObject();
 			json.put("TYPE", MSG);
 			JSONObject content = new JSONObject();
-			content.put("CIBLE", TO_ALL);
+			content.put("CIBLE", A_TOUS);
 			content.put("MESSAGE", "foo bar");
 			json.put("CONTENU", content);
 			
@@ -100,7 +100,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		try
 		{
 			JSONObject json = new JSONObject();
-			json.put("TYPE", PLAYER);
+			json.put("TYPE", JOUEUR);
 			json.put("ETAT", etat);
 			
 			canal1.envoyerString(json.toString());
@@ -114,7 +114,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	public void envoyerVague(int nbCreature, int typeCreature){
 		try{
 			JSONObject json = new JSONObject();
-			json.put("TYPE", WAVE);
+			json.put("TYPE", VAGUE);
 			json.put("TYPE_WAVE", typeCreature);
 			json.put("SIZE_WAVE", nbCreature);
 			
@@ -131,7 +131,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		{
 			JSONObject json = new JSONObject();
 			//TODO GAME au lieu de PLAY?
-			json.put("TYPE", PLAY);
+			json.put("TYPE", PARTIE);
 			json.put("ETAT", etat);
 			
 			canal1.envoyerString(json.toString());
@@ -148,7 +148,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		{
 			// envoye de la requete d'ajout
 		    JSONObject json = new JSONObject();
-			json.put("TYPE", TOWER);
+			json.put("TYPE", TOUR_AJOUT);
 			json.put("X", x);
 			json.put("Y", y);
 			//TODO regarder pour le doublon
@@ -166,9 +166,9 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			{
 			    case PAS_ARGENT :
 			        throw new NoMoneyException("Pas assez d'argent");
-			    case MAUVAISE_POS :
+			    case ZONE_INACCESSIBLE :
                     throw new BadPosException("Zone non accessible");
-			    case CHEM_BLOQUE :
+			    case CHEMIN_BLOQUE :
                     throw new BadPosException("La tour bloque le chemin");
 			}
 		} 
@@ -182,7 +182,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		{
 		    // envoye de la requete de vente
 		    JSONObject json = new JSONObject();
-			json.put("TYPE", TOWER_UP);
+			json.put("TYPE", TOUR_AMELIORATION);
 			json.put("ID_TOWER", idTour);
 			
 			if(DEBUG)
@@ -208,7 +208,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			JSONObject json = new JSONObject();
 			//TODO TOWER_SELL au lieu de TOWER_DEL?
 			// (DE AURELIEN) ... EFFECTIVEMENT! MAIS TOWER_DEL EN RETOUR DU SERVEUR
-			json.put("TYPE", TOWER_DEL);
+			json.put("TYPE", TOUR_SUPRESSION);
 			json.put("ID_TOWER", idTour);
 			
 			canal1.envoyerString(json.toString());
@@ -263,8 +263,10 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
             
         }
         
+        // initialisation des tours
         tour.x = tourInfo.getInt("X");
         tour.y = tourInfo.getInt("Y");
+        tour.setId(tourInfo.getInt("ID_TOUR"));
         
         jeu.poserTourDirect(tour);
 	}
@@ -284,12 +286,13 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
             
             switch(resultat.getInt("TYPE"))
             {
-                case TOUR :
+                case TOUR_AJOUT :
                     receptionTour(resultat);
                     break;
                 
-                
-                    
+                case TOUR_SUPRESSION :
+                    receptionVendreTour(resultat);
+                    break;
                     
                 case CREATURE :    
                     receptionCreature(resultat);
@@ -311,6 +314,22 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
             e.printStackTrace();
         }
 	}
+
+    private void receptionVendreTour(JSONObject resultat)
+    {
+        if(DEBUG)
+            afficherMessage("Réception de la suppression d'une tour");
+        
+        try
+        {
+            int idTour = resultat.getInt("ID_TOWER");
+            jeu.supprimerTourDirect(idTour);
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     private void receptionCreature(JSONObject resultat)
     {

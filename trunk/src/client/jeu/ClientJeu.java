@@ -68,7 +68,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 			
 			
 			System.out.println("Envoi de PING");
-			client.envoyerMessage("PING!", TO_ALL);
+			client.envoyerMessage("PING!", A_TOUS);
 //			
 //			System.out.println("Récéption : "+canal.recevoirString());
 //			System.out.println("Fermeture");
@@ -83,7 +83,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 			JSONObject json = new JSONObject();
 			json.put("TYPE", MSG);
 			JSONObject content = new JSONObject();
-			content.put("CIBLE", TO_ALL);
+			content.put("CIBLE", A_TOUS);
 			content.put("MESSAGE", "foo bar");
 			json.put("CONTENU", content);
 			
@@ -101,7 +101,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public void envoyerEtatJoueur(int etat){
 		try{
 			JSONObject json = new JSONObject();
-			json.put("TYPE", PLAYER);
+			json.put("TYPE", JOUEUR);
 			json.put("ETAT", etat);
 			
 			canal.envoyerString(json.toString());
@@ -118,7 +118,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public void envoyerVague(int nbCreature, int typeCreature){
 		try{
 			JSONObject json = new JSONObject();
-			json.put("TYPE", WAVE);
+			json.put("TYPE", VAGUE);
 			json.put("TYPE_WAVE", typeCreature);
 			json.put("SIZE_WAVE", nbCreature);
 			
@@ -135,7 +135,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 		try {
 			JSONObject json = new JSONObject();
 			//TODO GAME au lieu de PLAY?
-			json.put("TYPE", PLAY);
+			json.put("TYPE", PARTIE);
 			json.put("ETAT", etat);
 			
 			canal.envoyerString(json.toString());
@@ -148,7 +148,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public void demanderCreationTour(int x, int y, int type){
 		try {
 			JSONObject json = new JSONObject();
-			json.put("TYPE", TOWER);
+			json.put("TYPE", TOUR_AJOUT);
 			json.put("X", x);
 			json.put("Y", y);
 			//TODO regarder pour le doublon
@@ -164,7 +164,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public void demanderAmeliorationTour(int idTour){
 		try {
 			JSONObject json = new JSONObject();
-			json.put("TYPE", TOWER_UP);
+			json.put("TYPE", TOUR_AMELIORATION);
 			json.put("ID_TOWER", idTour);
 			
 			canal.envoyerString(json.toString());
@@ -182,7 +182,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 			JSONObject json = new JSONObject();
 			//TODO TOWER_SELL au lieu de TOWER_DEL?
 			// (DE AURELIEN) ... EFFECTIVEMENT! MAIS TOWER_DEL EN RETOUR DU SERVEUR
-			json.put("TYPE", TOWER_DEL);
+			json.put("TYPE", TOUR_SUPRESSION);
 			json.put("ID_TOWER", idTour);
 			
 			canal.envoyerString(json.toString());
@@ -200,7 +200,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 			mes = new JSONObject(canal.recevoirString());
 			
 			switch(mes.getInt("TYPE")){
-				case CHEM_BLOQUE :
+				case CHEMIN_BLOQUE :
 					break;
 				default :
 						

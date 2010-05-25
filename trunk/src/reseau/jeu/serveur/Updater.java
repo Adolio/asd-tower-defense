@@ -118,7 +118,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 		{
 			try
 			{
-				json.put("TYPE", TOUR);
+				json.put("TYPE", TOUR_AJOUT);
 				json.put("JOUEUR", t.getPrioprietaire().getId());
 				json.put("ID_TOUR", t.getId());
 				json.put("X", t.getXi());

@@ -221,4 +221,22 @@ public class GestionnaireTours implements Runnable
         
         return false;
     }
+
+    public void supprimerTour(int idTour)
+    {
+        synchronized (tours)
+        { 
+            Tour tour;
+            for(int i=0;i<tours.size();i++)
+            {
+                tour = tours.get(i);
+                
+                if(tour.getId() == idTour)
+                {
+                    supprimerTour(tour);
+                    return;
+                }
+            }
+        }
+    }
 }

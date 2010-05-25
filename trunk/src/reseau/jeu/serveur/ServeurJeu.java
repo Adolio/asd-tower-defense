@@ -361,7 +361,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			break;
 		default:
 			log("Tour " + typeTour + " inconnue.");
-			return ERROR;
+			return ERREUR;
 		}
 		// Assignation des paramêtres
 		tour.x = x;
@@ -375,15 +375,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		} catch (NoMoneyException e)
 		{
 			// Si pas assez d'argent on retourne le code d'erreur correspondant
-			return NO_MONEY;
+			return PAS_ARGENT;
 		} catch (BadPosException e)
 		{
 			// Mauvaise position
-			return BAD_POS;
+			return ZONE_INACCESSIBLE;
 		} catch (PathBlockException e)
 		{
 			// Chemin bloqué.
-			return PATH_BLOCK;
+			return CHEMIN_BLOQUE;
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -438,14 +438,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Repérate de la tour à améliorer
 		Tour tour = repererTour(tourCible);
 		if (tour == null)
-			return ERROR;
+			return ERREUR;
 		// On effectue l'action
 		try
 		{
 			serveurJeu.ameliorerTour(tour);
 		} catch (Exception e)
 		{
-			return NO_MONEY;
+			return PAS_ARGENT;
 		}
 		return OK;
 	}
@@ -461,7 +461,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Repérage de la tour à supprimer
 		Tour tour = repererTour(tourCible);
 		if (tour == null)
-			return ERROR;
+			return ERREUR;
 		// On effectue l'action
 		serveurJeu.vendreTour(tour);
 		return OK;
