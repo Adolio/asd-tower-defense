@@ -1,8 +1,10 @@
 package vues;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
@@ -51,12 +53,13 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
      * @param jeu le jeu
      * @param joueur le joueur
      */
-    public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeu, Joueur joueur)
+    public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeuServeur, Jeu_Client jeuClient, Joueur joueur)
     {
-        this.parent = parent;
-        this.ADMIN  = true;
-        this.jeuServeur    = jeu;
-        this.joueur = joueur;
+        this.parent     = parent;
+        this.ADMIN      = true;
+        this.jeuServeur = jeuServeur;
+        this.jeuClient  = jeuClient;
+        this.joueur     = joueur;
 
         initialiserForm();
     }
@@ -70,10 +73,10 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
      */
     public Panel_AttendreJoueurs(JFrame parent, Jeu_Client jeu, Joueur joueur)
     {
-        this.parent = parent;
-        this.ADMIN  = false;
-        this.jeuClient = jeu;
-        this.joueur = joueur;
+        this.parent     = parent;
+        this.ADMIN      = false;
+        this.jeuClient  = jeu;
+        this.joueur     = joueur;
         
         initialiserForm();
     }
@@ -251,15 +254,27 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                 jeuServeur.desenregistrerSurSE();
             
             
+            
+            // FIXME INFO VENANT DU SERVEUR
+            //this.joueur = new Joueur("toto");
+            joueur.setEquipe(new Equipe("ahah",Color.BLACK));
+            joueur.setEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,200,200)));
+
+            jeuClient.initialiser(joueur);
             jeuServeur.initialiser(joueur);
+            
+           
+            
+            
+            
             switch(jeuServeur.getTerrain().getMode())
             {
                 case ModeDeJeu.MODE_VERSUS :
-                    new Fenetre_JeuVersus(jeuServeur);
+                    new Fenetre_JeuVersus(jeuClient);
                     break;
                 
                 case ModeDeJeu.MODE_COOP :
-                    new Fenetre_JeuVersus(jeuServeur); // FIXME
+                    new Fenetre_JeuVersus(jeuClient); // FIXME
                     break;
             }
             parent.dispose();

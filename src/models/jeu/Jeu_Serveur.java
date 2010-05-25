@@ -107,21 +107,11 @@ public class Jeu_Serveur extends Jeu
     /**
      * TODO
      * @return
+     * @throws IOException 
      */
-    public boolean etablissementDuServeur()
+    public void etablissementDuServeur() throws IOException
     {
-        try
-        {
-            serveurDeJeu = new ServeurJeu(this);
-            
-            return true;
-        } 
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        
-        return false;
+        serveurDeJeu = new ServeurJeu(this);
     }
 
     public void stopperServeurDeJeu()

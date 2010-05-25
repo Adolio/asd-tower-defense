@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import outils.fichierDeConfiguration;
 import reseau.CanalTCP;
 import reseau.CanalException;
+import reseau.jeu.serveur.ServeurJeu;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
 
@@ -515,7 +516,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         if (tbServeurs.getSelectedRow() != -1)
             return Integer.parseInt((String) model.getValueAt(tbServeurs.getSelectedRow(),2));  
         else
-            return PORT_SJ;
+            return ServeurJeu.PORT;
     } 
     
     /**

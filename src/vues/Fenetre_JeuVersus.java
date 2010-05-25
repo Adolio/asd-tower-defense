@@ -14,6 +14,7 @@ import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
@@ -129,8 +130,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	public Fenetre_JeuVersus(Jeu jeu)
 	{
 	    this.jeu = jeu;
-        this.joueur = jeu.getJoueurPrincipal();
-        
+	    
+	    this.joueur = jeu.getJoueurPrincipal();
+	    
+  
 	    //-------------------------------
 		//-- preferances de le fenetre --
 		//-------------------------------
