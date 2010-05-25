@@ -72,7 +72,7 @@ public class TestClient implements ConstantesServeurJeu
 		JSONObject json = new JSONObject();
 		json.put("TYPE", MSG);
 		JSONObject content = new JSONObject();
-		content.put("CIBLE", TO_ALL);
+		content.put("CIBLE", A_TOUS);
 		content.put("MESSAGE", msg);
 		json.put("CONTENU", content);
 

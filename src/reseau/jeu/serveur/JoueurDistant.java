@@ -215,7 +215,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Extraction du texte du message
 			String text = message.getString("MESSAGE");
 			log("Texte : " + text);
-			if (cible == TO_ALL)
+			if (cible == A_TOUS)
 			{
 				// On broadcast le message à tous les clients
 				serveur.direATous(ID, text);
@@ -226,7 +226,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			}
 			break;
 		// Changement d'état d'un joueur
-		case PLAYER:
+		case JOUEUR:
 			// Récupération du nouvel état
 			int nouvelEtat = json.getInt("ETAT");
 			// Le le nouvelEtat n'est pas une commanque QUITTER
@@ -241,29 +241,29 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				// code d'état
 				code = serveur.changementEtatJoueur(ID, nouvelEtat);
 				// Réponse du code d'état au client
-				repondreEtat(PLAYER, code);
+				repondreEtat(JOUEUR, code);
 			}
 			break;
 		// Action sur une vague
-		case WAVE:
+		case VAGUE:
 			// Récupération du type de vague
 			int typeVague = json.getInt("TYPE_WAVE");
 			// Demande de lancement d'une vague
 			code = serveur.lancerVague(ID, typeVague);
 			// Retour au client de l'information
-			repondreEtat(WAVE, code);
+			repondreEtat(VAGUE, code);
 			break;
 		// Changement d'état d'une partie
-		case PLAY:
+		case PARTIE:
 			// Récupération du nouvel état
 			int nouvelEtatPartie = json.getInt("ETAT");
 			// Envoi de l'information au serveur principal
 			code = serveur.changementEtatPartie(ID, nouvelEtatPartie);
 			// Retour du code au client
-			repondreEtat(PLAY, code);
+			repondreEtat(PARTIE, code);
 			break;
 		// Requête de création d'une tour
-		case TOWER:
+		case TOUR_AJOUT:
 			// Extraction des coordonnées
 			int x = json.getInt("X");
 			int y = json.getInt("Y");
@@ -272,30 +272,30 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Demande d'ajout au serveur
 			code = serveur.poserTour(ID, typeTour, x, y);
 			// Retour au client du code
-			repondreEtat(TOWER, code);
+			repondreEtat(TOUR_AJOUT, code);
 			break;
 		// Requête d'amélioration d'une tour
-		case TOWER_UP:
+		case TOUR_AMELIORATION:
 			// Récupération de la tour cible
 			int tourCible = json.getInt("ID_TOWER");
 			// Demande au serveur de l'opération
 			code = serveur.ameliorerTour(ID, tourCible);
 			// Retour au client de code
-			repondreEtat(TOWER_UP, code);
+			repondreEtat(TOUR_AMELIORATION, code);
 			break;
 		// Requete de suppresion d'une tour
-		case TOWER_DEL:
+		case TOUR_SUPRESSION:
 			// Récupération de la tour cible
 			int tourCibleDel = json.getInt("ID_TOWER");
 			// Demande au serveur de l'opération
 			code = serveur.supprimerTour(ID, tourCibleDel);
 			// Retour au client de code
-			repondreEtat(TOWER_UP, code);
+			repondreEtat(TOUR_SUPRESSION, code);
 			break;
 		default:
 			log("ERROR action inconnue : " + type);
 			// Signaler au client qu'il envoi quelque chose d'incorecte
-			repondreEtat(ERROR, ERROR);
+			repondreEtat(ERREUR, ERREUR);
 			break;
 		}
 	}
@@ -338,7 +338,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		try
 		{
 			// Construction de la structure JSON
-			message.put("TYPE", PLAYER);
+			message.put("TYPE", JOUEUR);
 			message.put("PSEUDO", pseudoFrom);
 			message.put("ETAT", nouvelEtat);
 			// Envoi de la structure à travers le réseau
@@ -380,7 +380,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		try
 		{
 			// Construction de la structure JSON
-			message.put("TYPE", OBJECT);
+			message.put("TYPE", OBJET);
 			message.put("OBJECT", ID_Objet);
 			message.put("ETAT", etat);
 			message.put("X", x);

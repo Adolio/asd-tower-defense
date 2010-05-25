@@ -55,4 +55,9 @@ public class Jeu_Client extends Jeu
         clientJeu = new ClientJeu(this, IP, port, joueur.getPseudo());
         return true;
     }
+
+    public void supprimerTourDirect(int idTour)
+    {
+        gestionnaireTours.supprimerTour(idTour);
+    }
 }

@@ -41,7 +41,7 @@ public abstract class Tour extends Rectangle
 	/**
      * Identificateur de la tour
      */
-    private final int ID;
+    private int ID;
     private static int idCourant = 0;
     
 	/**
@@ -605,5 +605,10 @@ public abstract class Tour extends Rectangle
     public double getAngle()
     {
         return angle;
+    }
+
+    public void setId(int id)
+    {
+       this.ID = id;
     }
 }
