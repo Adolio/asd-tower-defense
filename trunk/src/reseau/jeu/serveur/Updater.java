@@ -28,6 +28,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 
 	public Updater(HashMap<Integer, JoueurDistant> clients)
 	{
+		ServeurJeu.log("[UPDATER] Lancement de l'updater");
 		this.clients = clients;
 		buffer = new ConcurrentLinkedQueue<Message>();
 		thread = new Thread(this);

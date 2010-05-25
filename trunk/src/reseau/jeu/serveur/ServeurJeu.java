@@ -289,6 +289,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public void tourPosee(Tour tour)
 	{
 		setChanged();
+		notifyObservers();
 	}
 
 	@Override
