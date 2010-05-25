@@ -16,7 +16,8 @@ import models.tours.IDTours;
 import models.tours.Tour;
 import models.tours.*;
 
-public class Updater implements Observer, Runnable, ConstantesServeurJeu, IDTours, IDCreatures
+public class Updater implements Observer, Runnable, ConstantesServeurJeu,
+		IDTours, IDCreatures
 {
 	// Thread actif
 	private Thread thread;
@@ -114,10 +115,10 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu, IDTour
 				json.put("X", t.getXi());
 				json.put("Y", t.getYi());
 				int type = -1;
-				if(t instanceof TourArcher)
+				if (t instanceof TourArcher)
 					type = TOUR_ARCHER;
 				// TODO Faire la suite des tours
-				json.put("TYPE",type);
+				json.put("TYPE", type);
 			} catch (JSONException e)
 			{
 				e.printStackTrace();
