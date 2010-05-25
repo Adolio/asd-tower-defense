@@ -27,7 +27,7 @@ import org.json.*;
  * 2) PENSER QUE LE SERVEUR DOIT TE RETOURNER L'ID DE LA TOUR SI
  * ELLE EST POSABLE... ON EN A BESOINS POUR LA SUITE.
  */
-public class ClientJeu implements ConstantesServeurJeu, IDTours{
+public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	private int ID;
 	private CanalTCP canal1;
 	private CanalTCP canal2;
@@ -272,5 +272,12 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours{
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	//Canal1
+	public void run() {
+		// TODO Auto-generated method stub
+		receptionMessages();
 	}
 }
