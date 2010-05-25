@@ -31,7 +31,7 @@ public class ElementTD_Coop extends Terrain
 
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/blizzard/Human_I_(Fanfare).mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/Filippo Vicarelli/The War Begins.mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                           "img/cartes/menu_principal/elementTD.png");

@@ -516,6 +516,8 @@ public abstract class Jeu implements EcouteurDeCreature,
     {
         if(edj != null)
             edj.creatureBlessee(creature);
+        
+        ajouterAnimation(new TacheDeSang((int)creature.getCenterX(),(int) creature.getCenterY()));
     }
 
     @Override

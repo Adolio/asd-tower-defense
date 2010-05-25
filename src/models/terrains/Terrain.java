@@ -181,6 +181,11 @@ public abstract class Terrain implements Serializable
     private final int MODE;
     
     /**
+     * Permet de definit la taille du panel du terrain
+     */
+    protected Dimension taillePanelTerrain = null;
+    
+    /**
      * Constructeur du terrain.
      * 
      * @param largeur la largeur en pixels du terrain (utilisé pour le maillage)
@@ -323,6 +328,19 @@ public abstract class Terrain implements Serializable
         return MODE;
     }
 
+    /**
+     * Permet de recuperer la taille voulue pour le panel du terrain
+     * 
+     * @return la taille voulue pour le panel du terrain
+     */
+    public Dimension getTaillePanelTerrain()
+    {
+        if(taillePanelTerrain != null)
+            return taillePanelTerrain;
+        else  
+            return new Dimension(LARGEUR,HAUTEUR);
+    }
+    
     // ----------------------
     // -- GESTION DES MURS --
     // ----------------------

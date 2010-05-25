@@ -15,20 +15,30 @@ public class Panel_EmplacementsTerrain extends JPanel
 {
     private static final long serialVersionUID = 1L;
     private Terrain terrain;
-    private double scale = 0.7;
+    private double scaleX = 0.7;
     private static final int xOffsetPseudo = 10, 
                              yOffsetPseudo = 30;
+ 
+    // TODO proportionnel au plus grand coté
+    private int largeur;
     
-    public Panel_EmplacementsTerrain(Terrain terrain, double scale)
+    @SuppressWarnings("unused")
+    private int hauteur; 
+    
+    public Panel_EmplacementsTerrain(Terrain terrain, int largeur, int hauteur)
     {
         this.terrain = terrain;
-        this.scale   = scale;
-        setPreferredSize(new Dimension((int)(terrain.getLargeur()*scale),(int)(terrain.getHauteur()*scale)));
+        this.largeur = largeur;
+        this.hauteur = hauteur;
+        this.scaleX = 1.0 / terrain.getLargeur() * largeur;
+        setPreferredSize(new Dimension(largeur,hauteur));
     }
     
-    public Panel_EmplacementsTerrain(double scale)
+    
+    public Panel_EmplacementsTerrain(int largeur, int hauteur)
     {
-        this.scale   = scale;
+        this.largeur = largeur;
+        this.hauteur = hauteur;
     }
 
     @Override
@@ -38,7 +48,12 @@ public class Panel_EmplacementsTerrain extends JPanel
         
         if(terrain != null)
         { 
-            g2.scale(scale, scale);
+            g2.scale(scaleX, scaleX);
+            
+            
+            //g2.fillRect(0,0,500,500);
+            
+            
             
             //--------------------------
             //-- affichage du terrain --
@@ -103,9 +118,10 @@ public class Panel_EmplacementsTerrain extends JPanel
     public void setTerrain(Terrain terrain)
     {
         this.terrain = terrain;
-        
-        setPreferredSize(new Dimension((int)(terrain.getLargeur()*scale),(int)(terrain.getHauteur()*scale)));
-        
+         
+        scaleX = 1.0 / terrain.getLargeur() * largeur;
+        setPreferredSize(new Dimension((int)(terrain.getLargeur()*scaleX),(int)(terrain.getHauteur()*scaleX)));
+
         repaint();
     }
 }

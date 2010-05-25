@@ -572,9 +572,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	public void creatureBlessee(Creature creature)
 	{
 	    panelInfoCreature.miseAJourInfosVariables();
-	    
-	    
-	    jeu.ajouterAnimation(new TacheDeSang((int)creature.getCenterX(),(int) creature.getCenterY()));
 	}
 
 	/**
