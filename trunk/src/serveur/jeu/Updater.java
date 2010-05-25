@@ -87,10 +87,19 @@ public class Updater implements Observer, Runnable
 	{
 		Message(Creature c)
 		{
+			c.getId();
+			c.getX();
+			c.getY();
+			c.getAngle();
+			c.getSante();
+			c.getSanteMax();
+			c.getNbPiecesDOr();
 		}
 
 		Message(Tour t)
 		{
+			t.getXi();
+			t.getYi();
 		}
 		
 		public String toString(){

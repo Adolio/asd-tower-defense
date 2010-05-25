@@ -138,9 +138,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			} catch (JeuEnCoursException e)
 			{
 				e.printStackTrace();
+				canal.envoyerString("Erreur, le jeu est en cours");
 			} catch (AucunePlaceDisponibleException e)
 			{
 				e.printStackTrace();
+				canal.envoyerString("Erreur, pas de place disponible");
 			}
 		}
 	}
