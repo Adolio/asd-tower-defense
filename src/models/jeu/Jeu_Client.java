@@ -1,6 +1,6 @@
 package models.jeu;
 
-import client.jeu.ClientJeu;
+import reseau.jeu.client.ClientJeu;
 import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
 import models.tours.Tour;
@@ -11,7 +11,7 @@ public class Jeu_Client extends Jeu
     
     public Jeu_Client(Joueur joueur)
     {
-        clientJeu = new ClientJeu("127.0.0.1",8888);
+        clientJeu = new ClientJeu("127.0.0.1",2357, joueur.getPseudo());
     }
 
     @Override
