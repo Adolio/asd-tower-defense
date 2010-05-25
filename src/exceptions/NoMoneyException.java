@@ -1,4 +1,4 @@
-package models.jeu;
+package exceptions;
 
 /**
  * Exception levée si le joueur n'a pas assez d'argent poour effectuer cette

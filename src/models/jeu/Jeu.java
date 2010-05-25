@@ -3,6 +3,13 @@ package models.jeu;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Vector;
+
+import exceptions.AucunePlaceDisponibleException;
+import exceptions.BadPosException;
+import exceptions.JeuEnCoursException;
+import exceptions.NoMoneyException;
+import exceptions.PathBlockException;
+import exceptions.TerrainDejaInitialise;
 import models.animations.*;
 import models.creatures.Creature;
 import models.creatures.EcouteurDeCreature;
@@ -327,7 +334,7 @@ public abstract class Jeu implements EcouteurDeCreature,
     public void setTerrain(Terrain terrain) throws IllegalArgumentException
     {
         if(this.terrain != null) 
-            throw new IllegalArgumentException("Terrain déjà initialisé");
+            throw new TerrainDejaInitialise("Terrain déjà initialisé");
 
         equipes = terrain.getEquipesInitiales();
         
@@ -343,7 +350,7 @@ public abstract class Jeu implements EcouteurDeCreature,
     public Terrain getTerrain()
     {
         if(terrain == null)
-            throw new IllegalStateException("Le terrain ne doit jamais etre nul !");
+            throw new NullPointerException("Le terrain ne doit jamais etre nul !");
         
         return terrain;
     }
@@ -442,14 +449,14 @@ public abstract class Jeu implements EcouteurDeCreature,
      * Permet d'ajouter un joueur dans le premier emplacement disponible
      * 
      * @param joueur le joueur
-     * @exception IllegalStateException Si la partie à déjà démarrée
-     * @exception IllegalStateException Aucune place disponible dans les équipes.
+     * @throws JeuEnCoursException Si la partie à déjà démarrée
+     * @throws AucunePlaceDisponibleException Aucune place disponible dans les équipes.
      */
-    public void ajouterJoueur(Joueur joueur)
+    public void ajouterJoueur(Joueur joueur) throws JeuEnCoursException, AucunePlaceDisponibleException
     {
         // si la partie est en court
         if(partieDemarree)
-            throw new IllegalStateException("La partie à déjà démarrée");
+            throw new JeuEnCoursException("La partie à déjà démarrée");
         
         // ajout du joueur dans le premier emplacement disponible
         for(int i=0;i<equipes.size();i++)
@@ -471,7 +478,7 @@ public abstract class Jeu implements EcouteurDeCreature,
             }
         }
         
-       throw new IllegalStateException("Aucune place disponible.");
+       throw new AucunePlaceDisponibleException("Aucune place disponible.");
     }
 
     /**
