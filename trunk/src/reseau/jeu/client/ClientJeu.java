@@ -40,13 +40,15 @@ public class ClientJeu implements ConstantesServeurJeu {
 	 * PORT_SERVEUR SERA UN PARAMETRE...
 	 */
 	public ClientJeu(String IPServeur, int portServeur, String pseudo) {
-		
+		int port2;
 		try
 		{
 			canal1 = new CanalTCP(IPServeur, portServeur, true);
 			canal1.envoyerString(pseudo);
 			ID = canal1.recevoirInt();
 			canal1.recevoirString();
+			port2 = canal1.recevoirInt();
+			canal2 = new CanalTCP(IPServeur, port2, true);
 			
 			
 			//TODO Recevoir l'id! :D
