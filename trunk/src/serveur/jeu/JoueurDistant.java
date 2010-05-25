@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import reseau.CanalTCP;
 import reseau.CanalException;
+import reseau.Port;
 
 /**
  * Une classe qui modélise coté serveur un joueur.
@@ -31,8 +32,12 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private int etat = VALIDATION;
 	// Message du client;
 	private String str = "";
+	// Offset pour les ports temporaires
+	private static int offset_port = 101010;
+	// Debug
+	private final static boolean DEBUG = true;
 	/**
-	 *  Niveau d'affichage des messages
+	 * Niveau d'affichage des messages
 	 */
 	public static int verboseMode = 0;
 
@@ -79,8 +84,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				e.printStackTrace();
 			} catch (CanalException e)
 			{
-				ServeurJeu.log("ERROR : une erreur est survenue durant la connexion");
-				ServeurJeu.log("ERROR : Déconexion du client "+ID);
+				ServeurJeu
+						.log("ERROR : une erreur est survenue durant la connexion");
+				ServeurJeu.log("ERROR : Déconexion du client " + ID);
 				desenregistrement();
 				return;
 			}
@@ -120,7 +126,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		case VALIDATION:
 			// Envoi de la version du serveur au client
 			send(ServeurJeu.VERSION);
-			// Passage en état EN_JEU
+			// Réservation du port pour le canal temporaire
+			Port port = new Port(offset_port++);
+			// Envoi du numéro de port utilisé
+			send(port.getNumeroPort());
+			// Création du canal de mise à jour et attente de la connexion
+			canal_update = new CanalTCP(port, DEBUG);
+			// Passage en état EN_ATTENTE
 			etat = EN_ATTENTE;
 			break;
 		case EN_ATTENTE:
@@ -165,8 +177,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 */
 	public synchronized void send(final String msg)
 	{
-			log("Envoi du String " + msg);
-			canal.envoyerString(msg);
+		log("Envoi du String " + msg);
+		canal.envoyerString(msg);
 	}
 
 	public void send(final int msg)
@@ -402,7 +414,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void desenregistrement()
 	{
-		log("Suppression du joueur "+ID);
+		log("Suppression du joueur " + ID);
 		serveur.supprimerJoueur(ID);
 	}
 
@@ -455,5 +467,17 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	public void partieTerminee()
 	{
 		etat = PARTIE_TERMINEE;
+	}
+
+	/**
+	 * Envoi sur le canal de mise à jour le message en paramêtre
+	 * 
+	 * @param message
+	 *            Le message à envoyer
+	 */
+	public void update(String message)
+	{
+		canal_update.envoyerString(message);
+
 	}
 }
