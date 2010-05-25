@@ -14,8 +14,16 @@ import models.jeu.Jeu;
 import models.jeu.NoMoneyException;
 import models.jeu.PathBlockException;
 import models.joueurs.Joueur;
+import models.tours.IDTours;
 import models.tours.Tour;
+import models.tours.TourAntiAerienne;
 import models.tours.TourArcher;
+import models.tours.TourBalistique;
+import models.tours.TourCanon;
+import models.tours.TourDAir;
+import models.tours.TourDeFeu;
+import models.tours.TourDeGlace;
+import models.tours.TourElectrique;
 
 import reseau.Canal;
 import reseau.Port;
@@ -28,7 +36,7 @@ import reseau.Port;
  * 
  */
 public class ServeurJeu extends Observable implements ConstantesServeurJeu,
-		EcouteurDeJeu
+		EcouteurDeJeu, IDTours
 {
 	/**
 	 * La version courante du serveur
@@ -43,7 +51,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -94,10 +102,23 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		{
 			// On attend qu'un joueur se présente
 			log("écoute sur le port " + _port);
+			// Nouveau joueur !!
 			canal = new Canal(port, DEBUG);
+			// Log
 			log("Récéption de " + canal.getIpClient());
-			int IDClient = canal.recevoirInt();
+			// Récéption du pseudo du joueur
+			String pseudo = canal.recevoirString();
+			// Création du joueur
+			Joueur joueur = new Joueur(pseudo);
+			// Ajout du joueur à l'ensemble des joueurs
+			serveurJeu.ajouterJoueur(joueur);
+			// Extraction de l'ID du joueur
+			int IDClient = joueur.getId();
+			// Envoi de l'ID du joueur au client
+			canal.envoyerInt(joueur.getId());
+			// Log
 			log("Nouveau joueur ! ID : " + IDClient);
+			// Enregistrement de l'ID et du canal dans la base interne
 			enregistrerClient(IDClient, canal);
 		}
 	}
@@ -143,7 +164,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			if (joueur.getId() == ID)
 				return joueur;
 		}
-		return null;
+		throw new IllegalArgumentException("ID " + ID + " non trouvé");
 	}
 
 	/**
@@ -172,29 +193,25 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void etoileGagnee()
 	{
-		// TODO Auto-generated method stub
-
+		setChanged();
 	}
 
 	@Override
@@ -207,35 +224,31 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void vagueEntierementLancee(VagueDeCreatures vague)
 	{
-		// TODO Auto-generated method stub
-
+		// Rien
 	}
 
 	@Override
 	public void animationAjoutee(Animation animation)
 	{
-		// TODO Auto-generated method stub
+		setChanged();
 	}
 
 	@Override
 	public void animationTerminee(Animation animation)
 	{
-		// TODO Auto-generated method stub
-
+		setChanged();
 	}
 
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void joueurAjoute(Joueur joueur)
 	{
-		// TODO Auto-generated method stub
-
+		// FIXME J'fais quoi ici moi ?
 	}
 
 	@Override
@@ -248,22 +261,19 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void tourAmelioree(Tour tour)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void tourPosee(Tour tour)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	@Override
 	public void tourVendue(Tour tour)
 	{
-	    // FIXME (DE AURELIEN) RASSURE-MOI TU COMPTE PAS TOUT METTRE A JOUR POUR CA ?
-	    update();
+		setChanged();
 	}
 
 	/**
@@ -310,8 +320,37 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		Tour tour = null;
 		switch (typeTour)
 		{
-		case 0: // FIXME
+		// Tour d'archer
+		case TOUR_ARCHER: // FIXME
 			tour = new TourArcher();
+			break;
+		// Tour Anti Aerienne
+		case TOUR_AA:
+			tour = new TourAntiAerienne();
+			break;
+		// Tour balistique
+		case TOUR_BALISTIQUE:
+			tour = new TourBalistique();
+			break;
+		// Tour canon
+		case TOUR_CANON:
+			tour = new TourCanon();
+			break;
+		// Tour d'air
+		case TOUR_D_AIR:
+			tour = new TourDAir();
+			break;
+		// Tour de feu
+		case TOUR_DE_FEU:
+			tour = new TourDeFeu();
+			break;
+		// Tour de glace (à la fraise)
+		case TOUR_DE_GLACE:
+			tour = new TourDeGlace();
+			break;
+		// Bobine de Telsa
+		case TOUR_ELECTRIQUE:
+			tour = new TourElectrique();
 			break;
 		default:
 			log("Tour " + typeTour + " inconnue.");
@@ -320,6 +359,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Assignation des paramêtres
 		tour.x = x;
 		tour.y = y;
+		// Assignation du propriétaire
 		tour.setProprietaire(repererJoueur(IDJoueur));
 		try
 		{
@@ -340,7 +380,10 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		} catch (Exception e)
 		{
 			e.printStackTrace();
+			return ERREUR;
 		}
+		setChanged();
+		notifyObservers();
 		return OK;
 	}
 
