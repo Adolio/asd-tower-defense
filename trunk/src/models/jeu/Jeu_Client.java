@@ -17,7 +17,7 @@ public class Jeu_Client extends Jeu
     @Override
     public void poserTour(Tour tour)
     {
-        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(), 1);
+        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(),1);
     }
 
     @Override
@@ -37,5 +37,10 @@ public class Jeu_Client extends Jeu
     {
         // TODO [CONTACT SERVEUR]
         //clientJeu.envoyerVague(vague);
+    }
+    
+    public void poserTourDirect(Tour tour)
+    {
+        gestionnaireTours.ajouterTour(tour);
     }
 }
