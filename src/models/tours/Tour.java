@@ -25,7 +25,7 @@ import models.joueurs.Joueur;
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */
-public abstract class Tour extends Rectangle
+public abstract class Tour extends Rectangle implements IDTours
 {
 	private static final long serialVersionUID      = 1L;
 	public static final int TYPE_TERRESTRE_ET_AIR 	= 0;
@@ -610,5 +610,30 @@ public abstract class Tour extends Rectangle
     public void setId(int id)
     {
        this.ID = id;
+    }
+
+    /**
+     * Permet de recuperer le type d'une tour
+     */
+    public static int getTypeDeTour(Tour tour)
+    {
+        if (tour instanceof TourArcher)
+            return TOUR_ARCHER;
+        else if (tour instanceof TourCanon)
+            return TOUR_CANON;
+        else if (tour instanceof TourAntiAerienne)
+            return TOUR_AA;
+        else if (tour instanceof TourDeGlace)
+            return TOUR_DE_GLACE;
+        else if (tour instanceof TourElectrique)
+            return TOUR_ELECTRIQUE;
+        else if (tour instanceof TourDeFeu)
+            return TOUR_DE_FEU;
+        else if (tour instanceof TourDAir)
+            return TOUR_D_AIR;
+        else if (tour instanceof TourDeTerre)
+            return TOUR_DE_TERRE;
+        
+        return -1;
     }
 }

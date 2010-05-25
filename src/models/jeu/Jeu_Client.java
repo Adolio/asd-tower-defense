@@ -1,12 +1,10 @@
 package models.jeu;
 import java.net.ConnectException;
-import exceptions.BadPosException;
-import exceptions.NoMoneyException;
+import exceptions.*;
 import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
 import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
-import models.tours.IDTours;
 import models.tours.Tour;
 
 public class Jeu_Client extends Jeu
@@ -20,35 +18,29 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void poserTour(Tour tour) throws NoMoneyException, BadPosException
+    public void poserTour(Tour tour) throws ArgentInsuffisantException, ZoneInaccessibleException
     {
-        clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(),IDTours.TOUR_ARCHER);
+        clientJeu.demanderCreationTour(tour);
     }
 
     @Override
     public void vendreTour(Tour tour)
     {
-        clientJeu.venteTour(tour.getId());
+        clientJeu.venteTour(tour);
     }
 
     @Override
-    public void ameliorerTour(Tour tour)
+    public void ameliorerTour(Tour tour) throws ArgentInsuffisantException
     {
-        clientJeu.demanderAmeliorationTour(tour.getId());
+        clientJeu.demanderAmeliorationTour(tour);
     }
 
     @Override
     public void lancerVague(VagueDeCreatures vague)
     {
-        // TODO [CONTACT SERVEUR]
-        //clientJeu.envoyerVague(vague);
+        clientJeu.envoyerVague(vague.getNbCreatures(), 1);
     }
     
-    public void poserTourDirect(Tour tour)
-    {
-        gestionnaireTours.ajouterTour(tour);
-    }
-
     public boolean connexionAvecLeServeur(String IP, int port) 
     throws ConnectException, CanalException
     {
@@ -56,8 +48,38 @@ public class Jeu_Client extends Jeu
         return true;
     }
 
+    /**
+     * Permet de poser une tour directement (sans contrôle)
+     * 
+     * @param idTour l'identificateur de la tour 
+     */
+    public void poserTourDirect(Tour tour)
+    {
+        gestionnaireTours.ajouterTour(tour);
+    }
+    
+    /**
+     * Permet de supprimer une tour directement (sans contrôle)
+     * 
+     * @param idTour l'identificateur de la tour 
+     */
     public void supprimerTourDirect(int idTour)
     {
-        gestionnaireTours.supprimerTour(idTour);
+        Tour tour = gestionnaireTours.getTour(idTour);
+        
+        gestionnaireTours.supprimerTour(tour);
+    }
+
+    /**
+     * Permet d'améliorer une tour directement (sans contrôle)
+     * 
+     * @param idTour l'identificateur de la tour 
+     */
+    public void ameliorerTourDirect(int idTour)
+    {
+        Tour tour = gestionnaireTours.getTour(idTour);
+
+        if(tour != null)
+            tour.ameliorer();
     }
 }

@@ -222,7 +222,13 @@ public class GestionnaireTours implements Runnable
         return false;
     }
 
-    public void supprimerTour(int idTour)
+    /**
+     * Permet de recuperer une tour grace a son identificateur
+     * 
+     * @param idTour identificateur de la tour
+     * @return la tour, null si non trouvé
+     */
+    public Tour getTour(int idTour)
     {
         synchronized (tours)
         { 
@@ -232,11 +238,10 @@ public class GestionnaireTours implements Runnable
                 tour = tours.get(i);
                 
                 if(tour.getId() == idTour)
-                {
-                    supprimerTour(tour);
-                    return;
-                }
+                    return tour;
             }
         }
+        
+        return null;
     }
 }

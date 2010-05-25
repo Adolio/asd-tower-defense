@@ -76,10 +76,7 @@ public class CanalTCP
          // est bloquante jusqu'à ce qu'une connexion soit disponible.
          socket = port.getServerSocket().accept();
          
-         if (afficherMessagesDebug)
-         {
-            System.out.println("     Canal: connexion établie");
-         }
+         log("Canal: connexion établie");
          
          // Configurer les flux entrant/sortant pour la lecture et l'écriture
          // sur le
@@ -87,9 +84,8 @@ public class CanalTCP
          configurerFlux();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'attente d'une connexion entrante sur le port "
-                     + port.getNumeroPort());
+         log("Canal: une erreur est survenue pendant l'attente d'une connexion " +
+         	  "entrante sur le port " + port.getNumeroPort());
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -123,22 +119,18 @@ public class CanalTCP
       
       try
       {
-         if (afficherMessagesDebug)
-         {
-            System.out
-                  .println("     Canal: tentative de connexion à l'adresse "
+         
+         log("Canal: tentative de connexion à l'adresse "
                         + adresseIp + " sur le port " + numeroPort);
-         }
+        
          
          // Créée une connexion, c'est-à-dire une socket vers l'IP et le port
          // donnés et
          // attend qu'il y ait une réponse.
          socket = new Socket(adresseIp, numeroPort);
          
-         if (afficherMessagesDebug)
-         {
-            System.out.println("     Canal: connexion établie");
-         }
+         log("Canal: connexion établie");
+         
          
          // Configurer les flux entrant/sortant pour la lecture et l'écriture
          // sur le
@@ -148,18 +140,15 @@ public class CanalTCP
       {
          // La connexion a été refusée. Pas considéré comme une erreur
          // fatale.
-         if (afficherMessagesDebug)
-         {
-            System.out.println("     Canal: connexion refusée");
-         }
+         log("Canal: connexion refusée");
+         
          throw e;
       } catch (Exception e)
       {
          // Un problème de connexion est survenu. Considéré comme une erreur
          // fatale.
-         System.out
-               .println("Canal: une erreur est survenue lors de la tentative de connexion à l'adresse "
-                     + adresseIp + " sur le port " + numeroPort);
+          log("Canal: une erreur est survenue lors de la tentative " +
+              "de connexion à l'adresse " + adresseIp + " sur le port " + numeroPort);
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -200,8 +189,7 @@ public class CanalTCP
          canalIn = new ObjectInputStream(generalIn);
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant la configuration des flux In/Out");
+         log("Canal: une erreur est survenue pendant la configuration des flux In/Out");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -218,10 +206,7 @@ public class CanalTCP
     */
    public void envoyerString(String message) throws CanalException
    {
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: envoi du String " + message);
-      }
+      log("Canal: envoi du String " + message);
       
       try
       {
@@ -231,8 +216,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'envoi du String");
+         log("Canal: une erreur est survenue pendant l'envoi du String");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -248,10 +232,8 @@ public class CanalTCP
    public String recevoirString() throws CanalException
    {
       String message = null;
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: en attente d'un String...");
-      }
+      
+      log("Canal: en attente d'un String...");
       
       try
       {
@@ -266,10 +248,9 @@ public class CanalTCP
          // e.printStackTrace();
          throw new CanalException(e);
       }
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: réception du String " + message);
-      }
+      
+      log("Canal: réception du String " + message);
+      
       return message;
    }
    
@@ -282,10 +263,7 @@ public class CanalTCP
     */
    public void envoyerInt(int i) throws CanalException
    {
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: envoi de l'int " + i);
-      }
+      log("Canal: envoi de l'int " + i);
       
       try
       {
@@ -295,8 +273,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'envoi de l'int");
+         log("Canal: une erreur est survenue pendant l'envoi de l'int");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -312,25 +289,22 @@ public class CanalTCP
    public int recevoirInt() throws CanalException
    {
       int intRecu = 0;
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: en attente d'un int...");
-      }
+      
+      log("Canal: en attente d'un int...");
       
       try
       {
          intRecu = canalIn.readInt();
-      } catch (Exception e)
+      } 
+      catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'attente de réception d'un int");
+         log("Canal: une erreur est survenue pendant l'attente de réception d'un int");
          e.printStackTrace();
          throw new CanalException(e);
       }
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: réception de l'int " + intRecu);
-      }
+      
+      log("Canal: réception de l'int " + intRecu);
+      
       return intRecu;
    }
    
@@ -343,10 +317,7 @@ public class CanalTCP
     */
    public void envoyerDouble(double d) throws CanalException
    {
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: envoi du double " + d);
-      }
+      log("Canal: envoi du double " + d);
       
       try
       {
@@ -356,8 +327,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'envoi du double");
+         log("Canal: une erreur est survenue pendant l'envoi du double");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -373,25 +343,21 @@ public class CanalTCP
    public double recevoirDouble() throws CanalException
    {
       double doubleRecu = 0.0;
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: en attente d'un double...");
-      }
+      
+      log("Canal: en attente d'un double...");
       
       try
       {
          doubleRecu = canalIn.readDouble();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'attente de réception d'un double");
+         log("Canal: une erreur est survenue pendant l'attente de réception d'un double");
          e.printStackTrace();
          throw new CanalException(e);
       }
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: réception du double " + doubleRecu);
-      }
+      
+      log("Canal: réception du double " + doubleRecu);
+      
       return doubleRecu;
    }
    
@@ -404,10 +370,7 @@ public class CanalTCP
     */
    public void envoyerBytes(byte[] b) throws CanalException
    {
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: envoi de " + b.length + " bytes");
-      }
+      log("Canal: envoi de " + b.length + " bytes");
       
       try
       {
@@ -417,8 +380,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'envoi des bytes");
+         log("Canal: une erreur est survenue pendant l'envoi des bytes");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -435,26 +397,21 @@ public class CanalTCP
    public byte[] recevoirBytes(int size) throws CanalException
    {
       byte[] bytesRecus = new byte[size];
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: en attente de " + size + " bytes ...");
-      }
+      
+      log("Canal: en attente de " + size + " bytes ...");
       
       try
       {
          canalIn.readFully(bytesRecus);
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'attente de réception des bytes");
+         log("Canal: une erreur est survenue pendant l'attente de réception des bytes");
          e.printStackTrace();
          throw new CanalException(e);
       }
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: réception de " + bytesRecus.length
-               + " bytes");
-      }
+
+      log("Canal: réception de " + bytesRecus.length+ " bytes");
+   
       return bytesRecus;
    }
    
@@ -467,11 +424,8 @@ public class CanalTCP
     */
    public void envoyerPaquet(Paquet p) throws CanalException
    {
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: envoi du paquet " + p);
-      }
-      
+      log("Canal: envoi du paquet " + p);
+
       try
       {
          canalOut.writeObject(p);
@@ -482,8 +436,7 @@ public class CanalTCP
 
       catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'envoi du paquet");
+         log("Canal: une erreur est survenue pendant l'envoi du paquet");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -499,17 +452,16 @@ public class CanalTCP
    public Paquet recevoirPaquet() throws CanalException
    {
       Paquet paquetRecu = null;
-      if (afficherMessagesDebug)
-      {
-         System.out.println("     Canal: en attente d'un paquet ...");
-      }
+
+      log("Canal: en attente d'un paquet ...");
       
       try
       {
          paquetRecu = (Paquet) (canalIn.readObject());
-         if (paquetRecu != null && afficherMessagesDebug)
+         
+         if (paquetRecu != null)
          {
-            System.out.println("     Canal: réception du paquet "
+             log("Canal: réception du paquet "
                   + paquetRecu
                   + " contenant "
                   + (paquetRecu.getOctets() == null ? 0 : paquetRecu
@@ -517,8 +469,7 @@ public class CanalTCP
          }
       } catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant l'attente de réception d'un paquet");
+         log("Canal: une erreur est survenue pendant l'attente de réception d'un paquet");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -549,10 +500,10 @@ public class CanalTCP
          canalIn.close();
          canalOut.close();
          socket.close();
-      } catch (Exception e)
+      } 
+      catch (Exception e)
       {
-         System.out
-               .println("Canal: une erreur est survenue pendant la fermeture du canal");
+         log("Canal: une erreur est survenue pendant la fermeture du canal");
          e.printStackTrace();
          throw new CanalException(e);
       }
@@ -589,4 +540,11 @@ public class CanalTCP
    {
       return afficherMessagesDebug;
    }
+   
+   public void log(String msg)
+   {
+       if(afficherMessagesDebug && false)
+           System.out.println("    "+msg);
+   }
+   
 }

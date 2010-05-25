@@ -268,7 +268,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			int x = json.getInt("X");
 			int y = json.getInt("Y");
 			// Extraction du type de tour
-			int typeTour = json.getInt("SORT");
+			int typeTour = json.getInt("TYPE_TOUR");
 			// Demande d'ajout au serveur
 			code = serveur.poserTour(ID, typeTour, x, y);
 			// Retour au client du code
@@ -412,7 +412,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
 	private void log(String msg)
 	{
-		ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
+		if(DEBUG)
+		    ServeurJeu.log("[JOUEUR " + ID + "]" + msg);
 	}
 
 	private void desenregistrement()
@@ -478,7 +479,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param message
 	 *            Le message à envoyer
 	 */
-	public void update(String message)
+	public void envoyerSurCanalMAJ(String message)
 	{
 		log("Broadcast "+message); //FIXME supprimer pour la version production
 		canal_update.envoyerString(message);

@@ -1,36 +1,16 @@
 package reseau.jeu.serveur;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
+import java.util.*;
 import java.util.Map.Entry;
-
-import exceptions.AucunePlaceDisponibleException;
-import exceptions.BadPosException;
-import exceptions.JeuEnCoursException;
-import exceptions.NoMoneyException;
-import exceptions.PathBlockException;
-
+import org.json.*;
+import exceptions.*;
 import models.animations.Animation;
-import models.creatures.Creature;
-import models.creatures.VagueDeCreatures;
-import models.jeu.EcouteurDeJeu;
-import models.jeu.Jeu;
+import models.creatures.*;
+import models.jeu.*;
 import models.joueurs.Joueur;
-import models.tours.IDTours;
-import models.tours.Tour;
-import models.tours.TourAntiAerienne;
-import models.tours.TourArcher;
-import models.tours.TourBalistique;
-import models.tours.TourCanon;
-import models.tours.TourDAir;
-import models.tours.TourDeFeu;
-import models.tours.TourDeGlace;
-import models.tours.TourElectrique;
-
-import reseau.CanalTCP;
-import reseau.Port;
+import models.tours.*;
+import reseau.*;
 
 /**
  * Cette classe contiendra le serveur de jeu sur lequel se connecteront tout les
@@ -71,6 +51,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * Thead de rafraichissement pour les messages
 	 */
 	private Watchdog notifieur;
+	
 	private final static long ATTENTE = 1000;
 
 	/**
@@ -115,7 +96,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			// Création du joueur
 			Joueur joueur = new Joueur(pseudo);
 			// FIXME On met de la thune au joueur par defaut
-			joueur.setNbPiecesDOr(1000);
+			joueur.setNbPiecesDOr(100000);
+			
 			try
 			{
 				// Ajout du joueur à l'ensemble des joueurs
@@ -310,6 +292,44 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 				+ typeVague);
 		return 0;
 	}
+	
+	   /**
+     * 
+     * @param IDPlayer
+     * @param nouvelEtat
+     * @return
+     */
+    public synchronized int changementEtatJoueur(int IDPlayer, int nouvelEtat)
+    {
+        log("Le joueur " + IDPlayer + " désire passer en état " + nouvelEtat);
+        return 0;
+    }
+
+    /**
+     * 
+     * @param nouvelEtatPartie
+     * @return
+     */
+    public synchronized int changementEtatPartie(int IDPlayer, int nouvelEtat)
+    {
+        log("Le joueur " + IDPlayer + " désire passer la partie en état "
+                + nouvelEtat);
+
+        switch (nouvelEtat)
+        {
+        case EN_PAUSE:
+            break;
+        case EN_JEU:
+            break;
+        default:
+            break;
+        }
+        return 0;
+    }
+    
+    //-----------------------
+    //-- GESTION DES TOURS --
+    //-----------------------
 
 	/**
 	 * 
@@ -323,109 +343,86 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		log("Le joueur " + IDJoueur + " veut poser une tour de type "
 				+ typeTour);
+		
 		// Selection de la tour cible
 		Tour tour = null;
 		switch (typeTour)
 		{
-		// Tour d'archer
-		case TOUR_ARCHER: // FIXME
-			tour = new TourArcher();
-			break;
-		// Tour Anti Aerienne
-		case TOUR_AA:
-			tour = new TourAntiAerienne();
-			break;
-		// Tour balistique
-		case TOUR_BALISTIQUE:
-			tour = new TourBalistique();
-			break;
-		// Tour canon
-		case TOUR_CANON:
-			tour = new TourCanon();
-			break;
-		// Tour d'air
-		case TOUR_D_AIR:
-			tour = new TourDAir();
-			break;
-		// Tour de feu
-		case TOUR_DE_FEU:
-			tour = new TourDeFeu();
-			break;
-		// Tour de glace (à la fraise)
-		case TOUR_DE_GLACE:
-			tour = new TourDeGlace();
-			break;
-		// Bobine de Telsa
-		case TOUR_ELECTRIQUE:
-			tour = new TourElectrique();
-			break;
-		default:
-			log("Tour " + typeTour + " inconnue.");
-			return ERREUR;
+    		// Tour d'archer
+    		case TOUR_ARCHER:
+    			tour = new TourArcher();
+    			break;
+    		// Tour canon
+            case TOUR_CANON:
+                tour = new TourCanon();
+                break;
+    		// Tour Anti Aerienne
+    		case TOUR_AA:
+    			tour = new TourAntiAerienne();
+    			break;
+    		// Tour de glace (à la fraise)
+            case TOUR_DE_GLACE:
+                tour = new TourDeGlace();
+                break;	
+            // Bobine de Telsa
+            case TOUR_ELECTRIQUE:
+                tour = new TourElectrique();
+                break;
+            // Tour de feu
+            case TOUR_DE_FEU:
+                tour = new TourDeFeu();
+                break;    
+    		// Tour d'air
+    		case TOUR_D_AIR:
+    			tour = new TourDAir();
+    			break;
+    		// Tour de terre
+            case TOUR_DE_TERRE:
+                tour = new TourDeTerre();
+                break;
+    		default:
+    			log("Tour " + typeTour + " inconnue.");
+    			return ERREUR;
 		}
+		
 		// Assignation des paramêtres
 		tour.x = x;
 		tour.y = y;
+		
 		// Assignation du propriétaire
 		tour.setProprietaire(repererJoueur(IDJoueur));
+		
 		try
 		{
 			// Tentative de poser la tour
 			serveurJeu.poserTour(tour);
-		} catch (NoMoneyException e)
-		{
-			// Si pas assez d'argent on retourne le code d'erreur correspondant
-			return PAS_ARGENT;
-		} catch (BadPosException e)
-		{
-			// Mauvaise position
-			return ZONE_INACCESSIBLE;
-		} catch (PathBlockException e)
-		{
-			// Chemin bloqué.
-			return CHEMIN_BLOQUE;
-		} catch (Exception e)
-		{
+		} 
+		// Pas assez d'argent 
+		catch (ArgentInsuffisantException e){
+			return ARGENT_INSUFFISANT;
+		} 
+		// Pose dans une zone non accessible
+		catch (ZoneInaccessibleException e){
+			return ZONE_INACCESSIBLE; 
+		} 
+		// Chemin bloqué.
+		catch (CheminBloqueException e){
+			return CHEMIN_BLOQUE; 
+		} 
+		// Autre erreur
+		catch (Exception e){
 			e.printStackTrace();
 			return ERREUR;
 		}
-		setChanged();
+		
+		// Multicast aux clients
+		envoyerATous(construireMsgAjoutTour(tour).toString());
+  
+		//setChanged();
 		return OK;
 	}
 
-	/**
-	 * 
-	 * @param IDPlayer
-	 * @param nouvelEtat
-	 * @return
-	 */
-	public synchronized int changementEtatJoueur(int IDPlayer, int nouvelEtat)
-	{
-		log("Le joueur " + IDPlayer + " désire passer en état " + nouvelEtat);
-		return 0;
-	}
 
-	/**
-	 * 
-	 * @param nouvelEtatPartie
-	 * @return
-	 */
-	public synchronized int changementEtatPartie(int IDPlayer, int nouvelEtat)
-	{
-		log("Le joueur " + IDPlayer + " désire passer la partie en état "
-				+ nouvelEtat);
-
-		switch (nouvelEtat)
-		{
-		case EN_PAUSE:
-			break;
-		case EN_JEU:
-			break;
-		default:
-			break;
-		}
-		return 0;
-	}
 
 	/**
 	 * 
@@ -434,36 +431,52 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	public synchronized int ameliorerTour(int IDPlayer, int tourCible)
 	{
-		log("Le joueur " + IDPlayer + " désire améliorer la tour" + tourCible);
-		// Repérate de la tour à améliorer
-		Tour tour = repererTour(tourCible);
+		log("Le joueur " + IDPlayer + " désire améliorer la tour " + tourCible);
+		
+		// Récupération de la tour à améliorer
+		Tour tour = getTour(tourCible);
+		
 		if (tour == null)
 			return ERREUR;
+		
 		// On effectue l'action
-		try
-		{
-			serveurJeu.ameliorerTour(tour);
-		} catch (Exception e)
-		{
-			return PAS_ARGENT;
+		try {
+		    serveurJeu.ameliorerTour(tour);  
+		} 
+		catch (ArgentInsuffisantException aie){
+			return ARGENT_INSUFFISANT;
 		}
+		catch (NiveauMaxAtteintException e){
+		    return NIVEAU_MAX_ATTEINT;
+        }
+		
+		// Multicast aux clients
+        envoyerATous(construireMsgAmeliorationTour(tour).toString());
+		
 		return OK;
 	}
 
-	/**
+    /**
 	 * 
 	 * @param tourCibleDel
 	 * @return
 	 */
 	public synchronized int supprimerTour(int IDPlayer, int tourCible)
 	{
-		log("Le joueur " + IDPlayer + " désire supprimer la tour" + tourCible);
+		log("Le joueur " + IDPlayer + " désire supprimer la tour " + tourCible);
+		
 		// Repérage de la tour à supprimer
-		Tour tour = repererTour(tourCible);
+		Tour tour = getTour(tourCible);
+		
 		if (tour == null)
 			return ERREUR;
+		
 		// On effectue l'action
 		serveurJeu.vendreTour(tour);
+		
+		// Multicast aux clients
+        envoyerATous(construireMsgSuppressionTour(tour).toString());
+		
 		return OK;
 	}
 
@@ -514,13 +527,104 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		return new ArrayList<Animation>();
 	}
 
-	private Tour repererTour(int ID)
+	/**
+	 * Permet de recuperer une tour à l'aide de son identificateur
+	 * 
+	 * @param ID l'identificateur de la tour
+	 * @return la tour trouvée ou null
+	 */
+	private Tour getTour(int ID)
 	{
-		for (Tour t : serveurJeu.getTours())
+		for (Tour tour : serveurJeu.getTours())
 		{
-			if (t.getId() == ID)
-				return t;
+			if (tour.getId() == ID)
+				return tour;
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * de aurélien
+	 * 
+	 * @param message
+	 */
+	private void envoyerATous(String message)
+	{
+	    for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+            joueur.getValue().envoyerSurCanalMAJ(message);
+	}
+	
+	/**
+	 * de aurélien
+	 * 
+	 * @param tour
+	 * @return
+	 */
+	private JSONObject construireMsgAjoutTour(Tour tour)
+	{
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", TOUR_AJOUT);
+            msg.put("JOUEUR", tour.getPrioprietaire().getId());
+            msg.put("ID_TOUR", tour.getId());
+            msg.put("X", tour.x);
+            msg.put("Y", tour.y);
+            msg.put("TYPE_TOUR", Tour.getTypeDeTour(tour));
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;
+	}
+	
+	/**
+	 * de aurélien
+	 * 
+	 * @param tour
+	 * @return
+	 */
+	private Object construireMsgAmeliorationTour(Tour tour)
+    {
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", TOUR_AMELIORATION);
+            msg.put("ID_TOUR", tour.getId());
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;
+    }
+	
+	/**
+	 * de aurélien
+	 * 
+	 * @param tour
+	 * @return
+	 */
+	private JSONObject construireMsgSuppressionTour(Tour tour)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", TOUR_SUPRESSION);
+            msg.put("ID_TOUR", tour.getId());
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;
+    }
 }

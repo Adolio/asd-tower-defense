@@ -592,7 +592,14 @@ public abstract class Terrain implements Serializable
     {
         // activation de la zone
         if(MAILLAGE_TERRESTRE != null)
-            MAILLAGE_TERRESTRE.activerZone(zone);
+        {
+            try
+            {
+                MAILLAGE_TERRESTRE.activerZone(zone);
+            }
+            catch(IllegalArgumentException e)
+            {}
+        }
 
         // mise a jour des chemins si necessaire
         if (miseAJourDesCheminsDesCreatures)

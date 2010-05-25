@@ -93,7 +93,7 @@ public interface ConstantesServeurJeu
 	/**
 	 * Code d'erreur : pas assez d'argent
 	 */
-	public final int PAS_ARGENT = 400; //ou PAUVRE, a choix :P
+	public final int ARGENT_INSUFFISANT = 400; //ou PAUVRE, a choix :P
 	
 	/**
 	 * Code d'erreur : mauvaise position de l'objet
@@ -105,6 +105,11 @@ public interface ConstantesServeurJeu
 	 */
 	public final int CHEMIN_BLOQUE = 402;
 
+	/**
+     * Code d'erreur : Niveau max de la tour atteint
+     */
+    public final int NIVEAU_MAX_ATTEINT = 403;
+	
 	/**
 	 * Code d'erreur : erreur quelconque
 	 */
@@ -119,4 +124,6 @@ public interface ConstantesServeurJeu
 	 * Changement d'état de la partie : en jeu
 	 */
 	public final int EN_JEU = 502;
+	
+	
 }

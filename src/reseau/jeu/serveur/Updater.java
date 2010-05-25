@@ -73,7 +73,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 			{
 				// Signalisation aux clients du message
 				for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-					joueur.getValue().update(message.toString());
+					joueur.getValue().envoyerSurCanalMAJ(message.toString());
 			}
 
 		}
