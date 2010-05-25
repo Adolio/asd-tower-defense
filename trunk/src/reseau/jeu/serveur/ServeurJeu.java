@@ -70,7 +70,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Thead de rafraichissement pour les messages
 	 */
-	private Thread notifieur;
+	private Watchdog notifieur;
 	private final static long ATTENTE = 1000;
 
 	/**
@@ -100,6 +100,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		// Assignation du serveur
 		this.serveurJeu = serveurJeu;
+		// Lancement du thread serveur.
+		(new Thread(this)).start();
+	}
+	
+	@Override
+	public void run()
+	{
 		// Réglage du niveau d'affichage des messages clients
 		JoueurDistant.verboseMode = 0;
 		// Réservation du port d'écoute
@@ -108,8 +115,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// Canal d'écoute
 		CanalTCP canal;
 		// Lancement de l'horloge interne
-		notifieur = new Thread(this);
-		notifieur.start();
+		notifieur = new Watchdog(this, ATTENTE);
 		// Boucle d'attente de connections
 		while (true)
 		{
@@ -501,27 +507,5 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized ArrayList<Animation> getAnimations()
 	{
 		return new ArrayList<Animation>();
-	}
-
-	@Override
-	public void run()
-	{
-		while (true)
-		{
-			// Met à jour
-			notifyObservers();
-			// Attente un nombre donné de temps
-			try
-			{
-				synchronized (this)
-				{					
-					wait(ATTENTE);
-				}
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
-
 	}
 }

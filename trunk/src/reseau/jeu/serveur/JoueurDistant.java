@@ -25,7 +25,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private Thread thread;
 	// Canal de dialogue commun
 	private CanalTCP canal;
-	// Canal de mise à jour
+	// Canal de mise à jour 
 	private CanalTCP canal_update;
 	private int ID;
 	private ServeurJeu serveur;
