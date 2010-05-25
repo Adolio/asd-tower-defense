@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import exceptions.AucunePlaceDisponibleException;
+import exceptions.JeuEnCoursException;
 import models.jeu.Jeu_Client;
 import models.jeu.Jeu_Serveur;
 import models.jeu.ModeDeJeu;
@@ -278,7 +281,18 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         {  
             Joueur j = new Joueur("J"+this.nbJoueurs);
             
-            jeuServeur.ajouterJoueur(j);
+            try
+            {
+                jeuServeur.ajouterJoueur(j);
+            } 
+            catch (JeuEnCoursException e1)
+            {
+                e1.printStackTrace();
+            } 
+            catch (AucunePlaceDisponibleException e1)
+            {
+                e1.printStackTrace();
+            }
             
             ajouterJoueur(j);
             

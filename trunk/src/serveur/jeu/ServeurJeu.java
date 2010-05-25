@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import exceptions.BadPosException;
+import exceptions.NoMoneyException;
+import exceptions.PathBlockException;
+
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
-import models.jeu.BadPosException;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
-import models.jeu.NoMoneyException;
-import models.jeu.PathBlockException;
 import models.joueurs.Joueur;
 import models.tours.IDTours;
 import models.tours.Tour;

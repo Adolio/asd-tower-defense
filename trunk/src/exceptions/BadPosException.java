@@ -1,4 +1,4 @@
-package models.jeu;
+package exceptions;
 
 public class BadPosException extends Exception
 {

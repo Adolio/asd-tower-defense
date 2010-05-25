@@ -8,6 +8,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+
+import exceptions.AucunePlaceDisponibleException;
+import exceptions.JeuEnCoursException;
 import models.jeu.*;
 import models.joueurs.Joueur;
 import models.terrains.*;
@@ -373,7 +376,18 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             // ajout du joueur dans le premier emplacement
             Joueur joueur1 = new Joueur(tfPseudo.getText());
-            jeu.ajouterJoueur(joueur1);
+            try
+            {
+                jeu.ajouterJoueur(joueur1);
+            } 
+            catch (JeuEnCoursException e1)
+            {
+                e1.printStackTrace();
+            } 
+            catch (AucunePlaceDisponibleException e1)
+            {
+                e1.printStackTrace();
+            }
             
             /* TODO a effacer
             Joueur joueur2 = new Joueur("fictiveBoy");

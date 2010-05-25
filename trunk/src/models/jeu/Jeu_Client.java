@@ -11,7 +11,7 @@ public class Jeu_Client extends Jeu
     
     public Jeu_Client(Joueur joueur)
     {
-        clientJeu = new ClientJeu(joueur.getId());
+        clientJeu = new ClientJeu("127.0.0.1",8888);
     }
 
     @Override
