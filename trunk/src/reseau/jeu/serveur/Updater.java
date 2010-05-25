@@ -118,7 +118,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 		{
 			try
 			{
-				json.put("OBJECT", TOUR);
+				json.put("TYPE", TOUR);
 				json.put("JOUEUR", t.getPrioprietaire().getId());
 				json.put("ID_TOUR", t.getId());
 				json.put("X", t.getXi());
@@ -127,7 +127,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 				if (t instanceof TourArcher)
 					type = TOUR_ARCHER;
 				// TODO Faire la suite des tours
-				json.put("TYPE", type);
+				json.put("TYPE_TOUR", type);
 			} catch (JSONException e)
 			{
 				e.printStackTrace();
