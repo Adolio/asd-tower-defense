@@ -32,7 +32,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	private CanalTCP canal1;
 	private CanalTCP canal2;
 	private Jeu_Client jeu;
-	
+    private final boolean DEBUG = true;
 	
 	/*
 	 * FIXME (DE AURELIEN) NON L'ID DU JOUEUR JE NE LE CONNAIS PAS ENCORE
@@ -145,18 +145,39 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 		}
 	}
 	
-	public void demanderCreationTour(int x, int y, int type){
-		try {
-			JSONObject json = new JSONObject();
+	public void demanderCreationTour(int x, int y, int type) 
+	throws NoMoneyException, BadPosException
+	{
+		try 
+		{
+			// envoye de la requete d'ajout
+		    JSONObject json = new JSONObject();
 			json.put("TYPE", TOWER);
 			json.put("X", x);
 			json.put("Y", y);
 			//TODO regarder pour le doublon
 			json.put("SORT", type);
 			
+			if(DEBUG)
+			    System.out.print("[CLIENT][JOUEUR "+ID+"] Envoye d'une demande de tour");
+			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			
+			// attente de la réponse
+			String resultat = canal1.recevoirString();
+			JSONObject resultatJSON = new JSONObject(resultat);
+			switch(resultatJSON.getInt("STATUS"))
+			{
+			    case PAS_ARGENT :
+			        throw new NoMoneyException("Pas assez d'argent");
+			    case MAUVAISE_POS :
+                    throw new BadPosException("Zone non accessible");
+			    case CHEM_BLOQUE :
+                    throw new BadPosException("La tour bloque le chemin");
+			}
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -177,8 +198,10 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 	//TODO suppressionTour ou venteTour?
 	// (DE AURELIEN) ... VENTE CAR ON REGAGNE DE LA TUNE COTE SERVEUR!
 	// PAR CONTRE TU RECEVERA UNE SUPPRESSION DE TOUR DE LA PART SERVEUR.
-	public void venteTour(int idTour){
-		try {
+	public void venteTour(int idTour)
+	{
+		try 
+		{
 			JSONObject json = new JSONObject();
 			//TODO TOWER_SELL au lieu de TOWER_DEL?
 			// (DE AURELIEN) ... EFFECTIVEMENT! MAIS TOWER_DEL EN RETOUR DU SERVEUR
@@ -186,25 +209,35 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 			json.put("ID_TOWER", idTour);
 			
 			canal1.envoyerString(json.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
 	}
-	
-	
-	//TODO transformer en thread
-	public void receptionMessages(){
-		JSONObject mes;
-		try {
-			mes = new JSONObject(canal1.recevoirString());
+
+	// TODO commenter
+	public void receptionMessages()
+	{
+		JSONObject resultat;
+		try 
+		{
+		    if(DEBUG)
+		        System.out.print("[CLIENT][JOUEUR "+ID+"]");
+		    
+		    resultat = new JSONObject(canal2.recevoirString());
 			
-			switch(mes.getInt("TYPE")){
-				case TOUR :
+			switch(resultat.getInt("TYPE"))
+			{
+			    case TOUR :
+			        
+			        if(DEBUG)
+			            System.out.println("Réception d'une tour");
+			        
 					Tour t = null;
 				
-					
-					switch(mes.getInt("SORT")){
+					switch(resultat.getInt("SORT"))
+					{
 						case TOUR_ARCHER : 
 							t = new TourArcher();
 							break;
@@ -231,38 +264,45 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, Runnable{
 							break;
 						default : 
 							throw new TypeDeTourInvalideException("Le type " 
-									+ mes.getString("SORT") + " est invalide");
+									+ resultat.getString("SORT") + " est invalide");
 						
 					}
-					placerTour(t, mes);
+					placerTour(t, resultat);
 					break;
 					
 				default :
 						
 			}
-		} catch (CanalException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (CanalException e) 
+		{
 			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
-		} catch (TypeDeTourInvalideException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (TypeDeTourInvalideException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 	
-	private void placerTour(Tour t, JSONObject mes){
-		try {
+	private void placerTour(Tour t, JSONObject mes)
+	{
+		try 
+		{
 			t.x = mes.getInt("X");
 			t.y = mes.getInt("Y");
+			
+			System.out.println("-----------------AHAHAHAHAAHAHAHAHAAH");
 			jeu.poserTourDirect(t);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

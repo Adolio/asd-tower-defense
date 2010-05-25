@@ -1,10 +1,9 @@
 package models.jeu;
-
 import java.net.ConnectException;
-
+import exceptions.BadPosException;
+import exceptions.NoMoneyException;
 import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
-import reseau.jeu.serveur.ServeurJeu;
 import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
 import models.tours.IDTours;
@@ -21,7 +20,7 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void poserTour(Tour tour)
+    public void poserTour(Tour tour) throws NoMoneyException, BadPosException
     {
         clientJeu.demanderCreationTour((int) tour.getX(),(int) tour.getY(),IDTours.TOUR_ARCHER);
     }
