@@ -12,8 +12,11 @@ import models.tours.Tour;
 
 public class Updater implements Observer, Runnable
 {
+	// Thread actif
 	private Thread thread;
+	// Liste des clients
 	private HashMap<Integer, JoueurDistant> clients;
+	// Buffer des messages
 	private ConcurrentLinkedQueue<Message> buffer;
 
 	public Updater(HashMap<Integer, JoueurDistant> clients)
@@ -27,9 +30,12 @@ public class Updater implements Observer, Runnable
 	@Override
 	public void update(Observable o, Object arg)
 	{
+		// Extraction des nouvelles données
 		ServeurJeu srv = (ServeurJeu) o;
 		parseCreatures(srv.getCreatures());
 		parseTours(srv.getTours());
+		// Réveille le thread s'il dort
+		this.notify();
 	}
 
 	@Override
@@ -37,9 +43,23 @@ public class Updater implements Observer, Runnable
 	{
 		while (true)
 		{
-			// Signalisation aux clients que la partie à commencé
+			// Bloque le thread si le buffer est vide
+			if (buffer.size() == 0)
+			{
+				try
+				{
+					this.wait();
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			// Itération sur le prochain message en attente
+			Message message = buffer.poll();
+			// Signalisation aux clients du message
 			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-				joueur.getValue().send("Update");
+				joueur.getValue().send(message.toString());
+			
 		}
 	}
 
@@ -71,6 +91,10 @@ public class Updater implements Observer, Runnable
 
 		Message(Tour t)
 		{
+		}
+		
+		public String toString(){
+			return "Test";
 		}
 	}
 
