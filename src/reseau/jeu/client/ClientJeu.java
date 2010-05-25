@@ -5,9 +5,11 @@ import java.net.ConnectException;
 import reseau.CanalTCP;
 import reseau.CanalException;
 import reseau.jeu.serveur.ConstantesServeurJeu;
+import models.jeu.Jeu_Client;
+import models.tours.*;
+import exceptions.*;
 
 import org.json.*;
-
 
 /* 
  * DES IDEES : (DE AURELIEN)
@@ -25,10 +27,11 @@ import org.json.*;
  * 2) PENSER QUE LE SERVEUR DOIT TE RETOURNER L'ID DE LA TOUR SI
  * ELLE EST POSABLE... ON EN A BESOINS POUR LA SUITE.
  */
-public class ClientJeu implements ConstantesServeurJeu {
+public class ClientJeu implements ConstantesServeurJeu, IDTours{
 	private int ID;
 	private CanalTCP canal1;
 	private CanalTCP canal2;
+	private Jeu_Client jeu;
 	
 	
 	/*
@@ -39,8 +42,9 @@ public class ClientJeu implements ConstantesServeurJeu {
 	 * IP_SERVEUR SERA UN PARAMETRE...
 	 * PORT_SERVEUR SERA UN PARAMETRE...
 	 */
-	public ClientJeu(String IPServeur, int portServeur, String pseudo) {
+	public ClientJeu(Jeu_Client jeu, String IPServeur, int portServeur, String pseudo) {
 		int port2;
+		this.jeu = jeu;
 		try
 		{
 			canal1 = new CanalTCP(IPServeur, portServeur, true);
@@ -68,12 +72,12 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public static void main(String[] args)
 	{
 		System.out.println("Creation du client");
-		ClientJeu client = new ClientJeu("localhost", 2357, "Tux");
+		//ClientJeu client = new ClientJeu("localhost", 2357, "Tux");
 		for(int i = 0; i < 5; i++){
 			
 			
 			System.out.println("Envoi de PING");
-			client.envoyerMessage("PING!", TO_ALL);
+		//T	client.envoyerMessage("PING!", TO_ALL);
 //			
 //			System.out.println("Récéption : "+canal.recevoirString());
 //			System.out.println("Fermeture");
@@ -205,7 +209,42 @@ public class ClientJeu implements ConstantesServeurJeu {
 			
 			switch(mes.getInt("TYPE")){
 				case TOUR :
+					Tour t = null;
+				
+					
+					switch(mes.getInt("SORT")){
+						case TOUR_ARCHER : 
+							t = new TourArcher();
+							break;
+						case TOUR_AA : 
+							t = new TourAntiAerienne();
+							break;
+						/*case TOUR_BALISTIQUE :
+							t = new TourBalistique();
+							break;*/
+						case TOUR_CANON :
+							t = new TourCanon();
+							break;
+						case TOUR_D_AIR :
+							t = new TourDAir();
+							break;
+						case TOUR_DE_FEU : 
+							t = new TourDeFeu();
+							break;
+						case TOUR_DE_GLACE : 
+							t = new TourDeGlace();
+							break;
+						case TOUR_ELECTRIQUE :
+							t = new TourElectrique();
+							break;
+						default : 
+							throw new TypeDeTourInvalideException("Le type " 
+									+ mes.getString("SORT") + " est invalide");
+						
+					}
+					placerTour(t, mes);
 					break;
+					
 				default :
 						
 			}
@@ -215,7 +254,22 @@ public class ClientJeu implements ConstantesServeurJeu {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (TypeDeTourInvalideException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+	}
+	
+	private void placerTour(Tour t, JSONObject mes){
+		try {
+			t.x = mes.getInt("X");
+			t.y = mes.getInt("Y");
+			jeu.poserTour(t);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
