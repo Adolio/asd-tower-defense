@@ -1,4 +1,4 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 import static org.junit.Assert.*;
 

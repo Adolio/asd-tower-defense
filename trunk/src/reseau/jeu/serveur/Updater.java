@@ -1,4 +1,4 @@
-package serveur.jeu;
+package reseau.jeu.serveur;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,10 +7,16 @@ import java.util.Observer;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import models.creatures.Creature;
-import models.tours.Tour;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Updater implements Observer, Runnable
+import models.creatures.Creature;
+import models.creatures.IDCreatures;
+import models.tours.IDTours;
+import models.tours.Tour;
+import models.tours.*;
+
+public class Updater implements Observer, Runnable, ConstantesServeurJeu, IDTours, IDCreatures
 {
 	// Thread actif
 	private Thread thread;
@@ -59,7 +65,7 @@ public class Updater implements Observer, Runnable
 			// Signalisation aux clients du message
 			for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 				joueur.getValue().update(message.toString());
-			
+
 		}
 	}
 
@@ -85,26 +91,42 @@ public class Updater implements Observer, Runnable
 
 	private class Message
 	{
+		JSONObject json = new JSONObject();
+
 		Message(Creature c)
 		{
-			c.getId();
-			c.getX();
-			c.getY();
-			c.getAngle();
-			c.getSante();
-			c.getSanteMax();
-			c.getNbPiecesDOr();
+			try
+			{
+				json.put("OBJECT", CREATURE);
+			} catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		Message(Tour t)
 		{
-			t.getXi();
-			t.getYi();
+			try
+			{
+				json.put("OBJECT", TOUR);
+				json.put("JOUEUR", t.getPrioprietaire().getId());
+				json.put("ID_TOUR", t.getId());
+				json.put("X", t.getXi());
+				json.put("Y", t.getYi());
+				int type = -1;
+				if(t instanceof TourArcher)
+					type = TOUR_ARCHER;
+				// TODO Faire la suite des tours
+				json.put("TYPE",type);
+			} catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		
-		public String toString(){
-			return "Test";
+
+		public String toString()
+		{
+			return json.toString();
 		}
 	}
-
 }

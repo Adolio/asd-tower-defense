@@ -7,9 +7,9 @@ import org.json.JSONObject;
 import outils.fichierDeConfiguration;
 import reseau.CanalTCP;
 import reseau.CanalException;
+import reseau.jeu.serveur.ServeurJeu;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
-import serveur.jeu.ServeurJeu;
 
 public class Jeu_Serveur extends Jeu
 {
