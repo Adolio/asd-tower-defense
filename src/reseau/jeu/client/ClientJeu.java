@@ -66,6 +66,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours{
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * @param args
 	 */
