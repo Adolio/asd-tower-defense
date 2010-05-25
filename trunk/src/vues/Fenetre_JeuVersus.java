@@ -589,7 +589,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void lancerVague(VagueDeCreatures vague)
     {
-        jeu.lancerVague(vague); 
+        jeu.lancerVague(vague);
     }
 
     @Override

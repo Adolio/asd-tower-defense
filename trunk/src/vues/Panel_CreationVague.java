@@ -21,18 +21,17 @@ public class Panel_CreationVague extends JPanel
         new Elephant(500, 50, 40.0)
     };
     
-    public Panel_CreationVague(final Jeu jeu, final Joueur cible, final EcouteurDeLanceurDeVagues edlv)
-                               
+    public Panel_CreationVague(final Jeu jeu, final Joueur cible, 
+            final EcouteurDeLanceurDeVagues edlv)                          
     {
         //setOpaque(false);
         //tb.setOpaque(false);
         setBackground(LookInterface.COULEUR_DE_FOND_2);
         tb.setOpaque(false);
         
-        tb.add(new JLabel("Créature"),0,0); 
-        tb.add(new JLabel("Prix"),2,0); 
-        tb.add(new JLabel("Revenu"),3,0); 
-        
+        tb.add(new JLabel("Créature"),0,0);
+        tb.add(new JLabel("Prix"),2,0);
+        tb.add(new JLabel("Revenu"),3,0);
         
         for(int i=0;i < creatures.length;i++)
         {
