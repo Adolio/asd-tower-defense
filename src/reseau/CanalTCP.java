@@ -11,7 +11,7 @@ import java.util.*;
  * @author Lazhar Farjallah
  * 
  */
-public class Canal
+public class CanalTCP
 {
    
    // La socket qui est associée à ce côté du canal.
@@ -40,7 +40,7 @@ public class Canal
     * @throws CanalException
     *            Si un problème de connexion survient
     */
-   public Canal(Port port, boolean afficherMessagesDebug) throws CanalException
+   public CanalTCP(Port port, boolean afficherMessagesDebug) throws CanalException
    {
       this.afficherMessagesDebug = afficherMessagesDebug;
       
@@ -116,7 +116,7 @@ public class Canal
     * @throws CanalException
     *            Si une erreur de connexion survient
     */
-   public Canal(String adresseIp, int numeroPort, boolean afficherMessagesDebug)
+   public CanalTCP(String adresseIp, int numeroPort, boolean afficherMessagesDebug)
          throws ConnectException, CanalException
    {
       this.afficherMessagesDebug = afficherMessagesDebug;

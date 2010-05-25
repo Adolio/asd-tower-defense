@@ -15,7 +15,7 @@ public class SEInscription {
    private static ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
    private Port port;
    private boolean avecLog;
-   private Canal canal;
+   private CanalTCP canal;
    
    /**
     * 
@@ -45,7 +45,7 @@ public class SEInscription {
     */
    private void creerCanal() {
       try {
-         canal = new Canal(port, avecLog);
+         canal = new CanalTCP(port, avecLog);
       } catch (CanalException ce) {
          System.out.println("\tProbleme de connexion : " + ce.getMessage());
       }
