@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import exceptions.AucunePlaceDisponibleException;
-import exceptions.BadPosException;
+import exceptions.ZoneInaccessibleException;
 import exceptions.JeuEnCoursException;
-import exceptions.NoMoneyException;
-import exceptions.PathBlockException;
+import exceptions.NiveauMaxAtteintException;
+import exceptions.ArgentInsuffisantException;
+import exceptions.CheminBloqueException;
 import exceptions.TerrainDejaInitialise;
 import models.animations.*;
 import models.creatures.Creature;
@@ -204,7 +205,7 @@ public abstract class Jeu implements EcouteurDeCreature,
      * @param tour la tour
      * @throws Exception si c'est pas possible
      */
-    public void poserTour(Tour tour) throws NoMoneyException, BadPosException, PathBlockException
+    public void poserTour(Tour tour) throws ArgentInsuffisantException, ZoneInaccessibleException, CheminBloqueException
     {
         // c'est bien une tour valide ?
         if (tour == null)
@@ -212,15 +213,15 @@ public abstract class Jeu implements EcouteurDeCreature,
 
         // suffisemment d'argent ?
         if(!laTourPeutEtreAchetee(tour))    
-            throw new NoMoneyException("Pose impossible : Pas assez d'argent");
+            throw new ArgentInsuffisantException("Pose impossible : Pas assez d'argent");
         
         // si elle peut pas etre posee
         if (!laTourPeutEtrePosee(tour))
-            throw new BadPosException("Pose impossible : Zone non accessible");
+            throw new ZoneInaccessibleException("Pose impossible : Zone non accessible");
 
         // si elle bloque le chemin de A vers B
         if (terrain.laTourBloqueraLeChemin(tour))
-            throw new PathBlockException("Pose impossible : Chemin bloqué");
+            throw new CheminBloqueException("Pose impossible : Chemin bloqué");
 
         // desactive la zone dans le maillage qui correspond a la tour
         terrain.desactiverZone(tour, true);
@@ -261,16 +262,16 @@ public abstract class Jeu implements EcouteurDeCreature,
      * 
      * @param tour la tour a ameliorer
      * @return vrai si operation realisee avec succes, sinon faux 
-     * @throws Exception si pas assez d'argent 
-     * @throws Exception si niveau max de la tour atteint
+     * @throws ArgentInsuffisantException si pas assez d'argent 
+     * @throws NiveauMaxAtteintException si niveau max de la tour atteint
      */
-    public void ameliorerTour(Tour tour) throws Exception
+    public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException
     {
         if(!tour.peutEncoreEtreAmelioree())
-            throw new Exception("Amélioration impossible : Niveau max atteint");
+            throw new NiveauMaxAtteintException("Amélioration impossible : Niveau max atteint");
         
         if(tour.getPrioprietaire().getNbPiecesDOr() < tour.getPrixAchat())
-            throw new Exception("Amélioration impossible : Pas assez d'argent");
+            throw new ArgentInsuffisantException("Amélioration impossible : Pas assez d'argent");
 
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());

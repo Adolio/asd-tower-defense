@@ -7,7 +7,7 @@ package exceptions;
  * @author Pierre-Do
  * 
  */
-public class NoMoneyException extends Exception
+public class ArgentInsuffisantException extends Exception
 {
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class NoMoneyException extends Exception
 	 * Appel du constructeur simple.
 	 * @param cause Un bref message d'erreur sur la cause de l'exception
 	 */
-	public NoMoneyException(String cause)
+	public ArgentInsuffisantException(String cause)
 	{
 		super(cause);
 	}
