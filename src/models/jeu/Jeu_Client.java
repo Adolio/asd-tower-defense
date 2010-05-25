@@ -1,6 +1,10 @@
 package models.jeu;
 
+import java.net.ConnectException;
+
+import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
+import reseau.jeu.serveur.ServeurJeu;
 import models.creatures.VagueDeCreatures;
 import models.joueurs.Joueur;
 import models.tours.IDTours;
@@ -8,11 +12,12 @@ import models.tours.Tour;
 
 public class Jeu_Client extends Jeu
 {
-    ClientJeu clientJeu;
+    private ClientJeu clientJeu;
+    private Joueur joueur;
     
     public Jeu_Client(Joueur joueur)
     {
-        clientJeu = new ClientJeu(this, "127.0.0.1",2357, joueur.getPseudo());
+        this.joueur = joueur;
     }
 
     @Override
@@ -43,5 +48,12 @@ public class Jeu_Client extends Jeu
     public void poserTourDirect(Tour tour)
     {
         gestionnaireTours.ajouterTour(tour);
+    }
+
+    public boolean connexionAvecLeServeur(String IP, int port) 
+    throws ConnectException, CanalException
+    {
+        clientJeu = new ClientJeu(this, IP, port, joueur.getPseudo());
+        return true;
     }
 }

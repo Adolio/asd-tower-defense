@@ -74,6 +74,8 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         this.ADMIN  = false;
         this.jeuClient = jeu;
         this.joueur = joueur;
+        
+        initialiserForm();
     }
 
     /**
