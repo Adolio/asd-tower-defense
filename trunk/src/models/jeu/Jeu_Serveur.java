@@ -97,8 +97,13 @@ public class Jeu_Serveur extends Jeu
         }
     }
 
-    // TODO
-    public boolean getEnregistrementReussie()
+    /**
+     * Permet de savoir si le serveur est 
+     * enregistré sur le Serveur d'Enregistrement.
+     * 
+     * @return true si il l'est, false sinon
+     */
+    public boolean estEnregisterSurSE()
     {
         return enregistrementReussie;
     }

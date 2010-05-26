@@ -8,6 +8,8 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import exceptions.ActionNonAutoriseeException;
 import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -459,16 +461,24 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void vendreTour(Tour tour)
     {
-        jeu.vendreTour(tour);
-        panelInfoTour.effacerTour();
-        panelMenuInteraction.miseAJourNbPiecesOr();
-        panelTerrain.setTourSelectionnee(null);
-        
-        jeu.ajouterAnimation(
-                new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
-                        tour.getPrixDeVente())
-                );
-        
+        try
+        {
+            jeu.vendreTour(tour);
+            
+            panelInfoTour.effacerTour();
+            panelMenuInteraction.miseAJourNbPiecesOr();
+            panelTerrain.setTourSelectionnee(null);
+            
+            jeu.ajouterAnimation(
+                    new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
+                            tour.getPrixDeVente())
+                    );
+            
+        } 
+        catch (ActionNonAutoriseeException e)
+        {
+            e.printStackTrace();
+        }
     }
 	
     /**

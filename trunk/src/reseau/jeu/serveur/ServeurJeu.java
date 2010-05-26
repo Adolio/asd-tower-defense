@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import org.json.*;
+
 import exceptions.*;
 import models.animations.Animation;
 import models.creatures.*;
@@ -17,10 +18,10 @@ import reseau.*;
  * cliens.
  * 
  * @author Pierre-Do
- * 
+ * @author Da Campo Aurélien
  */
 public class ServeurJeu extends Observable implements ConstantesServeurJeu,
-		EcouteurDeJeu, IDTours, Runnable
+		EcouteurDeJeu, IDTours, IDCreatures, Runnable
 {
 	/**
 	 * La version courante du serveur
@@ -32,6 +33,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	public final static int PORT = 2357;
 
+	/**
+     * TODO
+     */
+	private long TEMPS_DE_RAFFRAICHISSEMENT = 200;
+	
 	/**
 	 * Fanion pour le mode debug
 	 */
@@ -45,7 +51,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Lien vers le module coté serveur du jeu
 	 */
-	private Jeu serveurJeu;
+	private Jeu jeuServeur;
 
 	/**
 	 * Thead de rafraichissement pour les messages
@@ -56,13 +62,17 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 
 	/**
 	 * 
-	 * @param serveurJeu
+	 * @param jeuServeur
 	 * @throws IOException
 	 */
-	public ServeurJeu(Jeu serveurJeu) throws IOException
+	public ServeurJeu(final Jeu jeuServeur) throws IOException
 	{
 		// Assignation du serveur
-		this.serveurJeu = serveurJeu;
+		this.jeuServeur = jeuServeur;
+		
+		// le serveur ecoute le jeu
+		jeuServeur.setEcouteurDeJeu(this);
+		
 		// Lancement du thread serveur.
 		(new Thread(this)).start();
 	}
@@ -101,7 +111,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			try
 			{
 				// Ajout du joueur à l'ensemble des joueurs
-				serveurJeu.ajouterJoueur(joueur);
+				jeuServeur.ajouterJoueur(joueur);
 				// Extraction de l'ID du joueur
 				int IDClient = joueur.getId();
 				// Envoi de l'ID du joueur au client
@@ -110,12 +120,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 				log("Nouveau joueur ! ID : " + IDClient);
 				// Enregistrement de l'ID et du canal dans la base interne
 				enregistrerClient(IDClient, canal);
-			} catch (JeuEnCoursException e)
-			{
+			} 
+			catch (JeuEnCoursException e){
 				e.printStackTrace();
 				canal.envoyerString("Erreur, le jeu est en cours");
-			} catch (AucunePlaceDisponibleException e)
-			{
+			}
+			catch (AucunePlaceDisponibleException e){
 				e.printStackTrace();
 				canal.envoyerString("Erreur, pas de place disponible");
 			}
@@ -156,9 +166,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		System.out.println(msg);
 	}
 
-	private synchronized Joueur repererJoueur(int ID)
+	private synchronized Joueur getJoueur(int ID)
 	{
-		for (Joueur joueur : serveurJeu.getJoueurs())
+		for (Joueur joueur : jeuServeur.getJoueurs())
 		{
 			if (joueur.getId() == ID)
 				return joueur;
@@ -168,11 +178,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 
 	public synchronized void lancerPartie()
 	{
-		// Signalisation aux clients que la partie à commencé
+	    // Signalisation aux clients que la partie à commencé
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-		{
 			joueur.getValue().lancerPartie();
-		}
+		
+		// TODO
+		//JSONObject requete = construireMsgPartieLancee();
+        //envoyerATous(requete.toString());
 	}
 
 	/**************** NOTIFICATIONS **************/
@@ -180,90 +192,106 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-		setChanged();
+	    /*
+	     *  TODO uniquement pour les joueurs concernée
+	     *  -> les joueurs de l'equipe qui a perdu une vie
+	     */
+	    //JSONObject requete = construireMsgPerteVie(equipe);
+	    
+	    // envoyer aux membres de l'equipe
 	}
 
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-		setChanged();
+	    // detectable lors de la mise a jour par l'état d'une creature 
 	}
 
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-		setChanged();
+        JSONObject requete = construireMsgSuppressionCreature(creature);
+        envoyerATous(requete.toString());
 	}
 
-	@Override
-	public void etoileGagnee()
-	{
-		setChanged();
-	}
+    @Override
+	public void etoileGagnee(){}
 
+	
 	@Override
 	public void partieTerminee()
 	{
-		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-			joueur.getValue().partieTerminee();
+	    // TODO
+	    //JSONObject requete = construireMsgFinPartie();
+        //envoyerATous(requete.toString());
 	}
 
 	@Override
-	public void vagueEntierementLancee(VagueDeCreatures vague)
-	{
-		// Rien
-	}
+	public void vagueEntierementLancee(VagueDeCreatures vague){}
 
 	@Override
-	public void animationAjoutee(Animation animation)
-	{
-		setChanged();
-	}
+	public void animationAjoutee(Animation animation){}
 
 	@Override
-	public void animationTerminee(Animation animation)
-	{
-		setChanged();
-	}
-
+	public void animationTerminee(Animation animation){}
+	
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{
-		setChanged();
+	    JSONObject requete = construireMsgAjoutCreature(creature);
+	    
+	    envoyerATous(requete.toString());
 	}
 
-	@Override
-	public void joueurAjoute(Joueur joueur)
-	{
-		// FIXME J'fais quoi ici moi ?
-	}
+    @Override
+	public void joueurAjoute(Joueur joueur){}
+    
+
 
 	@Override
 	public void partieDemarree()
 	{
-		// Notification aux joueurs que la partie débutte
-		notifyAll();
 		lancerPartie();
+
+		//--------------------------------------
+		//-- tache de mise a jour des clients --
+		//--------------------------------------
+		Thread t = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while(!jeuServeur.estTermine())
+                {
+                    JSONObject msg;
+
+                    for(Creature creature : jeuServeur.getCreatures())
+                    {
+                        msg = construireMsgEtatCreature(creature);
+                        envoyerATous(msg.toString());
+                    }
+  
+                    try{
+                        Thread.sleep(TEMPS_DE_RAFFRAICHISSEMENT);
+                    } 
+                    catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        
+        t.start();
 	}
 
 	@Override
-	public void tourAmelioree(Tour tour)
-	{
-		setChanged();
-	}
+	public void tourAmelioree(Tour tour){}
 
 	@Override
-	public void tourPosee(Tour tour)
-	{
-		setChanged();
-		notifyObservers();
-	}
+	public void tourPosee(Tour tour){}
 
 	@Override
-	public void tourVendue(Tour tour)
-	{
-		setChanged();
-	}
+	public void tourVendue(Tour tour){}
 
 	/**
 	 * Supprime un joueur de la partie
@@ -274,23 +302,57 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public synchronized void supprimerJoueur(int ID)
 	{
 		clients.remove(ID);
-		// TODO
-		setChanged();
-		notifyObservers(clients);
+		
+		//setChanged();
+		//notifyObservers(clients);
 	}
 
 	/************************** ACTIONS DES JOUEURS ************************/
 
 	/**
+	 * TODO Contrôle de l'argent
 	 * 
 	 * @param typeVague
 	 * @return
 	 */
-	public synchronized int lancerVague(int IDPlayer, int typeVague)
+	public synchronized int lancerVague(int IDPlayer, int nbCreatures, int typeCreature)
 	{
-		log("Le joueur " + IDPlayer + " désire lancer une vague de type"
-				+ typeVague);
-		return 0;
+	    Creature creature;
+        
+        switch(typeCreature)
+        {
+            case AIGLE :
+                creature = new Aigle(100, 100, 20);
+                break;
+            case ARAIGNEE : 
+                creature = new Araignee(100, 100, 20);
+                break;
+            case ELEPHANT :
+                creature = new Elephant(100, 100, 20);
+                break;
+            case GRANDE_ARAIGNEE : 
+                creature = new GrandeAraignee(100, 100, 20);
+                break;
+            case MOUTON :
+                creature = new Mouton(100, 100, 20);
+                break;
+            case PIGEON : 
+                creature = new Pigeon(100, 100, 20);
+                break;
+            case RHINOCEROS :
+                creature = new Rhinoceros(100, 100, 20);
+                break;
+            default :
+                return ERREUR; // TODO erreur
+        }
+        
+        log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
+                + creature.getNom());
+        
+		VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 200, true);
+		jeuServeur.lancerVague(vague);
+		
+		return OK;
 	}
 	
 	   /**
@@ -306,24 +368,26 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     }
 
     /**
-     * 
-     * @param nouvelEtatPartie
-     * @return
+     * TODO
      */
     public synchronized int changementEtatPartie(int IDPlayer, int nouvelEtat)
     {
         log("Le joueur " + IDPlayer + " désire passer la partie en état "
                 + nouvelEtat);
 
+        // FIXME S'il est le créateur !
         switch (nouvelEtat)
         {
-        case EN_PAUSE:
-            break;
-        case EN_JEU:
-            break;
-        default:
-            break;
+            case EN_PAUSE:
+                // TODO
+                break;
+            case EN_JEU:
+                // TODO
+                break;
+            default:
+                break;
         }
+        
         return 0;
     }
     
@@ -332,16 +396,17 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     //-----------------------
 
 	/**
+	 * Appelée lors d'un demande d'ajout d'une tour
 	 * 
-	 * @param IDJoueur
-	 * @param typeTour
-	 * @param x
-	 * @param y
-	 * @return
+	 * @param idJoueur le joueur qui souhaite améliorer
+	 * @param typeTour le type de la tour a ajouter
+	 * @param x la position x de la tour
+	 * @param y la position y de la tour
+	 * @return l'état de l'action
 	 */
-	public synchronized int poserTour(int IDJoueur, int typeTour, int x, int y)
+	public synchronized int poserTour(int idJoueur, int typeTour, int x, int y)
 	{
-		log("Le joueur " + IDJoueur + " veut poser une tour de type "
+		log("Le joueur " + idJoueur + " veut poser une tour de type "
 				+ typeTour);
 		
 		// Selection de la tour cible
@@ -390,12 +455,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		tour.y = y;
 		
 		// Assignation du propriétaire
-		tour.setProprietaire(repererJoueur(IDJoueur));
+		tour.setProprietaire(getJoueur(idJoueur));
 		
 		try
 		{
 			// Tentative de poser la tour
-			serveurJeu.poserTour(tour);
+			jeuServeur.poserTour(tour);
 		} 
 		// Pas assez d'argent 
 		catch (ArgentInsuffisantException e){
@@ -416,42 +481,51 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		}
 		
 		// Multicast aux clients
-		envoyerATous(construireMsgAjoutTour(tour).toString());
+		envoyerATous(construireMsgDemandeAjoutTour(tour).toString());
   
 		//setChanged();
 		return OK;
 	}
 
-
-
 	/**
+	 * Appelée lors d'un demande d'amélioration d'une tour
 	 * 
-	 * @param tourCible
-	 * @return
+	 * @param idJoueur le joueur qui souhaite améliorer
+	 * @param idTour la tour a améliorer
+	 * 
+	 * @return l'état de l'action
 	 */
-	public synchronized int ameliorerTour(int IDPlayer, int tourCible)
+	public synchronized int ameliorerTour(int idJoueur, int idTour)
 	{
-		log("Le joueur " + IDPlayer + " désire améliorer la tour " + tourCible);
+		log("Le joueur " + idJoueur + " désire améliorer la tour " + idTour);
 		
 		// Récupération de la tour à améliorer
-		Tour tour = getTour(tourCible);
+		Tour tour = getTour(idTour);
 		
 		if (tour == null)
 			return ERREUR;
 		
+		// si le joueur est bien le propriétaire de la tour
+		if(tour.getPrioprietaire().getId() != idJoueur)
+		    return ACTION_NON_AUTORISEE;
+		
 		// On effectue l'action
 		try {
-		    serveurJeu.ameliorerTour(tour);  
+		    jeuServeur.ameliorerTour(tour);  
 		} 
 		catch (ArgentInsuffisantException aie){
 			return ARGENT_INSUFFISANT;
 		}
 		catch (NiveauMaxAtteintException e){
 		    return NIVEAU_MAX_ATTEINT;
+        } 
+		catch (ActionNonAutoriseeException e)
+        {
+		    return ACTION_NON_AUTORISEE;
         }
 		
 		// Multicast aux clients
-        envoyerATous(construireMsgAmeliorationTour(tour).toString());
+        envoyerATous(construireMsgDemanderAmeliorationTour(tour).toString());
 		
 		return OK;
 	}
@@ -471,11 +545,19 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		if (tour == null)
 			return ERREUR;
 		
+		// seul le proprio peut vendre la tour
+		if(tour.getPrioprietaire().getId() != IDPlayer)
+		    return ACTION_NON_AUTORISEE;
+		
 		// On effectue l'action
-		serveurJeu.vendreTour(tour);
+		try
+        {
+            jeuServeur.vendreTour(tour);
+        } 
+		catch (ActionNonAutoriseeException e){}
 		
 		// Multicast aux clients
-        envoyerATous(construireMsgSuppressionTour(tour).toString());
+        envoyerATous(construireMsgDemanderSuppressionTour(tour).toString());
 		
 		return OK;
 	}
@@ -512,20 +594,21 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		clients.get(IDTo).envoyerMessageTexte(IDPlayer, message);
 	}
 
+	/* TODO pas besoins pour ma structure
 	public synchronized ArrayList<Creature> getCreatures()
 	{
-		return new ArrayList<Creature>(serveurJeu.getCreatures());
+		return new ArrayList<Creature>(jeuServeur.getCreatures());
 	}
 
 	public synchronized ArrayList<Tour> getTours()
 	{
-		return new ArrayList<Tour>(serveurJeu.getTours());
+		return new ArrayList<Tour>(jeuServeur.getTours());
 	}
 
 	public synchronized ArrayList<Animation> getAnimations()
 	{
 		return new ArrayList<Animation>();
-	}
+	}*/
 
 	/**
 	 * Permet de recuperer une tour à l'aide de son identificateur
@@ -535,7 +618,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	private Tour getTour(int ID)
 	{
-		for (Tour tour : serveurJeu.getTours())
+		for (Tour tour : jeuServeur.getTours())
 		{
 			if (tour.getId() == ID)
 				return tour;
@@ -543,25 +626,27 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		return null;
 	}
 	
-	
 	/**
-	 * de aurélien
+	 * Permet de Mutli-caster a tous les clients
 	 * 
-	 * @param message
+	 * @param message le message à diffuser
 	 */
 	private void envoyerATous(String message)
-	{
-	    for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-            joueur.getValue().envoyerSurCanalMAJ(message);
+	{   
+	    synchronized(clients)
+	    {
+    	    for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
+                joueur.getValue().envoyerSurCanalMAJ(message);
+	    }
 	}
 	
 	/**
-	 * de aurélien
+	 * Permet de construire le message de demande d'ajout d'une tour
 	 * 
-	 * @param tour
-	 * @return
+	 * @param tour la tour
+	 * @return Une structure JSONObject
 	 */
-	private JSONObject construireMsgAjoutTour(Tour tour)
+	private JSONObject construireMsgDemandeAjoutTour(Tour tour)
 	{
 	    JSONObject msg = new JSONObject();
         
@@ -583,12 +668,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	}
 	
 	/**
-	 * de aurélien
-	 * 
-	 * @param tour
-	 * @return
-	 */
-	private Object construireMsgAmeliorationTour(Tour tour)
+     * Permet de construire le message de demande d'amélioration d'une tour
+     * 
+     * @param tour la tour
+     * @return Une structure JSONObject
+     */
+	private Object construireMsgDemanderAmeliorationTour(Tour tour)
     {
 	    JSONObject msg = new JSONObject();
         
@@ -606,12 +691,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     }
 	
 	/**
-	 * de aurélien
-	 * 
-	 * @param tour
-	 * @return
-	 */
-	private JSONObject construireMsgSuppressionTour(Tour tour)
+     * Permet de construire le message de demander la suppression d'une tour
+     * 
+     * @param tour la tour
+     * @return Une structure JSONObject
+     */
+	private JSONObject construireMsgDemanderSuppressionTour(Tour tour)
     {
         JSONObject msg = new JSONObject();
         
@@ -626,5 +711,88 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         }
         
         return msg;
+    }
+	
+	/**
+     * Permet de construire le message d'état d'une créature
+     * 
+     * @param creature la creature
+     * @return Une structure JSONObject
+     */
+    private JSONObject construireMsgEtatCreature(Creature creature)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", CREATURE_ETAT);
+            msg.put("ID_CREATURE", creature.getId());
+           
+            msg.put("X", creature.x);
+            msg.put("Y", creature.y);
+            msg.put("SANTE", creature.getSante());
+            msg.put("ANGLE", creature.getAngle());
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;
+    }
+	
+	
+    /**
+     * Permet de construire le message d'ajout d'une créature
+     * 
+     * @param creature la creature
+     * @return Une structure JSONObject
+     */
+	private JSONObject construireMsgAjoutCreature(Creature creature)
+    {
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", CREATURE_AJOUT);
+            msg.put("TYPE_CREATURE", Creature.getTypeCreature(creature));
+            msg.put("ID_CREATURE", creature.getId());
+            
+            
+            msg.put("X", creature.x);
+            msg.put("Y", creature.y);
+            msg.put("SANTE_MAX", creature.getSanteMax());
+            msg.put("NB_PIECES_OR", creature.getNbPiecesDOr());
+            msg.put("VITESSE", creature.getVitesseNormale());  
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;  
+    }
+	
+	/**
+     * Permet de construire le message de suppression d'une créature
+     * 
+     * @param creature la creature
+     * @return Une structure JSONObject
+     */
+	private JSONObject construireMsgSuppressionCreature(Creature creature)
+    {
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", CREATURE_SUPPRESSION);
+            msg.put("ID_CREATURE", creature.getId()); 
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;  
     }
 }

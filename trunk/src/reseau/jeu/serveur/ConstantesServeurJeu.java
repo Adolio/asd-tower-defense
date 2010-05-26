@@ -8,33 +8,62 @@ package reseau.jeu.serveur;
  */
 public interface ConstantesServeurJeu
 {
-	/**
+    
+    // COMMUNICATION 0-99
+    
+    /**
+     * Message à destination de tous les joueurs
+     */
+    public final int A_TOUS = 1;
+    
+    /**
+     * Message en provenance du serveur de jeu
+     */
+    public final int DU_SERVEUR = 2;
+    
+    
+    // PARTIE 100-199
+    
+    /**
 	 * Démarrage de la partie
 	 */
-	public final int START = 100;
+	public final int PARTIE_DEBUT = 300;
 	/**
 	 * Arrêt de la partie
 	 */
-	public final int STOP = 101;
+	public final int PARTIE_FIN = 301;
+	
+    /**
+     * Code pour quitter la partie
+     */
+    public final int PARTIE_QUITTER = 302;
 	
 	/**
-	 * Message à destination de tous les joueurs
-	 */
-	public final int A_TOUS = 150;
-	
-	/**
-	 * Message en provenance du serveur de jeu
-	 */
-	public final int DU_SERVEUR = 151;
+     * Type de message : état de la partie
+     */
+    public final int PARTIE_ETAT = 303;
+    
+    /**
+     * Changement d'état de la partie : en pause
+     */
+    public final int EN_PAUSE = 304;
+    
+    /**
+     * Changement d'état de la partie : en jeu
+     */
+    public final int EN_JEU = 305;
 
+
+	// SUCCES 200-299
+	
 	/**
 	 * Code de succès
 	 */
 	public final int OK = 200;
-	/**
-	 * Code pour quitter la partie
-	 */
-	public final int QUITTER = 201;
+	
+	
+	// JOUEUR 300-309
+	
 	/**
 	 * Type de message : un message texte
 	 */
@@ -43,52 +72,77 @@ public interface ConstantesServeurJeu
 	/**
 	 * Type de message : état d'un joueur
 	 */
-	public final int JOUEUR = 302;
+	public final int JOUEUR_ETAT = 302;
+	
+
+
+	// CREATURE 310-319
 	
 	/**
-	 * Type de message : état d'une créature
+	 * Type de message : ajout d'une créature
 	 */
-	public final int CREATURE = 303;
+	public final int CREATURE_AJOUT = 310;
 	
+	/**
+     * Type de message : etat d'une créature
+     */
+    public final int CREATURE_ETAT = 311;
+	
+	/**
+     * Type de message : suppression d'une créature
+     */
+    public final int CREATURE_SUPPRESSION = 312;
+	
+    /**
+     * Type de message : vague de création
+     */
+    public final int VAGUE = 313;
+    
+	
+   
+	// TOUR 320-329
+	
+	/**
+     * Type de message : nouvelle tour
+     */
+    public final int TOUR_AJOUT = 320;
+    
+    /**
+     * Type de message : suppression d'une tour
+     */
+    public final int TOUR_SUPRESSION = 321;
+    
+    /**
+     * Type de message : amélioration d'une tour
+     */
+    public final int TOUR_AMELIORATION = 322;
+    
+    /**
+     * Type de message : vente tour
+     */
+    public final int TOUR_VENTE = 323;
+	
+	
+	// ANIMATION 330 - 340
+    
 	/**
 	 * Type de message : état d'une animation
 	 */
-	public final int ANIMATION = 304;
+	public final int ANIMATION_AJOUT = 330;
 	
-	/**
-	 * Type de message : vague de création
-	 */
-	public final int VAGUE = 305;
+
 	
-	/**
-	 * Type de message : état de la partie
-	 */
-	public final int PARTIE = 306;
 	
-	/**
-	 * Type de message : nouvelle tour
-	 */
-	public final int TOUR_AJOUT = 307;
-	
-	/**
-	 * Type de message : suppression d'une tour
-	 */
-	public final int TOUR_SUPRESSION = 308;
-	
-	/**
-	 * Type de message : amélioration d'une tour
-	 */
-	public final int TOUR_AMELIORATION = 309;
-	
-	/**
-	 * Type de message : vente tour
-	 */
-	public final int TOUR_VENTE = 310;
+	// AUTRES 350 - 399
 	
 	/**
 	 * Type de message : un objet
 	 */
 	public final int OBJET = 350;
+	
+	
+
+	// ERREURS 400-499
 	
 	/**
 	 * Code d'erreur : pas assez d'argent
@@ -110,20 +164,16 @@ public interface ConstantesServeurJeu
      */
     public final int NIVEAU_MAX_ATTEINT = 403;
 	
+    /**
+     * Code d'erreur : action non autorisee
+     */
+    public final int ACTION_NON_AUTORISEE = 404;
+    
 	/**
 	 * Code d'erreur : erreur quelconque
 	 */
-	public final int ERREUR = 404;
+	public final int ERREUR = 450;
 	
-	/**
-	 * Changement d'état de la partie : en pause
-	 */
-	public final int EN_PAUSE = 501;
-	
-	/**
-	 * Changement d'état de la partie : en jeu
-	 */
-	public final int EN_JEU = 502;
 	
 	
 }

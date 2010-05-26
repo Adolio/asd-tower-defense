@@ -1,12 +1,8 @@
 package models.creatures;
 
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
+import java.awt.*;
+import java.util.*;
+import models.joueurs.*;
 
 /**
  * Classe de gestion d'une creature.
@@ -20,13 +16,11 @@ import models.joueurs.Joueur;
  * ne sont pas affecter par les murs et l'emplacement des tours. Elle volent 
  * simplement de la zone A a la zone B sans suivre un chemin particulier.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.2 | mai 2010
  * @since jdk1.6.0_16
  */
-public abstract class Creature extends Rectangle
+public abstract class Creature extends Rectangle implements IDCreatures
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -34,7 +28,7 @@ public abstract class Creature extends Rectangle
 	/**
      * Identificateur unique de la créature
      */
-    private final int ID;
+    private int ID;
     private static int idCourant = 0;
 	
 	
@@ -378,7 +372,7 @@ public abstract class Creature extends Rectangle
            && !aDetruire && !estMorte())
         {
             aDetruire = true;
-            
+
             // informe les ecouteurs que la creature est arrivee 
             // a la fin du parcours
             for(EcouteurDeCreature edc : ecouteursDeCreature)
@@ -485,7 +479,7 @@ public abstract class Creature extends Rectangle
 			
 			// est-elle morte ?
 			if(estMorte())
-				mourrir();
+				mourrir(joueur);
 		}
 	}
 	
@@ -500,13 +494,13 @@ public abstract class Creature extends Rectangle
 	/**
 	 * Permet de tuer la creature
 	 */
-	private void mourrir()
+	private void mourrir(Joueur tueur)
 	{
 		sante = 0;
 		
 		// appel des ecouteurs de la creature
 		for( EcouteurDeCreature edc : ecouteursDeCreature)
-			edc.creatureTuee(this);
+			edc.creatureTuee(this,tueur);
 	}
 
 	/**
@@ -573,5 +567,56 @@ public abstract class Creature extends Rectangle
     public void setEquipeCiblee(Equipe equipeCiblee)
     {
         this.equipeCiblee = equipeCiblee;
+    }
+
+    /**
+     * Permet de modifier l'id 
+     * 
+     * @param id le nouvel id
+     */
+    public void setId(int id)
+    {
+        this.ID = id;
+    }
+
+    /**
+     * Permet de modifier la sante
+     * 
+     * @param sante la nouvelle sante
+     */
+    public void setSante(int sante)
+    {
+        this.sante = sante;
+    }
+
+    /**
+     * Permet de modifier l'angle
+     * 
+     * @param angle le nouvel angle
+     */
+    public void setAngle(double angle)
+    {
+        this.angle = angle;
+    }
+
+    // TODO A METTRE DANS UNE CLASSE TypeCreature AVEC LES CONSTANTES
+    public static int getTypeCreature(Creature creature)
+    {
+        if (creature instanceof Aigle)
+            return AIGLE;
+        else if (creature instanceof Araignee)
+            return ARAIGNEE;
+        else if (creature instanceof Elephant)
+            return ELEPHANT;
+        else if (creature instanceof Mouton)
+            return MOUTON;
+        else if (creature instanceof Pigeon)
+            return PIGEON;
+        else if (creature instanceof Rhinoceros)
+            return RHINOCEROS;
+        else if (creature instanceof GrandeAraignee)
+            return GRANDE_ARAIGNEE;
+        
+        return -1;
     }
 }

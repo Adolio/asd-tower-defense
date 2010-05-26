@@ -10,6 +10,7 @@ import reseau.Port;
  * Une classe qui modélise coté serveur un joueur.
  * 
  * @author Pierre-Do
+ * @author Da Campo Aurélien
  */
 public class JoueurDistant implements Runnable, ConstantesServeurJeu
 {
@@ -226,11 +227,11 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			}
 			break;
 		// Changement d'état d'un joueur
-		case JOUEUR:
+		case JOUEUR_ETAT:
 			// Récupération du nouvel état
 			int nouvelEtat = json.getInt("ETAT");
 			// Le le nouvelEtat n'est pas une commanque QUITTER
-			if (nouvelEtat == QUITTER)
+			if (nouvelEtat == PARTIE_QUITTER)
 			{
 				couperLeCanal();
 				desenregistrement();
@@ -241,26 +242,29 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				// code d'état
 				code = serveur.changementEtatJoueur(ID, nouvelEtat);
 				// Réponse du code d'état au client
-				repondreEtat(JOUEUR, code);
+				repondreEtat(JOUEUR_ETAT, code);
 			}
 			break;
 		// Action sur une vague
 		case VAGUE:
 			// Récupération du type de vague
-			int typeVague = json.getInt("TYPE_WAVE");
+		    int nbCreatures = json.getInt("NB_CREATURES");
+			int typeCreature = json.getInt("TYPE_CREATURE");
+			
 			// Demande de lancement d'une vague
-			code = serveur.lancerVague(ID, typeVague);
+			code = serveur.lancerVague(ID, nbCreatures, typeCreature);
+			
 			// Retour au client de l'information
 			repondreEtat(VAGUE, code);
 			break;
 		// Changement d'état d'une partie
-		case PARTIE:
+		case PARTIE_ETAT:
 			// Récupération du nouvel état
 			int nouvelEtatPartie = json.getInt("ETAT");
 			// Envoi de l'information au serveur principal
 			code = serveur.changementEtatPartie(ID, nouvelEtatPartie);
 			// Retour du code au client
-			repondreEtat(PARTIE, code);
+			repondreEtat(PARTIE_ETAT, code);
 			break;
 		// Requête de création d'une tour
 		case TOUR_AJOUT:
@@ -293,7 +297,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			repondreEtat(TOUR_SUPRESSION, code);
 			break;
 		default:
-			log("ERROR action inconnue : " + type);
+			log("Type de message inconnu : " + type);
 			// Signaler au client qu'il envoi quelque chose d'incorecte
 			repondreEtat(ERREUR, ERREUR);
 			break;
@@ -301,7 +305,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	}
 
 	/**
-	 * Répond du client un code d'état pour une réponse donnée
+	 * Répond au client un code d'état pour une réponse donnée
 	 * 
 	 * @param player
 	 * @param code
@@ -338,7 +342,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		try
 		{
 			// Construction de la structure JSON
-			message.put("TYPE", JOUEUR);
+			message.put("TYPE", JOUEUR_ETAT);
 			message.put("PSEUDO", pseudoFrom);
 			message.put("ETAT", nouvelEtat);
 			// Envoi de la structure à travers le réseau

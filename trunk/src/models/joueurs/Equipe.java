@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Classe de gestion d'une equipe.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | 16 avril 2010
+ * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
  */
 public class Equipe implements Serializable
@@ -323,5 +323,15 @@ public class Equipe implements Serializable
     public void setLongueurChemin(double longueur)
     {
         this.longueurChemin = longueur;
+    }
+
+    /**
+     * Permet de savoir si l'equipe a perdue
+     * 
+     * @return true si elle a perdue, false sinon
+     */
+    public boolean aPerdu()
+    {
+        return nbViesRestantes <= 0;
     }
 }
