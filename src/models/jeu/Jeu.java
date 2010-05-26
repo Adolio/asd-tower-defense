@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import exceptions.ActionNonAutoriseeException;
 import exceptions.AucunePlaceDisponibleException;
 import exceptions.ZoneInaccessibleException;
 import exceptions.JeuEnCoursException;
@@ -186,7 +187,8 @@ public abstract class Jeu implements EcouteurDeCreature,
         partieDemarree = true;
         
         // notification
-        edj.partieDemarree();
+        if(edj != null)
+            edj.partieDemarree();
     }
     
     /**
@@ -196,7 +198,9 @@ public abstract class Jeu implements EcouteurDeCreature,
      */
     public void lancerVague(VagueDeCreatures vague)
     { 
-        vague.lancerVague(this, joueur.getEquipe(), this, this);
+        
+        
+        vague.lancerVague(this, getEquipes().get(0), this, this);
     }
     
     /**
@@ -245,8 +249,9 @@ public abstract class Jeu implements EcouteurDeCreature,
      * Permet de vendre une tour.
      * 
      * @param tour la tour a vendre
+     * @throws ActionNonAutoriseeException 
      */
-    public void vendreTour(Tour tour)
+    public void vendreTour(Tour tour) throws ActionNonAutoriseeException
     {
         // supprime la tour
         gestionnaireTours.supprimerTour(tour);
@@ -264,8 +269,9 @@ public abstract class Jeu implements EcouteurDeCreature,
      * @return vrai si operation realisee avec succes, sinon faux 
      * @throws ArgentInsuffisantException si pas assez d'argent 
      * @throws NiveauMaxAtteintException si niveau max de la tour atteint
+     * @throws ActionNonAutoriseeException 
      */
-    public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException
+    public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException, ActionNonAutoriseeException
     {
         if(!tour.peutEncoreEtreAmelioree())
             throw new NiveauMaxAtteintException("Amélioration impossible : Niveau max atteint");
@@ -323,7 +329,8 @@ public abstract class Jeu implements EcouteurDeCreature,
         
         arreterTout();
         
-        edj.partieTerminee();
+        if(edj != null)
+            edj.partieTerminee();
     }
 
     /**
@@ -522,19 +529,20 @@ public abstract class Jeu implements EcouteurDeCreature,
     }
 
     @Override
-    public void creatureTuee(Creature creature)
+    public void creatureTuee(Creature creature, Joueur tueur)
     {
         // gain de pieces d'or
-        joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
+        tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
         
         // augmentation du score
-        int nbEtoiles = joueur.getNbEtoiles();
+        int nbEtoiles = tueur.getNbEtoiles();
         
-        joueur.setScore(joueur.getScore() + creature.getNbPiecesDOr());
+        tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());
         
         // nouvelle étoile
-        if(nbEtoiles < joueur.getNbEtoiles())
-            edj.etoileGagnee();
+        if(nbEtoiles < tueur.getNbEtoiles())
+            if(edj != null)  
+                edj.etoileGagnee();
  
         if(edj != null)
             edj.creatureTuee(creature);
@@ -543,18 +551,20 @@ public abstract class Jeu implements EcouteurDeCreature,
     @Override
     synchronized public void creatureArriveeEnZoneArrivee(Creature creature)
     {
+        Equipe equipe = creature.getEquipeCiblee();
+        
         // si pas encore perdu
-        if(!joueur.aPerdu())
+        if(!equipe.aPerdu())
         {
-            joueur.getEquipe().perdreUneVie();
+            equipe.perdreUneVie();
             
             if(edj != null)
                 edj.creatureArriveeEnZoneArrivee(creature);
             
             // le joueur n'a plus de vie
-            if(joueur.aPerdu())
+            if(equipe.aPerdu())
                 terminer();
-        }  
+        } 
     }
 
     @Override
@@ -608,14 +618,16 @@ public abstract class Jeu implements EcouteurDeCreature,
     {
         gestionnaireCreatures.ajouterCreature(creature);
         
-        edj.creatureAjoutee(creature);
+        if(edj != null)
+            edj.creatureAjoutee(creature);
     }
 
     public void ajouterAnimation(Animation animation)
     {
         gestionnaireAnimations.ajouterAnimation(animation);
         
-        edj.animationAjoutee(animation);
+        if(edj != null)
+            edj.animationAjoutee(animation);
     }
 
     public void dessinerAnimations(Graphics2D g2, int hauteur)

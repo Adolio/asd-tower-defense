@@ -194,7 +194,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         pBottom.add(bDeconnecter, BorderLayout.WEST);
 
         if (ADMIN)
-            if (jeuServeur.getEnregistrementReussie())
+            if (jeuServeur.estEnregisterSurSE())
             {
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
                 lblEtat.setText("La connexion avec le serveur central à réussie"); 
@@ -251,9 +251,13 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         if (src == bDemarrerMaintenant)
         {
             if (ADMIN)
-                jeuServeur.desenregistrerSurSE();
-            
-            
+            {
+                if(jeuServeur.estEnregisterSurSE())
+                    jeuServeur.desenregistrerSurSE();
+ 
+                jeuServeur.initialiser(joueur);
+                jeuServeur.demarrer();       
+            }
             
             // FIXME INFO VENANT DU SERVEUR
             //this.joueur = new Joueur("toto");

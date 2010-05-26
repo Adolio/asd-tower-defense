@@ -1,14 +1,14 @@
 package models.creatures;
 
+import models.joueurs.Joueur;
+
 /**
  * Interface d'ecoute d'une creature.
  * 
  * Permet d'etre renseigne lorsqu'une creature subi des modifications.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
  * @see Creature
  */
@@ -17,8 +17,9 @@ public interface EcouteurDeCreature
 	/**
 	 * Permet de savoir si une creature subie des degats.
 	 * @param creature la creature qui a subie des degats
+	 * @param tueur 
 	 */
-	void creatureTuee(Creature creature);
+	void creatureTuee(Creature creature, Joueur tueur);
 	
 	/**
 	 * Permet de savoir quand une creature a ete tuee.

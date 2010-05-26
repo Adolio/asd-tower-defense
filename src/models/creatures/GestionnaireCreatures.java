@@ -199,4 +199,27 @@ public class GestionnaireCreatures implements Runnable
         
         return creaturesIntersctees;
     }
+
+    /**
+     * Permet de recuperer une créature à l'aide de son identificateur
+     * 
+     * @param id l'identificateur
+     * @return la créature trouvée, null sinon
+     */
+    public Creature getCreature(int id)
+    {
+        synchronized (creatures)
+        { 
+            Creature creature;
+            for(int i=0;i<creatures.size();i++)
+            {
+                creature = creatures.get(i);
+                
+                if(creature.getId() == id)
+                    return creature;
+            }
+        }
+        
+        return null;
+    }
 }

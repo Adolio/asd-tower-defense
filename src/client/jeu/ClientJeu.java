@@ -101,7 +101,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 	public void envoyerEtatJoueur(int etat){
 		try{
 			JSONObject json = new JSONObject();
-			json.put("TYPE", JOUEUR);
+			json.put("TYPE", JOUEUR_ETAT);
 			json.put("ETAT", etat);
 			
 			canal.envoyerString(json.toString());
@@ -135,7 +135,7 @@ public class ClientJeu implements ConstantesServeurJeu {
 		try {
 			JSONObject json = new JSONObject();
 			//TODO GAME au lieu de PLAY?
-			json.put("TYPE", PARTIE);
+			json.put("TYPE", PARTIE_ETAT);
 			json.put("ETAT", etat);
 			
 			canal.envoyerString(json.toString());

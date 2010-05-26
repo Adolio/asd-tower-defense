@@ -12,7 +12,7 @@ public class Joueur
     /**
      * Identificateur du joueur
      */
-    private final int id;
+    private int id;
     
     /**
      * Pseudo
@@ -191,5 +191,14 @@ public class Joueur
             emplacement.retirerJoueur();
         
         emplacement = null;
+    }
+
+    /**
+     * TODO
+     * @param id
+     */
+    public void setId(int id)
+    {
+       this.id = id; 
     } 
 }

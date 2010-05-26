@@ -40,8 +40,8 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 	{
 		// Extraction des nouvelles données
 		ServeurJeu srv = (ServeurJeu) o;
-		parseCreatures(srv.getCreatures());
-		parseTours(srv.getTours());
+		//parseCreatures(srv.getCreatures());
+		//parseTours(srv.getTours());
 		// Réveille le thread s'il dort
 		synchronized (this)
 		{
@@ -107,7 +107,7 @@ public class Updater implements Observer, Runnable, ConstantesServeurJeu,
 		{
 			try
 			{
-				json.put("OBJECT", CREATURE);
+				json.put("OBJECT", CREATURE_AJOUT);
 			} catch (JSONException e)
 			{
 				e.printStackTrace();
