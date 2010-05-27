@@ -6,6 +6,7 @@ import java.net.ConnectException;
 import reseau.CanalTCP;
 import reseau.CanalException;
 import reseau.jeu.serveur.ConstantesServeurJeu;
+import reseau.jeu.serveur.Protocole;
 import models.animations.GainDePiecesOr;
 import models.creatures.*;
 import models.jeu.Jeu_Client;
@@ -24,7 +25,7 @@ import org.json.*;
  * @author Romain Poulain
  * @author Da Campo Aurélien
  */
-public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Runnable{
+public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	
     /**
      * Joueur traité
@@ -124,40 +125,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 	 */
 	public void envoyerMessage(String message, int cible)
 	{
-		try 
-		{
-			JSONObject json = new JSONObject();
-			json.put("TYPE", MSG);
-			JSONObject content = new JSONObject();
-			content.put("CIBLE", A_TOUS);
-			content.put("MESSAGE", "foo bar");
-			json.put("CONTENU", content);
-			
-			canal1.envoyerString(json.toString());
-		} 
-		catch (JSONException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * TODO lorsque le joueur se casse...
-	 * 
-	 * @param etat
-	 */
-	public void envoyerEtatJoueur(int etat){
-		try
-		{
-			JSONObject json = new JSONObject();
-			json.put("TYPE", JOUEUR_ETAT);
-			json.put("ETAT", etat);
-			
-			canal1.envoyerString(json.toString());
-		} 
-		catch (JSONException e) {
-			e.printStackTrace();
-		}
+	    canal1.envoyerString(Protocole.construireMsgChat(message, cible));
 	}
 	
 	/**
@@ -173,7 +141,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 		{
 			JSONObject json = new JSONObject();
 			json.put("TYPE", VAGUE);
-			json.put("TYPE_CREATURE", Creature.getTypeCreature(vague.getNouvelleCreature()));
+			json.put("TYPE_CREATURE", TypeDeCreature.getTypeCreature(vague.getNouvelleCreature()));
 			json.put("NB_CREATURES", vague.getNbCreatures());
 			
 			canal1.envoyerString(json.toString());
@@ -186,28 +154,6 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
             }	
-		} 
-		catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Permet d'envoyer l'etat de la partie
-	 * 
-	 * TODO necessaire ?
-	 * 
-	 * @param etat
-	 */
-	public void envoyerEtatPartie(int etat)
-	{
-	    try 
-		{
-			JSONObject json = new JSONObject();
-			json.put("TYPE", PARTIE_ETAT);
-			json.put("ETAT", etat);
-			
-			canal1.envoyerString(json.toString());
 		} 
 		catch (JSONException e) {
 			e.printStackTrace();
@@ -232,7 +178,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 			json.put("TYPE", TOUR_AJOUT);
 			json.put("X", tour.x);
 			json.put("Y", tour.y);
-			json.put("TYPE_TOUR", Tour.getTypeDeTour(tour));
+			json.put("TYPE_TOUR", TypeDeTour.getTypeDeTour(tour));
 			
             log("Envoye d'une demande de pose d'une tour");
 			
@@ -281,6 +227,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 			JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
+                case TOUR_INCONNUE: // TODO CHECK
+                    throw new NullPointerException("Tour inconnue");
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
                 case ACTION_NON_AUTORISEE :
@@ -340,37 +288,9 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 	    // création de la tour en fonction de son type
         try
         {
-            switch(message.getInt("TYPE_TOUR"))
-            {
-                case TOUR_ARCHER : 
-                    tour = new TourArcher();
-                    break;
-                case TOUR_AA : 
-                    tour = new TourAntiAerienne();
-                    break;
-                case TOUR_CANON :
-                    tour = new TourCanon();
-                    break;
-                case TOUR_D_AIR :
-                    tour = new TourDAir();
-                    break;
-                case TOUR_DE_FEU : 
-                    tour = new TourDeFeu();
-                    break;
-                case TOUR_DE_GLACE : 
-                    tour = new TourDeGlace();
-                    break;
-                case TOUR_ELECTRIQUE :
-                    tour = new TourElectrique();
-                    break;
-                case TOUR_DE_TERRE :
-                    tour = new TourDeTerre();
-                    break;
-                default : 
-                    throw new TypeDeTourInvalideException("Le type " 
-                            + message.getString("TYPE_TOUR") + " est invalide");
-                
-            }
+            int typeDeCreature = message.getInt("TYPE_TOUR");
+            
+            tour = TypeDeTour.getTour(typeDeCreature);
             
             // initialisation des tours
             tour.x = message.getInt("X");
@@ -456,6 +376,10 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
                         receptionSuppressionCreature(resultat);
                         break;  
   
+                    case CREATURE_ARRIVEE : 
+                        receptionCreatureArrivee(resultat);
+                        break;
+                        
                     default :
                         log("Réception d'un objet de type : Inconnu.");      
                 }
@@ -472,8 +396,23 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 	    }
 	}
 
-	
-	private void receptionInitialisationJoueur(JSONObject message) throws AucunEmplacementDisponibleException
+	private void receptionCreatureArrivee(JSONObject message)
+    {
+	    log("Réception de l'arrivée d'une créature");
+	    
+	    try
+        {
+           int idCreature = message.getInt("ID_CREATURE");
+           jeu.supprimerCreatureDirect(idCreature);
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+	    
+    }
+
+    private void receptionInitialisationJoueur(JSONObject message) throws AucunEmplacementDisponibleException
     {
 	    log("Réception des donnees d'initialisation du joueur");
         
@@ -600,18 +539,6 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
     }
     
     /**
-     * Analyse d'un message d'info des équipes
-     * 
-     * TODO
-     * 
-     * @param message le message
-     */
-    private void receptionInfoEquipes(JSONObject message)
-    {
-        log("Réception des etats des equipes");
-    }
-    
-    /**
      * Analyse d'un message d'ajout d'une créature
      * 
      * @param message le message
@@ -632,40 +559,20 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
             int nbPiecesDOr = message.getInt("NB_PIECES_OR");
             double vitesse = message.getDouble("VITESSE");
             
-            Creature creature;
+            Creature creature = TypeDeCreature.getCreature(typeCreature,santeMax,nbPiecesDOr,vitesse);
             
-            switch(typeCreature)
+            if(creature != null)
             {
-                case AIGLE :
-                    creature = new Aigle(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case ARAIGNEE : 
-                    creature = new Araignee(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case ELEPHANT :
-                    creature = new Elephant(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case GRANDE_ARAIGNEE : 
-                    creature = new GrandeAraignee(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case MOUTON :
-                    creature = new Mouton(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case PIGEON : 
-                    creature = new Pigeon(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                case RHINOCEROS :
-                    creature = new Rhinoceros(santeMax, nbPiecesDOr, vitesse);
-                    break;
-                default :
-                    return; // TODO erreur
+                creature.setId(id);
+                creature.setX(x);
+                creature.setY(y);
+                
+                jeu.ajouterCreatureDirect(creature);
             }
-            
-            creature.setId(id);
-            creature.setX(x);
-            creature.setY(y);
-            
-            jeu.ajouterCreatureDirect(creature);
+            else
+            {
+                // TODO ERREUR Créature inconnue
+            }     
         } 
         catch (JSONException e)
         {

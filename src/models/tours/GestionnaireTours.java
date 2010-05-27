@@ -44,6 +44,7 @@ public class GestionnaireTours implements Runnable
      * Permet de supprimer une tour du terrain.
      * 
      * @param tour la tour a supprimer
+     * @param miseAJourMaillage 
      */
     public void supprimerTour(Tour tour)
     {

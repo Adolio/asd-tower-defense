@@ -14,7 +14,7 @@ public interface ConstantesServeurJeu
     /**
      * Message à destination de tous les joueurs
      */
-    public final int A_TOUS = 1;
+    public final int A_TOUS = -1;
     
     /**
      * Message en provenance du serveur de jeu
@@ -59,7 +59,11 @@ public interface ConstantesServeurJeu
      */
     public final int EN_JEU = 106;
 
-
+    /**
+     * Changement d'état de la partie : en jeu
+     */
+    public final int PARTIE_TERMINEE = 107;
+    
 	// SUCCES 200-299
 	
 	/**
@@ -114,9 +118,14 @@ public interface ConstantesServeurJeu
     public final int CREATURE_SUPPRESSION = 312;
 	
     /**
+     * Type de message : créature est arrivé
+     */
+    public final int CREATURE_ARRIVEE = 313;
+    
+    /**
      * Type de message : vague de création
      */
-    public final int VAGUE = 313;
+    public final int VAGUE = 314;
     
 	
    
@@ -194,11 +203,18 @@ public interface ConstantesServeurJeu
      */
     public final int PAS_DE_PLACE = 405;
     
+    /**
+     * Code d'erreur : jeu déjà en cours
+     */
+    public final int JEU_EN_COURS = 406;
+    
+    /**
+     * Code d'erreur : tour inconnue
+     */
+    public final int TOUR_INCONNUE = 407;
+    
 	/**
 	 * Code d'erreur : erreur quelconque
 	 */
 	public final int ERREUR = 450;
-	
-	
-	
 }
