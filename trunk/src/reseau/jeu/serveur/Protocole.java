@@ -339,4 +339,22 @@ public class Protocole implements ConstantesServeurJeu
         
         return msg.toString();
     }
+
+    public static String construireMsgJoueurAjout(Joueur joueur)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try {
+            msg.put("TYPE", JOUEUR_AJOUT);
+            msg.put("ID_JOUEUR", joueur.getId());
+            msg.put("PSEUDO", joueur.getPseudo()); 
+            msg.put("ID_EQUIPE", joueur.getEquipe().getId());
+            msg.put("ID_EMPLACEMENT", joueur.getEmplacement().getId()); 
+        }
+        catch (JSONException jsone){
+            jsone.printStackTrace();
+        }
+        
+        return msg.toString();
+    }
 }

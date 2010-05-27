@@ -45,6 +45,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private final int LARGEUR;
 	private final int HAUTEUR;
 	
+	private static final int xOffsetPseudo = 10, 
+                             yOffsetPseudo = 30;
+	
 	/**
 	 * Hauteur de la barre de vie d'une creature. (en pixels)
 	 */
@@ -94,7 +97,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	private static final float [] DASHES_EPAIS   = {8.0F, 4.0F};
 	private static final BasicStroke TRAIT_TILLE_EPAIS = new BasicStroke(
-            3.0f,BasicStroke.CAP_ROUND, 
+            4.0f,BasicStroke.CAP_ROUND, 
             BasicStroke.JOIN_ROUND, 
             10.0F, DASHES_EPAIS, 0.F);
 	
@@ -278,6 +281,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
         setPreferredSize(jeu.getTerrain().getTaillePanelTerrain());
         setFocusable(true);
         
+        // Centrage sur la zone de construction du joueur
+        Rectangle zoneConstruction = joueur.getEmplacement().getZoneDeConstruction();
+        centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
+
         // ajout des ecouteurs
         addKeyListener(this);
         addMouseListener(this);
@@ -287,7 +294,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         // demarrage du thread de rafraichissement de l'affichage
         thread = new Thread(this);
         thread.start();
-	}
+    }
 	
 	/**
      * Permet de modifier la tour selectionnee depuis l'exterieur de l'objet
@@ -451,12 +458,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.setStroke(TRAIT_TILLE_EPAIS);
   
             // affichages des zones de départ et arrivée
-            //for(Joueur joueur : jeu.getJoueurs())
-            //{
+            g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
+            for(Joueur joueur : jeu.getJoueurs())
+            {
                 Rectangle zoneC = joueur.getEmplacement().getZoneDeConstruction();
                 g2.setColor(joueur.getEmplacement().getCouleur());
                 g2.drawRect(zoneC.x , zoneC.y, zoneC.width, zoneC.height);
-            //}
+            
+                // TODO
+                //if(joueur != this.joueur){
+                    g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo , zoneC.y+yOffsetPseudo);
+                    g2.setColor(Color.BLACK);
+                    g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo+2 , zoneC.y+yOffsetPseudo+2);
+                //}
+            }
             
             g2.setStroke(tmp);
             
@@ -557,8 +572,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			dessinerCheminCreature(creatureSelectionnee,g2);
 			
 			if(centrerSurCreatureSelectionnee)
-			    centrerSur((int) creatureSelectionnee.getX(),
-			               (int) creatureSelectionnee.getY());
+			    centrerSur((int) creatureSelectionnee.getCenterX(),
+			               (int) creatureSelectionnee.getCenterY());
 			
 			setTransparence(1.f,g2);
 		}
@@ -1195,7 +1210,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
      */
     private void centrerSur(int x, int y)
     {
-        decaleX = (int) ((getSize().width/2.0 - x * coeffTaille) / coeffTaille);
-        decaleY = (int) ((getSize().height/2.0 - y * coeffTaille) / coeffTaille);
+        decaleX = (int) ((getPreferredSize().width/2.0 - x * coeffTaille) / coeffTaille);
+        decaleY = (int) ((getPreferredSize().height/2.0 - y * coeffTaille) / coeffTaille);
     }
 }

@@ -35,12 +35,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     /**
      * Canal de ping-pong envoie / reception
      */
-	private CanalTCP canal1;
+	private CanalTCP canalPingPong;
 	
 	/**
 	 * Canal d'écoute du serveur
 	 */
-	private CanalTCP canal2;
+	private CanalTCP canalAsynchrone;
 	
 	/**
 	 * Le jeu du client
@@ -73,16 +73,16 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 		this.joueur   = joueur;
 		
 		// création du canal 1 (Requête / réponse)
-		canal1 = new CanalTCP(IPServeur, portServeur, true);
+		canalPingPong = new CanalTCP(IPServeur, portServeur, true);
 		
 		// demande de connexion au serveur (canal 1)
-		canal1.envoyerString(joueur.getPseudo());
+		canalPingPong.envoyerString(joueur.getPseudo());
 		
 		// le serveur nous retourne notre identificateur
 		JSONObject msg;
         
 		try{
-            msg = new JSONObject(canal1.recevoirString());
+            msg = new JSONObject(canalPingPong.recevoirString());
             receptionInitialisationJoueur(msg);
         } 
 		catch (JSONException e1){
@@ -100,14 +100,14 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 		
 		
 		// reception de la version du serveur
-		String version = canal1.recevoirString();
+		String version = canalPingPong.recevoirString();
 		log("Version du jeu : "+version);
 		
 		// reception du port du canal 2
-		int portCanal2 = canal1.recevoirInt();
+		int portCanal2 = canalPingPong.recevoirInt();
 		
 		// création du canal 2 (Reception asynchrone)
-		canal2 = new CanalTCP(IPServeur, portCanal2, true);
+		canalAsynchrone = new CanalTCP(IPServeur, portCanal2, true);
 
 		// lancement de la tache d'écoute du canal 2
 		(new Thread(this)).start();
@@ -125,7 +125,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 */
 	public void envoyerMessage(String message, int cible)
 	{
-	    canal1.envoyerString(Protocole.construireMsgChat(message, cible));
+	    canalPingPong.envoyerString(Protocole.construireMsgChat(message, cible));
 	}
 	
 	/**
@@ -144,10 +144,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			json.put("TYPE_CREATURE", TypeDeCreature.getTypeCreature(vague.getNouvelleCreature()));
 			json.put("NB_CREATURES", vague.getNbCreatures());
 			
-			canal1.envoyerString(json.toString());
+			canalPingPong.envoyerString(json.toString());
 			
 			// attente de la réponse
-            String resultat = canal1.recevoirString();
+            String resultat = canalPingPong.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
@@ -182,10 +182,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			
             log("Envoye d'une demande de pose d'une tour");
 			
-			canal1.envoyerString(json.toString());
+			canalPingPong.envoyerString(json.toString());
 			
 			// attente de la réponse
-			String resultat = canal1.recevoirString();
+			String resultat = canalPingPong.recevoirString();
 			JSONObject resultatJSON = new JSONObject(resultat);
 			switch(resultatJSON.getInt("STATUS"))
 			{
@@ -220,9 +220,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			
 			log("Envoye d'une demande de vente d'une tour");
                 
-			canal1.envoyerString(json.toString());
+			canalPingPong.envoyerString(json.toString());
 			
-			String resultat = canal1.recevoirString(); // pas d'erreur possible...
+			String resultat = canalPingPong.recevoirString(); // pas d'erreur possible...
 
 			JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
@@ -255,10 +255,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 		    JSONObject json = new JSONObject();
 			json.put("TYPE", TOUR_SUPRESSION);
 			json.put("ID_TOWER", tour.getId());
-			canal1.envoyerString(json.toString());
+			canalPingPong.envoyerString(json.toString());
 			
 			// reponse
-			String resultat = canal1.recevoirString();
+			String resultat = canalPingPong.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
@@ -277,8 +277,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * @param message le message
      * @throws TypeDeTourInvalideException 
      */
-	private void receptionAjoutTour(JSONObject message) 
-	    throws TypeDeTourInvalideException
+	private void receptionAjoutTour(JSONObject message) throws JSONException
 	{
 	   
 	    log("Réception d'un objet de type : Tour.");
@@ -299,9 +298,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             
             jeu.poserTourDirect(tour);  
         } 
-        catch (JSONException e)
+        catch (TypeDeTourInvalideException e)
         {
-            e.printStackTrace();
+            logErreur("Tour inconnue");
         }
 	}
 
@@ -310,161 +309,167 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 */
 	public void run() 
 	{
-	    JSONObject resultat;
-	    
-	    while(true)
-	    {
-	    
-            try 
-            {
-                //log("Attente d'un String sur le canal 2...");
-                
-                resultat = new JSONObject(canal2.recevoirString());
-                
-                //log("Canal 2 recoit : "+resultat);
-                
-                switch(resultat.getInt("TYPE"))
-                {
-                    
-                    // PARTIE
-                    case PARTIE_ETAT : 
-                        
-                        switch(resultat.getInt("ETAT"))
-                        {
-                            case PARTIE_INITIALISEE :
-                                log("Partie initialisee");
-                                jeu.initialiser(joueur);
-                                break;
-                            
-                            case PARTIE_LANCEE :
-                                jeu.demarrer();
-                                log("Partie lancee");
-                                break;
-                        }  
-                        
-                    break; 
-                
-                    // JOUEURS
-                    
-                    case JOUEUR_ETAT :    
-                        receptionEtatJoueur(resultat);
-                    break; 
-                
-                    // TOURS
-                    
-                    case TOUR_AJOUT :
-                        receptionAjoutTour(resultat);
-                        break;
-                    
-                    case TOUR_AMELIORATION :
-                        receptionAmeliorationTour(resultat);
-                        break;    
-                        
-                    case TOUR_SUPRESSION :
-                        receptionVendreTour(resultat);
-                        break;
-                        
-                    case CREATURE_AJOUT :    
-                        receptionAjoutCreature(resultat);
-                        break;
-   
-                    case CREATURE_ETAT :    
-                        receptionEtatCreature(resultat);
-                        break;
-                        
-                    case CREATURE_SUPPRESSION :    
-                        receptionSuppressionCreature(resultat);
-                        break;  
-  
-                    case CREATURE_ARRIVEE : 
-                        receptionCreatureArrivee(resultat);
-                        break;
-                        
-                    default :
-                        log("Réception d'un objet de type : Inconnu.");      
-                }
-            } 
-            catch (CanalException e) {
-                e.printStackTrace();
-            } 
-            catch (JSONException e) {
-                e.printStackTrace();
-            } 
-            catch (TypeDeTourInvalideException e) {
-                e.printStackTrace();
-            }
-	    }
+	    while(true) // TODO
+	        attendreMessageCanalAsynchrone();
 	}
 
-	private void receptionCreatureArrivee(JSONObject message)
+	private void attendreMessageCanalAsynchrone()
+    {
+	    try{  
+    	    //log("Attente d'un String sur le canal 2...");
+            
+    	    JSONObject resultat = new JSONObject(canalAsynchrone.recevoirString());
+            
+            //log("Canal 2 recoit : "+resultat);
+            
+            switch(resultat.getInt("TYPE"))
+            {
+                
+                // PARTIE
+                case PARTIE_ETAT : 
+                    receptionEtatPartie(resultat);
+                break; 
+            
+                // JOUEURS
+                case JOUEUR_ETAT :    
+                    receptionEtatJoueur(resultat);
+                break; 
+                
+                case JOUEUR_AJOUT :    
+                    receptionAjoutJoueur(resultat);
+                break;
+            
+                // TOURS
+                case TOUR_AJOUT :
+                    receptionAjoutTour(resultat);
+                    break;
+                
+                case TOUR_AMELIORATION :
+                    receptionAmeliorationTour(resultat);
+                    break;    
+                    
+                case TOUR_SUPRESSION :
+                    receptionVendreTour(resultat);
+                    break;
+                    
+                // CREATURES
+                case CREATURE_AJOUT :    
+                    receptionAjoutCreature(resultat);
+                    break;
+    
+                case CREATURE_ETAT :    
+                    receptionEtatCreature(resultat);
+                    break;
+                    
+                case CREATURE_SUPPRESSION :    
+                    receptionSuppressionCreature(resultat);
+                    break;  
+    
+                case CREATURE_ARRIVEE : 
+                    receptionCreatureArrivee(resultat);
+                    break;
+                    
+                default :
+                    logErreur("Réception d'un objet de type : Inconnu.");      
+            }
+        } 
+        catch (CanalException ce) {
+            ce.printStackTrace();
+        } 
+        catch (JSONException jsone) {
+            jsone.printStackTrace();
+        }
+    }
+
+    private void receptionAjoutJoueur(JSONObject resultat) throws JSONException
+    {
+        int idJoueur  = resultat.getInt("ID_JOUEUR");
+        String pseudo = resultat.getString("PSEUDO");
+        
+        log("Réception d'un nouveau joueur (pseudo:"+pseudo+", id:"+ idJoueur+")");
+        
+        Joueur joueur = new Joueur(pseudo);
+        joueur.setId(idJoueur);
+        
+        int idEquipe  = resultat.getInt("ID_EQUIPE");
+        int idEmplacement  = resultat.getInt("ID_EMPLACEMENT");
+        
+        Equipe equipe = jeu.getEquipe(idEquipe);
+        EmplacementJoueur ej = jeu.getEmplacementJoueur(idEmplacement); 
+        equipe.ajouterJoueur(joueur, ej);
+    }
+
+    private void receptionEtatPartie(JSONObject resultat) throws JSONException
+    {
+        switch(resultat.getInt("ETAT"))
+        {
+            case PARTIE_INITIALISEE :
+                log("Partie initialisee");
+                jeu.initialiser(joueur);
+                break;
+            
+            case PARTIE_LANCEE :
+                jeu.demarrer();
+                log("Partie lancee");
+                break;
+        }
+    }
+
+    private void receptionCreatureArrivee(JSONObject message) throws JSONException
     {
 	    log("Réception de l'arrivée d'une créature");
 	    
-	    try
-        {
-           int idCreature = message.getInt("ID_CREATURE");
-           jeu.supprimerCreatureDirect(idCreature);
-        } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-	    
+        int idCreature = message.getInt("ID_CREATURE");
+        jeu.supprimerCreatureDirect(idCreature);
     }
 
-    private void receptionInitialisationJoueur(JSONObject message) throws AucunEmplacementDisponibleException
+    private void receptionInitialisationJoueur(JSONObject message) throws JSONException, AucunEmplacementDisponibleException
     {
 	    log("Réception des donnees d'initialisation du joueur");
         
-        try
+        
+        switch(message.getInt("STATUS"))
         {
-            switch(message.getInt("STATUS"))
-            {
-                case OK :
-                    
-                    int idJoueur = message.getInt("ID_JOUEUR");
-                    int idEquipe = message.getInt("ID_EQUIPE");
-                    int idEmplacement = message.getInt("ID_EMPLACEMENT");
-                    String nomFichierTerrain = message.getString("NOM_FICHIER_TERRAIN");
-                     
-                    log("Reception d'une initialisation de joueur [idJ:"+idJoueur+" idE:"+idEquipe+" idEJ:"+idEmplacement+" terrain:"+nomFichierTerrain+"]");
-                    
-                    Terrain terrain;
-                    
-                    try {
-                        terrain = Terrain.charger(new File("maps/"+nomFichierTerrain));
-                        jeu.setTerrain(terrain);
-                        terrain.setJeu(jeu);
-                    } 
-                    catch (IOException e) {
-                        logErreur("Terrain inconnu");
-                    } 
-                    catch (ClassNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                     
-                    joueur.setId(idJoueur);
-                                   
-                    Equipe equipe = jeu.getEquipe(idEquipe);
-                    EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
+            case OK :
+                
+                int idJoueur = message.getInt("ID_JOUEUR");
+                int idEquipe = message.getInt("ID_EQUIPE");
+                int idEmplacement = message.getInt("ID_EMPLACEMENT");
+                String nomFichierTerrain = message.getString("NOM_FICHIER_TERRAIN");
+                 
+                log("Reception d'une initialisation de joueur [idJ:"+idJoueur+" idE:"+idEquipe+" idEJ:"+idEmplacement+" terrain:"+nomFichierTerrain+"]");
+                
+                Terrain terrain;
+                
+                try {
+                    terrain = Terrain.charger(new File("maps/"+nomFichierTerrain));
+                    jeu.setTerrain(terrain);
+                    terrain.setJeu(jeu);
+                } 
+                catch (IOException e) {
+                    logErreur("Terrain inconnu");
+                } 
+                catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                 
+                joueur.setId(idJoueur);
+                               
+                Equipe equipe = jeu.getEquipe(idEquipe);
+                EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
 
-                    if(equipe != null && emplacementJoueur != null)
-                        equipe.ajouterJoueur(joueur,emplacementJoueur);  
-                    else
-                        logErreur("Equipe ou emplacementJoueur inconnu");
-                    
-                    break;
-            
-                case PAS_DE_PLACE :    
-                    log("Reception d'un refu");
-                    throw new AucunEmplacementDisponibleException("Aucun emplacement disponible");
-            } 
+                if(equipe != null && emplacementJoueur != null)
+                    equipe.ajouterJoueur(joueur,emplacementJoueur);  
+                else
+                    logErreur("Equipe ou emplacementJoueur inconnu");
+                
+                break;
+        
+            case PAS_DE_PLACE :    
+                log("Reception d'un refu");
+                throw new AucunEmplacementDisponibleException("Aucun emplacement disponible");
         } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
     }
 	
 	 /**
@@ -472,30 +477,24 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-	private void receptionEtatJoueur(JSONObject message)
+	private void receptionEtatJoueur(JSONObject message) throws JSONException
     {
-	    log("Réception de l'état d'un joueur");
+        int idJoueur = message.getInt("ID_JOUEUR");
         
-        try
-        {
-            int idJoueur = message.getInt("ID_JOUEUR");
-            int nbPiecesDOr = message.getInt("NB_PIECES_OR");
-            int score = message.getInt("SCORE");
-            
-            Joueur joueur = jeu.getJoueur(idJoueur);
-            
-            if(joueur != null)
-            { 
-                joueur.setNbPiecesDOr(nbPiecesDOr);
-                joueur.setScore(score);
-            }
-            else
-                logErreur("Joueur inconnu (id:"+idJoueur+")");
-        } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
+        log("Réception de l'état d'un joueur (id:"+idJoueur+")");
+        
+        int nbPiecesDOr = message.getInt("NB_PIECES_OR");
+        int score = message.getInt("SCORE");
+        
+        Joueur joueur = jeu.getJoueur(idJoueur);
+        
+        if(joueur != null)
+        { 
+            joueur.setNbPiecesDOr(nbPiecesDOr);
+            joueur.setScore(score);
         }
+        else
+            logErreur("Joueur inconnu (id:"+idJoueur+")");
     }
 
     /**
@@ -503,19 +502,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionAmeliorationTour(JSONObject message)
+    private void receptionAmeliorationTour(JSONObject message) throws JSONException
     {
         log("Réception de l'amélioration d'une tour");
         
-        try
-        {
-            int idTour = message.getInt("ID_TOUR");
-            jeu.ameliorerTourDirect(idTour);
-        } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
+        int idTour = message.getInt("ID_TOUR");
+        jeu.ameliorerTourDirect(idTour);  
     }
 
     /**
@@ -523,19 +515,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionVendreTour(JSONObject message)
+    private void receptionVendreTour(JSONObject message) throws JSONException
     {
         log("Réception de la suppression d'une tour");
         
-        try
-        {
-            int idTour = message.getInt("ID_TOUR");
-            jeu.supprimerTourDirect(idTour);
-        } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
+        int idTour = message.getInt("ID_TOUR");
+        jeu.supprimerTourDirect(idTour); 
     }
     
     /**
@@ -543,41 +528,33 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionAjoutCreature(JSONObject message)
+    private void receptionAjoutCreature(JSONObject message) throws JSONException
     {
         log("Réception d'un l'ajout d'une créature.");
         
-        try
+        int id = message.getInt("ID_CREATURE");
+        int typeCreature = message.getInt("TYPE_CREATURE");
+        
+        int x = message.getInt("X");
+        int y = message.getInt("Y");
+        long santeMax = message.getLong("SANTE_MAX");
+        int nbPiecesDOr = message.getInt("NB_PIECES_OR");
+        double vitesse = message.getDouble("VITESSE");
+        
+        Creature creature = TypeDeCreature.getCreature(typeCreature,santeMax,nbPiecesDOr,vitesse);
+        
+        if(creature != null)
         {
-            int id = message.getInt("ID_CREATURE");
-            int typeCreature = message.getInt("TYPE_CREATURE");
+            creature.setId(id);
+            creature.setX(x);
+            creature.setY(y);
             
-            
-            int x = message.getInt("X");
-            int y = message.getInt("Y");
-            long santeMax = message.getLong("SANTE_MAX");
-            int nbPiecesDOr = message.getInt("NB_PIECES_OR");
-            double vitesse = message.getDouble("VITESSE");
-            
-            Creature creature = TypeDeCreature.getCreature(typeCreature,santeMax,nbPiecesDOr,vitesse);
-            
-            if(creature != null)
-            {
-                creature.setId(id);
-                creature.setX(x);
-                creature.setY(y);
-                
-                jeu.ajouterCreatureDirect(creature);
-            }
-            else
-            {
-                // TODO ERREUR Créature inconnue
-            }     
-        } 
-        catch (JSONException e)
+            jeu.ajouterCreatureDirect(creature);
+        }
+        else
         {
-            e.printStackTrace();
-        } 
+            // TODO ERREUR Créature inconnue
+        }
     }
     
     /**
@@ -585,29 +562,23 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionEtatCreature(JSONObject message)
+    private void receptionEtatCreature(JSONObject message) throws JSONException
     {
-        try 
-        { 
-            int id = message.getInt("ID_CREATURE");
-            int x = message.getInt("X");
-            int y = message.getInt("Y");
-            int sante = message.getInt("SANTE");
-            double angle = message.getDouble("ANGLE");
-            
-            Creature creature = jeu.getCreature(id);
-            
-            // Elle peut avoir été détruite entre-temps.
-            if(creature != null)
-            {
-                creature.x = x;
-                creature.y = y;
-                creature.setSante(sante);
-                creature.setAngle(angle);
-            }
-        } 
-        catch (JSONException e){
-            e.printStackTrace();
+        int id = message.getInt("ID_CREATURE");
+        int x = message.getInt("X");
+        int y = message.getInt("Y");
+        int sante = message.getInt("SANTE");
+        double angle = message.getDouble("ANGLE");
+        
+        Creature creature = jeu.getCreature(id);
+        
+        // Elle peut avoir été détruite entre-temps.
+        if(creature != null)
+        {
+            creature.x = x;
+            creature.y = y;
+            creature.setSante(sante);
+            creature.setAngle(angle);
         }
     }
     
@@ -616,26 +587,19 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionSuppressionCreature(JSONObject message)
+    private void receptionSuppressionCreature(JSONObject message) throws JSONException
     {
-        try {
-            
-            int id = message.getInt("ID_CREATURE");
-            
-            // TODO A REVOIR... pas sur que ca doit ici.
-            Creature creature = jeu.getCreature(id);
-            
-            if(creature != null)
-                jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
-                                                    (int)creature.getCenterY(),
-                                                    creature.getNbPiecesDOr()));
-            
-            jeu.supprimerCreatureDirect(id); 
-        } 
-        catch (JSONException e){
-            e.printStackTrace();
-        }
+        int id = message.getInt("ID_CREATURE");
         
+        // TODO A REVOIR... pas sur que ca doit ici.
+        Creature creature = jeu.getCreature(id);
+        
+        if(creature != null)
+            jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
+                                                (int)creature.getCenterY(),
+                                                creature.getNbPiecesDOr()));
+        
+        jeu.supprimerCreatureDirect(id); 
     }
     
     /**
@@ -661,7 +625,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 
 
 
-    public void demanderChangementEquipe(Equipe equipe)
+    public void demanderChangementEquipe(Equipe equipe) throws AucunEmplacementDisponibleException
     {
         try 
         {
@@ -673,9 +637,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             
             log("Envoye d'une demande de changement d'équipe");
                 
-            canal1.envoyerString(json.toString());
+            canalPingPong.envoyerString(json.toString());
             
-            String resultat = canal1.recevoirString();
+            String resultat = canalPingPong.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
@@ -694,7 +658,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     
                     break;
                 case PAS_DE_PLACE :
-                    throw new Error("Pas de place dans cette équipe");
+                    throw new AucunEmplacementDisponibleException("Pas de place dans cette équipe");
             }
         } 
         catch (JSONException e) {

@@ -500,7 +500,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	public void envoyerSurCanalMAJ(String message)
 	{
 		log("Broadcast "+message); //FIXME supprimer pour la version production
-		canal_update.envoyerString(message);
-
+		
+		if(canal_update != null)
+		    canal_update.envoyerString(message);
 	}
 }

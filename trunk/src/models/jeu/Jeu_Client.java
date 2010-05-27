@@ -105,7 +105,7 @@ public class Jeu_Client extends Jeu
         gestionnaireCreatures.supprimerCreature(creature);
     }
 
-    public void changerEquipe(Joueur joueur, Equipe equipe)
+    public void changerEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException
     {
         clientJeu.demanderChangementEquipe(equipe); 
     }

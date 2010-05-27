@@ -129,9 +129,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         // Ajout du joueur à l'ensemble des joueurs
         jeuServeur.ajouterJoueur(joueur);
         
-        // Envoye de la réponse
-        canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
-        
         // Log
         log("Nouveau joueur ! ID : " + joueur.getId());
         
@@ -144,11 +141,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		} 
 		else
 		{
-			// On inscrit le joueur à la partie
-			clients.put(joueur.getId(), new JoueurDistant(joueur.getId(), canal, this));
+		    // Envoye de la réponse
+            canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
+
+		    // On inscrit le joueur à la partie
+            JoueurDistant jd = new JoueurDistant(joueur.getId(), canal, this);
+			clients.put(joueur.getId(), jd);
 			
-			//setChanged();
-			//notifyObservers(clients);
+			// Notification des clients
+	        envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
 		}
 	}
 
@@ -167,7 +168,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-	    // detectable lors de la mise a jour par l'état d'une creature 
+	    // detectable lors de la mise a jour par l'état d'une creature
 	}
 
 	@Override
