@@ -2,16 +2,8 @@ package models.terrains;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
 import models.creatures.*;
 import models.jeu.Jeu;
@@ -795,8 +787,10 @@ public abstract class Terrain implements Serializable
      * @param terrain le terrain à sérialiser
      * @param fichier le fichier de destination
      */
-    public static void serialiser(Terrain terrain, File fichier)
+    public static void serialiser(Terrain terrain)
     {
+       File fichier = new File("maps/"+terrain.getClass().getSimpleName()+".map");
+
        try
        {
           // Ouverture d'un flux de sortie vers le fichier FICHIER.
@@ -835,55 +829,40 @@ public abstract class Terrain implements Serializable
      * Permet de charger un terrain serialisé
      * 
      * @param fichier le fichier Terrain serialisé
+     * @throws IOException 
+     * @throws ClassNotFoundException 
      */
-    public static Terrain charger(File fichier)
+    public static Terrain charger(File fichier) throws IOException, ClassNotFoundException
     {
-       try
-       {
-          // Ouverture d'un flux d'entree depuis le fichier FICHIER.
-          FileInputStream fluxEntreeFichier = new FileInputStream(fichier);
-          // Creation d'un "flux objet" avec le flux d'entree.
-          ObjectInputStream fluxEntreeObjet = new ObjectInputStream(fluxEntreeFichier);
-          try
-          {
-             // Deserialisation : lecture de l'objet depuis le flux d'entree
-             // (chargement des donnees du fichier).
-              
-             Terrain terrain = (Terrain) fluxEntreeObjet.readObject();
-             
-             // seule les ImageIcon peuvent etre serialisée 
-             // donc la on met a jour l'image de font avec une ImageIcon
-             terrain.imageDeFond = terrain.iconImageDeFond.getImage();
-            
-             return terrain ;
-          }
-          finally
-          {
-             // On ferme les flux (important!).
-             try
-             {
-                fluxEntreeObjet.close();
-             }
-             finally
-             {
-                fluxEntreeFichier.close();
-             }
-          }
-       }
-       catch (FileNotFoundException erreur) // Le fichier n'existe pas.
-       {
-           erreur.printStackTrace();
-       }
-       catch (IOException erreur) // Erreur sur l'ObjectInputStream.
-       {
-          erreur.printStackTrace();
-       }
-       catch (ClassNotFoundException erreur) // Erreur sur l'ObjectInputStream.
-       {
-          erreur.printStackTrace();
-       }
        
-       return null;
+      // Ouverture d'un flux d'entree depuis le fichier FICHIER.
+      FileInputStream fluxEntreeFichier = new FileInputStream(fichier);
+      // Creation d'un "flux objet" avec le flux d'entree.
+      ObjectInputStream fluxEntreeObjet = new ObjectInputStream(fluxEntreeFichier);
+      try
+      {
+         // Deserialisation : lecture de l'objet depuis le flux d'entree
+         // (chargement des donnees du fichier).
+          
+         Terrain terrain = (Terrain) fluxEntreeObjet.readObject();
+         
+         // seule les ImageIcon peuvent etre serialisée 
+         // donc la on met a jour l'image de font avec une ImageIcon
+         terrain.imageDeFond = terrain.iconImageDeFond.getImage();
+        
+         return terrain ;
+      }
+      finally
+      {
+         // On ferme les flux (important!).
+         try{
+            fluxEntreeObjet.close();
+         }
+         finally
+         {
+            fluxEntreeFichier.close();
+         }
+      }
     }
 
     public void setJeu(Jeu jeu)

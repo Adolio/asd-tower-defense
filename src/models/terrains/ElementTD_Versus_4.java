@@ -65,28 +65,28 @@ public class ElementTD_Versus_4 extends Terrain
         
         
         // Création des équipes
-        Equipe e1 = new Equipe("Les verts",Color.GREEN);
+        Equipe e1 = new Equipe(1,"Les verts",Color.GREEN);
         e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,480,500),Color.GREEN));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,480,500),Color.GREEN));
         equipes.add(e1);
         
-        Equipe e2 = new Equipe("Les rouges",Color.RED);
+        Equipe e2 = new Equipe(2,"Les rouges",Color.RED);
         e2.ajouterZoneDepartCreatures(new Rectangle(590, 0, 80, 20));
         e2.setZoneArriveeCreatures(new Rectangle(710, 0, 80, 20));
-        e2.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(480,0,480,500),Color.RED));
+        e2.ajouterEmplacementJoueur(new EmplacementJoueur(2,new Rectangle(480,0,480,500),Color.RED));
         equipes.add(e2);
         
-        Equipe e3 = new Equipe("Les bleus",Color.BLUE);
+        Equipe e3 = new Equipe(3,"Les bleus",Color.BLUE);
         e3.ajouterZoneDepartCreatures(new Rectangle(110, 500, 80, 20));
         e3.setZoneArriveeCreatures(new Rectangle(230, 500, 80, 20));
-        e3.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,500,480,500),Color.BLUE));
+        e3.ajouterEmplacementJoueur(new EmplacementJoueur(3,new Rectangle(0,500,480,500),Color.BLUE));
         equipes.add(e3);
         
-        Equipe e4 = new Equipe("Les jaunes",Color.YELLOW);
+        Equipe e4 = new Equipe(4,"Les jaunes",Color.YELLOW);
         e4.ajouterZoneDepartCreatures(new Rectangle(590,500, 80, 20));
         e4.setZoneArriveeCreatures(new Rectangle(710, 500, 80, 20));
-        e4.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(480,500,480,500),Color.YELLOW));
+        e4.ajouterEmplacementJoueur(new EmplacementJoueur(4,new Rectangle(480,500,480,500),Color.YELLOW));
         equipes.add(e4);
         
         

@@ -2,14 +2,15 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.util.ArrayList;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+
+import exceptions.AucunEmplacementDisponibleException;
 import models.jeu.*;
 import models.joueurs.Joueur;
 import models.terrains.*;
@@ -213,14 +214,25 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
             if (extFichier.equals(Terrain.EXTENSION_FICHIER))
             {
-                t = Terrain.charger(f2);
+                try{
+                    t = Terrain.charger(f2);
                 
-                terrains.add(t);
-                
-                Object[] obj = new Object[] { t.getNom(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
-                        t.getEquipesInitiales().size()+"", t.getImageDeFond() };
-                
-                model.addRow(obj);
+                    terrains.add(t);
+                    
+                    Object[] obj = new Object[] { t.getNom(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
+                            t.getEquipesInitiales().size()+"", t.getImageDeFond() };
+                    
+                    model.addRow(obj);
+                } 
+                catch (IOException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } 
             }
         }
 
@@ -340,51 +352,50 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 
                 Jeu_Client jeuClient = new Jeu_Client(joueur);
                 
-                /* 
-                 * FIXME A INSTANCIER DANS LE CLIENT AU MOMENT DE L'ACCEPTATION
-                 * DU JOUEUR... ON RECOIT DU SERVEUR LE NOM DE LA MAP ET ON DESERIALISE
-                 * LE TERRAIN.
-                 */
-                jeuClient.setTerrain(terrain);
-                
- 
                 try
                 {
                     lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
                     lblEtat.setText("Tentative de connexion au serveur local...");
                     
                     // TODO port dynamique
-                    jeuClient.connexionAvecLeServeur("127.0.0.1", ServeurJeu.PORT);
-                
-                    
-                    // ---------------------------------------------------------------
-                    // -- Enregistrement du serveur sur le serveur d'enregistrement --
-                    // ---------------------------------------------------------------
-                
-                    // Information
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
-                    lblEtat.setText("Enregistrement au serveur central...");
-
-                    if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
-                            terrain.getNbJoueursMax(),
-                            (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
-                            terrain.getMode()))
+                    try
                     {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
-                        lblEtat.setText("Enregistrement au serveur central réussi!");
+                        jeuClient.connexionAvecLeServeur("127.0.0.1", ServeurJeu.PORT);
+                    
+                        // ---------------------------------------------------------------
+                        // -- Enregistrement du serveur sur le serveur d'enregistrement --
+                        // ---------------------------------------------------------------
+                    
+                        // Information
+                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
+                        lblEtat.setText("Enregistrement au serveur central...");
+
+                        if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
+                                terrain.getNbJoueursMax(),
+                                (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
+                                terrain.getMode()))
+                        {
+                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                            lblEtat.setText("Enregistrement au serveur central réussi!");
+                        } 
+                        else
+                        {
+                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                            lblEtat.setText("Enregistrement au serveur central échoué!");
+                        }
+                        
+                        // connexion réussie
+                        parent.getContentPane().removeAll();
+                        parent.getContentPane().add(
+                                new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient, joueur),
+                                BorderLayout.CENTER);
+                        parent.getContentPane().validate();
                     } 
-                    else
+                    catch (AucunEmplacementDisponibleException e1)
                     {
                         lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                        lblEtat.setText("Enregistrement au serveur central échoué!");
+                        lblEtat.setText("Pas de place pour rejoindre!");
                     }
-                    
-                    // connexion réussie
-                    parent.getContentPane().removeAll();
-                    parent.getContentPane().add(
-                            new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient, joueur),
-                            BorderLayout.CENTER);
-                    parent.getContentPane().validate();
                 }
                 catch (ConnectException e2)
                 {

@@ -1,31 +1,20 @@
 package vues;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import exceptions.AucunePlaceDisponibleException;
-import exceptions.JeuEnCoursException;
-import models.jeu.Jeu_Client;
-import models.jeu.Jeu_Serveur;
-import models.jeu.ModeDeJeu;
-import models.joueurs.EmplacementJoueur;
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
+import models.animations.Animation;
+import models.creatures.Creature;
+import models.creatures.VagueDeCreatures;
+import models.jeu.*;
+import models.joueurs.*;
+import models.tours.Tour;
 
 @SuppressWarnings("serial")
-public class Panel_AttendreJoueurs extends JPanel implements ActionListener
+public class Panel_AttendreJoueurs extends JPanel implements ActionListener, EcouteurDeJeu
 {
     private final int MARGES_PANEL = 40;
     private final boolean ADMIN;
@@ -33,10 +22,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
     private JButton bDemarrerMaintenant = new JButton("Démarrer maintenant");
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
-
-    
     private JButton bTmpJConn = new JButton("...Un joueur se connect");
-    
     private Panel_GridBag pJoueurs;
     private Jeu_Serveur jeuServeur;
     private Jeu_Client jeuClient;
@@ -86,6 +72,8 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
      */
     private void initialiserForm()
     {
+        jeuClient.setEcouteurDeJeu(this);
+        
         // initialisation
         setLayout(new BorderLayout());
 
@@ -255,40 +243,19 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                 if(jeuServeur.estEnregisterSurSE())
                     jeuServeur.desenregistrerSurSE();
  
+                // reférence différente entre client et serveur
+                Joueur joueur = new Joueur(this.joueur.getPseudo());
                 jeuServeur.initialiser(joueur);
-                jeuServeur.demarrer();       
+                jeuServeur.demarrer();  
             }
-            
-            // FIXME INFO VENANT DU SERVEUR
-            //this.joueur = new Joueur("toto");
-            joueur.setEquipe(new Equipe("ahah",Color.BLACK));
-            joueur.setEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,200,200)));
-
-            jeuClient.initialiser(joueur);
-            jeuServeur.initialiser(joueur);
-            
-           
-            
-            
-            
-            switch(jeuServeur.getTerrain().getMode())
-            {
-                case ModeDeJeu.MODE_VERSUS :
-                    new Fenetre_JeuVersus(jeuClient);
-                    break;
-                
-                case ModeDeJeu.MODE_COOP :
-                    new Fenetre_JeuVersus(jeuClient); // FIXME
-                    break;
-            }
-            parent.dispose();
-            
         }
         else if (src == bDeconnecter)
         {
             if (ADMIN)
             {
-                jeuServeur.desenregistrerSurSE();
+                if(jeuServeur.estEnregisterSurSE())
+                    jeuServeur.desenregistrerSurSE();
+                
                 jeuServeur.stopperServeurDeJeu();
             }
 
@@ -302,6 +269,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
         {  
             Joueur j = new Joueur("J"+this.nbJoueurs);
             
+            /*
             try
             {
                 jeuServeur.ajouterJoueur(j);
@@ -316,6 +284,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
             }
             
             ajouterJoueur(j);
+            */
             
             jeuServeur.miseAJourSE();
         }
@@ -365,8 +334,8 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                         Equipe equipe = (Equipe) cbEquipes
                                 .getSelectedItem();
                         
-                        equipe.ajouterJoueur(joueur);
-                        
+                        jeuClient.changerEquipe(joueur, equipe);
+ 
                         // mise a jour de la liste des emplacements
                         remplirCombo(cbEmplacements,joueur);
 
@@ -458,6 +427,128 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener
                 pJoueurs.add(lInconnu, 1, i, 1);
             }
         }
+    }
+
+    @Override
+    public void animationAjoutee(Animation animation)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void animationTerminee(Animation animation)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void creatureAjoutee(Creature creature)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void creatureArriveeEnZoneArrivee(Creature creature)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void creatureBlessee(Creature creature)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void creatureTuee(Creature creature)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void etoileGagnee()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void joueurAjoute(Joueur joueur)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void joueurMisAJour(Joueur joueur)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void partieDemarree()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void partieInitialisee()
+    { 
+        switch(jeuClient.getTerrain().getMode())
+        {
+            case ModeDeJeu.MODE_VERSUS :
+                new Fenetre_JeuVersus(jeuClient);
+                break;
+            
+            case ModeDeJeu.MODE_COOP :
+                new Fenetre_JeuVersus(jeuClient); // FIXME
+                break;
+        }
+        
+        parent.dispose();
+    }
+
+    @Override
+    public void partieTerminee()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void tourAmelioree(Tour tour)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void tourPosee(Tour tour)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void tourVendue(Tour tour)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void vagueEntierementLancee(VagueDeCreatures vague)
+    {
+        // TODO Auto-generated method stub
+        
     }
     
 }

@@ -18,6 +18,8 @@ import models.creatures.EcouteurDeCreature;
 import models.creatures.EcouteurDeVague;
 import models.creatures.GestionnaireCreatures;
 import models.creatures.VagueDeCreatures;
+import models.joueurs.EcouteurDeJoueur;
+import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.terrains.Terrain;
@@ -42,8 +44,9 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see Tour
  */
-public abstract class Jeu implements EcouteurDeCreature, 
-                            EcouteurDeVague
+public abstract class Jeu implements EcouteurDeJoueur,
+                                     EcouteurDeCreature, 
+                                     EcouteurDeVague
 {
 	/**
 	 * version du jeu
@@ -62,7 +65,7 @@ public abstract class Jeu implements EcouteurDeCreature,
 	/**
 	 * Collection des équipes en jeu
 	 */
-	private ArrayList<Equipe> equipes = new ArrayList<Equipe>();
+	protected ArrayList<Equipe> equipes = new ArrayList<Equipe>();
 	
     /**
      * Les tours sont posees sur le terrain et permettent de tuer les creatures.
@@ -102,12 +105,12 @@ public abstract class Jeu implements EcouteurDeCreature,
     /**
      * Permet de savoir si la partie est initialisée
      */
-    private boolean estInitialise;
+    protected boolean estInitialise;
     
     /**
      * Pour notifications (observable)
      */
-    private EcouteurDeJeu edj;
+    protected EcouteurDeJeu edj;
     
     /**
      * Joueur principal  
@@ -134,7 +137,7 @@ public abstract class Jeu implements EcouteurDeCreature,
      * 
      * @param joueur 
      */
-    public void initialiser(Joueur joueur)
+    synchronized public void initialiser(Joueur joueur)
     {
         if(terrain == null)
             throw new IllegalStateException("Terrain nul");
@@ -143,7 +146,7 @@ public abstract class Jeu implements EcouteurDeCreature,
             throw new IllegalStateException("Aucune équipe inscrite");
         
         // le joueur principal
-        this.joueur = joueur;
+        setJoueurPrincipal(joueur);
         
         // initialisation des valeurs par defaut
         for(Equipe equipe : equipes)
@@ -157,6 +160,9 @@ public abstract class Jeu implements EcouteurDeCreature,
         }  
         
         estInitialise = true;
+        
+        if(edj != null)
+            edj.partieInitialisee();
     }
 
     /**
@@ -170,14 +176,8 @@ public abstract class Jeu implements EcouteurDeCreature,
         if(!estInitialise)
             throw new IllegalStateException("Le jeu n'est pas initialisé");
             
-        // donne les pieces aux joueurs et les vies aux equipes
-        for(Equipe equipe : getEquipes())
-        {
-            equipe.setNbViesRestantes(terrain.getNbViesInitiales());
-            
-            for(Joueur joueur : equipe.getJoueurs())
-                joueur.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
-        }
+        if(partieDemarree)
+            throw new IllegalStateException("Le jeu est déjà démarré");
         
         // demarrage des gestionnaires
         gestionnaireTours.demarrer();
@@ -196,11 +196,9 @@ public abstract class Jeu implements EcouteurDeCreature,
      * 
      * @param vague la vague
      */
-    public void lancerVague(VagueDeCreatures vague)
+    public void lancerVague(Equipe cible, VagueDeCreatures vague)
     { 
-        
-        
-        vague.lancerVague(this, getEquipes().get(0), this, this);
+        vague.lancerVague(this, cible, this, this);
     }
     
     /**
@@ -474,19 +472,22 @@ public abstract class Jeu implements EcouteurDeCreature,
                 // on tente l'ajout...
                 equipes.get(i).ajouterJoueur(joueur);
                 
+                // ajout de l'ecouteur
+                joueur.setEcouteurDeJoueur(this);
+                
                 // notification
                 if(edj != null)
                     edj.joueurAjoute(joueur);
-                
+  
                 return; // équipe trouvée
             }
-            catch(IllegalArgumentException iae)
+            catch (AucunePlaceDisponibleException e)
             {
-                
+                // on essaye encore...
             }
         }
         
-       throw new AucunePlaceDisponibleException("Aucune place disponible.");
+        throw new AucunePlaceDisponibleException("Aucune place disponible.");
     }
 
     /**
@@ -514,9 +515,12 @@ public abstract class Jeu implements EcouteurDeCreature,
      * 
      * @param joueur le joueur principal du jeu
      */
-    public void setJoueurPrincipal(Joueur joueur)
+    protected void setJoueurPrincipal(Joueur joueur)
     {
         this.joueur = joueur;
+        
+        // mis à jour de l'écouteur
+        joueur.setEcouteurDeJoueur(this);
     }
     
     @Override
@@ -537,6 +541,7 @@ public abstract class Jeu implements EcouteurDeCreature,
         // augmentation du score
         int nbEtoiles = tueur.getNbEtoiles();
         
+        // TODO
         tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());
         
         // nouvelle étoile
@@ -559,8 +564,12 @@ public abstract class Jeu implements EcouteurDeCreature,
             equipe.perdreUneVie();
             
             if(edj != null)
+            {
                 edj.creatureArriveeEnZoneArrivee(creature);
-            
+                
+                // FIXME plutot edj.equipeMiseAJour(equipe)
+                edj.joueurMisAJour(joueur);
+            }
             // le joueur n'a plus de vie
             if(equipe.aPerdu())
                 terminer();
@@ -574,6 +583,13 @@ public abstract class Jeu implements EcouteurDeCreature,
             edj.vagueEntierementLancee(vagueDeCreatures); 
     }
     
+    @Override
+    public void joueurMisAJour(Joueur joueur)
+    {
+        if(edj != null)
+            edj.joueurMisAJour(joueur);
+    }
+
     /**
      * Permet de savoir si une tour peut etre posee.
      * 
@@ -633,5 +649,69 @@ public abstract class Jeu implements EcouteurDeCreature,
     public void dessinerAnimations(Graphics2D g2, int hauteur)
     {
         gestionnaireAnimations.dessinerAnimations(g2,hauteur);
+    }
+    
+    
+    
+    
+    public Joueur getJoueur(int idJoueur)
+    {
+        ArrayList<Joueur> joueurs = getJoueurs();
+
+        for(Joueur joueur : joueurs)
+            if(joueur.getId() == idJoueur)
+                return joueur;
+        
+        return null;
+    }
+
+    public Equipe getEquipe(int idEquipe)
+    {
+        for(Equipe equipe : equipes)
+            if(equipe.getId() == idEquipe)
+                return equipe;
+        
+        return null;
+    }
+    
+    public EmplacementJoueur getEmplacementJoueur(int idEmplacement)
+    {
+        for(Equipe equipe : equipes)
+            for(EmplacementJoueur ej : equipe.getEmplacementsJoueur())
+                if(ej.getId() == idEmplacement)
+                    return ej;
+
+        return null;
+    }
+    
+    /**
+     * Permet de recuperer une tour à l'aide de son identificateur
+     * 
+     * @param idTour l'identificateur de la tour
+     * @return la tour trouvée ou null
+     */
+    public Tour getTour(int idTour)
+    {
+        for (Tour tour : getTours())
+            if (tour.getId() == idTour)
+                return tour;
+        
+        return null;
+    }
+    
+    
+    public Creature getCreature(int idCreature)
+    {
+        return gestionnaireCreatures.getCreature(idCreature);
+    }
+
+    public Equipe getEquipeAvecJoueurSuivante(Equipe equipe)
+    {
+        int i = (equipes.indexOf(equipe)+1) % equipes.size();
+        
+        while(equipes.get(i).getJoueurs().size() == 0)
+            i = ++i % equipes.size();
+
+        return equipes.get(i);
     }
 }

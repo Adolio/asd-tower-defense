@@ -115,7 +115,8 @@ public class CanalTCP
    public CanalTCP(String adresseIp, int numeroPort, boolean afficherMessagesDebug)
          throws ConnectException, CanalException
    {
-      this.afficherMessagesDebug = afficherMessagesDebug;
+      // TODO
+      //this.afficherMessagesDebug = afficherMessagesDebug;
       
       try
       {
@@ -278,7 +279,7 @@ public class CanalTCP
          throw new CanalException(e);
       }
    }
-   
+
    /**
     * Cette méthode permet d'attendre de recevoir un message de type int venant
     * du canal de transmission.

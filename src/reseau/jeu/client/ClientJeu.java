@@ -1,5 +1,7 @@
 package reseau.jeu.client;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.ConnectException;
 import reseau.CanalTCP;
 import reseau.CanalException;
@@ -7,9 +9,13 @@ import reseau.jeu.serveur.ConstantesServeurJeu;
 import models.animations.GainDePiecesOr;
 import models.creatures.*;
 import models.jeu.Jeu_Client;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
+import models.terrains.Terrain;
 import models.tours.*;
 import exceptions.*;
+
 import org.json.*;
 
 /**
@@ -54,12 +60,13 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
      * @param pseudo
      * @throws ConnectException
      * @throws CanalException
+     * @throws AucunEmplacementDisponibleException 
      */
 	public ClientJeu(Jeu_Client jeu, 
 	                 String IPServeur, 
 	                 int portServeur, 
 	                 Joueur joueur) 
-	                 throws ConnectException, CanalException 
+	                 throws ConnectException, CanalException, AucunEmplacementDisponibleException 
 	{
 		this.jeu      = jeu;
 		this.joueur   = joueur;
@@ -71,7 +78,25 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 		canal1.envoyerString(joueur.getPseudo());
 		
 		// le serveur nous retourne notre identificateur
-		joueur.setId(canal1.recevoirInt());
+		JSONObject msg;
+        
+		try{
+            msg = new JSONObject(canal1.recevoirString());
+            receptionInitialisationJoueur(msg);
+        } 
+		catch (JSONException e1){
+		    e1.printStackTrace(); 
+		} 
+
+		// FIXME
+		/*
+		try{
+            jeu.ajouterJoueur(joueur);  
+        } 
+		catch (JeuEnCoursException e){e.printStackTrace();} 
+		catch (AucunePlaceDisponibleException e){e.printStackTrace();}
+		*/
+		
 		
 		// reception de la version du serveur
 		String version = canal1.recevoirString();
@@ -87,7 +112,9 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 		(new Thread(this)).start();
 	}
 	
-	/**
+	
+
+    /**
 	 * Envoyer un message chat
 	 * 
 	 * TODO controler les betises de l'expediteur (guillemets, etc..)
@@ -336,6 +363,9 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
                 case TOUR_ELECTRIQUE :
                     tour = new TourElectrique();
                     break;
+                case TOUR_DE_TERRE :
+                    tour = new TourDeTerre();
+                    break;
                 default : 
                     throw new TypeDeTourInvalideException("Le type " 
                             + message.getString("TYPE_TOUR") + " est invalide");
@@ -367,14 +397,41 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 	    
             try 
             {
-                log("Attente d'un String sur le canal 2...");
+                //log("Attente d'un String sur le canal 2...");
                 
                 resultat = new JSONObject(canal2.recevoirString());
                 
-                log("Canal 2 recoit : "+resultat);
+                //log("Canal 2 recoit : "+resultat);
                 
                 switch(resultat.getInt("TYPE"))
                 {
+                    
+                    // PARTIE
+                    case PARTIE_ETAT : 
+                        
+                        switch(resultat.getInt("ETAT"))
+                        {
+                            case PARTIE_INITIALISEE :
+                                log("Partie initialisee");
+                                jeu.initialiser(joueur);
+                                break;
+                            
+                            case PARTIE_LANCEE :
+                                jeu.demarrer();
+                                log("Partie lancee");
+                                break;
+                        }  
+                        
+                    break; 
+                
+                    // JOUEURS
+                    
+                    case JOUEUR_ETAT :    
+                        receptionEtatJoueur(resultat);
+                    break; 
+                
+                    // TOURS
+                    
                     case TOUR_AJOUT :
                         receptionAjoutTour(resultat);
                         break;
@@ -415,7 +472,94 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
 	    }
 	}
 
-	/**
+	
+	private void receptionInitialisationJoueur(JSONObject message) throws AucunEmplacementDisponibleException
+    {
+	    log("Réception des donnees d'initialisation du joueur");
+        
+        try
+        {
+            switch(message.getInt("STATUS"))
+            {
+                case OK :
+                    
+                    int idJoueur = message.getInt("ID_JOUEUR");
+                    int idEquipe = message.getInt("ID_EQUIPE");
+                    int idEmplacement = message.getInt("ID_EMPLACEMENT");
+                    String nomFichierTerrain = message.getString("NOM_FICHIER_TERRAIN");
+                     
+                    log("Reception d'une initialisation de joueur [idJ:"+idJoueur+" idE:"+idEquipe+" idEJ:"+idEmplacement+" terrain:"+nomFichierTerrain+"]");
+                    
+                    Terrain terrain;
+                    
+                    try {
+                        terrain = Terrain.charger(new File("maps/"+nomFichierTerrain));
+                        jeu.setTerrain(terrain);
+                        terrain.setJeu(jeu);
+                    } 
+                    catch (IOException e) {
+                        logErreur("Terrain inconnu");
+                    } 
+                    catch (ClassNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                     
+                    joueur.setId(idJoueur);
+                                   
+                    Equipe equipe = jeu.getEquipe(idEquipe);
+                    EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
+
+                    if(equipe != null && emplacementJoueur != null)
+                        equipe.ajouterJoueur(joueur,emplacementJoueur);  
+                    else
+                        logErreur("Equipe ou emplacementJoueur inconnu");
+                    
+                    break;
+            
+                case PAS_DE_PLACE :    
+                    log("Reception d'un refu");
+                    throw new AucunEmplacementDisponibleException("Aucun emplacement disponible");
+            } 
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	 /**
+     * Analyse d'un message d'état d'un joueur
+     * 
+     * @param message le message
+     */
+	private void receptionEtatJoueur(JSONObject message)
+    {
+	    log("Réception de l'état d'un joueur");
+        
+        try
+        {
+            int idJoueur = message.getInt("ID_JOUEUR");
+            int nbPiecesDOr = message.getInt("NB_PIECES_OR");
+            int score = message.getInt("SCORE");
+            
+            Joueur joueur = jeu.getJoueur(idJoueur);
+            
+            if(joueur != null)
+            { 
+                joueur.setNbPiecesDOr(nbPiecesDOr);
+                joueur.setScore(score);
+            }
+            else
+                logErreur("Joueur inconnu (id:"+idJoueur+")");
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Analyse d'un message d'amélioration d'une tour
      * 
      * @param message le message
@@ -465,7 +609,6 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
     private void receptionInfoEquipes(JSONObject message)
     {
         log("Réception des etats des equipes");
-
     }
     
     /**
@@ -485,7 +628,7 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
             
             int x = message.getInt("X");
             int y = message.getInt("Y");
-            long santeMax = message.getInt("SANTE_MAX"); // FIXME ATTENTION getLong attendu
+            long santeMax = message.getLong("SANTE_MAX");
             int nbPiecesDOr = message.getInt("NB_PIECES_OR");
             double vitesse = message.getDouble("VITESSE");
             
@@ -537,8 +680,8 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
      */
     private void receptionEtatCreature(JSONObject message)
     {
-        try {
-            
+        try 
+        { 
             int id = message.getInt("ID_CREATURE");
             int x = message.getInt("X");
             int y = message.getInt("Y");
@@ -599,4 +742,56 @@ public class ClientJeu implements ConstantesServeurJeu, IDTours, IDCreatures, Ru
             System.out.println("[CLIENT][JOUEUR "+joueur.getId()+"] "+msg);
     }
     
+    /**
+     * Permet d'afficher des message log d'erreur
+     * 
+     * @param msg le message
+     */
+    private void logErreur(String msg)
+    {
+        System.err.println("[CLIENT ERREUR][JOUEUR "+joueur.getId()+"] "+msg);
+    }
+
+
+
+    public void demanderChangementEquipe(Equipe equipe)
+    {
+        try 
+        {
+            // envoye de la requete de vente
+            JSONObject json = new JSONObject();
+            json.put("TYPE", JOUEUR_CHANGER_EQUIPE);
+            json.put("ID_EQUIPE", equipe.getId());
+            
+            
+            log("Envoye d'une demande de changement d'équipe");
+                
+            canal1.envoyerString(json.toString());
+            
+            String resultat = canal1.recevoirString();
+            JSONObject resultatJSON = new JSONObject(resultat);
+            switch(resultatJSON.getInt("STATUS"))
+            {
+                case OK :
+                    
+                    int idEquipe = resultatJSON.getInt("ID_EQUIPE");
+                    int idEmplacement = resultatJSON.getInt("ID_EMPLACEMENT");
+                    
+                    Equipe equipe2 = jeu.getEquipe(idEquipe);
+                    EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
+
+                    if(equipe2 != null && emplacementJoueur != null)
+                        equipe2.ajouterJoueur(joueur,emplacementJoueur);  
+                    else
+                        logErreur("Equipe ou emplacementJoueur inconnu");
+                    
+                    break;
+                case PAS_DE_PLACE :
+                    throw new Error("Pas de place dans cette équipe");
+            }
+        } 
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

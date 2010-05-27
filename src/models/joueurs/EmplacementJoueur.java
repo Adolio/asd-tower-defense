@@ -9,20 +9,19 @@ public class EmplacementJoueur implements Serializable
     private static final long serialVersionUID = 1L;
     transient Joueur joueur;
     private Color couleur;
-    private static int compteur = 0;
     private int id;
     Rectangle zoneDeConstruction;
     
-    public EmplacementJoueur(Rectangle zoneDeConstruction)
+    public EmplacementJoueur(int id, Rectangle zoneDeConstruction)
     {
-        this(zoneDeConstruction,Color.BLACK);
+        this(id,zoneDeConstruction,Color.BLACK);
     }
     
-    public EmplacementJoueur(Rectangle zoneDeConstruction, Color couleur)
+    public EmplacementJoueur(int id,Rectangle zoneDeConstruction, Color couleur)
     {
         this.zoneDeConstruction = zoneDeConstruction;
         this.couleur = couleur;
-        this.id = compteur++;
+        this.id = id;
     }
     
     /**
@@ -77,6 +76,11 @@ public class EmplacementJoueur implements Serializable
     public Joueur getJoueur()
     {
         return joueur;
+    }
+    
+    public int getId()
+    {
+        return id;
     }
     
     public String toString()

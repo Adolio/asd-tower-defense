@@ -277,7 +277,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	/**
 	 * Permet de demander une mise a jour du nombre de pieces du joueur
 	 */
-	public void miseAJourNbPiecesOr()
+	private void miseAJourNbPiecesOr()
 	{
 		int nbPiecesOr = joueur.getNbPiecesDOr();
 	    
@@ -296,7 +296,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	/**
      * Permet de demander une mise a jour du nombre de vies restantes du joueur
      */
-	public void miseAJourNbViesRestantes()
+	private void miseAJourNbViesRestantes()
 	{
 		lVies.setText(String.format("%02d",joueur.getEquipe().getNbViesRestantes()));
 	}
@@ -304,7 +304,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	/**
      * Permet de demander une mise a jour du nombre d'étoiles gagnées
      */
-    public void miseAJourNbEtoiles()
+	private void miseAJourNbEtoiles()
     {
         lEtoiles.setText(String.format("%02d",joueur.getNbEtoiles()));
     }
@@ -312,7 +312,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	/**
      * Permet de demander une mise a jour du score du joueur
      */
-	public void miseAJourScore()
+	private void miseAJourScore()
     {
         lScore.setText(String.format("%06d",joueur.getScore()));
         miseAJourNbEtoiles();
@@ -367,5 +367,13 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
                 bTour.setEnabled(false);
         else
             miseAJourNbPiecesOr();
+    }
+
+    public void miseAJourInfoJoueur()
+    {
+        miseAJourNbViesRestantes();
+        miseAJourScore();
+        miseAJourNbPiecesOr();
+        miseAJourNbEtoiles();
     }
 }

@@ -123,6 +123,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private Joueur joueur;
 	
 	/**
+	 * Panel de cröation d'une vague
+	 */
+    private Panel_CreationVague pCreationVague;
+	
+	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
 	 * @param jeu le jeu a gerer
@@ -186,11 +191,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
 		
-		//--------------------
-        //-- vague suivante --
-        //--------------------
-        JPanel pVagueSuivante = new JPanel(new BorderLayout());
-        pVagueSuivante.setOpaque(false);
+		//-------------
+        //-- Console --
+        //-------------
+        JPanel pConsole = new JPanel(new BorderLayout());
+        pConsole.setOpaque(false);
         ajouterInfoVagueSuivanteDansConsole();
 
         // style du champ de description de la vague suivante 
@@ -200,17 +205,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         JScrollPane scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(
                 (int) jeu.getTerrain().getTaillePanelTerrain().getWidth(),50));
-        pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
+        pConsole.add(scrollConsole,BorderLayout.WEST);
         
         // panel de création de vagues
-        JScrollPane js = new JScrollPane(new Panel_CreationVague(jeu,joueur,this));
+        pCreationVague = new Panel_CreationVague(jeu,joueur,this);
+
+        JScrollPane js = new JScrollPane(pCreationVague);
         js.setOpaque(false);
         js.setPreferredSize(new Dimension(300,100));
-        pVagueSuivante.add(js,BorderLayout.CENTER);
+        pConsole.add(js,BorderLayout.CENTER);
             
-        pFormulaire.add(pVagueSuivante,BorderLayout.SOUTH);
+        pFormulaire.add(pConsole,BorderLayout.SOUTH);
 		
-
 		//----------------------------------------
 		//-- panel du jeu et menu d'interaction --
 		//----------------------------------------
@@ -250,10 +256,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         //-- demarrage du jeu --
         //----------------------
 		// TODO faire un 5.. 4.. 3.. 2.. 1..
-		jeu.setJoueurPrincipal(joueur);
 		jeu.setEcouteurDeJeu(this);
-		jeu.demarrer();
-		
 	
 		//---------------------------------------
 		//-- dernieres propietes de la fenetre --
@@ -364,7 +367,9 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	        jeu.poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
-            panelMenuInteraction.miseAJourNbPiecesOr();
+	        
+	        // TODO CHECK
+            //panelMenuInteraction.miseAJourNbPiecesOr();
             
             Tour nouvelleTour = tour.getCopieOriginale();
             nouvelleTour.setProprietaire(tour.getPrioprietaire());
@@ -385,7 +390,9 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         {
 	        jeu.ameliorerTour(tour);
 	        
-	        panelMenuInteraction.miseAJourNbPiecesOr();
+	        // TODO CHECK
+            //panelMenuInteraction.miseAJourNbPiecesOr();
+	        
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
         }
 	    catch(Exception e)
@@ -402,7 +409,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         {
             jeu.vendreTour(tour);
             panelInfoTour.effacerTour();
-            panelMenuInteraction.miseAJourNbPiecesOr();
+            
+            // TODO CHECK
+            //panelMenuInteraction.miseAJourNbPiecesOr();
+            
             panelTerrain.setTourSelectionnee(null);
             
             jeu.ajouterAnimation(
@@ -496,8 +506,9 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             panelTerrain.setCreatureSelectionnee(null);
         }
             
-        panelMenuInteraction.miseAJourNbPiecesOr();
-        panelMenuInteraction.miseAJourScore();
+        // TODO CHECK
+        //panelMenuInteraction.miseAJourNbPiecesOr();
+        //panelMenuInteraction.miseAJourScore();
 
         jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
@@ -514,8 +525,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    // creation de l'animation de blessure du joueur
         jeu.ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
 
-	    // mise a jour des infos
-        panelMenuInteraction.miseAJourNbViesRestantes();
+        // TODO CHECK
+        //panelMenuInteraction.miseAJourNbViesRestantes();
         
         // si c'est la creature selectionnee
         if(panelTerrain.getCreatureSelectionnee() == creature)
@@ -534,9 +545,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
      */
     public void miseAJourInfoJeu()
     {
-        panelMenuInteraction.miseAJourNbPiecesOr();
-        panelMenuInteraction.miseAJourNbViesRestantes();
-        panelMenuInteraction.miseAJourScore();
+        // TODO CHECK
+        // panelMenuInteraction.miseAJourNbPiecesOr();
+        //panelMenuInteraction.miseAJourNbViesRestantes();
+        //panelMenuInteraction.miseAJourScore();
     }
 
     @Override
@@ -600,7 +612,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void lancerVague(VagueDeCreatures vague)
     {
-        jeu.lancerVague(vague);
+        jeu.lancerVague(jeu.getEquipeAvecJoueurSuivante(joueur.getEquipe()),vague);
     }
 
     @Override
@@ -643,4 +655,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 
     @Override
     public void partieDemarree(){}
+
+    @Override
+    public void joueurMisAJour(Joueur joueur)
+    {
+        if(jeu.getJoueurPrincipal() == joueur)
+            panelMenuInteraction.miseAJourInfoJoueur();
+    }
+
+    @Override
+    public void partieInitialisee()
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

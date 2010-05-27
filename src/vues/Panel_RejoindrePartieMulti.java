@@ -20,6 +20,8 @@ import models.joueurs.Joueur;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import exceptions.AucunEmplacementDisponibleException;
 import outils.fichierDeConfiguration;
 import reseau.CanalTCP;
 import reseau.CanalException;
@@ -537,13 +539,24 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
-            jeu.connexionAvecLeServeur(IP,port);
-        
-            // connexion réussie
-            parent.getContentPane().removeAll();
-            parent.getContentPane().add(new Panel_AttendreJoueurs(parent, jeu, joueur),
-                    BorderLayout.CENTER);
-            parent.getContentPane().validate();
+            try
+            {
+                jeu.connexionAvecLeServeur(IP,port);
+                
+                // connexion réussie
+                parent.getContentPane().removeAll();
+                parent.getContentPane().add(new Panel_AttendreJoueurs(parent, jeu, joueur),
+                        BorderLayout.CENTER);
+                parent.getContentPane().validate();
+            } 
+            catch (AucunEmplacementDisponibleException e)
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Pas de place pour rejoindre!");
+                
+                bRejoindre.setText("Rejoindre");
+                bRejoindre.setEnabled(true);
+            }
         }
         catch (ConnectException e)
         {
