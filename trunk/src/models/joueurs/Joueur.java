@@ -44,6 +44,11 @@ public class Joueur
      * Permet de définir les zones de construction du joueur
      */
     private EmplacementJoueur emplacement;
+
+    /**
+     * Permet de notifier l'ecouteur de joueur
+     */
+    private EcouteurDeJoueur edj;
     
     /**
      * Constructeur
@@ -81,6 +86,9 @@ public class Joueur
     public void setNbPiecesDOr(int nbPiecesDOr)
     {
         this.nbPiecesDOr = nbPiecesDOr;
+        
+        if(edj != null)
+            edj.joueurMisAJour(this);
     }
 
     /**
@@ -101,6 +109,9 @@ public class Joueur
     public void setScore(int score)
     {
         this.score.setValeur(score);
+        
+        if(edj != null)
+            edj.joueurMisAJour(this);
     }
     
     /**
@@ -165,6 +176,12 @@ public class Joueur
             this.equipe.retirerJoueur(this);
         
         this.equipe = equipe;
+        
+        // FIXME
+        //equipe.ajouterJoueur(this);
+        
+        //if(edj != null)
+        //    edj.joueurMisAJour(this);
     }
     
     /**
@@ -179,6 +196,9 @@ public class Joueur
             emplacementJoueur.setJoueur(this);
         
         this.emplacement = emplacementJoueur;
+        
+        //if(edj != null)
+        //    edj.joueurMisAJour(this);
     }
 
     /**
@@ -191,14 +211,31 @@ public class Joueur
             emplacement.retirerJoueur();
         
         emplacement = null;
+        
+        //if(edj != null)
+        //    edj.joueurMisAJour(this);
     }
 
     /**
-     * TODO
-     * @param id
+     * Permet de modifier l'id du joueur
+     * 
+     * @param id le nouvel id du joueur
      */
     public void setId(int id)
     {
-       this.id = id; 
+        this.id = id; 
+        
+        //if(edj != null)
+        //    edj.joueurMisAJour(this);
+    }
+
+    /**
+     * Permet de modifier l'écouteur de joueur
+     * 
+     * @param edj l'écouteur de joueur
+     */
+    public void setEcouteurDeJoueur(EcouteurDeJoueur edj)
+    {
+        this.edj = edj;
     } 
 }

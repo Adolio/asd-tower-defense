@@ -9,9 +9,11 @@ import exceptions.*;
 import models.animations.Animation;
 import models.creatures.*;
 import models.jeu.*;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.tours.*;
 import reseau.*;
+import sun.print.resources.serviceui;
 
 /**
  * Cette classe contiendra le serveur de jeu sur lequel se connecteront tout les
@@ -36,12 +38,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
      * TODO
      */
-	private long TEMPS_DE_RAFFRAICHISSEMENT = 200;
+	private long TEMPS_DE_RAFFRAICHISSEMENT = 50;
 	
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean DEBUG = false;
+	private static final boolean verbeux = true;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -56,9 +58,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Thead de rafraichissement pour les messages
 	 */
-	private Watchdog notifieur;
-	
-	private final static long ATTENTE = 1000;
+	//private Watchdog notifieur;
 
 	/**
 	 * 
@@ -81,58 +81,80 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public void run()
 	{
 		// Réglage du niveau d'affichage des messages clients
-		JoueurDistant.verboseMode = 0;
+		JoueurDistant.verbeux = verbeux;
+		
 		// Réservation du port d'écoute
 		Port port = new Port(PORT);
 		port.reserver();
+		
 		// Canal d'écoute
 		CanalTCP canal;
+		
 		// Lancement de l'horloge interne
-		notifieur = new Watchdog(this, ATTENTE);
+		//notifieur = new Watchdog(this, ATTENTE);
 		// Lancement du thread de rafraichisement
-		Updater updater = new Updater(clients);
-		addObserver(updater);
+		//Updater updater = new Updater(clients);
+		//addObserver(updater);
+		
 		// Boucle d'attente de connections
 		while (true)
 		{
 			// On attend qu'un joueur se présente
-			log("écoute sur le port " + PORT);
-			// Nouveau joueur !!
-			canal = new CanalTCP(port, DEBUG);
+			log("Ecoute sur le port " + PORT);
+			
+			// Bloquant en attente d'une connexion
+			canal = new CanalTCP(port, verbeux);
+			
+			String ip = canal.getIpClient();
 			// Log
-			log("Récéption de " + canal.getIpClient());
+			log("Récéption de " + ip); 
+			
 			// Récéption du pseudo du joueur
 			String pseudo = canal.recevoirString();
+			
 			// Création du joueur
 			Joueur joueur = new Joueur(pseudo);
-			// FIXME On met de la thune au joueur par defaut
-			joueur.setNbPiecesDOr(100000);
 			
 			try
 			{
 				// Ajout du joueur à l'ensemble des joueurs
 				jeuServeur.ajouterJoueur(joueur);
-				// Extraction de l'ID du joueur
-				int IDClient = joueur.getId();
-				// Envoi de l'ID du joueur au client
-				canal.envoyerInt(joueur.getId());
+				
+				// Envoye de la réponse
+				JSONObject requete = construireMsgInitialisationJoueur(joueur);
+				canal.envoyerString(requete.toString());
+				
 				// Log
-				log("Nouveau joueur ! ID : " + IDClient);
+				log("Nouveau joueur ! ID : " + joueur.getId());
+				
 				// Enregistrement de l'ID et du canal dans la base interne
-				enregistrerClient(IDClient, canal);
-			} 
+				enregistrerClient(joueur.getId(), canal);
+			}
 			catch (JeuEnCoursException e){
 				e.printStackTrace();
+				// TODO
 				canal.envoyerString("Erreur, le jeu est en cours");
 			}
 			catch (AucunePlaceDisponibleException e){
-				e.printStackTrace();
-				canal.envoyerString("Erreur, pas de place disponible");
+				
+			    log("Joueur refusé");
+
+				JSONObject msg = new JSONObject();
+		        
+		        try {
+		            msg.put("TYPE", JOUEUR_INITIALISATION);
+		            msg.put("STATUS", PAS_DE_PLACE);
+		        } 
+		        catch (JSONException jsone){
+		            jsone.printStackTrace();
+		        }
+				
+				canal.envoyerString(msg.toString());
 			}
 		}
 	}
 
-	private void enregistrerClient(int IDClient, CanalTCP canal)
+    private void enregistrerClient(int IDClient, CanalTCP canal)
 	{
 		// On vérifie que l'ID passé en paramêtre soit bien unique
 		if (clients.containsKey(IDClient))
@@ -162,8 +184,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 
 	protected synchronized static void log(String msg)
 	{
-		System.out.print("[SERVEUR]");
-		System.out.println(msg);
+		if(verbeux)
+		    System.out.println("[SERVEUR] "+ msg);
 	}
 
 	private synchronized Joueur getJoueur(int ID)
@@ -182,12 +204,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
 			joueur.getValue().lancerPartie();
 		
-		// TODO
-		//JSONObject requete = construireMsgPartieLancee();
-        //envoyerATous(requete.toString());
+		JSONObject requete = construireMsgEtatPartie(PARTIE_LANCEE);
+        envoyerATous(requete.toString());
 	}
 
-	/**************** NOTIFICATIONS **************/
+    /**************** NOTIFICATIONS **************/
 
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
@@ -270,7 +291,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                         msg = construireMsgEtatCreature(creature);
                         envoyerATous(msg.toString());
                     }
-  
+                    
                     try{
                         Thread.sleep(TEMPS_DE_RAFFRAICHISSEMENT);
                     } 
@@ -293,6 +314,16 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void tourVendue(Tour tour){}
 
+	@Override
+    public void joueurMisAJour(Joueur joueur)
+    {
+	    log("Mise a jour du joueur "+joueur.getPseudo());
+	    
+	    JSONObject msg = construireMsgEtatJoueur(joueur);
+        envoyerATous(msg.toString());
+    }
+	
+	
 	/**
 	 * Supprime un joueur de la partie
 	 * 
@@ -349,8 +380,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
                 + creature.getNom());
         
-		VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 200, true);
-		jeuServeur.lancerVague(vague);
+		VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 500, true);
+		
+		
+		Joueur j = jeuServeur.getJoueur(IDPlayer);
+		
+		jeuServeur.lancerVague(jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
 		
 		return OK;
 	}
@@ -500,7 +535,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		log("Le joueur " + idJoueur + " désire améliorer la tour " + idTour);
 		
 		// Récupération de la tour à améliorer
-		Tour tour = getTour(idTour);
+		Tour tour = jeuServeur.getTour(idTour);
 		
 		if (tour == null)
 			return ERREUR;
@@ -540,7 +575,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		log("Le joueur " + IDPlayer + " désire supprimer la tour " + tourCible);
 		
 		// Repérage de la tour à supprimer
-		Tour tour = getTour(tourCible);
+		Tour tour = jeuServeur.getTour(tourCible);
 		
 		if (tour == null)
 			return ERREUR;
@@ -611,22 +646,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	}*/
 
 	/**
-	 * Permet de recuperer une tour à l'aide de son identificateur
-	 * 
-	 * @param ID l'identificateur de la tour
-	 * @return la tour trouvée ou null
-	 */
-	private Tour getTour(int ID)
-	{
-		for (Tour tour : jeuServeur.getTours())
-		{
-			if (tour.getId() == ID)
-				return tour;
-		}
-		return null;
-	}
-	
-	/**
 	 * Permet de Mutli-caster a tous les clients
 	 * 
 	 * @param message le message à diffuser
@@ -639,6 +658,71 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                 joueur.getValue().envoyerSurCanalMAJ(message);
 	    }
 	}
+	
+	
+	private JSONObject construireMsgInitialisationJoueur(Joueur joueur)
+    {
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", JOUEUR_INITIALISATION);
+            msg.put("STATUS", OK);
+            msg.put("ID_JOUEUR", joueur.getId());
+            msg.put("ID_EMPLACEMENT", joueur.getEmplacement().getId());
+            msg.put("ID_EQUIPE", joueur.getEquipe().getId());
+            msg.put("NOM_FICHIER_TERRAIN", jeuServeur.getTerrain().getClass().getSimpleName()+".map");
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg; 
+    }
+	
+	private JSONObject construireMsgEtatPartie(int etat)
+    {
+	    JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", PARTIE_ETAT);
+            msg.put("ETAT", etat); 
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg; 
+    }
+	
+	/**
+     * Permet de construire le message d'état d'un joueur
+     * 
+     * @param joueur le joueur
+     * @return Une structure JSONObject
+     */
+    private JSONObject construireMsgEtatJoueur(Joueur joueur)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", JOUEUR_ETAT);
+            msg.put("ID_JOUEUR", joueur.getId());
+            msg.put("NB_PIECES_OR", joueur.getNbPiecesDOr());
+            msg.put("SCORE", joueur.getScore());
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg; 
+    }
+	
 	
 	/**
 	 * Permet de construire le message de demande d'ajout d'une tour
@@ -713,35 +797,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         return msg;
     }
 	
-	/**
-     * Permet de construire le message d'état d'une créature
-     * 
-     * @param creature la creature
-     * @return Une structure JSONObject
-     */
-    private JSONObject construireMsgEtatCreature(Creature creature)
-    {
-        JSONObject msg = new JSONObject();
-        
-        try
-        {
-            msg.put("TYPE", CREATURE_ETAT);
-            msg.put("ID_CREATURE", creature.getId());
-           
-            msg.put("X", creature.x);
-            msg.put("Y", creature.y);
-            msg.put("SANTE", creature.getSante());
-            msg.put("ANGLE", creature.getAngle());
-        } 
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        
-        return msg;
-    }
-	
-	
+    // CREATURES
+    
     /**
      * Permet de construire le message d'ajout d'une créature
      * 
@@ -774,6 +831,34 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     }
 	
 	/**
+     * Permet de construire le message d'état d'une créature
+     * 
+     * @param creature la creature
+     * @return Une structure JSONObject
+     */
+    private JSONObject construireMsgEtatCreature(Creature creature)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try
+        {
+            msg.put("TYPE", CREATURE_ETAT);
+            msg.put("ID_CREATURE", creature.getId());
+           
+            msg.put("X", creature.x);
+            msg.put("Y", creature.y);
+            msg.put("SANTE", creature.getSante());
+            msg.put("ANGLE", creature.getAngle());
+        } 
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg;
+    }
+	
+	/**
      * Permet de construire le message de suppression d'une créature
      * 
      * @param creature la creature
@@ -794,5 +879,46 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         }
         
         return msg;  
+    }
+
+    public JSONObject changerEquipe(int idJoueur, int idEquipe)
+    {
+        Joueur joueur = jeuServeur.getJoueur(idJoueur);
+        Equipe e = jeuServeur.getEquipe(idEquipe);
+        
+        
+        JSONObject message = new JSONObject();
+ 
+        try {
+            try {
+                
+                message.put("TYPE", JOUEUR_CHANGER_EQUIPE);
+                
+                e.ajouterJoueur(joueur);
+    
+                // SUCCES
+                message.put("STATUS", OK);
+                message.put("ID_EQUIPE", joueur.getEquipe().getId());
+                message.put("ID_EMPLACEMENT", joueur.getEmplacement().getId());
+            }
+            catch (AucunePlaceDisponibleException e1)
+            {
+                // ECHEC
+                message.put("STATUS", PAS_DE_PLACE);
+            }
+        }
+        catch (JSONException jsone)
+        {
+            jsone.printStackTrace();
+        }
+ 
+        return message;
+    }
+
+    @Override
+    public void partieInitialisee()
+    {
+        JSONObject requete = construireMsgEtatPartie(PARTIE_INITIALISEE);
+        envoyerATous(requete.toString());
     }
 }

@@ -170,8 +170,10 @@ public class VagueDeCreatures implements Runnable
      * @param terrain le terrain en question
      * @param edc l'ecouteur de creature fourni a chaque creature creee
      */
-    public void lancerVague(Jeu jeu, Equipe equipeCiblee, EcouteurDeVague edv,
-            EcouteurDeCreature edc)
+    public void lancerVague(Jeu jeu, 
+                            Equipe equipeCiblee, 
+                            EcouteurDeVague edv,
+                            EcouteurDeCreature edc)
     {
         this.jeu = jeu;
         this.edc = edc;
@@ -422,5 +424,11 @@ public class VagueDeCreatures implements Runnable
             enPause = false;
             pause.notify(); 
         }
+    }
+
+    public void getProprietaire()
+    {
+        // TODO Auto-generated method stub
+        
     } 
 }

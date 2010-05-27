@@ -6,6 +6,8 @@ import java.io.File;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import exceptions.AucunePlaceDisponibleException;
 import models.jeu.Jeu;
 import models.jeu.Jeu_Solo;
 import models.joueurs.Equipe;
@@ -419,7 +421,14 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         jeu.setTerrain(terrain);
         Equipe equipe = jeu.getEquipes().get(0); // les equipes sont créer par le terrain
         Joueur joueur = new Joueur("Joueur");
-        equipe.ajouterJoueur(joueur);
+        
+        try{
+            equipe.ajouterJoueur(joueur);
+        } 
+        catch (AucunePlaceDisponibleException e){
+            e.printStackTrace();
+        }
+        
         jeu.initialiser(joueur);
         new Fenetre_JeuSolo(jeu);
         

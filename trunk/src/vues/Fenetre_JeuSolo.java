@@ -262,7 +262,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    //----------------------
         //-- demarrage du jeu --
         //----------------------
-		jeu.setJoueurPrincipal(joueur);
 		jeu.setEcouteurDeJeu(this);
         jeu.demarrer();
         
@@ -419,7 +418,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	        jeu.poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
-            panelMenuInteraction.miseAJourNbPiecesOr();
             
             Tour nouvelleTour = tour.getCopieOriginale();
             nouvelleTour.setProprietaire(tour.getPrioprietaire());
@@ -443,8 +441,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    try
         {
 	        jeu.ameliorerTour(tour);
-	        
-	        panelMenuInteraction.miseAJourNbPiecesOr();
+	         
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
         }
 	    catch(Exception e)
@@ -466,7 +463,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.vendreTour(tour);
             
             panelInfoTour.effacerTour();
-            panelMenuInteraction.miseAJourNbPiecesOr();
+            
             panelTerrain.setTourSelectionnee(null);
             
             jeu.ajouterAnimation(
@@ -597,9 +594,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             panelInfoCreature.effacerCreature();
             panelTerrain.setCreatureSelectionnee(null);
         }
-            
-        panelMenuInteraction.miseAJourNbPiecesOr();
-        panelMenuInteraction.miseAJourScore();
 
         // TODO A METTRE OU PAS
         //jeu.ajouterAnimation(new Disparition((int) creature.getCenterX(), (int) creature.getCenterY(), creature.getImage(), 400));
@@ -615,9 +609,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    // creation de l'animation de blessure du joueur
         jeu.ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
 
-	    // mise a jour des infos
-        panelMenuInteraction.miseAJourNbViesRestantes();
-        
         // si c'est la creature selectionnee
         if(panelTerrain.getCreatureSelectionnee() == creature)
         {
@@ -638,9 +629,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void miseAJourInfoJeu()
     {
-        panelMenuInteraction.miseAJourNbPiecesOr();
-        panelMenuInteraction.miseAJourNbViesRestantes();
-        panelMenuInteraction.miseAJourScore();
+        panelMenuInteraction.miseAJourInfoJoueur();
     }
 
     @Override
@@ -785,4 +774,17 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
     @Override
     public void partieDemarree(){}
+
+    @Override
+    public void joueurMisAJour(Joueur joueur)
+    {
+        panelMenuInteraction.miseAJourInfoJoueur();
+    }
+
+    @Override
+    public void partieInitialisee()
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

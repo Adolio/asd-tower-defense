@@ -60,10 +60,10 @@ public class WaterWorld extends Terrain
         );
 
         // Création des équipes
-        Equipe e = new Equipe("Les rouges",Color.RED);
+        Equipe e = new Equipe(1,"Les rouges",Color.RED);
         e.ajouterZoneDepartCreatures(new Rectangle(-30, 30, 20, 80));
         e.setZoneArriveeCreatures(new Rectangle(480, 390, 20, 80));
-        e.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(0,0,500,500)));
+        e.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,500,500)));
         equipes.add(e);
         
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;

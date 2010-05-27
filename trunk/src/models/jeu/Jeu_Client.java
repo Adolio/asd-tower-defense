@@ -1,21 +1,24 @@
 package models.jeu;
 import java.net.ConnectException;
+import java.util.ArrayList;
+
 import exceptions.*;
 import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.tours.Tour;
 
 public class Jeu_Client extends Jeu
 {
     private ClientJeu clientJeu;
-    private Joueur joueur;
     
     public Jeu_Client(Joueur joueur)
     {
-        this.joueur = joueur;
+        setJoueurPrincipal(joueur);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void lancerVague(VagueDeCreatures vague) 
+    public void lancerVague(Equipe equipe, VagueDeCreatures vague) 
     {
         try
         {
@@ -51,9 +54,9 @@ public class Jeu_Client extends Jeu
     }
     
     public boolean connexionAvecLeServeur(String IP, int port) 
-    throws ConnectException, CanalException
+    throws ConnectException, CanalException, AucunEmplacementDisponibleException
     {
-        clientJeu = new ClientJeu(this, IP, port, joueur);
+        clientJeu = new ClientJeu(this, IP, port, getJoueurPrincipal());
         return true;
     }
 
@@ -97,16 +100,34 @@ public class Jeu_Client extends Jeu
         gestionnaireCreatures.ajouterCreature(creature);
     }
 
-    
-    public Creature getCreature(int id)
-    {
-        return gestionnaireCreatures.getCreature(id);
-    }
-
     public void supprimerCreatureDirect(int id)
     {
         // FIXME pas optimal
         Creature creature = gestionnaireCreatures.getCreature(id);
         gestionnaireCreatures.supprimerCreature(creature);
     }
+
+    public void changerEquipe(Joueur joueur, Equipe equipe)
+    {
+        clientJeu.demanderChangementEquipe(equipe); 
+    }
+    
+    
+    public void initialiser(Joueur joueur)
+    {
+        if(terrain == null)
+            throw new IllegalStateException("Terrain nul");
+        
+        if(equipes.size() == 0)
+            throw new IllegalStateException("Aucune équipe inscrite");
+        
+        // le joueur principal
+        setJoueurPrincipal(joueur);
+        
+        estInitialise = true;
+        
+        if(edj != null)
+            edj.partieInitialisee();
+    }
+    
 }

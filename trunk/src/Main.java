@@ -48,16 +48,17 @@ public class Main
                } 
                   
       // TODO [A EFFACER]
-      Terrain t = new ElementTD_Coop(new Jeu_Solo());      
-      Terrain.serialiser(t,new File("maps/ElementTD_Coop.map"));
+      /*
+      Terrain t1 = new ElementTD_Coop(new Jeu_Solo());      
+      Terrain.serialiser(t1);
                
       Terrain t2 = new SimpleFiveVersus(new Jeu_Solo());      
-      Terrain.serialiser(t2,new File("maps/SimpleFiveVersus.map"));
+      Terrain.serialiser(t2);
 
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
-      Terrain.serialiser(t3,new File("maps/ElementTD_Versus_4.map"));
-      
-      
+      Terrain.serialiser(t3);
+      */
+               
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }

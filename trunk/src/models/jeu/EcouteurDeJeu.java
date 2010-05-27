@@ -20,6 +20,9 @@ public interface EcouteurDeJeu
     
     // ETAT DU JEU
     
+    // TODO
+    public void partieInitialisee();
+    
     /**
      * Permet d'informer l'écouteur que la partie a démarrée
      */
@@ -43,6 +46,10 @@ public interface EcouteurDeJeu
      */
     public void joueurAjoute(Joueur joueur);
     
+    /**
+     * Permet d'informer l'écouteur qu'un joueur a été mis à jour
+     */
+    public void joueurMisAJour(Joueur joueur);
     
     // TOURS
     

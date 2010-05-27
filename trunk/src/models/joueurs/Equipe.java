@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import exceptions.AucunePlaceDisponibleException;
 
 /**
  * Classe de gestion d'une equipe.
@@ -16,6 +17,11 @@ public class Equipe implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Identificateur
+     */
+    private int id;
+    
    /**
     * Nom de l'equipe
     */
@@ -65,8 +71,9 @@ public class Equipe implements Serializable
     * @param nom
     * @param couleur
     */
-   public Equipe(String nom, Color couleur)
+   public Equipe(int id, String nom, Color couleur)
    {
+       this.id = id;
        this.nom = nom;
        this.couleur = couleur;
    }
@@ -91,35 +98,58 @@ public class Equipe implements Serializable
        return couleur;
    }
    
+   
+   
+   
    /**
     * Permet d'ajouter un joueur
+    * TODO
+    */
+   public void ajouterJoueur(Joueur joueur, EmplacementJoueur ej) throws IllegalArgumentException
+   {
+       if(joueur == null)
+           throw new IllegalArgumentException();
+       
+       if(ej == null)
+           throw new IllegalArgumentException();
+       
+       if(ej.getJoueur() != null)
+           throw new IllegalArgumentException("EmplacementJoueur occupé");
+       
+       // on retire le joueur de son ancienne equipe
+       if(joueur.getEquipe() != null)
+           joueur.getEquipe().retirerJoueur(joueur);
+       
+       // on l'ajout dans la nouvelle equipe
+       joueurs.add(joueur);
+
+       // on modifier sont equipe
+       joueur.setEquipe(this);
+       
+       // on lui attribut le nouvel emplacement
+       joueur.setEmplacementJoueur(ej);
+   }
+   
+   /**
+    * Permet d'ajouter un joueur sans connaitre l'emplacement
     * 
     * @param joueur le joueur a ajouter
-    * @throws IllegalArgumentException si le joueur est nul
+    * @throws IllegalArgumentException si le joueur est nul  
+    * @throws AucunePlaceDisponibleException 
     */
-   public void ajouterJoueur(Joueur joueur) throws IllegalArgumentException
+   public void ajouterJoueur(Joueur joueur) throws IllegalArgumentException, AucunePlaceDisponibleException
    {
        if(joueur == null)
            throw new IllegalArgumentException();
           
        EmplacementJoueur ej = trouverEmplacementDiponible();
-       if(ej == null) // emplacement non trouvé
-           throw new IllegalArgumentException("Aucun emplacement disponible");
-       else // emplacement trouvé
-       {
-           // on retire le joueur de son ancienne equipe
-           if(joueur.getEquipe() != null)
-               joueur.getEquipe().retirerJoueur(joueur);
-           
-           // on l'ajout dans la nouvelle equipe
-           joueurs.add(joueur);
-
-           // on modifier sont equipe
-           joueur.setEquipe(this);
-           
-           // on lui attribut le nouvel emplacement
-           joueur.setEmplacementJoueur(ej);
-       }
+       
+       // emplacement non trouvé
+       if(ej == null) 
+           throw new AucunePlaceDisponibleException("Aucune place disponible.");
+       // emplacement trouvé
+       else 
+           ajouterJoueur(joueur, ej);
    }
 
    /**
@@ -135,22 +165,6 @@ public class Equipe implements Serializable
   
        return null;
    }
-   
-   /**
-    * Permet d'ajouter un joueur
-    * 
-    * @param joueur le joueur a ajouter
-    * @param l'emplacement du joueur sur le terrain
-    * @throws IllegalArgumentException si le joueur est nul
-    */
-   /*public void ajouterJoueur(Joueur joueur, EmplacementJoueur emplacementJoueur)
-   {
-       joueurs.add(joueur);
-       joueur.setEquipe(this);
-       
-       //emplacementJoueur.setJoueur(joueur);
-       joueur.setEmplacementJoueur(emplacementJoueur);
-   }*/
    
    /**
     * TODO
@@ -333,5 +347,10 @@ public class Equipe implements Serializable
     public boolean aPerdu()
     {
         return nbViesRestantes <= 0;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 }

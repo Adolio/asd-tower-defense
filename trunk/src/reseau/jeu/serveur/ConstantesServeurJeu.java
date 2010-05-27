@@ -27,31 +27,37 @@ public interface ConstantesServeurJeu
     /**
 	 * Démarrage de la partie
 	 */
-	public final int PARTIE_DEBUT = 300;
+	public final int PARTIE_INITIALISEE = 100;
+	
+	/**
+     * Démarrage de la partie
+     */
+    public final int PARTIE_LANCEE = 101;
+	
 	/**
 	 * Arrêt de la partie
 	 */
-	public final int PARTIE_FIN = 301;
+	public final int PARTIE_FIN = 102;
 	
     /**
      * Code pour quitter la partie
      */
-    public final int PARTIE_QUITTER = 302;
+    public final int PARTIE_QUITTER = 103;
 	
 	/**
      * Type de message : état de la partie
      */
-    public final int PARTIE_ETAT = 303;
+    public final int PARTIE_ETAT = 104;
     
     /**
      * Changement d'état de la partie : en pause
      */
-    public final int EN_PAUSE = 304;
+    public final int EN_PAUSE = 105;
     
     /**
      * Changement d'état de la partie : en jeu
      */
-    public final int EN_JEU = 305;
+    public final int EN_JEU = 106;
 
 
 	// SUCCES 200-299
@@ -65,16 +71,30 @@ public interface ConstantesServeurJeu
 	// JOUEUR 300-309
 	
 	/**
-	 * Type de message : un message texte
-	 */
-	public final int MSG = 301;
-	
+     * Type de message : initialisation d'un joueur
+     */
+    public final int JOUEUR_INITIALISATION = 300;
+
+    /**
+     * Type de message : ajout d'un joueur
+     */
+    public final int JOUEUR_AJOUT = 301;
+    
+    /**
+     * Type de message : ajout d'un joueur
+     */
+    public final int JOUEUR_CHANGER_EQUIPE = 302;
+    
 	/**
 	 * Type de message : état d'un joueur
 	 */
-	public final int JOUEUR_ETAT = 302;
+	public final int JOUEUR_ETAT = 303;
 	
-
+	/**
+     * Type de message : un message texte
+     */
+    public final int MSG = 309;
+	
 
 	// CREATURE 310-319
 	
@@ -168,6 +188,11 @@ public interface ConstantesServeurJeu
      * Code d'erreur : action non autorisee
      */
     public final int ACTION_NON_AUTORISEE = 404;
+    
+    /**
+     * Code d'erreur : pas de place dans l'equipe
+     */
+    public final int PAS_DE_PLACE = 405;
     
 	/**
 	 * Code d'erreur : erreur quelconque

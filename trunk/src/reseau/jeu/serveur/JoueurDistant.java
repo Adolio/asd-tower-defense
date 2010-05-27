@@ -40,7 +40,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static int verboseMode = 1;
+	public static boolean verbeux = true;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -245,6 +245,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				repondreEtat(JOUEUR_ETAT, code);
 			}
 			break;
+			
+		// Changement d'equipe
+        case JOUEUR_CHANGER_EQUIPE:
+            
+            int idEquipe = json.getInt("ID_EQUIPE");
+            
+            JSONObject reponse = serveur.changerEquipe(ID,idEquipe);
+            send(reponse.toString());
+            
+            break;
 		// Action sur une vague
 		case VAGUE:
 			// Récupération du type de vague
@@ -257,6 +267,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Retour au client de l'information
 			repondreEtat(VAGUE, code);
 			break;
+			
 		// Changement d'état d'une partie
 		case PARTIE_ETAT:
 			// Récupération du nouvel état
@@ -266,6 +277,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			// Retour du code au client
 			repondreEtat(PARTIE_ETAT, code);
 			break;
+			
 		// Requête de création d'une tour
 		case TOUR_AJOUT:
 			// Extraction des coordonnées

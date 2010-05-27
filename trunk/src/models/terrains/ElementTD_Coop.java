@@ -62,14 +62,14 @@ public class ElementTD_Coop extends Terrain
  
         
         // Création des équipes
-        Equipe e1 = new Equipe("Les rouges",Color.RED);
+        Equipe e1 = new Equipe(1,"Les rouges",Color.RED);
         e1.ajouterZoneDepartCreatures(new Rectangle(110, 0, 80, 20));
         e1.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,20,180,220),Color.RED));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(200,120,140,240),Color.BLUE));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(20,260,180,220),Color.GREEN));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(200,380,260,100),Color.ORANGE));
-        e1.ajouterEmplacementJoueur(new EmplacementJoueur(new Rectangle(360,20,100,360),Color.CYAN));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(20,20,180,220),Color.RED));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(2,new Rectangle(200,120,140,240),Color.BLUE));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(3,new Rectangle(20,260,180,220),Color.GREEN));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(4,new Rectangle(200,380,260,100),Color.ORANGE));
+        e1.ajouterEmplacementJoueur(new EmplacementJoueur(5,new Rectangle(360,20,100,360),Color.CYAN));
         equipes.add(e1);
         
         
