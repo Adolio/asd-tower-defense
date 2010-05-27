@@ -1,13 +1,11 @@
 package models.jeu;
 import java.net.ConnectException;
-import java.util.ArrayList;
 
 import exceptions.*;
 import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
-import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.tours.Tour;
@@ -112,7 +110,8 @@ public class Jeu_Client extends Jeu
         clientJeu.demanderChangementEquipe(equipe); 
     }
     
-    
+    // TODO CHECK 
+    /*
     public void initialiser(Joueur joueur)
     {
         if(terrain == null)
@@ -128,6 +127,5 @@ public class Jeu_Client extends Jeu
         
         if(edj != null)
             edj.partieInitialisee();
-    }
-    
+    }*/
 }

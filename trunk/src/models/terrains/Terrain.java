@@ -591,11 +591,11 @@ public abstract class Terrain implements Serializable
             }
             catch(IllegalArgumentException e)
             {}
+            
+            // mise a jour des chemins si necessaire
+            if (miseAJourDesCheminsDesCreatures)
+                miseAJourDesCheminsDesCreatures();
         }
-
-        // mise a jour des chemins si necessaire
-        if (miseAJourDesCheminsDesCreatures)
-            miseAJourDesCheminsDesCreatures();
     }
 
     /**

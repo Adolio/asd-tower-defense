@@ -235,14 +235,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			{
 				couperLeCanal();
 				desenregistrement();
-			} else
+			} 
+			else
 			{
-				// Appelle de la fonction de gestion des états et récupération
+				// TODO
+			    // Appelle de la fonction de gestion des états et récupération
 				// du
 				// code d'état
-				code = serveur.changementEtatJoueur(ID, nouvelEtat);
+				//code = serveur.changementEtatJoueur(ID, nouvelEtat);
 				// Réponse du code d'état au client
-				repondreEtat(JOUEUR_ETAT, code);
+				//repondreEtat(JOUEUR_ETAT, code);
 			}
 			break;
 			
@@ -250,9 +252,8 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         case JOUEUR_CHANGER_EQUIPE:
             
             int idEquipe = json.getInt("ID_EQUIPE");
-            
-            JSONObject reponse = serveur.changerEquipe(ID,idEquipe);
-            send(reponse.toString());
+
+            send(serveur.changerEquipe(ID,idEquipe));
             
             break;
 		// Action sur une vague
@@ -269,14 +270,15 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			break;
 			
 		// Changement d'état d'une partie
-		case PARTIE_ETAT:
+		/* TODO 
+		 case PARTIE_ETAT:
 			// Récupération du nouvel état
 			int nouvelEtatPartie = json.getInt("ETAT");
 			// Envoi de l'information au serveur principal
 			code = serveur.changementEtatPartie(ID, nouvelEtatPartie);
 			// Retour du code au client
 			repondreEtat(PARTIE_ETAT, code);
-			break;
+			break;*/
 			
 		// Requête de création d'une tour
 		case TOUR_AJOUT:

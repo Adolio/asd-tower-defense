@@ -20,7 +20,7 @@ import models.joueurs.*;
  * @version 1.2 | mai 2010
  * @since jdk1.6.0_16
  */
-public abstract class Creature extends Rectangle implements IDCreatures
+public abstract class Creature extends Rectangle
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -597,26 +597,5 @@ public abstract class Creature extends Rectangle implements IDCreatures
     public void setAngle(double angle)
     {
         this.angle = angle;
-    }
-
-    // TODO A METTRE DANS UNE CLASSE TypeCreature AVEC LES CONSTANTES
-    public static int getTypeCreature(Creature creature)
-    {
-        if (creature instanceof Aigle)
-            return AIGLE;
-        else if (creature instanceof Araignee)
-            return ARAIGNEE;
-        else if (creature instanceof Elephant)
-            return ELEPHANT;
-        else if (creature instanceof Mouton)
-            return MOUTON;
-        else if (creature instanceof Pigeon)
-            return PIGEON;
-        else if (creature instanceof Rhinoceros)
-            return RHINOCEROS;
-        else if (creature instanceof GrandeAraignee)
-            return GRANDE_ARAIGNEE;
-        
-        return -1;
     }
 }
