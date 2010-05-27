@@ -531,7 +531,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRejoindre.setText("Connexion...");
         bRejoindre.setEnabled(false);
 
-        Joueur joueur = new Joueur(lblPseudo.getText());
+        Joueur joueur = new Joueur(tfPseudo.getText());
         
         Jeu_Client jeu = new Jeu_Client(joueur);
         try

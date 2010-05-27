@@ -42,11 +42,12 @@ public class CanalTCP
     */
    public CanalTCP(Port port, boolean afficherMessagesDebug) throws CanalException
    {
-      this.afficherMessagesDebug = afficherMessagesDebug;
+       // TODO
+       //this.afficherMessagesDebug = afficherMessagesDebug;
       
       try
       {
-         if (afficherMessagesDebug)
+         if (this.afficherMessagesDebug)
          {
             System.out
                   .print("     Canal: en attente de connexion sur le port <"
@@ -544,7 +545,7 @@ public class CanalTCP
    
    public void log(String msg)
    {
-       if(afficherMessagesDebug && false)
+       if(afficherMessagesDebug)
            System.out.println("    "+msg);
    }
    

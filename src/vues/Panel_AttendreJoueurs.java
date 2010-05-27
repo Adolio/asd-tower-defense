@@ -6,6 +6,8 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import exceptions.AucunEmplacementDisponibleException;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
@@ -341,7 +343,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
 
                         lPseudo.setForeground(joueur.getEquipe().getCouleur());
                     } 
-                    catch (IllegalArgumentException iae)
+                    catch (Exception iae)
                     {
                         // on reselectionne l'ancienne sélection
                         cbEquipes.setSelectedItem(joueur.getEquipe());
