@@ -26,18 +26,15 @@ public class Jeu_Serveur extends Jeu
         // recuperation des configurations
         fichierDeConfiguration config = new fichierDeConfiguration("cfg/config.cfg");
         String IP_SE = config.getProprety("IP_SE");
-        int PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
-        int PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
-        // IP idael : "188.165.41.224";
-        // IP lazhar : "10.192.51.161";
-        
+        int PORT_SE  = Integer.parseInt(config.getProprety("PORT_SE"));
+
         try
         {
             canalServeurEnregistrement = new CanalTCP(IP_SE, PORT_SE, true);
             
             // Création de la requete d'enregistrement
             String requete = RequeteEnregistrement.getRequeteEnregistrer(
-                    nomServeur, PORT_SJ, nbJoueurs, nomTerrain, ModeDeJeu.getNomMode(mode));
+                    nomServeur, ServeurJeu.PORT, nbJoueurs, nomTerrain, ModeDeJeu.getNomMode(mode));
 
             // Envoie de la requete
             canalServeurEnregistrement.envoyerString(requete);
@@ -86,14 +83,14 @@ public class Jeu_Serveur extends Jeu
                 // fermeture propre du canal
                 //canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
                 //canalServeurEnregistrement.recevoirString();
-            }
-            // il y a eu une erreur... on quitte tout de même
+            
+                canalServeurEnregistrement.fermer();}
+                // il y a eu une erreur... on quitte tout de même
+            
             catch (CanalException ce)
             {
                 ce.printStackTrace();
             }
-
-            canalServeurEnregistrement.fermer();
         }
     }
 
@@ -121,7 +118,7 @@ public class Jeu_Serveur extends Jeu
 
     public void stopperServeurDeJeu()
     {
-        // TODO
+        serveurDeJeu.stopper();
     }
 
     public void miseAJourSE()
@@ -131,11 +128,19 @@ public class Jeu_Serveur extends Jeu
             // Création de la requete d'enregistrement
             String requete = RequeteEnregistrement.getRequeteMiseAJour(terrain.getNbJoueursMax() - getJoueurs().size());
     
-            // Envoie de la requete 
-            canalServeurEnregistrement.envoyerString(requete);
+            try
+            {
+                // Envoie de la requete 
+                canalServeurEnregistrement.envoyerString(requete);
             
-            // Attente du résultat
-            canalServeurEnregistrement.recevoirString();
+                // Attente du résultat
+                canalServeurEnregistrement.recevoirString();
+            } 
+            catch (CanalException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 }

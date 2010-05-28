@@ -8,7 +8,7 @@ package reseau;
  * @author lazhar
  * 
  */
-public class CanalException extends RuntimeException {
+public class CanalException extends Exception {
    
    private static final long serialVersionUID = 1L;
    

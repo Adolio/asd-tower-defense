@@ -144,6 +144,11 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
          catch (JSONException e1) {
             // JSON exception
             e1.printStackTrace();
+         } 
+         catch (CanalException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
          }
       }
    }

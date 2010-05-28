@@ -293,14 +293,22 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             // vidage de la table
             viderTable();
             
-            // envoie de la requete d'enregistrement
-            canalServeurEnregistrement.envoyerString(RequeteEnregistrement.INFOS_PARTIES);
-            
-            // attente du résultat
-            String resultat = canalServeurEnregistrement.recevoirString();
-    
-            // mise à jour de la liste des serveurs
-            mettreAJourListeDepuisJSON(resultat);
+            try
+            {
+                // envoie de la requete d'enregistrement
+                canalServeurEnregistrement.envoyerString(RequeteEnregistrement.INFOS_PARTIES);
+                
+                // attente du résultat
+                String resultat = canalServeurEnregistrement.recevoirString();
+        
+                // mise à jour de la liste des serveurs
+                mettreAJourListeDepuisJSON(resultat);
+            } 
+            catch (CanalException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } 
         }
     }
 
@@ -452,11 +460,14 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                     // fermeture propre du canal
                     canalServeurEnregistrement.envoyerString(RequeteEnregistrement.STOP);
                     canalServeurEnregistrement.recevoirString();
+               
+                    canalServeurEnregistrement.fermer();  
+                } 
+                catch (CanalException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
-                // il y a eu une erreur... on quitte tout de même
-                catch(CanalException ce){}
-                
-                canalServeurEnregistrement.fermer();
             }
         }
     }

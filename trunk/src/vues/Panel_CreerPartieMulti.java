@@ -411,7 +411,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             catch (IOException e1)
             {
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                lblEtat.setText("Création du serveur de jeu impossible");
+                lblEtat.setText("Création du serveur de jeu impossible " +
+                		        "- un serveur possible par machine (pour le moment)");
             }
         } 
         else if (src == bAnnuler)

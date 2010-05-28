@@ -22,20 +22,41 @@ public class Jeu_Client extends Jeu
     @Override
     public void poserTour(Tour tour) throws ArgentInsuffisantException, ZoneInaccessibleException
     {
-        clientJeu.demanderCreationTour(tour);
+        try
+        {
+            clientJeu.demanderCreationTour(tour);
+        } 
+        catch (CanalException e)
+        {
+            erreurCanal(e);
+        }
     }
 
     @Override
     public void vendreTour(Tour tour) throws ActionNonAutoriseeException
     {
-        clientJeu.demanderVenteTour(tour);
+        try
+        {
+            clientJeu.demanderVenteTour(tour);
+        }
+        catch (CanalException e)
+        {
+           erreurCanal(e);
+        }
     }
 
     @Override
     public void ameliorerTour(Tour tour) throws ArgentInsuffisantException, 
     ActionNonAutoriseeException
     {
-        clientJeu.demanderAmeliorationTour(tour);
+        try
+        {
+            clientJeu.demanderAmeliorationTour(tour);
+        } 
+        catch (CanalException e)
+        {
+            erreurCanal(e);
+        }
     }
 
     @Override
@@ -48,6 +69,10 @@ public class Jeu_Client extends Jeu
         catch (ArgentInsuffisantException e){
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } 
+        catch (CanalException e)
+        {
+            erreurCanal(e);
         }
     }
     
@@ -107,25 +132,19 @@ public class Jeu_Client extends Jeu
 
     public void changerEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException
     {
-        clientJeu.demanderChangementEquipe(equipe); 
+        try
+        {
+            clientJeu.demanderChangementEquipe(equipe);
+        } 
+        catch (CanalException e)
+        {
+            erreurCanal(e);
+        } 
     }
     
-    // TODO CHECK 
-    /*
-    public void initialiser(Joueur joueur)
+    private void erreurCanal(Exception e)
     {
-        if(terrain == null)
-            throw new IllegalStateException("Terrain nul");
-        
-        if(equipes.size() == 0)
-            throw new IllegalStateException("Aucune équipe inscrite");
-        
-        // le joueur principal
-        setJoueurPrincipal(joueur);
-        
-        estInitialise = true;
-        
-        if(edj != null)
-            edj.partieInitialisee();
-    }*/
+        System.err.println("Jeu_Client.erreurCanal()");
+        e.printStackTrace();
+    }
 }

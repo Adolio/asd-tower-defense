@@ -3,6 +3,9 @@ package reseau.jeu.serveur;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+
+import org.json.JSONException;
+
 import exceptions.*;
 import models.animations.Animation;
 import models.creatures.*;
@@ -53,6 +56,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	private Jeu jeuServeur;
 
 	/**
+	 * FIXME libérer le port !
+	 */
+	private Port port;
+	
+	/**
 	 * 
 	 * @param jeuServeur
 	 * @throws IOException
@@ -65,92 +73,111 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// le serveur ecoute le jeu
 		jeuServeur.setEcouteurDeJeu(this);
 		
+		// Réglage du niveau d'affichage des messages clients
+        JoueurDistant.verbeux = verbeux;
+		
+        // Réservation du port d'écoute
+        port = new Port(PORT);
+        
+        // reservation du port
+        port.reserver();
+          
 		// Lancement du thread serveur.
 		(new Thread(this)).start();
 	}
 
 	@Override
 	public void run()
-	{
-		// Réglage du niveau d'affichage des messages clients
-		JoueurDistant.verbeux = verbeux;
-		
-		// Réservation du port d'écoute
-		Port port = new Port(PORT);
-		port.reserver();
-		
-		// Canal d'écoute
-		CanalTCP canal;
-		
-		// Boucle d'attente de connections
-		while (true)
-		{
-			// On attend qu'un joueur se présente
-			log("Ecoute sur le port " + PORT);
-			
-			// Bloquant en attente d'une connexion
-			canal = new CanalTCP(port, verbeux);
-			
-			String ip = canal.getIpClient();
-			// Log
-			log("Récéption de " + ip); 
-			
-			// Récéption du pseudo du joueur
-			String pseudo = canal.recevoirString();
-			
-			// Création du joueur
-			Joueur joueur = new Joueur(pseudo);
-			
-			try
-			{
-				enregistrerClient(joueur, canal);
-			}
-			catch (JeuEnCoursException e){
-
-			    log("Joueur refusé - jeu est en cours");
-				
-				// Envoye de la réponse
-                canal.envoyerString(Protocole.construireMsgJoueurInitialisation(JEU_EN_COURS));
-				
-			}
-			catch (AucunePlaceDisponibleException e){
-				
-			    log("Joueur refusé - aucune place disponible");
-
-			    // Envoye de la réponse
-		        canal.envoyerString(Protocole.construireMsgJoueurInitialisation(PAS_DE_PLACE));
-			}
-		}
+	{  
+	    // Canal d'écoute
+        CanalTCP canal = null;
+        
+        try
+        {
+    	    // Boucle d'attente de connections
+            while (true)
+            {
+                try
+                {
+                    // On attend qu'un joueur se présente
+                    log("Ecoute sur le port " + PORT);
+                    
+                    // Bloquant en attente d'une connexion
+                    canal = new CanalTCP(port, verbeux);
+                    
+                    String ip = canal.getIpClient();
+                    
+                    // Log
+                    log("Récéption de " + ip); 
+                    
+                    // Récéption du pseudo du joueur
+                    String pseudo = canal.recevoirString();
+                    
+                    // Création du joueur
+                    Joueur joueur = new Joueur(pseudo);
+                    
+                    enregistrerClient(joueur, canal);
+                } 
+                catch (JeuEnCoursException e){
+    
+                    log("Joueur refusé - jeu est en cours");
+                    
+                    // Envoye de la réponse
+                    canal.envoyerString(Protocole.construireMsgJoueurInitialisation(JEU_EN_COURS));   
+                }
+                
+                catch (AucunePlaceDisponibleException e){
+                    
+                    log("Joueur refusé - aucune place disponible");
+    
+                    // Envoye de la réponse
+                    canal.envoyerString(Protocole.construireMsgJoueurInitialisation(PAS_DE_PLACE));
+                }
+            }
+        }  
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }       
 	}
 
     private void enregistrerClient(Joueur joueur, CanalTCP canal) 
         throws JeuEnCoursException, AucunePlaceDisponibleException
 	{
-        // Ajout du joueur à l'ensemble des joueurs
-        jeuServeur.ajouterJoueur(joueur);
-        
-        // Log
-        log("Nouveau joueur ! ID : " + joueur.getId());
-        
-        // On vérifie que l'ID passé en paramêtre soit bien unique
-		if (clients.containsKey(joueur.getId()))
-		{
-			log("ERROR : Le client " + joueur.getId() + " est déjà dans la partie");
-			// On déconnecte le client; // FIXME
-			canal.fermer();
-		} 
-		else
-		{
-		    // Envoye de la réponse
-            canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
-
-		    // On inscrit le joueur à la partie
-            JoueurDistant jd = new JoueurDistant(joueur.getId(), canal, this);
-			clients.put(joueur.getId(), jd);
-			
-			// Notification des clients
-	        envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
-		}
+        try
+        {
+            // Ajout du joueur à l'ensemble des joueurs
+            jeuServeur.ajouterJoueur(joueur);
+            
+            // Log
+            log("Nouveau joueur ! ID : " + joueur.getId());
+            
+            // On vérifie que l'ID passé en paramêtre soit bien unique
+    		if (clients.containsKey(joueur.getId()))
+    		{
+    			log("ERROR : Le client " + joueur.getId() + " est déjà dans la partie");
+    			// On déconnecte le client; // FIXME
+    			
+                canal.fermer();
+    		} 
+    		else
+    		{
+    		    // Envoye de la réponse
+                canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
+    
+    		    // On inscrit le joueur à la partie
+                JoueurDistant jd = new JoueurDistant(joueur.getId(), canal, this);
+    			clients.put(joueur.getId(), jd);
+    			
+    			// Notification des clients
+    	        envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
+    		}
+		
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
 	}
 
     /**************** NOTIFICATIONS **************/
@@ -162,7 +189,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	     *  TODO uniquement pour les joueurs concernée
 	     *  -> les joueurs de l'equipe qui a perdu une vie
 	     */
-	    envoyerATous(Protocole.construireMsgCreatureArrivee(creature));
+	    try
+        {
+            envoyerATous(Protocole.construireMsgCreatureArrivee(creature));
+        } 
+	    catch (CanalException e)
+        {
+	        canalErreur(e);
+        }
 	}
 
 	@Override
@@ -174,7 +208,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-        envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
+        try
+        {
+            envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
+        } 
+        catch (CanalException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 
     @Override
@@ -184,7 +226,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void partieTerminee()
 	{
-        envoyerATous(Protocole.construireMsgPartieTerminee());
+        try
+        {
+            envoyerATous(Protocole.construireMsgPartieTerminee());
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
 	}
 
 	@Override
@@ -204,7 +253,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{
-	    envoyerATous(Protocole.construireMsgCreatureAjout(creature));
+	    try
+        {
+            envoyerATous(Protocole.construireMsgCreatureAjout(creature));
+        } 
+	    catch (CanalException e)
+        {
+	        canalErreur(e);
+        }
 	}
 
     @Override
@@ -218,7 +274,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             joueur.getValue().lancerPartie();
         
         // Notification des joueurs
-        envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_LANCEE));
+        try
+        {
+            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_LANCEE));
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
 
 		//--------------------------------------
 		//-- tache de mise a jour des clients --
@@ -231,7 +294,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                 while(!jeuServeur.estTermine())
                 {
                     for(Creature creature : jeuServeur.getCreatures())
-                        envoyerATous(Protocole.construireMsgCreatureEtat(creature));
+                        try
+                        {
+                            envoyerATous(Protocole.construireMsgCreatureEtat(creature));
+                        } 
+                        catch (CanalException e)
+                        {
+                            canalErreur(e);
+                        }
                     
                     try{
                         Thread.sleep(TEMPS_DE_RAFFRAICHISSEMENT);
@@ -260,9 +330,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     {
 	    log("Mise à jour du joueur "+joueur.getPseudo());
 	    
-        envoyerATous(Protocole.construireMsgJoueurEtat(joueur));
+        try
+        {
+            envoyerATous(Protocole.construireMsgJoueurEtat(joueur));
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
     }
-	
 	
 	/**
 	 * Supprime un joueur de la partie
@@ -404,7 +480,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         }
 		
 		// Multicast aux clients
-        envoyerATous(Protocole.construireMsgTourAmelioration(tour).toString());
+        try
+        {
+            envoyerATous(Protocole.construireMsgTourAmelioration(tour).toString());
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
 		
 		return OK;
 	}
@@ -436,7 +519,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		catch (ActionNonAutoriseeException e){}
 		
 		// Multicast aux clients
-        envoyerATous(Protocole.construireMsgTourSuppression(tour).toString());
+        try
+        {
+            envoyerATous(Protocole.construireMsgTourSuppression(tour).toString());
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
 		
 		return OK;
 	}
@@ -448,8 +538,10 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 *            L'ID de l'expéditeur.
 	 * @param message
 	 *            Le message à envoyer.
+	 * @throws CanalException 
+	 * @throws JSONException 
 	 */
-	public synchronized void direATous(int IDPlayer, String message)
+	public synchronized void direATous(int IDPlayer, String message) throws JSONException, CanalException
 	{
 		log("Le joueur " + IDPlayer + " dit : " + message);
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
@@ -465,8 +557,10 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 *            L'ID du destinataire
 	 * @param message
 	 *            Le message à envoyer.
+	 * @throws CanalException 
+	 * @throws JSONException 
 	 */
-	public synchronized void direAuClient(int IDPlayer, int IDTo, String message)
+	public synchronized void direAuClient(int IDPlayer, int IDTo, String message) throws JSONException, CanalException
 	{
 		log("Le joueur " + IDPlayer + " désire envoyer un message à " + IDTo
 				+ "(" + message + ")");
@@ -477,8 +571,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * Permet de Mutli-caster a tous les clients
 	 * 
 	 * @param message le message à diffuser
+	 * @throws CanalException 
 	 */
-	private void envoyerATous(String message)
+	private void envoyerATous(String message) throws CanalException
 	{   
 	    synchronized(clients)
 	    {
@@ -515,7 +610,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     @Override
     public void partieInitialisee()
     {
-        envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_INITIALISEE));
+        try
+        {
+            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_INITIALISEE));
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
+        }
     }
     
     protected synchronized static void log(String msg)
@@ -523,4 +625,41 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         if(verbeux)
             System.out.println("[SERVEUR] "+ msg);
     }
+
+    public void stopper()
+    {
+        port.liberer();
+        
+        try
+        {
+            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_STOPPEE));
+        } 
+        catch (CanalException e)
+        { 
+            canalErreur(e);
+        } 
+    }
+    
+    private void canalErreur(Exception e)
+    {
+        //
+        port.liberer();
+        System.out.println("ServeurJeu.canalErreur");
+        
+        // envoi si possible...
+        try
+        {
+            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_STOPPEE));
+        } 
+        catch (CanalException e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        
+        
+        //e.printStackTrace();   
+    }
+    
+    
 }

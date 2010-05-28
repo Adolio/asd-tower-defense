@@ -69,18 +69,12 @@ public class Port {
    
    /**
     * Permet de réserver un port en l'associant avec un socket.
+ * @throws IOException 
     */
-   public void reserver() {
+   public void reserver() throws IOException 
+   {
       // Demander le port et l'associer avec un socket.
-      try {
-         serverSocket = new ServerSocket(numeroPort);
-      } catch (IOException e) {
-         System.out
-               .println("Une exception a été levée lors la création du socket pour le port "
-                     + numeroPort);
-         e.printStackTrace();
-         throw new RuntimeException();
-      }
+      serverSocket = new ServerSocket(numeroPort);
    }
    
    /**
