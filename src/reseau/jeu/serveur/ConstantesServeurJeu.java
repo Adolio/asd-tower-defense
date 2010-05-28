@@ -219,6 +219,11 @@ public interface ConstantesServeurJeu
      */
     public final int TOUR_INCONNUE = 407;
     
+    /**
+     * Code d'erreur : joueur inconnu
+     */
+    public final int JOUEUR_INCONNU = 408;
+    
 	/**
 	 * Code d'erreur : erreur quelconque
 	 */
