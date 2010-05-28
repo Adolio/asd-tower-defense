@@ -19,7 +19,6 @@ public class GestionnaireDeRevenu implements Runnable
     private Object pause = new Object();
     private Jeu jeu;
     
-    
     /**
      * Constructeur du gestionnaire des creatures
      */

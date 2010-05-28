@@ -467,8 +467,8 @@ public abstract class Creature extends Rectangle
 	 */
 	synchronized public void blesser(long degats, Joueur joueur)
 	{
-		// deja morte ?
-		if(!estMorte())
+		// si pas deja morte et que le joueur peu la tuer
+		if(!estMorte() && joueur.getEquipe() == equipeCiblee)
 		{
 			// diminution de la sante
 			sante -= degats;
