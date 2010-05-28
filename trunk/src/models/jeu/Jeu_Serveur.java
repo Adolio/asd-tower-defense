@@ -2,6 +2,9 @@ package models.jeu;
 
 import java.io.IOException;
 import java.net.ConnectException;
+
+import models.joueurs.GestionnaireDeRevenu;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.fichierDeConfiguration;
@@ -18,6 +21,16 @@ public class Jeu_Serveur extends Jeu
     
     private boolean enregistrementReussie = false;
     
+    private GestionnaireDeRevenu gRevenus = new GestionnaireDeRevenu(this);
+
+    @Override
+    public void demarrer()
+    {
+        super.demarrer();
+        
+        gRevenus.demarrer();
+    }
+
     /**
      * TODO
      */
