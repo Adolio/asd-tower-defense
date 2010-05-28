@@ -479,8 +479,13 @@ public abstract class Tour extends Rectangle
 	 * @param creature le crature a testee
 	 * @return true si la creature peut etre blessee, false sinon
 	 */
-	public boolean peutBlesser(Creature creature)
+	public boolean peutEtreAttaquee(Creature creature)
 	{
+	    // c'est un ennemi
+	    if(proprietaire.getEquipe() != creature.getEquipeCiblee())
+	        return false;
+	    
+	    // elle est blessable
 	    return type == TYPE_TERRESTRE_ET_AIR 
 	        || (type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE) 
 	        || (type == TYPE_AIR && creature.getType()       == Creature.TYPE_AERIENNE);
@@ -512,7 +517,7 @@ public abstract class Tour extends Rectangle
                 creature = eCreatures.nextElement();
                
         		// si la creature est accessible
-        	    if (peutBlesser(creature))
+        	    if (peutEtreAttaquee(creature))
                 {
         		    // calcul de la distance entre la tour et la creature
         			distance = getDistance(creature);
