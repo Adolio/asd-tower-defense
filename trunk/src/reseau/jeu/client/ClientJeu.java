@@ -155,6 +155,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             {
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
+                case JOUEUR_INCONNU :
+                    logErreur("Joueur inconnu"); // TODO
             }	
 		} 
 		catch (JSONException e) {

@@ -369,13 +369,29 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
                 + creature.getNom());
         
-		VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 500, true);
-		
+        
+        int prix = 10 * nbCreatures;
+	
 		Joueur j = jeuServeur.getJoueur(IDPlayer);
 		
-		jeuServeur.lancerVague(jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
-		
-		return OK;
+		if(j != null)
+		{
+    		synchronized (j)
+            {
+    		    if(j.getNbPiecesDOr() - prix >= 0)
+    		    {
+    		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 500, true);
+    
+    		        j.setNbPiecesDOr(j.getNbPiecesDOr() - prix);
+    	            jeuServeur.lancerVague(jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
+    	            return OK;
+    		    }
+    		    else
+    		        return ARGENT_INSUFFISANT;
+            }
+		}
+		else
+		    return JOUEUR_INCONNU;    
 	}
 	
     //-----------------------

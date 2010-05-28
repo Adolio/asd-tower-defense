@@ -60,19 +60,20 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void lancerVague(Equipe equipe, VagueDeCreatures vague) 
+    public void lancerVague(Equipe equipe, VagueDeCreatures vague)
     {
         try
         {
             clientJeu.envoyerVague(vague);
         } 
-        catch (ArgentInsuffisantException e){
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
         catch (CanalException e)
         {
             erreurCanal(e);
+        } 
+        catch (ArgentInsuffisantException e)
+        {
+            // TODO
+            System.out.println(e.getMessage());
         }
     }
     
@@ -135,7 +136,7 @@ public class Jeu_Client extends Jeu
         try
         {
             clientJeu.demanderChangementEquipe(equipe);
-        } 
+        }
         catch (CanalException e)
         {
             erreurCanal(e);
