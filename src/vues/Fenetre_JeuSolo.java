@@ -554,7 +554,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	{ 
 	    if(vaguePeutEtreLancee)
 	    {
-	        jeu.lancerVagueSuivante(joueur.getEquipe());
+	        jeu.lancerVagueSuivante(joueur, joueur.getEquipe());
 	        ajouterInfoVagueSuivanteDansConsole();
 	        bLancerVagueSuivante.setEnabled(false);
 	        vaguePeutEtreLancee = false;
@@ -687,7 +687,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
         {
-            jeu.lancerVagueSuivante(joueur.getEquipe());
+            jeu.lancerVagueSuivante(joueur, joueur.getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
     }

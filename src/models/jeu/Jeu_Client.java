@@ -60,7 +60,7 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void lancerVague(Equipe equipe, VagueDeCreatures vague)
+    public void lancerVague(Joueur joueur, Equipe equipe, VagueDeCreatures vague)
     {
         try
         {

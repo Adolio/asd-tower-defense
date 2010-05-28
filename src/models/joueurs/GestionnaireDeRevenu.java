@@ -45,11 +45,8 @@ public class GestionnaireDeRevenu implements Runnable
         {
             // donne de l'argent
             for(Joueur joueur : jeu.getJoueurs())
-                synchronized(joueur)
-                {
-                    joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + 100);
-                }
-            
+                joueur.donnerRevenu(TEMPS_REVENU_CREATURE);
+              
             // gestion de la pause
             try
             {

@@ -604,15 +604,13 @@ public abstract class Creature extends Rectangle
     /**
      * Permet de savoir si une creature peut etre blessee.
      * 
-     * Il s'agit en fait d'une verification des types.
+     * Il s'agit en fait d'une verification des types et des equipes.
      * 
-     * @param creature le crature a testee
+     * @param creature le créature a testee
      * @return true si la creature peut etre blessee, false sinon
      */
     public boolean peutEtreAttaquee(Tour tour)
     {
-        System.out.println(tour.getPrioprietaire().getEquipe()+" "+equipeCiblee);
-        
         // si c'est pas une créature ennemie
         if(tour.getPrioprietaire().getEquipe() != equipeCiblee)
             return false;
