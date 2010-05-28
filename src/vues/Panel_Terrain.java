@@ -454,11 +454,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
             // modification de la transparence
             setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
             
-            Stroke tmp = g2.getStroke();
+            Stroke tmpStroke = g2.getStroke();
+            Font tmpFont = g2.getFont();
+            
             g2.setStroke(TRAIT_TILLE_EPAIS);
-  
-            // affichages des zones de départ et arrivée
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
+            
+            // affichages des zones de départ et arrivée
             for(Joueur joueur : jeu.getJoueurs())
             {
                 Rectangle zoneC = joueur.getEmplacement().getZoneDeConstruction();
@@ -472,8 +474,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
                     g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo+2 , zoneC.y+yOffsetPseudo+2);
                 //}
             }
-            
-            g2.setStroke(tmp);
+            g2.setFont(tmpFont);
+            g2.setStroke(tmpStroke);
             
             setTransparence(1.f, g2);
         //}

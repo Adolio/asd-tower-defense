@@ -64,6 +64,12 @@ public interface ConstantesServeurJeu
      */
     public final int PARTIE_TERMINEE = 107;
     
+    /**
+     * Code pour quitter la partie
+     */
+    public final int PARTIE_STOPPEE = 108;
+    
+    
 	// SUCCES 200-299
 	
 	/**

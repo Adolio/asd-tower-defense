@@ -1,6 +1,9 @@
 package reseau;
 
 import static org.junit.Assert.*;
+
+import java.io.IOException;
+
 import org.junit.*;
 
 /**
@@ -51,7 +54,14 @@ public class PortTest
    public void testReserver()
    {
       port = new Port(1234);
-      port.reserver();
+      try
+      {
+          port.reserver();
+      } catch (IOException e)
+      {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+      }
       assertTrue(port.getServerSocket().isBound());
       assertNotNull(port.getServerSocket());
       port.liberer();
@@ -64,7 +74,14 @@ public class PortTest
    public void testLiberer()
    {
       port = new Port(1234);
-      port.reserver();
+      try
+      {
+        port.reserver();
+      } 
+      catch (IOException e){
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
       port.liberer();
       assertTrue(port.getServerSocket().isClosed());
    }

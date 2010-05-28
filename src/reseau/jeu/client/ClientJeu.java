@@ -122,8 +122,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * 
 	 * @param message le message
 	 * @param cible le joueur visé
+     * @throws CanalException 
 	 */
-	public void envoyerMessage(String message, int cible)
+	public void envoyerMessage(String message, int cible) throws CanalException
 	{
 	    canalPingPong.envoyerString(Protocole.construireMsgChat(message, cible));
 	}
@@ -134,8 +135,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @param nbCreatures le nombre de créatures
 	 * @param typeCreature le type des créatures
 	 * @throws ArgentInsuffisantException 
+	 * @throws CanalException 
 	 */
-	public void envoyerVague(VagueDeCreatures vague) throws ArgentInsuffisantException
+	public void envoyerVague(VagueDeCreatures vague) throws ArgentInsuffisantException, CanalException
 	{
 		try
 		{
@@ -167,9 +169,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * 
 	 * @throws ArgentInsuffisantException si pas assez d'argent
 	 * @throws ZoneInaccessibleException si la pose est impossible 
+	 * @throws CanalException 
 	 */
 	public void demanderCreationTour(Tour tour) 
-	    throws ArgentInsuffisantException, ZoneInaccessibleException
+	    throws ArgentInsuffisantException, ZoneInaccessibleException, CanalException
 	{
 		try 
 		{
@@ -199,7 +202,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 		} 
 		catch (JSONException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	/**
@@ -208,8 +211,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @param tour la tour
 	 * @throws ArgentInsuffisantException
 	 * @throws ActionNonAutoriseeException 
+	 * @throws CanalException 
 	 */
-	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException
+	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException, CanalException
 	{
 		try 
 		{
@@ -246,8 +250,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param tour la tour a vendre
 	 * @throws ActionNonAutoriseeException 
+	 * @throws CanalException 
      */
-	public void demanderVenteTour(Tour tour) throws ActionNonAutoriseeException
+	public void demanderVenteTour(Tour tour) throws ActionNonAutoriseeException, CanalException
 	{
 		try 
 		{
@@ -309,11 +314,19 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 */
 	public void run() 
 	{
-	    while(true) // TODO
-	        attendreMessageCanalAsynchrone();
+	    while(true)
+            try
+            {
+                attendreMessageCanalAsynchrone();
+            } 
+	        catch (CanalException e)
+            {
+	            
+                e.printStackTrace();
+            }
 	}
 
-	private void attendreMessageCanalAsynchrone()
+	private void attendreMessageCanalAsynchrone() throws CanalException
     {
 	    try{  
     	    //log("Attente d'un String sur le canal 2...");
@@ -372,9 +385,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 default :
                     logErreur("Réception d'un objet de type : Inconnu.");      
             }
-        } 
-        catch (CanalException ce) {
-            ce.printStackTrace();
         } 
         catch (JSONException jsone) {
             jsone.printStackTrace();
@@ -625,7 +635,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 
 
 
-    public void demanderChangementEquipe(Equipe equipe) throws AucunEmplacementDisponibleException
+    public void demanderChangementEquipe(Equipe equipe) throws AucunEmplacementDisponibleException, CanalException
     {
         try 
         {

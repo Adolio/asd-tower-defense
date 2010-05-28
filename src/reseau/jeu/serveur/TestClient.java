@@ -59,7 +59,7 @@ public class TestClient implements ConstantesServeurJeu
 		}
 	}
 
-	String recevoirMessage(CanalTCP canal) throws JSONException
+	String recevoirMessage(CanalTCP canal) throws JSONException, CanalException
 	{
 		String rcp = canal.recevoirString();
 		JSONObject json = new JSONObject(rcp);
@@ -67,7 +67,7 @@ public class TestClient implements ConstantesServeurJeu
 				+ json.getString("MESSAGE");
 	}
 
-	void envoyerMessage(CanalTCP canal, String msg) throws JSONException
+	void envoyerMessage(CanalTCP canal, String msg) throws JSONException, CanalException
 	{
 		JSONObject json = new JSONObject();
 		json.put("TYPE", MSG);
@@ -77,7 +77,6 @@ public class TestClient implements ConstantesServeurJeu
 		json.put("CONTENU", content);
 
 		canal.envoyerString(json.toString());
-
 	}
 
 	private class Emission implements Runnable
@@ -97,7 +96,14 @@ public class TestClient implements ConstantesServeurJeu
 			{
 				try
 				{
-					envoyerMessage(canal, Clavier.lireString());
+					try
+                    {
+                        envoyerMessage(canal, Clavier.lireString());
+                    } 
+					catch (CanalException e)
+                    {
+                        e.printStackTrace();
+                    }
 				} catch (IOException e)
 				{
 					e.printStackTrace();
@@ -125,10 +131,15 @@ public class TestClient implements ConstantesServeurJeu
 				try
 				{
 					System.out.println(recevoirMessage(canal));
-				} catch (JSONException e)
+				} 
+				catch (JSONException e)
 				{
 					e.printStackTrace();
-				}
+				} 
+				catch (CanalException e)
+                {
+                    e.printStackTrace();
+                }
 			}
 		}
 	}

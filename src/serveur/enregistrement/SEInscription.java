@@ -1,5 +1,6 @@
 package serveur.enregistrement;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import reseau.*;
@@ -31,13 +32,21 @@ public class SEInscription {
     * 
     */
    public void lancer() {
-      port.reserver();
-      while (true) {
-         System.out.println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
-         // Fonction bloquante qui attend que quelqu'un se connecte
-         creerCanal();
-         (new Thread(new SEConnexion(canal))).start();
-      }
+      try
+      {
+         port.reserver();
+        
+         while (true) {
+            System.out.println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
+            // Fonction bloquante qui attend que quelqu'un se connecte
+            creerCanal();
+            (new Thread(new SEConnexion(canal))).start();
+         }
+      } 
+      catch (IOException e)
+      {
+         System.err.println("Serveur déjà lancé !");
+      } 
    }
    
    /**

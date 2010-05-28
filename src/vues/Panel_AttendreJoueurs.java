@@ -6,8 +6,6 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import exceptions.AucunEmplacementDisponibleException;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
