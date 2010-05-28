@@ -20,13 +20,11 @@ public class GestionnaireCreatures implements Runnable
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();
-    
-    
+
     /**
      * Constructeur du gestionnaire des creatures
      */
-    public GestionnaireCreatures()
-    {}
+    public GestionnaireCreatures(){}
     
     /**
      * Permet de demarrer la gestion
@@ -76,8 +74,10 @@ public class GestionnaireCreatures implements Runnable
                 if(creature.estMorte() || creature.aDetruire())
                     creatures.remove(creature);
                 else
+                {
                     // anime la creature
                     creature.action(TEMPS_ATTENTE);
+                }
             }
             
             // gestion de la pause
@@ -88,15 +88,8 @@ public class GestionnaireCreatures implements Runnable
                     if(enPause)
                         pause.wait();
                 } 
-            } 
-            catch (InterruptedException e1)
-            {
-                e1.printStackTrace();
-            }
             
-            try
-            {
-                 Thread.sleep(TEMPS_ATTENTE);
+                Thread.sleep(TEMPS_ATTENTE);
             } 
             catch (InterruptedException e){
                  e.printStackTrace();
