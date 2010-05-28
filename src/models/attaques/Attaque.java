@@ -60,7 +60,7 @@ abstract public class Attaque extends Animation
             return blesserCreaturesDansZoneImpact();
         else
         {
-            if(attaquant.peutEtreAttaquee(cible))
+            if(cible.peutEtreAttaquee(attaquant))
                 cible.blesser(degats,attaquant.getPrioprietaire());
             
             ArrayList<Creature> a = new ArrayList<Creature>();
@@ -90,7 +90,7 @@ abstract public class Attaque extends Animation
         {
             tmpCreature = eCreatures.nextElement();
             
-            if(attaquant.peutEtreAttaquee(tmpCreature))
+            if(tmpCreature.peutEtreAttaquee(attaquant))
             {
                 
                 // si la creature est dans le splash

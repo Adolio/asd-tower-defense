@@ -3,6 +3,7 @@ package models.creatures;
 import java.awt.*;
 import java.util.*;
 import models.joueurs.*;
+import models.tours.Tour;
 
 /**
  * Classe de gestion d'une creature.
@@ -597,5 +598,29 @@ public abstract class Creature extends Rectangle
     public void setAngle(double angle)
     {
         this.angle = angle;
+    }
+    
+    
+    /**
+     * Permet de savoir si une creature peut etre blessee.
+     * 
+     * Il s'agit en fait d'une verification des types.
+     * 
+     * @param creature le crature a testee
+     * @return true si la creature peut etre blessee, false sinon
+     */
+    public boolean peutEtreAttaquee(Tour tour)
+    {
+        System.out.println(tour.getPrioprietaire().getEquipe()+" "+equipeCiblee);
+        
+        // si c'est pas une créature ennemie
+        if(tour.getPrioprietaire().getEquipe() != equipeCiblee)
+            return false;
+        
+        // elle est blessable
+        int typeTour = tour.getType();
+        return typeTour == Tour.TYPE_TERRESTRE_ET_AIR 
+            || (typeTour == Tour.TYPE_TERRESTRE && TYPE == Creature.TYPE_TERRIENNE) 
+            || (typeTour == Tour.TYPE_AIR && TYPE == Creature.TYPE_AERIENNE);
     }
 }

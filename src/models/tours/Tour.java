@@ -392,7 +392,17 @@ public abstract class Tour extends Rectangle
         else
             return "Air";
     }
-
+    
+    /**
+     * Permet de recuperer le type de la tour.
+     * 
+     * @return le type de la tour.
+     */
+    public int getType()
+    {
+        return type;
+    }
+    
 	/**
 	 * Permet de mettre la tour en jeu. Cette methode demarre le thread de la
 	 * tour. Des lors, elle tirera sur les creatures.
@@ -472,26 +482,6 @@ public abstract class Tour extends Rectangle
     }
 	
 	/**
-	 * Permet de savoir si une creature peut etre blessee.
-	 * 
-	 * Il s'agit en fait d'une verification des types.
-	 * 
-	 * @param creature le crature a testee
-	 * @return true si la creature peut etre blessee, false sinon
-	 */
-	public boolean peutEtreAttaquee(Creature creature)
-	{
-	    // c'est un ennemi
-	    if(proprietaire.getEquipe() != creature.getEquipeCiblee())
-	        return false;
-	    
-	    // elle est blessable
-	    return type == TYPE_TERRESTRE_ET_AIR 
-	        || (type == TYPE_TERRESTRE && creature.getType() == Creature.TYPE_TERRIENNE) 
-	        || (type == TYPE_AIR && creature.getType()       == Creature.TYPE_AERIENNE);
-	}
-	
-	/**
 	 * Permet de recuperer la creature la plus proche et a portee de la tour.
 	 * 
 	 * @return la creature la plus proche et a portee de la tour ou <b>null s'il
@@ -515,9 +505,9 @@ public abstract class Tour extends Rectangle
         {
             try{
                 creature = eCreatures.nextElement();
-               
+                
         		// si la creature est accessible
-        	    if (peutEtreAttaquee(creature))
+        	    if (creature.peutEtreAttaquee(this))
                 {
         		    // calcul de la distance entre la tour et la creature
         			distance = getDistance(creature);
