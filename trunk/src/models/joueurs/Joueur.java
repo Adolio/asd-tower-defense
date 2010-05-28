@@ -49,6 +49,11 @@ public class Joueur
      * Permet de notifier l'ecouteur de joueur
      */
     private EcouteurDeJoueur edj;
+
+    /**
+     * Revenu périodique par seconde
+     */
+    private double revenu = 1;
     
     /**
      * Constructeur
@@ -237,5 +242,36 @@ public class Joueur
     public void setEcouteurDeJoueur(EcouteurDeJoueur edj)
     {
         this.edj = edj;
-    } 
+    }
+
+    /**
+     * Permet de recuperer le revenu du joueur
+     * 
+     * @return le revenu actuel
+     */
+    public double getRevenu()
+    {
+        return revenu;
+    }
+    
+    /**
+     * Permet d'ajouter une somme au revenu
+     * 
+     * @param somme la somme a ajouter 
+     */
+    public void ajouterRevenu(double somme)
+    {
+        revenu += somme;
+    }
+    
+    
+    /**
+     * Permet de donner le revenu au joueur
+     * 
+     * @param temps le temps en ms ecoulees (pour calcul du revenu / sec) 
+     */
+    public synchronized void donnerRevenu(long temps)
+    {
+        setNbPiecesDOr((int) (getNbPiecesDOr() + revenu * (temps / 1000.0)));
+    }
 }

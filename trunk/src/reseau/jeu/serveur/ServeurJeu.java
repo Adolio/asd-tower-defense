@@ -380,14 +380,14 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     		    int argentApresAchat = j.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
     		    
     		    if(argentApresAchat >= 0)
-    		    { 
+    		    {
     		        // TODO... 
     		        int tempsLancement = 500;
     		        
     		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
     
     		        j.setNbPiecesDOr(argentApresAchat);
-    	            jeuServeur.lancerVague(jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
+    	            jeuServeur.lancerVague(j, jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
     	            
     	            return OK;
     		    }

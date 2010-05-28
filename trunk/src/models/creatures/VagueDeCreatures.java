@@ -3,6 +3,7 @@ package models.creatures;
 import java.awt.Rectangle;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
+import models.joueurs.Joueur;
 import models.maillage.PathNotFoundException;
 
 /**
@@ -77,7 +78,11 @@ public class VagueDeCreatures implements Runnable
      * Cible de la vague
      */
     private Equipe equipeCiblee;
-    
+
+    /**
+     * Lanceur de la vague
+     */
+    private Joueur lanceur;
     
     /**
      * Constructeur de la vague de creatures
@@ -170,7 +175,8 @@ public class VagueDeCreatures implements Runnable
      * @param terrain le terrain en question
      * @param edc l'ecouteur de creature fourni a chaque creature creee
      */
-    public void lancerVague(Jeu jeu, 
+    public void lancerVague(Jeu jeu,
+                            Joueur lanceur,
                             Equipe equipeCiblee, 
                             EcouteurDeVague edv,
                             EcouteurDeCreature edc)
@@ -179,6 +185,7 @@ public class VagueDeCreatures implements Runnable
         this.edc = edc;
         this.edv = edv;
         this.equipeCiblee = equipeCiblee;
+        this.lanceur = lanceur;
         thread = new Thread(this);
         thread.start();
     }
@@ -242,6 +249,7 @@ public class VagueDeCreatures implements Runnable
                 // le chemin reste nul.
             }
 
+            lanceur.ajouterRevenu(creature.getNbPiecesDOr()*0.1);
             jeu.ajouterCreature(creature);
 
             // temps d'attente entre chaque creature

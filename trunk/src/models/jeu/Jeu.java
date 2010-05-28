@@ -196,9 +196,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
      * 
      * @param vague la vague
      */
-    public void lancerVague(Equipe cible, VagueDeCreatures vague)
+    public void lancerVague(Joueur joueur, Equipe cible, VagueDeCreatures vague)
     { 
-        vague.lancerVague(this, cible, this, this);
+        vague.lancerVague(this, joueur, cible, this, this);
     }
     
     /**
@@ -297,14 +297,14 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	/**
 	 * Permet de lancer une nouvelle vague de creatures.
 	 */
-	public void lancerVagueSuivante(Equipe cible)
+	public void lancerVagueSuivante(Joueur joueur, Equipe cible)
 	{
 	    // lancement de la vague
 	    VagueDeCreatures vagueCourante = terrain.getVagueDeCreaturesSuivante();
         
 	    terrain.passerALaProchaineVague();
 	    
-        vagueCourante.lancerVague(this, cible, this, this);
+        vagueCourante.lancerVague(this, joueur, cible, this, this);
 	}
 	
 	/**
