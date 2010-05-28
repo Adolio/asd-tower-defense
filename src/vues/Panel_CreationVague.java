@@ -14,11 +14,13 @@ public class Panel_CreationVague extends JPanel
     
     private Creature[] creatures = new Creature[]
     {
-        new Mouton(100, 10, 40.0),
-        new Araignee(200, 20, 40.0),
-        new Pigeon(300, 30, 40.0),
-        new Rhinoceros(400, 40, 40.0),
-        new Elephant(500, 50, 40.0)
+        TypeDeCreature.getCreature(0),
+        TypeDeCreature.getCreature(1),
+        TypeDeCreature.getCreature(2),
+        TypeDeCreature.getCreature(3),
+        TypeDeCreature.getCreature(4),
+        TypeDeCreature.getCreature(5),
+        TypeDeCreature.getCreature(6)
     };
     
     public Panel_CreationVague(final Jeu jeu, final Joueur cible, 
@@ -55,7 +57,9 @@ public class Panel_CreationVague extends JPanel
             p.add(new JLabel(image));
             p.add(new JLabel(" x "));
             p.add(cbNbCreatures);
-            tb.add(p,0,i+1);
+            tb.add(p,0,i+1);    
+            
+            tb.add(new JLabel(""+creature.getNbPiecesDOr()),1,i+1);    
             
             JButton bLancer = new JButton("Lancer");
             tb.add(bLancer,3,i+1);
