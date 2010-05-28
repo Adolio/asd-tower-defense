@@ -364,26 +364,31 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	public synchronized int lancerVague(int IDPlayer, int nbCreatures, int typeCreature)
 	{
-	    Creature creature = TypeDeCreature.getCreature(typeCreature, 100, 10, 20);
+	    
+	    // TODO FROM le terrain
+	    Creature creature = TypeDeCreature.getCreature(typeCreature);
     
         log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
                 + creature.getNom());
         
-        
-        int prix = 10 * nbCreatures;
-	
 		Joueur j = jeuServeur.getJoueur(IDPlayer);
 		
 		if(j != null)
 		{
     		synchronized (j)
             {
-    		    if(j.getNbPiecesDOr() - prix >= 0)
-    		    {
-    		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, 500, true);
+    		    int argentApresAchat = j.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
+    		    
+    		    if(argentApresAchat >= 0)
+    		    { 
+    		        // TODO... 
+    		        int tempsLancement = 500;
+    		        
+    		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
     
-    		        j.setNbPiecesDOr(j.getNbPiecesDOr() - prix);
+    		        j.setNbPiecesDOr(argentApresAchat);
     	            jeuServeur.lancerVague(jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
+    	            
     	            return OK;
     		    }
     		    else
@@ -391,7 +396,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             }
 		}
 		else
-		    return JOUEUR_INCONNU;    
+		    return JOUEUR_INCONNU;  
 	}
 	
     //-----------------------

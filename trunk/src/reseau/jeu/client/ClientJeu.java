@@ -553,7 +553,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         double vitesse = message.getDouble("VITESSE");
         
-        Creature creature = TypeDeCreature.getCreature(typeCreature,santeMax,nbPiecesDOr,vitesse);
+        Creature creature = TypeDeCreature.getCreature(typeCreature);
         
         if(creature != null)
         {
