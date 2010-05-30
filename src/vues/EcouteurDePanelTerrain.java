@@ -3,6 +3,14 @@ package vues;
 import models.creatures.Creature;
 import models.tours.Tour;
 
+/**
+ * Interface permettant de mettre en oeuvre le pattern Observable/ Observé pour la
+ * classe Panel_Terrain.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | avril 2010
+ * @see Panel_Terrain
+ */
 public interface EcouteurDePanelTerrain
 {
     /**

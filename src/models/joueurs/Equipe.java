@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Vector;
+
 import exceptions.AucunePlaceDisponibleException;
+import exceptions.EmplacementOccupeException;
 
 /**
  * Classe de gestion d'une equipe.
@@ -35,7 +39,7 @@ public class Equipe implements Serializable
    /**
     * Liste des joueurs
     */
-   private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+   private Vector<Joueur> joueurs = new Vector<Joueur>();
    
    /**
     * nombre de vies restantes. 
@@ -61,7 +65,7 @@ public class Equipe implements Serializable
    private ArrayList<EmplacementJoueur> emplacementsJoueur = new ArrayList<EmplacementJoueur>();
    
    /**
-    * TODO
+    * Permet de connaitre la longueur du chemin de l'equipe
     */
    private double longueurChemin = 0.0;
    
@@ -76,6 +80,16 @@ public class Equipe implements Serializable
        this.id = id;
        this.nom = nom;
        this.couleur = couleur;
+   }
+   
+   /**
+    * Permet de récupérer l'identificateur de l'équipe
+    * 
+    * @return l'identificateur de l'équipe
+    */
+   public int getId()
+   {
+       return id;
    }
    
    /**
@@ -97,15 +111,16 @@ public class Equipe implements Serializable
    {
        return couleur;
    }
-   
-   
-   
-   
+
    /**
-    * Permet d'ajouter un joueur
-    * TODO
+    * Permet d'ajouter un joueur dans l'équipe à un emplacement particulier.
+    * 
+    * @param joueur le joueur
+    * @param ej l'emplacement
+    * @throws EmplacementOccupeException 
     */
-   public void ajouterJoueur(Joueur joueur, EmplacementJoueur ej) throws IllegalArgumentException
+   public void ajouterJoueur(Joueur joueur, EmplacementJoueur ej) 
+       throws EmplacementOccupeException
    {
        if(joueur == null)
            throw new IllegalArgumentException();
@@ -114,7 +129,7 @@ public class Equipe implements Serializable
            throw new IllegalArgumentException();
        
        if(ej.getJoueur() != null)
-           throw new IllegalArgumentException("EmplacementJoueur occupé");
+           throw new EmplacementOccupeException("EmplacementJoueur occupé");
        
        // on retire le joueur de son ancienne equipe
        if(joueur.getEquipe() != null)
@@ -137,7 +152,7 @@ public class Equipe implements Serializable
     * @throws IllegalArgumentException si le joueur est nul  
     * @throws AucunePlaceDisponibleException 
     */
-   public void ajouterJoueur(Joueur joueur) throws IllegalArgumentException, AucunePlaceDisponibleException
+   public void ajouterJoueur(Joueur joueur) throws AucunePlaceDisponibleException
    {
        if(joueur == null)
            throw new IllegalArgumentException();
@@ -148,13 +163,19 @@ public class Equipe implements Serializable
        if(ej == null) 
            throw new AucunePlaceDisponibleException("Aucune place disponible.");
        // emplacement trouvé
-       else 
-           ajouterJoueur(joueur, ej);
+       else
+           try{
+               ajouterJoueur(joueur, ej);
+           } 
+           catch (EmplacementOccupeException e){
+               e.printStackTrace();
+           } 
    }
 
    /**
-    * TODO
-    * @return
+    * Permet de trouver le permier emplacement libre de l'équipe
+    * 
+    * @return l'emplacement ou null
     */
    public EmplacementJoueur trouverEmplacementDiponible()
    {
@@ -167,8 +188,10 @@ public class Equipe implements Serializable
    }
    
    /**
-    * TODO
-    * @param joueur
+    * Permet de retirer un joueur de l'equipe. 
+    * Corollaire : Le joueur quittera egalement son emplacement.
+    * 
+    * @param joueur le joueur
     */
    public void retirerJoueur(Joueur joueur)
    {
@@ -194,7 +217,7 @@ public class Equipe implements Serializable
     * 
     * @return la collection des joueurs
     */
-   public ArrayList<Joueur> getJoueurs()
+   public Vector<Joueur> getJoueurs()
    {
        return joueurs;
    }
@@ -349,8 +372,27 @@ public class Equipe implements Serializable
         return nbViesRestantes <= 0;
     }
 
-    public int getId()
+    /**
+     * Permet de vider l'équipe de tous ses joueurs, 
+     * 
+     * Ceux-ci perdront leur emplacement.
+     */
+    public void vider()
     {
-        return id;
+        synchronized (joueurs)
+        {
+            // retire tous les joueurs de leur emplacement
+            Enumeration<Joueur> e = joueurs.elements();
+            
+            Joueur joueur;
+            while(e.hasMoreElements())
+            {
+                joueur = e.nextElement();
+                retirerJoueur(joueur);
+            }
+                          
+            // vide la liste des joueurs
+            joueurs.clear();
+        }
     }
 }

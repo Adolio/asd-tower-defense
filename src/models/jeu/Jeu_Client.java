@@ -1,15 +1,21 @@
 package models.jeu;
 import java.net.ConnectException;
-
 import exceptions.*;
 import reseau.CanalException;
 import reseau.jeu.client.ClientJeu;
-import models.creatures.Creature;
-import models.creatures.VagueDeCreatures;
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
+import reseau.jeu.client.EcouteurDeClientJeu;
+import models.creatures.*;
+import models.joueurs.*;
 import models.tours.Tour;
 
+/**
+ * Classe de représentation d'un client sur le serveur.
+ * 
+ * C'est cette classe qui recevera les messages venant du client.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ */
 public class Jeu_Client extends Jeu
 {
     private ClientJeu clientJeu;
@@ -17,6 +23,8 @@ public class Jeu_Client extends Jeu
     public Jeu_Client(Joueur joueur)
     {
         setJoueurPrincipal(joueur);
+        
+        clientJeu = new ClientJeu(this);
     }
 
     @Override
@@ -60,7 +68,7 @@ public class Jeu_Client extends Jeu
     }
 
     @Override
-    public void lancerVague(Joueur joueur, Equipe equipe, VagueDeCreatures vague)
+    public void lancerVague(Joueur joueur, Equipe equipe, VagueDeCreatures vague) throws ArgentInsuffisantException
     {
         try
         {
@@ -70,17 +78,13 @@ public class Jeu_Client extends Jeu
         {
             erreurCanal(e);
         } 
-        catch (ArgentInsuffisantException e)
-        {
-            // TODO
-            System.out.println(e.getMessage());
-        }
     }
     
     public boolean connexionAvecLeServeur(String IP, int port) 
     throws ConnectException, CanalException, AucunEmplacementDisponibleException
     {
-        clientJeu = new ClientJeu(this, IP, port, getJoueurPrincipal());
+        clientJeu.etablirConnexion(IP, port);
+        
         return true;
     }
 
@@ -147,5 +151,21 @@ public class Jeu_Client extends Jeu
     {
         System.err.println("Jeu_Client.erreurCanal()");
         e.printStackTrace();
+    }
+
+    public void viderEquipes()
+    {
+        synchronized (equipes)
+        {
+            // vide toutes les equipes
+            for(Equipe e : equipes)
+                e.vider(); 
+        }
+    }
+
+    public void setEcouteurDeClientJeu(
+            EcouteurDeClientJeu edcj)
+    {
+        clientJeu.setEcouteurDeClientJeu(edcj);
     }
 }

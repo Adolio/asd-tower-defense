@@ -621,4 +621,19 @@ public abstract class Creature extends Rectangle
             || (typeTour == Tour.TYPE_TERRESTRE && TYPE == Creature.TYPE_TERRIENNE) 
             || (typeTour == Tour.TYPE_AIR && TYPE == Creature.TYPE_AERIENNE);
     }
+
+    public void setSanteMax(long santeMax)
+    {
+        this.santeMax = santeMax;
+    }
+
+    public void setNbPiecesDOr(int nbPiecesDOr)
+    {
+        this.nbPiecesDOr = nbPiecesDOr;
+    }
+
+    public void setVitesse(double vitesse)
+    {
+        this.vitesseNormale = vitesse;
+    }
 }

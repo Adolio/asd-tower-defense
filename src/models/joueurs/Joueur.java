@@ -2,6 +2,21 @@ package models.joueurs;
 
 import models.outils.Score;
 
+/**
+ * Le joueur est un élément très important du jeu.
+ * 
+ * Il est stocké dans une équipe et possède un emplacement de construction.
+ * 
+ * Il a également des pièces d'or et un score. 
+ * Les vies restantes sont gérées par son équipe.
+ * 
+ * Il possède aussi un revenu qui lui est distribué par le gestionnaire de revenu.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
+ * @see GestionnaireDeRevenu
+ */
 public class Joueur
 {
     /**
@@ -53,7 +68,7 @@ public class Joueur
     /**
      * Revenu périodique par seconde
      */
-    private double revenu = 1;
+    private double revenu = 1.0;
     
     /**
      * Constructeur
@@ -184,9 +199,6 @@ public class Joueur
         
         // FIXME
         //equipe.ajouterJoueur(this);
-        
-        //if(edj != null)
-        //    edj.joueurMisAJour(this);
     }
     
     /**
@@ -201,9 +213,6 @@ public class Joueur
             emplacementJoueur.setJoueur(this);
         
         this.emplacement = emplacementJoueur;
-        
-        //if(edj != null)
-        //    edj.joueurMisAJour(this);
     }
 
     /**
@@ -216,9 +225,6 @@ public class Joueur
             emplacement.retirerJoueur();
         
         emplacement = null;
-        
-        //if(edj != null)
-        //    edj.joueurMisAJour(this);
     }
 
     /**
@@ -229,9 +235,6 @@ public class Joueur
     public void setId(int id)
     {
         this.id = id; 
-        
-        //if(edj != null)
-        //    edj.joueurMisAJour(this);
     }
 
     /**

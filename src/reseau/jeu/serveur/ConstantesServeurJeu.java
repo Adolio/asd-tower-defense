@@ -4,7 +4,9 @@ package reseau.jeu.serveur;
  * Cet interface contient l'ensemble des constantes necessaires au protocole de
  * dialogue entre le client et le serveur de jeu.
  * 
- * @author Pierre-Do
+ * @author Da Campo Aurélien
+ * @author Pierre-Dominique Putallaz
+ * @author Romain Poulain
  */
 public interface ConstantesServeurJeu
 {
@@ -78,18 +80,13 @@ public interface ConstantesServeurJeu
 	public final int OK = 200;
 	
 	
-	// JOUEUR 300-309
+	// JOUEUR & EQUIPE 300-309
 	
 	/**
      * Type de message : initialisation d'un joueur
      */
     public final int JOUEUR_INITIALISATION = 300;
 
-    /**
-     * Type de message : ajout d'un joueur
-     */
-    public final int JOUEUR_AJOUT = 301;
-    
     /**
      * Type de message : ajout d'un joueur
      */
@@ -100,12 +97,17 @@ public interface ConstantesServeurJeu
 	 */
 	public final int JOUEUR_ETAT = 303;
 	
+    /**
+     * Type de message : un message texte
+     */
+    public final int JOUEURS_ETAT = 304;
+    
 	/**
      * Type de message : un message texte
      */
     public final int MSG = 309;
 	
-
+    
 	// CREATURE 310-319
 	
 	/**

@@ -126,11 +126,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private Jeu jeu;
 	
 	/**
-	 * Référence vers le joueur de la partie
-	 */
-	private Joueur joueur;
-	
-	/**
 	 * Permet de savoir si la prochaine vague peut etre lancée
 	 */
     private boolean vaguePeutEtreLancee = true;
@@ -144,7 +139,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	public Fenetre_JeuSolo(Jeu jeu)
 	{
 	    this.jeu = jeu;
-        this.joueur = jeu.getJoueurPrincipal();
         
 	    //-------------------------------
 		//-- preferences de le fenetre --
@@ -231,17 +225,17 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
          
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		conteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
-		panelTerrain = new Panel_Terrain(jeu, this, joueur);
+		panelTerrain = new Panel_Terrain(jeu, this);
 		panelTerrain.addKeyListener(this);
 		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(this,joueur,timer);
+		panelMenuInteraction = new Panel_MenuInteraction(this,jeu,timer);
 		timer.start();
 		
 		
-		panelInfoTour = panelMenuInteraction.getPanelInfoTour();
+		panelInfoTour     = panelMenuInteraction.getPanelInfoTour();
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
 		
 		
@@ -331,7 +325,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		
 		else if(source == bLancerVagueSuivante)
 		{
-		    if(!joueur.aPerdu())
+		    if(!jeu.getJoueurPrincipal().aPerdu())
 		    {
     		    lancerVagueSuivante();
     		    bLancerVagueSuivante.setEnabled(false);
@@ -377,7 +371,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void demanderEnregistrementDuScore()
 	{
 	    // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
-	    if(joueur.getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
+	    if(jeu.getJoueurPrincipal().getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
             
 	        demandeDEnregistrementDuScoreEffectuee = true;
@@ -386,7 +380,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-                new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+                new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
             }
         }
 	}
@@ -554,7 +548,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	{ 
 	    if(vaguePeutEtreLancee)
 	    {
-	        jeu.lancerVagueSuivante(joueur, joueur.getEquipe());
+	        jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
 	        ajouterInfoVagueSuivanteDansConsole();
 	        bLancerVagueSuivante.setEnabled(false);
 	        vaguePeutEtreLancee = false;
@@ -666,7 +660,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
-        joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + nbPiecesDOr); 
+        jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
         
         miseAJourInfoJeu();
     }
@@ -687,7 +681,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
         {
-            jeu.lancerVagueSuivante(joueur, joueur.getEquipe());
+            jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
     }
@@ -738,10 +732,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bLancerVagueSuivante.setIcon(I_RETOUR);
 
         // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
-        if(joueur.getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
+        if(jeu.getJoueurPrincipal().getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
             demandeDEnregistrementDuScoreEffectuee = true;
-            new Fenetre_PartieTerminee(this, joueur.getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
         }
     }
     
@@ -782,9 +776,5 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     }
 
     @Override
-    public void partieInitialisee()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void partieInitialisee(){}
 }

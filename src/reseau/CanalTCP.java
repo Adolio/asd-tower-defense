@@ -241,7 +241,6 @@ public class CanalTCP
       {
          message = canalIn.readUTF();
       }
-
       catch (Exception e)
       {
     	  // P-Do : Suppression de l'affichage brutal de la pile d'erreur, on prefera

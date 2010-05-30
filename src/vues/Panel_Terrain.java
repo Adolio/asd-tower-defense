@@ -199,11 +199,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private Jeu jeu;
 	
 	/**
-     * Reference vers le joueur à gerer
-     */
-	private Joueur joueur;
-	
-	/**
 	 * Reference vers la fenetre parent
 	 */
 	private EcouteurDePanelTerrain edpt;
@@ -267,12 +262,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * 
 	 * @param jeu Le jeu a gerer
 	 */
-	public Panel_Terrain(Jeu jeu, EcouteurDePanelTerrain edpt, Joueur joueur)
+	public Panel_Terrain(Jeu jeu, EcouteurDePanelTerrain edpt)
 	{ 
 	    // sauvegarde du jeu
         this.jeu      = jeu;
         this.edpt     = edpt;
-        this.joueur   = joueur;
         
         // proprietes du panel
         LARGEUR = jeu.getTerrain().getLargeur();
@@ -282,7 +276,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         setFocusable(true);
         
         // Centrage sur la zone de construction du joueur
-        Rectangle zoneConstruction = joueur.getEmplacement().getZoneDeConstruction();
+        Rectangle zoneConstruction = jeu.getJoueurPrincipal().getEmplacement().getZoneDeConstruction();
         centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
 
         // ajout des ecouteurs

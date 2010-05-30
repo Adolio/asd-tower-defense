@@ -12,7 +12,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  * Remarques : Pour avoir une {@link Line2D} de l'arc il faut utiliser la
  * méthode dédiée.
  * 
- * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @author Pierre-Dominique Putallaz
  * @version 4 déc. 2009

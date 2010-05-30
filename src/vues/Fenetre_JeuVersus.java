@@ -5,16 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
-import exceptions.ActionNonAutoriseeException;
+import javax.swing.border.*;
+import exceptions.*;
 import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
-import models.jeu.Jeu;
+import models.jeu.Jeu_Client;
 import models.joueurs.Joueur;
 
 /**
@@ -115,12 +113,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     /**
      * Lien vers le jeu
      */
-	private Jeu jeu;
-	
-	/**
-	 * Référence vers le joueur de la partie
-	 */
-	private Joueur joueur;
+	private Jeu_Client jeu;
 	
 	/**
 	 * Panel de cröation d'une vague
@@ -132,13 +125,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	 * 
 	 * @param jeu le jeu a gerer
 	 */
-	public Fenetre_JeuVersus(Jeu jeu)
+	public Fenetre_JeuVersus(Jeu_Client jeu)
 	{
 	    this.jeu = jeu;
-	    
-	    this.joueur = jeu.getJoueurPrincipal();
-	    
-  
+
 	    //-------------------------------
 		//-- preferances de le fenetre --
 		//-------------------------------
@@ -208,7 +198,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         pConsole.add(scrollConsole,BorderLayout.WEST);
         
         // panel de création de vagues
-        pCreationVague = new Panel_CreationVague(jeu,joueur,this);
+        pCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
 
         JScrollPane js = new JScrollPane(pCreationVague);
         js.setOpaque(false);
@@ -224,13 +214,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
          
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		conteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
-		panelTerrain = new Panel_Terrain(jeu, this, joueur);
+		panelTerrain = new Panel_Terrain(jeu, this);
 		panelTerrain.addKeyListener(this);
 		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(this,joueur,timer);
+		panelMenuInteraction = new Panel_MenuInteraction(this,jeu,timer);
 		timer.start();
 		
 		
@@ -367,10 +357,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	        jeu.poserTour(tour);
 	        
 	        panelTerrain.toutDeselectionner();
-	        
-	        // TODO CHECK
-            //panelMenuInteraction.miseAJourNbPiecesOr();
-            
+	          
             Tour nouvelleTour = tour.getCopieOriginale();
             nouvelleTour.setProprietaire(tour.getPrioprietaire());
             setTourAAcheter(nouvelleTour);
@@ -389,10 +376,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    try
         {
 	        jeu.ameliorerTour(tour);
-	        
-	        // TODO CHECK
-            //panelMenuInteraction.miseAJourNbPiecesOr();
-	        
+	          
             panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
         }
 	    catch(Exception e)
@@ -409,10 +393,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         {
             jeu.vendreTour(tour);
             panelInfoTour.effacerTour();
-            
-            // TODO CHECK
-            //panelMenuInteraction.miseAJourNbPiecesOr();
-            
             panelTerrain.setTourSelectionnee(null);
             
             jeu.ajouterAnimation(
@@ -505,10 +485,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             panelInfoCreature.effacerCreature();
             panelTerrain.setCreatureSelectionnee(null);
         }
-            
-        // TODO CHECK
-        //panelMenuInteraction.miseAJourNbPiecesOr();
-        //panelMenuInteraction.miseAJourScore();
 
         jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                 (int)creature.getCenterY() - 2,
@@ -525,9 +501,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    // creation de l'animation de blessure du joueur
         jeu.ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
 
-        // TODO CHECK
-        //panelMenuInteraction.miseAJourNbViesRestantes();
-        
         // si c'est la creature selectionnee
         if(panelTerrain.getCreatureSelectionnee() == creature)
         {
@@ -540,17 +513,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     public void vagueEntierementLancee(VagueDeCreatures vagueDeCreatures)
     {}
  
-    /**
-     * Permet de mettre a jour les infos du jeu
-     */
-    public void miseAJourInfoJeu()
-    {
-        // TODO CHECK
-        // panelMenuInteraction.miseAJourNbPiecesOr();
-        //panelMenuInteraction.miseAJourNbViesRestantes();
-        //panelMenuInteraction.miseAJourScore();
-    }
-
     @Override
     public void windowActivated(WindowEvent e)
     {}
@@ -577,17 +539,17 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void windowOpened(WindowEvent e){}
 
-    // TODO [DEBUG] a effacer
+    
     /**
-     * (pour debug) Permet d'ajouter des pieces d'or
+     * TODO [DEBUG] a effacer
+     * 
+     * Permet d'ajouter des pieces d'or
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
-        joueur.setNbPiecesDOr(joueur.getNbPiecesDOr() + nbPiecesDOr); 
-        
-        miseAJourInfoJeu();
+        jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
     }
 
     @Override
@@ -610,9 +572,9 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {}
 
     @Override
-    public void lancerVague(VagueDeCreatures vague)
+    public void lancerVague(VagueDeCreatures vague) throws ArgentInsuffisantException
     {
-        jeu.lancerVague(joueur, jeu.getEquipeAvecJoueurSuivante(joueur.getEquipe()),vague);
+        jeu.lancerVague(jeu.getJoueurPrincipal(), jeu.getEquipeSuivanteNonVide(jeu.getJoueurPrincipal().getEquipe()),vague);
     }
 
     @Override
@@ -626,7 +588,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         panelMenuInteraction.partieTerminee();
         
-        // TODO continuer
+        // FIXME continuer...
     }
 
     @Override
@@ -664,9 +626,15 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     }
 
     @Override
-    public void partieInitialisee()
+    public void partieInitialisee(){}
+
+    @Override
+    public void erreurPasAssezDArgent()
     {
-        // TODO Auto-generated method stub
-        
+        ajouterTexteHTMLDansConsole("<font color='red'>Vague trop chère</font><br />");
     }
+
+    @Override
+    public void miseAJourInfoJeu()
+    {}
 }

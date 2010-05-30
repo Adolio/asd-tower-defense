@@ -1,10 +1,5 @@
-import java.io.File;
+
 import javax.swing.UIManager;
-import models.jeu.Jeu_Solo;
-import models.terrains.ElementTD_Coop;
-import models.terrains.ElementTD_Versus_4;
-import models.terrains.SimpleFiveVersus;
-import models.terrains.Terrain;
 import vues.Fenetre_MenuPrincipal;
 
 /**
@@ -14,9 +9,7 @@ import vues.Fenetre_MenuPrincipal;
  * Elle s'occupe de configurer le style de l'interface graphique
  * et d'ouvrir le menu principal du programme.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
+ * @author Aurelien Da Campo
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  */

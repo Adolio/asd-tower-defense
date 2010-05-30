@@ -9,7 +9,6 @@ package models.maillage;
  * <p>
  * Remarques : Peut être utile aux classes utilisant le maillage.
  * 
- * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @author Pierre-Dominique Putallaz
  * @version 5 déc. 2009
