@@ -3,7 +3,6 @@ package models.attaques;
 import java.awt.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.outils.MeilleursScores;
 import models.tours.Tour;
 
 /**
@@ -11,12 +10,9 @@ import models.tours.Tour;
  * 
  * Permet de gerer le ralentissement d'une creature
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 30 decembre 2009
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class Glacon extends Attaque
 {

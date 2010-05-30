@@ -12,6 +12,11 @@ import java.util.Vector;
  * aleger le processeur.
  * 
  * Toutes les tours tournent sous le meme clock.
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.0 | 27 novemenbre 2009
+ * @since jdk1.6.0_16
+ * @see Creature
  */
 public class GestionnaireCreatures implements Runnable
 {

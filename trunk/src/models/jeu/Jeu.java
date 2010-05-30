@@ -132,12 +132,14 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireAnimations = new GestionnaireAnimations();
     }
     
+    
+    
     /**
      * Permet d'initialiser la partie avant le commencement
      * 
      * @param joueur 
      */
-    synchronized public void initialiser(Joueur joueur)
+    synchronized public void initialiser()
     {
         if(terrain == null)
             throw new IllegalStateException("Terrain nul");
@@ -146,7 +148,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
             throw new IllegalStateException("Aucune équipe inscrite");
         
         // le joueur principal
-        setJoueurPrincipal(joueur);
+        //if(joueur != null)
+        //    setJoueurPrincipal(joueur);
         
         // initialisation des valeurs par defaut
         for(Equipe equipe : equipes)
@@ -195,8 +198,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
      * Indique au jeu qu'une vague veut etre lancée
      * 
      * @param vague la vague
+     * @throws ArgentInsuffisantException 
      */
-    public void lancerVague(Joueur joueur, Equipe cible, VagueDeCreatures vague)
+    public void lancerVague(Joueur joueur, Equipe cible, VagueDeCreatures vague) throws ArgentInsuffisantException
     { 
         vague.lancerVague(this, joueur, cible, this, this);
     }
@@ -515,7 +519,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
      * 
      * @param joueur le joueur principal du jeu
      */
-    protected void setJoueurPrincipal(Joueur joueur)
+    public void setJoueurPrincipal(Joueur joueur)
     {
         this.joueur = joueur;
         
@@ -538,17 +542,18 @@ public abstract class Jeu implements EcouteurDeJoueur,
         // gain de pieces d'or
         tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
         
+        // nombre d'etoile avant l'ajout du score
+        int nbEtoilesAvantAjoutScore = tueur.getNbEtoiles();
+        
         // augmentation du score
-        int nbEtoiles = tueur.getNbEtoiles();
-        
-        // TODO
         tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());
-        
-        // nouvelle étoile
-        if(nbEtoiles < tueur.getNbEtoiles())
+
+        // nouvelle étoile ?
+        if(nbEtoilesAvantAjoutScore < tueur.getNbEtoiles())
             if(edj != null)  
                 edj.etoileGagnee();
  
+        // notification de la mort de la créature
         if(edj != null)
             edj.creatureTuee(creature);
     }
@@ -567,8 +572,12 @@ public abstract class Jeu implements EcouteurDeJoueur,
             {
                 edj.creatureArriveeEnZoneArrivee(creature);
                 
-                // FIXME plutot edj.equipeMiseAJour(equipe)
-                edj.joueurMisAJour(joueur);
+                // FIXME IMPORTANT faire plutot une mise a jour des donnees de l'equipe 
+                // -> ajout au protocole EQUIPE_ETAT
+                // et appler plutot edj.equipeMiseAJour(equipe) 
+                // pour tous les joueurs de l'equipe
+                for(Joueur joueur : equipe.getJoueurs())
+                    edj.joueurMisAJour(joueur);
             }
             // le joueur n'a plus de vie
             if(equipe.aPerdu())
@@ -646,14 +655,26 @@ public abstract class Jeu implements EcouteurDeJoueur,
             edj.animationAjoutee(animation);
     }
 
+    /**
+     * Permet de dessiner toutes les animations
+     * 
+     * @param g2 le Graphics2D
+     * @param hauteur la hauteur des animations
+     * @see Animation.HAUTEUR_SOL
+     * @see Animation.HAUTEUR_AIR
+     */
     public void dessinerAnimations(Graphics2D g2, int hauteur)
     {
         gestionnaireAnimations.dessinerAnimations(g2,hauteur);
     }
     
-    
-    
-    
+    /**
+     * Permet de recuperer un joueur grace a son identificateur
+     * 
+     * @param idJoueur identificateur du joueur
+     * 
+     * @return le joueur ou null
+     */ 
     public Joueur getJoueur(int idJoueur)
     {
         ArrayList<Joueur> joueurs = getJoueurs();
@@ -665,6 +686,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return null;
     }
 
+    /**
+     * Permet de recuperer une équipe grace a son identificateur
+     * 
+     * @param idEquipe identificateur de l'équipe
+     * 
+     * @return l'équipe ou null
+     */
     public Equipe getEquipe(int idEquipe)
     {
         for(Equipe equipe : equipes)
@@ -674,6 +702,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return null;
     }
     
+    /**
+     * Permet de recuperer un emplacement grace a son identificateur
+     * 
+     * @param idEmplacement identificateur de l'emplacement
+     * 
+     * @return l'emplacement ou null
+     */
     public EmplacementJoueur getEmplacementJoueur(int idEmplacement)
     {
         for(Equipe equipe : equipes)
@@ -699,19 +734,34 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return null;
     }
     
-    
+    /**
+     * Permet de recuperer une créature grace a son identificateur
+     * 
+     * @param idCreature identificateur de la créature
+     * 
+     * @return la créature ou null
+     */
     public Creature getCreature(int idCreature)
     {
         return gestionnaireCreatures.getCreature(idCreature);
     }
 
-    public Equipe getEquipeAvecJoueurSuivante(Equipe equipe)
+    /**
+     * Permet de recuperer l'equipe suivante (qui contient un joueur)
+     * 
+     * @param equipe
+     * @return
+     */
+    public Equipe getEquipeSuivanteNonVide(Equipe equipe)
     {
+        // on trouve l'equipe directement suivante
         int i = (equipes.indexOf(equipe)+1) % equipes.size();
         
+        // tant qu'il n'y a pas de joueur, on prend la suivante...
+        // au pire on retombera sur la même equipe qu'en argument
         while(equipes.get(i).getJoueurs().size() == 0)
             i = ++i % equipes.size();
-
+        
         return equipes.get(i);
     }
 }

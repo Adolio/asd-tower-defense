@@ -1,11 +1,9 @@
 package models.attaques;
 
 import java.awt.*;
-
 import models.animations.Explosion;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.outils.MeilleursScores;
 import models.tours.Tour;
 
 /**
@@ -14,12 +12,10 @@ import models.tours.Tour;
  * Cette classe est une animation qui dessine une boule de feu partant d'une
  * tour vers une creature.
  * 
- * @author Pierre-Dominique Putallaz
+ * @author Romain Poulain
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.1 | 4 mai 2010
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class BouleBalistique extends Attaque
 {

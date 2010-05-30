@@ -4,19 +4,59 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
+/**
+ * Un emplacement est une zone ou le joueur peut poser ses tours.
+ * <br>
+ * Chaque joueur doit posséder un emplacement.
+ * <br>
+ * Les emplacements sont normalement défini et géré par les équipes.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
+ */
 public class EmplacementJoueur implements Serializable
 {
     private static final long serialVersionUID = 1L;
-    transient Joueur joueur;
-    private Color couleur;
+    
+    /**
+     * Identificateur
+     */
     private int id;
+    
+    /**
+     * Le propriétaire de l'emplacement
+     */
+    transient Joueur joueur;
+    
+    /**
+     * Permet de definir ou le joueur peut poser ses tours
+     */
     Rectangle zoneDeConstruction;
     
+    /**
+     * Couleur pour les affichages
+     */
+    private Color couleur;
+ 
+    /**
+     * Constructeur 
+     * 
+     * @param id identificateur
+     * @param zoneDeConstruction la zone de construction
+     */
     public EmplacementJoueur(int id, Rectangle zoneDeConstruction)
     {
         this(id,zoneDeConstruction,Color.BLACK);
     }
     
+    /**
+     * Constructeur 
+     * 
+     * @param id identificateur
+     * @param zoneDeConstruction la zone de construction
+     * @param couleur la couleur
+     */
     public EmplacementJoueur(int id,Rectangle zoneDeConstruction, Color couleur)
     {
         this.zoneDeConstruction = zoneDeConstruction;
@@ -63,39 +103,60 @@ public class EmplacementJoueur implements Serializable
         }   
     }
     
+    /**
+     * Permet de recuperer la couleur
+     * @return la couleur
+     */
     public Color getCouleur()
     {
         return couleur;
     }
     
+    /**
+     * Permet de recuperer la zone de construction
+     * 
+     * @return la zone de construction
+     */
     public Rectangle getZoneDeConstruction()
     {
         return zoneDeConstruction;
     }
 
+    /**
+     * Permet de recuperer le joueur
+     * 
+     * @return le joueur
+     */
     public Joueur getJoueur()
     {
         return joueur;
     }
     
+    /**
+     * Permet de recuperer l'identificateur
+     * @return l'identificateur
+     */
     public int getId()
     {
         return id;
     }
     
+    @Override
     public String toString()
     {
         return "Zone "+id;
     }
 
+    /**
+     * Permet de retirer le joueur de l'emplacement
+     */
     public void retirerJoueur()
     {
-        // seulement s'il y avait un joueur avant
+        // seulement s'il y a un joueur
         if(this.joueur != null)
         {
             this.joueur.quitterEmplacementJoueur();
             this.joueur = null;
         }
-        
     }
 }

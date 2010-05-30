@@ -1,5 +1,13 @@
 package models.creatures;
-
+/**
+ * Classe de gestion de type de créatures pour le passage par le réseau.
+ * 
+ * @author Aurélien Da Campo
+ * @author Pierre-Dominique Putallaz
+ * @version 1.0 | 27 novemenbre 2009
+ * @since jdk1.6.0_16
+ * @see Creature
+ */
 public class TypeDeCreature
 {
     private static final int MOUTON          = 0;

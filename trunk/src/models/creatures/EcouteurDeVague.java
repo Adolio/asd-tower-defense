@@ -3,9 +3,7 @@ package models.creatures;
 /**
  * Interface d'ecoute d'une vague de creatures.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 31 decembre 2009
  * @since jdk1.6.0_16
  * @see VagueDeCreatures

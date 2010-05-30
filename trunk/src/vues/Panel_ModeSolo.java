@@ -429,7 +429,8 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
             e.printStackTrace();
         }
         
-        jeu.initialiser(joueur);
+        jeu.setJoueurPrincipal(joueur);
+        jeu.initialiser();
         new Fenetre_JeuSolo(jeu);
         
         chargementTermine = true;

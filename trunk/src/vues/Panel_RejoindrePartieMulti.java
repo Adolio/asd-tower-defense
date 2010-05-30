@@ -25,16 +25,22 @@ import exceptions.AucunEmplacementDisponibleException;
 import outils.fichierDeConfiguration;
 import reseau.CanalTCP;
 import reseau.CanalException;
+import reseau.jeu.client.EcouteurDeClientJeu;
 import reseau.jeu.serveur.ServeurJeu;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
 
+/**
+ * Panel pour rejoindre une partie réseau.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ */
 @SuppressWarnings("serial")
 public class Panel_RejoindrePartieMulti extends JPanel implements
-        ActionListener, KeyListener, MouseListener
+        ActionListener, KeyListener, MouseListener, EcouteurDeClientJeu
 {
     private static int PORT_SE;
-    private static int PORT_SJ;
     private static String IP_SE;
     
     private final int MARGES_PANEL = 40;
@@ -64,6 +70,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private CanalTCP canalServeurEnregistrement;
     
     private fichierDeConfiguration config;
+    private Jeu_Client jeu;
+    private Joueur joueur;
     
     
     /**
@@ -149,14 +157,11 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 MARGES_PANEL, MARGES_PANEL)));
         setBackground(LookInterface.COULEUR_DE_FOND);
         
-        
         // recuperation des configurations
         config  = new fichierDeConfiguration("cfg/config.cfg");
         IP_SE   = config.getProprety("IP_SE");
         PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
-        PORT_SJ = Integer.parseInt(config.getProprety("PORT_SJ"));
-            
-            
+                
         // ---------
         // -- TOP --
         // ---------
@@ -306,8 +311,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             } 
             catch (CanalException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Erreur! La connexion avec le serveur " +
+                "d'enregistrement n'est plus valide. " +
+                "Veuillez retourner au menu principal");
             } 
         }
     }
@@ -465,8 +472,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 } 
                 catch (CanalException e1)
                 {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    // l'utilisateur a déjà quitté le formulaire.
                 }
             }
         }
@@ -542,23 +548,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRejoindre.setText("Connexion...");
         bRejoindre.setEnabled(false);
 
-        Joueur joueur = new Joueur(tfPseudo.getText());
+        joueur = new Joueur(tfPseudo.getText());
+        jeu = new Jeu_Client(joueur);
+        jeu.setEcouteurDeClientJeu(this);
         
-        Jeu_Client jeu = new Jeu_Client(joueur);
         try
         {
             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
             try
-            {
+            { 
                 jeu.connexionAvecLeServeur(IP,port);
-                
-                // connexion réussie
-                parent.getContentPane().removeAll();
-                parent.getContentPane().add(new Panel_AttendreJoueurs(parent, jeu, joueur),
-                        BorderLayout.CENTER);
-                parent.getContentPane().validate();
             } 
             catch (AucunEmplacementDisponibleException e)
             {
@@ -619,22 +620,33 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     }
 
     @Override
-    public void mouseEntered(MouseEvent e)
+    public void mouseEntered(MouseEvent e){}
+
+    @Override
+    public void mouseExited(MouseEvent e){}
+
+    @Override
+    public void mousePressed(MouseEvent e){}
+
+    @Override
+    public void mouseReleased(MouseEvent e){}
+
+    @Override
+    public void joueurInitialise()
     {
+        // initialisation effectuee, 
+        // on passe au formulaire d'attente du debut de la partie...
+        
+        // connexion réussie
+        parent.getContentPane().removeAll();
+        parent.getContentPane().add(new Panel_AttendreJoueurs(parent, jeu),
+                BorderLayout.CENTER);
+        parent.getContentPane().validate();
     }
 
     @Override
-    public void mouseExited(MouseEvent e)
+    public void joueursMisAJour()
     {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
+        // on peut rien faire. (traité par le formulaire d'attente de joueurs)
     }
 }

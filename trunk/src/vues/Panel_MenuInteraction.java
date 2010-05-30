@@ -3,13 +3,11 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import outils.myTimer;
 import models.creatures.*;
-import models.joueurs.Joueur;
+import models.jeu.Jeu;
 import models.tours.*;
 
 /**
@@ -64,7 +62,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		
 	// autres membres
 	private EcouteurDePanelTerrain edpt;
-	private Joueur joueur;
+	private Jeu jeu;
 	
 	// panels internes
 	//private Panel_InfoTour panelInfoTour;
@@ -78,12 +76,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 * @param jeu le jeu avec lequel on interagit (le model)
 	 * @param fenJeu la fenetre de jeu
 	 */
-	public Panel_MenuInteraction(EcouteurDePanelTerrain edpt,Joueur joueur, final myTimer timer)
+	public Panel_MenuInteraction(EcouteurDePanelTerrain edpt,Jeu jeu, final myTimer timer)
 	{
 		super(new BorderLayout());
         
-		this.edpt     = edpt;
-		this.joueur   = joueur;
+		this.edpt  = edpt;
+		this.jeu   = jeu;
 		setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		timer.addActionListener(new ActionListener()
@@ -267,7 +265,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		else
 		    return;
 		
-		tour.setProprietaire(joueur);
+		tour.setProprietaire(jeu.getJoueurPrincipal());
 		
 		pSelection.setSelection(tour,Panel_InfoTour.MODE_ACHAT);
 		edpt.setTourAAcheter(tour);
@@ -279,7 +277,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	 */
 	private void miseAJourNbPiecesOr()
 	{
-		int nbPiecesOr = joueur.getNbPiecesDOr();
+		int nbPiecesOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
 	    
 		bTourArcher.setEnabled(nbPiecesOr >= TourArcher.PRIX_ACHAT);
 	    bTourCanon.setEnabled(nbPiecesOr >= TourCanon.PRIX_ACHAT);
@@ -298,7 +296,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	private void miseAJourNbViesRestantes()
 	{
-		lVies.setText(String.format("%02d",joueur.getEquipe().getNbViesRestantes()));
+		lVies.setText(String.format("%02d",jeu.getJoueurPrincipal().getEquipe().getNbViesRestantes()));
 	}
 	
 	/**
@@ -306,7 +304,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	private void miseAJourNbEtoiles()
     {
-        lEtoiles.setText(String.format("%02d",joueur.getNbEtoiles()));
+        lEtoiles.setText(String.format("%02d",jeu.getJoueurPrincipal().getNbEtoiles()));
     }
 	
 	/**
@@ -314,7 +312,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
      */
 	private void miseAJourScore()
     {
-        lScore.setText(String.format("%06d",joueur.getScore()));
+        lScore.setText(String.format("%06d",jeu.getJoueurPrincipal().getScore()));
         miseAJourNbEtoiles();
     }
 

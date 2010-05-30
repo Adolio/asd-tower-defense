@@ -4,16 +4,15 @@ import models.jeu.Jeu;
 import models.joueurs.Joueur;
 
 /**
- * Classe d'encapsulation des tours.
+ * Classe de gestion des revenus des joueurs
  * 
- * Permet de faire vivre toutes les tours sous le meme thread et ainsi 
- * aleger le processeur.
- * 
- * Toutes les tours tournent sous le meme clock.
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
  */
 public class GestionnaireDeRevenu implements Runnable
 {
-    private static final long TEMPS_REVENU_CREATURE = 10000; // 10 sec
+    private static final long TEMPS_REVENU_CREATURE = 5000; // ms
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();

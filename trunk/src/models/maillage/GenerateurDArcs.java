@@ -12,7 +12,6 @@ import org.jgrapht.*;
  * {@link EdgeFactory}.
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 5 déc. 2009
  * @since jdk1.6.0_16

@@ -11,9 +11,7 @@ import models.tours.Tour;
 /**
  * Classe de gestion d'une attaque venant d'une tour en direction d'une creature.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
+ * @author Aurelien Da Campo
  * @version 1.0 | 30 janvier 2009
  * @since jdk1.6.0_16
  * @see Tour

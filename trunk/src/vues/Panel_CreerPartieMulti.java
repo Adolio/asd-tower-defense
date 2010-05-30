@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-
 import exceptions.AucunEmplacementDisponibleException;
 import models.jeu.*;
 import models.joueurs.Joueur;
@@ -18,6 +17,12 @@ import outils.*;
 import reseau.CanalException;
 import reseau.jeu.serveur.ServeurJeu;
 
+/**
+ * Panel de création d'une partie réseau.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ */
 @SuppressWarnings("serial")
 public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 {
@@ -226,11 +231,14 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 } 
                 catch (IOException e)
                 {
-                    // TODO Auto-generated catch block
+                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
-                } catch (ClassNotFoundException e)
+                } 
+                catch (ClassNotFoundException e)
                 {
-                    // TODO Auto-generated catch block
+                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
                 } 
             }
@@ -387,7 +395,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                         // connexion réussie
                         parent.getContentPane().removeAll();
                         parent.getContentPane().add(
-                                new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient, joueur),
+                                new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient),
                                 BorderLayout.CENTER);
                         parent.getContentPane().validate();
                     } 

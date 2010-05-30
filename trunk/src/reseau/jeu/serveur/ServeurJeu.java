@@ -20,7 +20,8 @@ import reseau.*;
  * cliens.
  * 
  * @author Pierre-Do
- * @author Da Campo Aurélien
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
  */
 public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		EcouteurDeJeu, Runnable
@@ -170,7 +171,10 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     			clients.put(joueur.getId(), jd);
     			
     			// Notification des clients
-    	        envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
+    			// TODO réellement nécessaire ?
+    	        //envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
+    	        
+    	        envoyerATous(Protocole.construireMsgJoueursEtat(jeuServeur.getJoueurs()));
     		}
 		
         } 
@@ -276,7 +280,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         // Notification des joueurs
         try
         {
-            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_LANCEE));
+            //envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_LANCEE));
+        
+            envoyerATous(Protocole.construireMsgJoueursEtat(getJoueurs()));
         } 
         catch (CanalException e)
         {
@@ -387,7 +393,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
     
     		        j.setNbPiecesDOr(argentApresAchat);
-    	            jeuServeur.lancerVague(j, jeuServeur.getEquipeAvecJoueurSuivante(j.getEquipe()),vague);
+    	            try
+                    {
+                        jeuServeur.lancerVague(j, jeuServeur.getEquipeSuivanteNonVide(j.getEquipe()),vague);
+                    } 
+    	            catch (ArgentInsuffisantException e)
+                    {
+                        // impossible que ca arrive... 
+    	                // c'est pas très propre mais j'en avais besoins pour 
+                    }
     	            
     	            return OK;
     		    }
@@ -608,21 +622,27 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     public String changerEquipe(int idJoueur, int idEquipe)
     {
         Joueur joueur   = jeuServeur.getJoueur(idJoueur);
-        Equipe e        = jeuServeur.getEquipe(idEquipe);
+        Equipe equipe   = jeuServeur.getEquipe(idEquipe);
         
-        String message;
+        String message = null;
         
         try {
             
-            e.ajouterJoueur(joueur);
+            equipe.ajouterJoueur(joueur);
 
             // SUCCES
-            message = Protocole.construireMsgChangerEquipeOk(joueur,e);
+            message = Protocole.construireMsgChangerEquipe(OK); 
+            
+            envoyerATous(Protocole.construireMsgJoueursEtat(getJoueurs()));
         }
-        catch (AucunePlaceDisponibleException e1)
+        catch (AucunePlaceDisponibleException e)
         {
             // ECHEC
-            message = Protocole.construireMsgChangerEquipeEchec(joueur,e);
+            message = Protocole.construireMsgChangerEquipe(PAS_DE_PLACE);
+        } 
+        catch (CanalException e)
+        {
+            canalErreur(e);
         }
         
         return message;
@@ -678,8 +698,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             e1.printStackTrace();
         }
         
-        
         //e.printStackTrace();   
+    }
+
+    // TODO peut faire mieux
+    public ArrayList<Joueur> getJoueurs()
+    { 
+        return jeuServeur.getJoueurs();
     }
     
     

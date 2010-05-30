@@ -24,7 +24,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
  * Remarques : -
  * 
  * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 30 nov. 2009
  * @since jdk1.6.0_16

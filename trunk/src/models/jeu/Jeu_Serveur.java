@@ -14,13 +14,33 @@ import reseau.jeu.serveur.ServeurJeu;
 import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
 
+/**
+ * Classe de gestion du jeu réseau.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.1 | mai 2010
+ * @since jdk1.6.0_16
+ */
 public class Jeu_Serveur extends Jeu
 {
+    /**
+     * Connexion au serveur d'enregistrement
+     */
     private CanalTCP canalServeurEnregistrement;
+    
+    /**
+     * Connexions réseaux du serveur
+     */
     private ServeurJeu serveurDeJeu;
     
+    /**
+     * Permet de savoir si l'enregistrement au SE a réussi
+     */
     private boolean enregistrementReussie = false;
     
+    /**
+     * Gestionnaire de revenu.
+     */
     private GestionnaireDeRevenu gRevenus = new GestionnaireDeRevenu(this);
 
     @Override
@@ -32,7 +52,46 @@ public class Jeu_Serveur extends Jeu
     }
 
     /**
-     * TODO
+     * Permet de savoir si le serveur est 
+     * enregistré sur le Serveur d'Enregistrement.
+     * 
+     * @return true si il l'est, false sinon
+     */
+    public boolean estEnregisterSurSE()
+    {
+        return enregistrementReussie;
+    }
+    
+    /**
+     * Permet d'établir la connexion du serveur.
+     * 
+     * @throws IOException 
+     */
+    public void etablissementDuServeur() throws IOException
+    {
+        serveurDeJeu = new ServeurJeu(this);
+    }
+
+    /**
+     * Permet de stopper le serveur de jeu
+     */
+    public void stopperServeurDeJeu()
+    {
+        serveurDeJeu.stopper();
+    }
+
+    //------------------------------
+    //-- SERVEUR D'ENREGISTREMENT --
+    //------------------------------
+    
+    /**
+     * Permet d'enregistrer le jeu sur le serveur d'enregistrement
+     * 
+     * @param nomServeur le nom
+     * @param nbJoueurs le nombre de joueurs
+     * @param nomTerrain le terrain
+     * @param mode le mode de jeu
+     * @return true = ok, false = erreur
      */
     public boolean enregistrerSurSE(String nomServeur, int nbJoueurs, String nomTerrain, int mode)
     {
@@ -80,7 +139,7 @@ public class Jeu_Serveur extends Jeu
     }
     
     /**
-     * TODO
+     * Permet de surpprimer l'enregistrement du jeu sur le SE 
      */
     public void desenregistrerSurSE()
     {
@@ -106,34 +165,10 @@ public class Jeu_Serveur extends Jeu
             }
         }
     }
-
-    /**
-     * Permet de savoir si le serveur est 
-     * enregistré sur le Serveur d'Enregistrement.
-     * 
-     * @return true si il l'est, false sinon
-     */
-    public boolean estEnregisterSurSE()
-    {
-        return enregistrementReussie;
-    }
-    
     
     /**
-     * TODO
-     * @return
-     * @throws IOException 
+     * Permet de mettre à jour les infos du jeu sur le SE
      */
-    public void etablissementDuServeur() throws IOException
-    {
-        serveurDeJeu = new ServeurJeu(this);
-    }
-
-    public void stopperServeurDeJeu()
-    {
-        serveurDeJeu.stopper();
-    }
-
     public void miseAJourSE()
     {
         if(enregistrementReussie)

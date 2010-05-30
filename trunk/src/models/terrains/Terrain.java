@@ -41,9 +41,7 @@ import models.tours.Tour;
  * De plus, cette classe est abstraite, elle ne peut pas etre instanciee en tant
  * que telle mais doit etre heritee.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
+ * @author Aurelien Da Campo
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  * @see Tour
@@ -486,17 +484,16 @@ public abstract class Terrain implements Serializable
         // si l'on construit la tour, il existe toujours un chemin
         desactiverZone(tour, false);
 
-        try
-        {
-            Equipe e = tour.getPrioprietaire().getEquipe();
+        try {
             
-           
+            Equipe equipe = tour.getPrioprietaire().getEquipe();
+
             // on part du principe que le joueur ne peu blocker que son chemin
             // car il contruit sur son troncon... A VOIR!
             
             // TODO gérer plusieurs zone de depart
-            Rectangle zoneDepart = e.getZoneDepartCreatures(0);
-            Rectangle zoneArrivee = e.getZoneArriveeCreatures();
+            Rectangle zoneDepart = equipe.getZoneDepartCreatures(0);
+            Rectangle zoneArrivee = equipe.getZoneArriveeCreatures();
             
             // calcul du chemin et attente une exception
             // PathNotFoundException s'il y a un probleme
@@ -509,15 +506,15 @@ public abstract class Terrain implements Serializable
             
             
             // mise a jour du chemin
-            e.setLongueurChemin(longueur);
+            equipe.setLongueurChemin(longueur);
             
             
             // il existe un chemin, donc elle ne bloque pas.
             activerZone(tour, false); // on reactive la zone
             return false;
 
-        } catch (PathNotFoundException e)
-        {
+        } 
+        catch (PathNotFoundException e) {
             // il n'existe pas de chemin, donc elle bloque le chemin.
             activerZone(tour, false); // on reactive la zone
             return true;
@@ -832,7 +829,7 @@ public abstract class Terrain implements Serializable
      * @throws IOException 
      * @throws ClassNotFoundException 
      */
-    public static Terrain charger(File fichier) throws IOException, ClassNotFoundException
+    public static Terrain charger(File fichier) throws IOException, ClassNotFoundException, ClassCastException
     {
        
       // Ouverture d'un flux d'entree depuis le fichier FICHIER.

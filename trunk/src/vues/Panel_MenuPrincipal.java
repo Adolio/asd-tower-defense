@@ -14,6 +14,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
 
+/**
+ * Panel du menu principal de l'application.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ */
 public class Panel_MenuPrincipal extends JPanel implements ActionListener
 {
     // constantes statiques
@@ -133,11 +139,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     {
         Object source = ae.getSource();
 
-        // quitter
-        if (source == bQuitter)
-            System.exit(0); // Fermeture correcte du logiciel
-
-        else if (source == bPartieSolo)
+        if (source == bPartieSolo)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_ModeSolo(parent),
@@ -163,7 +165,8 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
        
         else if(source == bAPropos)
             new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"), parent);
-      
         
+        else if (source == bQuitter)
+            System.exit(0); // Fermeture correcte du logiciel
     }
 }

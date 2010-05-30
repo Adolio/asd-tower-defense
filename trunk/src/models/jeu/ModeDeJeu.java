@@ -1,5 +1,12 @@
 package models.jeu;
 
+/**
+ * Classe stockant les constantes des modes de jeu.
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ * @since jdk1.6.0_16
+ */
 public class ModeDeJeu
 {
     public static final int MODE_SOLO = 0;
@@ -17,5 +24,4 @@ public class ModeDeJeu
         
         return "Inconnu";
     }
-    
 }

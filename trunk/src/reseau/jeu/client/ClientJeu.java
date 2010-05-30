@@ -16,7 +16,6 @@ import models.joueurs.Joueur;
 import models.terrains.Terrain;
 import models.tours.*;
 import exceptions.*;
-
 import org.json.*;
 
 /**
@@ -27,11 +26,6 @@ import org.json.*;
  */
 public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	
-    /**
-     * Joueur traité
-     */
-    private Joueur joueur;
-    
     /**
      * Canal de ping-pong envoie / reception
      */
@@ -53,6 +47,13 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     private final boolean verbeux = true;
     
     /**
+     * Ecouteur de client jeu pour les notifications
+     */
+    private EcouteurDeClientJeu edcj;
+    
+    
+    
+    /**
      * Constructeur
      * 
      * @param jeu
@@ -63,55 +64,55 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * @throws CanalException
      * @throws AucunEmplacementDisponibleException 
      */
-	public ClientJeu(Jeu_Client jeu, 
-	                 String IPServeur, 
-	                 int portServeur, 
-	                 Joueur joueur) 
-	                 throws ConnectException, CanalException, AucunEmplacementDisponibleException 
+	public ClientJeu(Jeu_Client jeu)                
 	{
-		this.jeu      = jeu;
-		this.joueur   = joueur;
-		
-		// création du canal 1 (Requête / réponse)
-		canalPingPong = new CanalTCP(IPServeur, portServeur, true);
-		
-		// demande de connexion au serveur (canal 1)
-		canalPingPong.envoyerString(joueur.getPseudo());
-		
-		// le serveur nous retourne notre identificateur
-		JSONObject msg;
+		this.jeu = jeu;
+	}
+	
+	public void etablirConnexion(String IP, int port) 
+	    throws ConnectException, CanalException, AucunEmplacementDisponibleException 
+    {
+       
+	    // création du canal 1 (Requête / réponse)
+        canalPingPong = new CanalTCP(IP, port, true);
         
-		try{
+        // demande de connexion au serveur (canal 1)
+        canalPingPong.envoyerString(jeu.getJoueurPrincipal().getPseudo());
+        
+        // le serveur nous retourne notre identificateur
+        JSONObject msg;
+        
+        try{
             msg = new JSONObject(canalPingPong.recevoirString());
             receptionInitialisationJoueur(msg);
         } 
-		catch (JSONException e1){
-		    e1.printStackTrace(); 
-		} 
+        catch (JSONException e1){
+            e1.printStackTrace(); 
+        } 
 
-		// FIXME
-		/*
-		try{
+        // FIXME
+        /*
+        try{
             jeu.ajouterJoueur(joueur);  
         } 
-		catch (JeuEnCoursException e){e.printStackTrace();} 
-		catch (AucunePlaceDisponibleException e){e.printStackTrace();}
-		*/
-		
-		
-		// reception de la version du serveur
-		String version = canalPingPong.recevoirString();
-		log("Version du jeu : "+version);
-		
-		// reception du port du canal 2
-		int portCanal2 = canalPingPong.recevoirInt();
-		
-		// création du canal 2 (Reception asynchrone)
-		canalAsynchrone = new CanalTCP(IPServeur, portCanal2, true);
+        catch (JeuEnCoursException e){e.printStackTrace();} 
+        catch (AucunePlaceDisponibleException e){e.printStackTrace();}
+        */
+        
+        
+        // reception de la version du serveur
+        String version = canalPingPong.recevoirString();
+        log("Version du jeu : "+version);
+        
+        // reception du port du canal 2
+        int portCanal2 = canalPingPong.recevoirInt();
+        
+        // création du canal 2 (Reception asynchrone)
+        canalAsynchrone = new CanalTCP(IP, portCanal2, true);
 
-		// lancement de la tache d'écoute du canal 2
-		(new Thread(this)).start();
-	}
+        // lancement de la tache d'écoute du canal 2
+        (new Thread(this)).start();
+    }
 	
 	
 
@@ -323,15 +324,16 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             } 
 	        catch (CanalException e)
             {
-	            
                 e.printStackTrace();
+                return;
             }
 	}
 
 	private void attendreMessageCanalAsynchrone() throws CanalException
     {
 	    try{  
-    	    //log("Attente d'un String sur le canal 2...");
+    	    
+	        //log("Attente d'un String sur le canal 2...");
             
     	    JSONObject resultat = new JSONObject(canalAsynchrone.recevoirString());
             
@@ -350,10 +352,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     receptionEtatJoueur(resultat);
                 break; 
                 
-                case JOUEUR_AJOUT :    
-                    receptionAjoutJoueur(resultat);
+                case JOUEURS_ETAT :    
+                    receptionEtatJoueurs(resultat);
                 break;
-            
+    
                 // TOURS
                 case TOUR_AJOUT :
                     receptionAjoutTour(resultat);
@@ -393,22 +395,45 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         }
     }
 
-    private void receptionAjoutJoueur(JSONObject resultat) throws JSONException
+    private void receptionEtatJoueurs(JSONObject resultat) throws JSONException
     {
-        int idJoueur  = resultat.getInt("ID_JOUEUR");
-        String pseudo = resultat.getString("PSEUDO");
+        JSONArray joueurs = resultat.getJSONArray("JOUEURS");
         
-        log("Réception d'un nouveau joueur (pseudo:"+pseudo+", id:"+ idJoueur+")");
+        jeu.viderEquipes();
         
-        Joueur joueur = new Joueur(pseudo);
-        joueur.setId(idJoueur);
+        Joueur joueur;
+        for (int i = 0; i < joueurs.length(); i++)
+        {
+            JSONObject JSONjoueur = (JSONObject) joueurs.get(i);
+            
+            int idJoueur        = JSONjoueur.getInt("ID_JOUEUR");
+            String nomJoueur    = JSONjoueur.getString("NOM_JOUEUR");
+            int idEquipe        = JSONjoueur.getInt("ID_EQUIPE");
+            int idEmplacement   = JSONjoueur.getInt("ID_EMPLACEMENT");
+
+            // création du joueur
+            joueur = new Joueur(nomJoueur);
+            joueur.setId(idJoueur);
+            
+            // le joueur avec le meme id que l'ancien joueur principal
+            // devient le joueur principal
+            if(jeu.getJoueurPrincipal().getId() == idJoueur)
+                jeu.setJoueurPrincipal(joueur);
+               
+            // ajout dans l'equipe
+            try
+            {
+                jeu.getEquipe(idEquipe).ajouterJoueur(joueur,jeu.getEmplacementJoueur(idEmplacement));
+            } 
+            catch (EmplacementOccupeException e)
+            {
+                // ca n'arrivera pas, les infos viennent du serveur
+                e.printStackTrace();
+            }
+        }
         
-        int idEquipe  = resultat.getInt("ID_EQUIPE");
-        int idEmplacement  = resultat.getInt("ID_EMPLACEMENT");
-        
-        Equipe equipe = jeu.getEquipe(idEquipe);
-        EmplacementJoueur ej = jeu.getEmplacementJoueur(idEmplacement); 
-        equipe.ajouterJoueur(joueur, ej);
+        if(edcj != null)
+            edcj.joueursMisAJour();
     }
 
     private void receptionEtatPartie(JSONObject resultat) throws JSONException
@@ -417,7 +442,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         {
             case PARTIE_INITIALISEE :
                 log("Partie initialisee");
-                jeu.initialiser(joueur);
+                jeu.initialiser();
                 break;
             
             case PARTIE_LANCEE :
@@ -453,29 +478,44 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 
                 Terrain terrain;
                 
-                try {
+                try 
+                {
                     terrain = Terrain.charger(new File("maps/"+nomFichierTerrain));
                     jeu.setTerrain(terrain);
                     terrain.setJeu(jeu);
+                    
+                    jeu.getJoueurPrincipal().setId(idJoueur);
+                    
+                    Equipe equipe = jeu.getEquipe(idEquipe);
+                    EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
+
+                    if(equipe != null && emplacementJoueur != null)
+                    {
+                        equipe.ajouterJoueur(jeu.getJoueurPrincipal(),emplacementJoueur);  
+                        
+                        if(edcj != null)
+                            edcj.joueurInitialise();  
+                    }
+                    else
+                        logErreur("Equipe ou emplacementJoueur inconnu");
+                    
                 } 
                 catch (IOException e) {
                     logErreur("Terrain inconnu");
                 } 
                 catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logErreur(e.getMessage());
                 }
-                 
-                joueur.setId(idJoueur);
-                               
-                Equipe equipe = jeu.getEquipe(idEquipe);
-                EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
-
-                if(equipe != null && emplacementJoueur != null)
-                    equipe.ajouterJoueur(joueur,emplacementJoueur);  
-                else
-                    logErreur("Equipe ou emplacementJoueur inconnu");
-                
+                catch (ClassCastException e)
+                {
+                    logErreur("Format de terrain erroné");
+                } 
+                catch (EmplacementOccupeException e)
+                {
+                    // ca n'arrivera pas, l'info vient du serveur
+                    logErreur("Emplacement occupé");
+                }
+ 
                 break;
         
             case PAS_DE_PLACE :    
@@ -497,6 +537,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         int score = message.getInt("SCORE");
+        int nbViesRestantes = message.getInt("NB_VIES_RESTANTES_EQUIPE");
         
         Joueur joueur = jeu.getJoueur(idJoueur);
         
@@ -504,6 +545,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         { 
             joueur.setNbPiecesDOr(nbPiecesDOr);
             joueur.setScore(score);
+            joueur.getEquipe().setNbViesRestantes(nbViesRestantes);
         }
         else
             logErreur("Joueur inconnu (id:"+idJoueur+")");
@@ -561,11 +603,16 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             creature.setX(x);
             creature.setY(y);
             
+            creature.setSanteMax(santeMax);
+            creature.setNbPiecesDOr(nbPiecesDOr);
+            creature.setVitesse(vitesse);
+            
+            
             jeu.ajouterCreatureDirect(creature);
         }
         else
         {
-            // TODO ERREUR Créature inconnue
+            logErreur("Créature inconnue");
         }
     }
     
@@ -622,7 +669,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     public void log(String msg)
     {
         if(verbeux)
-            System.out.println("[CLIENT][JOUEUR "+joueur.getId()+"] "+msg);
+            System.out.println("[CLIENT][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
     }
     
     /**
@@ -632,7 +679,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      */
     private void logErreur(String msg)
     {
-        System.err.println("[CLIENT ERREUR][JOUEUR "+joueur.getId()+"] "+msg);
+        System.err.println("[CLIENT ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
     }
 
 
@@ -646,7 +693,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             json.put("TYPE", JOUEUR_CHANGER_EQUIPE);
             json.put("ID_EQUIPE", equipe.getId());
             
-            
             log("Envoye d'une demande de changement d'équipe");
                 
             canalPingPong.envoyerString(json.toString());
@@ -655,20 +701,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
-                case OK :
-                    
-                    int idEquipe = resultatJSON.getInt("ID_EQUIPE");
-                    int idEmplacement = resultatJSON.getInt("ID_EMPLACEMENT");
-                    
-                    Equipe equipe2 = jeu.getEquipe(idEquipe);
-                    EmplacementJoueur emplacementJoueur = jeu.getEmplacementJoueur(idEmplacement);
-
-                    if(equipe2 != null && emplacementJoueur != null)
-                        equipe2.ajouterJoueur(joueur,emplacementJoueur);  
-                    else
-                        logErreur("Equipe ou emplacementJoueur inconnu");
-                    
-                    break;
                 case PAS_DE_PLACE :
                     throw new AucunEmplacementDisponibleException("Pas de place dans cette équipe");
             }
@@ -676,5 +708,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+     
+    public void setEcouteurDeClientJeu(EcouteurDeClientJeu edcj)
+    {
+        this.edcj = edcj;
     }
 }

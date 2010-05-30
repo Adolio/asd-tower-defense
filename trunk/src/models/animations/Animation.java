@@ -15,7 +15,6 @@ import java.awt.*;
  */
 public abstract class Animation extends Point
 {
-	
     public static final int HAUTEUR_SOL = 0;
     public static final int HAUTEUR_AIR = 1;
     
@@ -67,7 +66,12 @@ public abstract class Animation extends Point
     {
         enJeu = false;
     }
-
+    
+    /**
+     * Permet de recuperer la hauteur de l'animation
+     * 
+     * @return la hauteur
+     */
     public int getHauteur()
     {
         return hauteur;

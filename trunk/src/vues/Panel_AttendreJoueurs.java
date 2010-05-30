@@ -6,6 +6,8 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import reseau.jeu.client.EcouteurDeClientJeu;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
@@ -14,7 +16,8 @@ import models.joueurs.*;
 import models.tours.Tour;
 
 @SuppressWarnings("serial")
-public class Panel_AttendreJoueurs extends JPanel implements ActionListener, EcouteurDeJeu
+public class Panel_AttendreJoueurs extends JPanel implements 
+    ActionListener, EcouteurDeJeu, EcouteurDeClientJeu
 {
     private final int MARGES_PANEL = 40;
     private final boolean ADMIN;
@@ -23,14 +26,13 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
     private JButton bTmpJConn = new JButton("...Un joueur se connect");
-    private Panel_GridBag pJoueurs;
     private Jeu_Serveur jeuServeur;
     private Jeu_Client jeuClient;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
     private JLabel lEtat = new JLabel();
     private JLabel lIPs = new JLabel();
-    private Joueur joueur;
-    private int nbJoueurs = 0;
+    private JPanel pTmp;
+    private Panel_GridBag pJoueurs;
     
     /**
      * Constructeur de créateur de partie
@@ -39,14 +41,15 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
      * @param jeu le jeu
      * @param joueur le joueur
      */
-    public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeuServeur, Jeu_Client jeuClient, Joueur joueur)
+    public Panel_AttendreJoueurs(JFrame parent, Jeu_Serveur jeuServeur, Jeu_Client jeuClient)
     {
         this.parent     = parent;
         this.ADMIN      = true;
         this.jeuServeur = jeuServeur;
         this.jeuClient  = jeuClient;
-        this.joueur     = joueur;
-
+        
+        jeuClient.setEcouteurDeClientJeu(this);
+        
         initialiserForm();
     }
 
@@ -57,16 +60,17 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
      * @param jeu le jeu du client
      * @param joueur le joueur
      */
-    public Panel_AttendreJoueurs(JFrame parent, Jeu_Client jeu, Joueur joueur)
+    public Panel_AttendreJoueurs(JFrame parent, Jeu_Client jeu)
     {
         this.parent     = parent;
         this.ADMIN      = false;
         this.jeuClient  = jeu;
-        this.joueur     = joueur;
+
+        jeuClient.setEcouteurDeClientJeu(this);
         
         initialiserForm();
     }
-
+    
     /**
      * Permet d'initialiser le formulaire
      */
@@ -97,48 +101,47 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
         // ------------
         // -- CENTER --
         // ------------
-        if (jeuServeur != null)
-        {
-            contruireEmplacementsJoueur();
+        
+         pJoueurs = contruirePanelEmplacementsJoueur();
 
-            JPanel pCenter = new JPanel(new BorderLayout());
-            pCenter.setOpaque(false);
+        JPanel pCenter = new JPanel(new BorderLayout());
+        pCenter.setOpaque(false);
 
-            pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeuServeur.getTerrain(),300,300);
-           
-            
-            JScrollPane spEmplacement = new JScrollPane(pEmplacementsTerrain);
-            spEmplacement.setOpaque(false);
-            spEmplacement.setBorder(null);
+        pEmplacementsTerrain = new Panel_EmplacementsTerrain(jeuClient.getTerrain(),300,300);
+       
+        JScrollPane spEmplacement = new JScrollPane(pEmplacementsTerrain);
+        spEmplacement.setOpaque(false);
+        spEmplacement.setBorder(null);
 
-            //spEmplacement.setPreferredSize(new Dimension(350, 350));
-            pCenter.add(spEmplacement, BorderLayout.EAST);
+        //spEmplacement.setPreferredSize(new Dimension(350, 350));
+        pCenter.add(spEmplacement, BorderLayout.EAST);
 
-            
-            JPanel pJoueursEtat = new JPanel(new BorderLayout());
-            pJoueursEtat.setOpaque(false);
-            pJoueursEtat.add(lEtat, BorderLayout.CENTER);
-            
-     
-            
-            JPanel pTmp = new JPanel(new BorderLayout());
-            pTmp.setOpaque(false);
+        
+        JPanel pJoueursEtat = new JPanel(new BorderLayout());
+        pJoueursEtat.setOpaque(false);
+        pJoueursEtat.add(lEtat, BorderLayout.CENTER);
+        
+ 
+        
+        pTmp = new JPanel(new BorderLayout());
+        pTmp.setOpaque(false);
 
-            JScrollPane js = new JScrollPane(pJoueurs);
-            js.setOpaque(false);
-            js.setBorder(null);
+        JScrollPane js = new JScrollPane(pJoueurs);
+        js.setOpaque(false);
+        js.setBorder(null);
+        pTmp.add(js, BorderLayout.NORTH);
+        
+        
+        //pTmp.add(bTmpJConn, BorderLayout.SOUTH);
+        //bTmpJConn.addActionListener(this);
+        
+        
+        pJoueursEtat.add(pTmp, BorderLayout.NORTH);
+        
+        pCenter.add(pJoueursEtat, BorderLayout.WEST);
 
-            pTmp.add(js, BorderLayout.NORTH);
-            pTmp.add(bTmpJConn, BorderLayout.SOUTH);
-            bTmpJConn.addActionListener(this);
-            
-            
-            pJoueursEtat.add(pTmp, BorderLayout.NORTH);
-            
-            pCenter.add(pJoueursEtat, BorderLayout.WEST);
-
-            add(pCenter, BorderLayout.CENTER);
-        }
+        add(pCenter, BorderLayout.CENTER);
+        
 
         // ------------
         // -- BOTTOM --
@@ -244,8 +247,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
                     jeuServeur.desenregistrerSurSE();
  
                 // reférence différente entre client et serveur
-                Joueur joueur = new Joueur(this.joueur.getPseudo());
-                jeuServeur.initialiser(joueur);
+                jeuServeur.initialiser();
                 jeuServeur.demarrer();  
             }
         }
@@ -267,7 +269,9 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
         }
         else if(src == bTmpJConn)
         {  
-            Joueur j = new Joueur("J"+this.nbJoueurs);
+            //Joueur j = new Joueur("J"+this.nbJoueurs);
+            
+            joueursMisAJour();
             
             /*
             try
@@ -285,12 +289,12 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
             
             ajouterJoueur(j);
             */
-            
-            jeuServeur.miseAJourSE();
+            if(ADMIN)
+                jeuServeur.miseAJourSE();
         }
     }
 
-    private void ajouterJoueur(final Joueur joueur)
+    private void ajouterJoueur(final Joueur joueur, Panel_GridBag pJoueurs, int pos)
     {
         final JComboBox cbEmplacements = new JComboBox();
         final JComboBox cbEquipes = new JComboBox();
@@ -301,12 +305,12 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
         
         final JLabel lPseudo = new JLabel(joueur.getPseudo());
         lPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        pJoueurs.add(lPseudo, 1, nbJoueurs, 1);
+        pJoueurs.add(lPseudo, 1, pos, 1);
         lPseudo.setForeground(joueur.getEquipe().getCouleur());
 
-        ArrayList<Equipe> equipes = jeuServeur.getEquipes();
+        ArrayList<Equipe> equipes = jeuClient.getEquipes();
         
-        if(ADMIN || this.joueur == joueur)
+        if(ADMIN || jeuClient.getJoueurPrincipal() == joueur)
         {
             // Liste des équipes
 
@@ -354,7 +358,7 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
                 }
             });
 
-            pJoueurs.add(cbEquipes, 2, nbJoueurs, 1);
+            pJoueurs.add(cbEquipes, 2, pos, 1);
 
             // remplissage de la combobox
             remplirCombo(cbEmplacements,joueur);
@@ -391,42 +395,40 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
             });
 
             // ajout de l'emplacement
-            pJoueurs.add(cbEmplacements, 3, nbJoueurs, 1);
-            
-            nbJoueurs++;
+            pJoueurs.add(cbEmplacements, 3, pos, 1);
         }
     }
     
-    public void contruireEmplacementsJoueur()
+    public Panel_GridBag contruirePanelEmplacementsJoueur()
     {
-        ArrayList<Joueur> joueurs = jeuServeur.getJoueurs();
-        
+        ArrayList<Joueur> joueurs = jeuClient.getJoueurs();
+        int maxJoueurs = jeuClient.getTerrain().getNbJoueursMax();
 
-        int maxJoueurs = jeuServeur.getTerrain().getNbJoueursMax();
-
-        pJoueurs = new Panel_GridBag(new Insets(2, 2, 2, 2));
+        Panel_GridBag pJoueurs = new Panel_GridBag(new Insets(2, 2, 2, 2));
         pJoueurs.setBackground(LookInterface.COULEUR_DE_FOND);
         pJoueurs.setPreferredSize(new Dimension(350, 150));
 
         for (int i = 0; i < maxJoueurs; i++)
         {
-            /*JLabel lNo = new JLabel((i + 1) + ". ");
+            /*
+            JLabel lNo = new JLabel((i + 1) + ". ");
             lNo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-            pJoueurs.add(lNo, 0, i, 1);*/
+            pJoueurs.add(lNo, 0, i, 1);
+            */
 
             // joueur trouvé
             if (i < joueurs.size())
-            {
-                // TODO
-                ajouterJoueur(joueurs.get(i));
-            } 
-            else// personne
+                ajouterJoueur(joueurs.get(i), pJoueurs, i);
+            // inconnu
+            else 
             {
                 JLabel lInconnu = new JLabel("???");
                 lInconnu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
                 pJoueurs.add(lInconnu, 1, i, 1);
             }
         }
+        
+        return pJoueurs;
     }
 
     @Override
@@ -550,5 +552,23 @@ public class Panel_AttendreJoueurs extends JPanel implements ActionListener, Eco
         // TODO Auto-generated method stub
         
     }
-    
+
+    @Override
+    public void joueurInitialise()
+    {
+        initialiserForm();
+    }
+
+    @Override
+    public void joueursMisAJour()
+    {
+        pTmp.removeAll();
+        pJoueurs = contruirePanelEmplacementsJoueur();
+        JScrollPane js = new JScrollPane(pJoueurs);
+        js.setOpaque(false);
+        js.setBorder(null);
+        pTmp.add(js, BorderLayout.NORTH);
+        pTmp.revalidate();
+        pEmplacementsTerrain.repaint();
+    }
 }

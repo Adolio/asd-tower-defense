@@ -3,6 +3,8 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import exceptions.ArgentInsuffisantException;
 import models.creatures.*;
 import models.jeu.Jeu;
 import models.joueurs.Joueur;
@@ -73,7 +75,14 @@ public class Panel_CreationVague extends JPanel
                 {
                     VagueDeCreatures vague = new VagueDeCreatures(Integer.parseInt((String) cbNbCreatures.getSelectedItem()), creature, 500, true);
                     
-                    edlv.lancerVague(vague); 
+                    try
+                    {
+                        edlv.lancerVague(vague);
+                    } 
+                    catch (ArgentInsuffisantException e1)
+                    {
+                        edlv.erreurPasAssezDArgent();
+                    } 
                 }
             });
             

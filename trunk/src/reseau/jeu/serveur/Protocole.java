@@ -1,18 +1,19 @@
 package reseau.jeu.serveur;
 
-import models.creatures.Creature;
-import models.creatures.TypeDeCreature;
-import models.joueurs.Equipe;
+import java.util.ArrayList;
+import models.creatures.*;
 import models.joueurs.Joueur;
 import models.terrains.Terrain;
-import models.tours.Tour;
-import models.tours.TypeDeTour;
-import org.json.JSONException;
-import org.json.JSONObject;
+import models.tours.*;
+import org.json.*;
 
 /**
+ * Classe de définition du protocole.
+ * 
+ * Elle permet de créer les messages qui transiteront sur les canaux.
  * 
  * @author Aurélien Da Campo
+ * @version 1.0 | mai 2010
  */
 public class Protocole implements ConstantesServeurJeu
 {
@@ -42,13 +43,52 @@ public class Protocole implements ConstantesServeurJeu
         return msg.toString(); 
     }
     
-    public static String construireMsgJoueurInitialisation(int pasDePlace)
+    public static String construireMsgJoueursEtat(ArrayList<Joueur> joueurs)
+    {
+        JSONObject msg = new JSONObject();
+        JSONArray JSONjoueurs = new JSONArray();
+        
+        try
+        {
+            msg.put("TYPE", JOUEURS_ETAT);
+            
+            Joueur joueur;
+            JSONObject JSONjoueur;
+              
+            for(int j=0; j < joueurs.size();j++)
+            {
+                // recuperation du joueur
+                joueur = joueurs.get(j);
+                    
+                // construction du joueur
+                JSONjoueur = new JSONObject();
+                JSONjoueur.put("ID_JOUEUR", joueur.getId());
+                JSONjoueur.put("NOM_JOUEUR", joueur.getPseudo());
+                JSONjoueur.put("ID_EMPLACEMENT", joueur.getEmplacement().getId());
+                JSONjoueur.put("ID_EQUIPE", joueur.getEquipe().getId());
+                
+                // ajout à la liste des joueurs
+                JSONjoueurs.put(JSONjoueur);
+            }
+            
+            msg.put("JOUEURS",JSONjoueurs);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return msg.toString(); 
+    }
+    
+    
+    public static String construireMsgJoueurInitialisation(int etat)
     {
         JSONObject msg = new JSONObject();
         
         try {
             msg.put("TYPE", JOUEUR_INITIALISATION);
-            msg.put("STATUS", PAS_DE_PLACE);
+            msg.put("STATUS", etat);
         } 
         catch (JSONException jsone){
             jsone.printStackTrace();
@@ -90,6 +130,7 @@ public class Protocole implements ConstantesServeurJeu
             msg.put("TYPE", JOUEUR_ETAT);
             msg.put("ID_JOUEUR", joueur.getId());
             msg.put("NB_PIECES_OR", joueur.getNbPiecesDOr());
+            msg.put("NB_VIES_RESTANTES_EQUIPE", joueur.getEquipe().getNbViesRestantes());
             msg.put("SCORE", joueur.getScore());
         }
         catch (JSONException e)
@@ -293,30 +334,13 @@ public class Protocole implements ConstantesServeurJeu
         return msg.toString();
     }
 
-    public static String construireMsgChangerEquipeOk(Joueur joueur, Equipe e)
+    public static String construireMsgChangerEquipe(int etat)
     {
         JSONObject msg = new JSONObject();
         
         try {
             msg.put("TYPE", JOUEUR_CHANGER_EQUIPE);
-            msg.put("STATUS", OK);
-            msg.put("ID_EQUIPE", joueur.getEquipe().getId());
-            msg.put("ID_EMPLACEMENT", joueur.getEmplacement().getId()); 
-        }
-        catch (JSONException jsone){
-            jsone.printStackTrace();
-        }
-        
-        return msg.toString();
-    }
-
-    public static String construireMsgChangerEquipeEchec(Joueur joueur, Equipe e)
-    {
-        JSONObject msg = new JSONObject();
-        
-        try {
-            msg.put("TYPE", JOUEUR_CHANGER_EQUIPE);
-            msg.put("STATUS", PAS_DE_PLACE);
+            msg.put("STATUS", etat);
         }
         catch (JSONException jsone){
             jsone.printStackTrace();
@@ -332,24 +356,6 @@ public class Protocole implements ConstantesServeurJeu
         try {
             msg.put("TYPE", CREATURE_ARRIVEE);
             msg.put("ID_CREATURE", creature.getId());
-        }
-        catch (JSONException jsone){
-            jsone.printStackTrace();
-        }
-        
-        return msg.toString();
-    }
-
-    public static String construireMsgJoueurAjout(Joueur joueur)
-    {
-        JSONObject msg = new JSONObject();
-        
-        try {
-            msg.put("TYPE", JOUEUR_AJOUT);
-            msg.put("ID_JOUEUR", joueur.getId());
-            msg.put("PSEUDO", joueur.getPseudo()); 
-            msg.put("ID_EQUIPE", joueur.getEquipe().getId());
-            msg.put("ID_EMPLACEMENT", joueur.getEmplacement().getId()); 
         }
         catch (JSONException jsone){
             jsone.printStackTrace();
