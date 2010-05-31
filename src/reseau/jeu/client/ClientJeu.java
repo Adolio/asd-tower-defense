@@ -682,15 +682,15 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         System.err.println("[CLIENT ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
     }
 
-
-
-    public void demanderChangementEquipe(Equipe equipe) throws AucunEmplacementDisponibleException, CanalException
+    
+    public void demanderChangementEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException, CanalException
     {
         try 
         {
             // envoye de la requete de vente
             JSONObject json = new JSONObject();
             json.put("TYPE", JOUEUR_CHANGER_EQUIPE);
+            json.put("ID_JOUEUR", joueur.getId());
             json.put("ID_EQUIPE", equipe.getId());
             
             log("Envoye d'une demande de changement d'équipe");

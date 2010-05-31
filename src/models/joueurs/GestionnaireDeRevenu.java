@@ -12,12 +12,14 @@ import models.joueurs.Joueur;
  */
 public class GestionnaireDeRevenu implements Runnable
 {
+    public static final double POURCENTAGE_NB_PIECES_OR_CREATURE = 0.01;
+    
     private static final long TEMPS_REVENU_CREATURE = 5000; // ms
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();
     private Jeu jeu;
-    
+
     /**
      * Constructeur du gestionnaire des creatures
      */

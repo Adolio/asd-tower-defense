@@ -61,6 +61,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 */
 	private Port port;
 	
+	
+	private Joueur createur;
+	
 	/**
 	 * 
 	 * @param jeuServeur
@@ -142,7 +145,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         }       
 	}
 
-    private void enregistrerClient(Joueur joueur, CanalTCP canal) 
+    private synchronized void enregistrerClient(Joueur joueur, CanalTCP canal) 
         throws JeuEnCoursException, AucunePlaceDisponibleException
 	{
         try
@@ -163,6 +166,10 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     		} 
     		else
     		{
+    		    // le premier joueur qui se connect est admin
+                if(createur == null)
+                    createur = joueur;
+    		    
     		    // Envoye de la réponse
                 canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
     
@@ -706,6 +713,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     { 
         return jeuServeur.getJoueurs();
     }
-    
-    
+
+    public int getIdCreateur()
+    {
+        return createur.getId();
+    }
 }
