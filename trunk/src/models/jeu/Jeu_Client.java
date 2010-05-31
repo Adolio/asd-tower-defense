@@ -139,7 +139,7 @@ public class Jeu_Client extends Jeu
     {
         try
         {
-            clientJeu.demanderChangementEquipe(equipe);
+            clientJeu.demanderChangementEquipe(joueur,equipe);
         }
         catch (CanalException e)
         {

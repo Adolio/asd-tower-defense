@@ -115,8 +115,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 */
 	private void finalStateMachin() throws JSONException
 	{
-		String str = "";
-
 		log("Etat : " + nomEtat(etat));
 
 		try
@@ -283,8 +281,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
             case JOUEUR_CHANGER_EQUIPE:
                 
                 int idEquipe = json.getInt("ID_EQUIPE");
-    
-                send(serveur.changerEquipe(idJoueur,idEquipe));
+                int idJoueur2 = json.getInt("ID_JOUEUR");
+                
+                // joueur identique ou admin
+                if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
+                    send(serveur.changerEquipe(idJoueur2,idEquipe));
+                else
+                    repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
 
                 break;
     		// Action sur une vague

@@ -3,6 +3,7 @@ package models.creatures;
 import java.awt.Rectangle;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
+import models.joueurs.GestionnaireDeRevenu;
 import models.joueurs.Joueur;
 import models.maillage.PathNotFoundException;
 
@@ -249,7 +250,8 @@ public class VagueDeCreatures implements Runnable
                 // le chemin reste nul.
             }
 
-            lanceur.ajouterRevenu(creature.getNbPiecesDOr()*0.1);
+            lanceur.ajouterRevenu(creature.getNbPiecesDOr()
+                    *GestionnaireDeRevenu.POURCENTAGE_NB_PIECES_OR_CREATURE);
             jeu.ajouterCreature(creature);
 
             // temps d'attente entre chaque creature
