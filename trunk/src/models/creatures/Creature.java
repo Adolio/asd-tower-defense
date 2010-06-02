@@ -121,6 +121,17 @@ public abstract class Creature extends Rectangle
 	 */
     private double angle = 0.0;
 	
+    /**
+     * Utiliser pour les clients réseau.
+     * 
+     * Il ne faut pas que les animations (gérées en local) puissent 
+     * blesser les créatures. Donc une maniere rapide de faire 
+     * ceci est de rendre les créatures invincibles pour ne pas 
+     * la détruire chez le client.
+     */
+    private boolean invincible = false;
+
+    
 	/**
 	 * Constructeur de la creature.
 	 * 
@@ -253,6 +264,16 @@ public abstract class Creature extends Rectangle
     public double getCoeffRalentissement()
     {
         return coeffRalentissement;
+    }
+    
+    /**
+     * Permet de rendre une créature invincible ou non
+     * 
+     * @param invincible l'état
+     */
+    public void setInvincible(boolean invincible)
+    {
+        this.invincible = invincible;
     }
     
     /**
@@ -472,7 +493,8 @@ public abstract class Creature extends Rectangle
 		if(!estMorte() && joueur.getEquipe() == equipeCiblee)
 		{
 			// diminution de la sante
-			sante -= degats;
+			if(!invincible)
+			    sante -= degats;
 			
 			// appel des ecouteurs de la creature
 			for(EcouteurDeCreature edc : ecouteursDeCreature)

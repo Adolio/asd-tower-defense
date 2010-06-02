@@ -16,13 +16,13 @@ public class Panel_CreationVague extends JPanel
     
     private Creature[] creatures = new Creature[]
     {
-        TypeDeCreature.getCreature(0),
-        TypeDeCreature.getCreature(1),
-        TypeDeCreature.getCreature(2),
-        TypeDeCreature.getCreature(3),
-        TypeDeCreature.getCreature(4),
-        TypeDeCreature.getCreature(5),
-        TypeDeCreature.getCreature(6)
+        TypeDeCreature.getCreature(0,true),
+        TypeDeCreature.getCreature(1,true),
+        TypeDeCreature.getCreature(2,true),
+        TypeDeCreature.getCreature(3,true),
+        TypeDeCreature.getCreature(4,true),
+        TypeDeCreature.getCreature(5,true),
+        TypeDeCreature.getCreature(6,true)
     };
     
     public Panel_CreationVague(final Jeu jeu, final Joueur cible, 

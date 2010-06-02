@@ -95,7 +95,13 @@ public class Jeu_Client extends Jeu
      */
     public void poserTourDirect(Tour tour)
     {
-        gestionnaireTours.ajouterTour(tour);
+        if(tour != null)
+        {
+            tour.mettreEnJeu();
+            tour.setJeu(this);
+            
+            gestionnaireTours.ajouterTour(tour);
+        }
     }
     
     /**
@@ -103,11 +109,10 @@ public class Jeu_Client extends Jeu
      * 
      * @param idTour l'identificateur de la tour 
      */
-    public void supprimerTourDirect(int idTour)
+    public void supprimerTourDirect(Tour tour)
     {
-        Tour tour = gestionnaireTours.getTour(idTour);
-        
-        gestionnaireTours.supprimerTour(tour);
+        if(tour != null)
+            gestionnaireTours.supprimerTour(tour);
     }
 
     /**
@@ -115,24 +120,22 @@ public class Jeu_Client extends Jeu
      * 
      * @param idTour l'identificateur de la tour 
      */
-    public void ameliorerTourDirect(int idTour)
+    public void ameliorerTourDirect(Tour tour)
     {
-        Tour tour = gestionnaireTours.getTour(idTour);
-
         if(tour != null)
             tour.ameliorer();
     }
 
     public void ajouterCreatureDirect(Creature creature)
     {
-        gestionnaireCreatures.ajouterCreature(creature);
+        if(creature != null)
+            gestionnaireCreatures.ajouterCreature(creature);
     }
 
-    public void supprimerCreatureDirect(int id)
+    public void supprimerCreatureDirect(Creature creature)
     {
-        // FIXME pas optimal
-        Creature creature = gestionnaireCreatures.getCreature(id);
-        gestionnaireCreatures.supprimerCreature(creature);
+        if(creature != null)
+            gestionnaireCreatures.supprimerCreature(creature);
     }
 
     public void changerEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException
@@ -167,5 +170,10 @@ public class Jeu_Client extends Jeu
             EcouteurDeClientJeu edcj)
     {
         clientJeu.setEcouteurDeClientJeu(edcj);
+    }
+
+    public void annoncerDeconnexion() throws CanalException
+    {
+        clientJeu.annoncerDeconnexion();
     }
 }

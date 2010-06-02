@@ -44,7 +44,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean verbeux = true;
+	private static final boolean verbeux = false;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -280,10 +280,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void partieDemarree()
 	{
-	    // Signalisation aux clients que la partie à commencé
-        for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-            joueur.getValue().lancerPartie();
-        
         // Notification des joueurs
         try
         {
@@ -358,13 +354,27 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * 
 	 * @param ID
 	 *            l'ID du joueur à supprimer
+	 * @throws CanalException 
 	 */
-	public synchronized void supprimerJoueur(int ID)
+	public synchronized void supprimerJoueur(int idJoueur)
 	{
-		clients.remove(ID);
+		clients.remove(idJoueur);
 		
-		//setChanged();
-		//notifyObservers(clients);
+		Joueur joueur = jeuServeur.getJoueur(idJoueur);
+		
+		if(joueur != null)
+		{
+		    joueur.getEquipe().retirerJoueur(joueur);
+		    
+		    try {
+                envoyerATous(Protocole.construireMsgJoueursEtat(getJoueurs()));
+            } 
+		    catch (CanalException e){
+                e.printStackTrace();
+            }
+		}
+		else
+		    logErreur("Joueur inconnu");
 	}
 
 	/************************** ACTIONS DES JOUEURS ************************/
@@ -379,7 +389,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 	    
 	    // TODO FROM le terrain
-	    Creature creature = TypeDeCreature.getCreature(typeCreature);
+	    Creature creature = TypeDeCreature.getCreature(typeCreature, false);
     
         log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
                 + creature.getNom());
@@ -587,7 +597,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		log("Le joueur " + IDPlayer + " dit : " + message);
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-			joueur.getValue().envoyerMessageTexte(IDPlayer, message);
+			joueur.getValue().envoyer(Protocole.construireMsgMessage(IDPlayer, message));
 	}
 
 	/**
@@ -606,7 +616,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
 		log("Le joueur " + IDPlayer + " désire envoyer un message à " + IDTo
 				+ "(" + message + ")");
-		clients.get(IDTo).envoyerMessageTexte(IDPlayer, message);
+		clients.get(IDTo).envoyer(Protocole.construireMsgMessage(IDPlayer, message));
 	}
 
 	/**
@@ -717,5 +727,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     public int getIdCreateur()
     {
         return createur.getId();
+    }
+    
+    /**
+     * Permet d'afficher des message log d'erreur
+     * 
+     * @param msg le message
+     */
+    private void logErreur(String msg)
+    {
+        System.out.println("[ERREUR][SERVEUR] "+ msg);
     }
 }

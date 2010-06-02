@@ -489,7 +489,7 @@ public abstract class Tour extends Rectangle
 	 */
 	private Creature getCreatureLaPlusProcheEtAPortee()
 	{
-		// le terrain a bien ete setter ?
+	    // le terrain a bien ete setter ?
 		if (jeu == null)
 			return null;
 
@@ -504,6 +504,7 @@ public abstract class Tour extends Rectangle
         while(eCreatures.hasMoreElements())
         {
             try{
+                
                 creature = eCreatures.nextElement();
                 
         		// si la creature est accessible

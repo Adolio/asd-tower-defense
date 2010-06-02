@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import reseau.CanalException;
 import reseau.jeu.client.EcouteurDeClientJeu;
 import models.animations.Animation;
 import models.creatures.Creature;
@@ -260,7 +261,20 @@ public class Panel_AttendreJoueurs extends JPanel implements
                 
                 jeuServeur.stopperServeurDeJeu();
             }
-
+            else
+            {
+                try
+                {
+                    jeuClient.annoncerDeconnexion();
+                } 
+                catch (CanalException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+            
+            
             // retour
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
@@ -503,7 +517,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
 
     @Override
     public void partieInitialisee()
-    { 
+    {
         switch(jeuClient.getTerrain().getMode())
         {
             case ModeDeJeu.MODE_VERSUS :
