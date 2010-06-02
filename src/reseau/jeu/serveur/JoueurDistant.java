@@ -24,21 +24,41 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private final static int QUITTE = 4;
 	private final static int PARTIE_TERMINEE = 5;
 
-	// Variables d'instance
-	private Thread thread;
-	// Canal de dialogue commun
+	/** 
+	 * Canal de dialogue commun
+	 */
 	private CanalTCP canal;
-	// Canal de mise à jour
+	
+	/**
+	 * Canal de mise à jour
+	 */
 	private CanalTCP canal_update;
+	
+	/**
+	 * identificateur du jeu
+	 */
 	private int idJoueur;
+	
+	/**
+	 * Serveur de jeu
+	 */
 	private ServeurJeu serveur;
+	
+	/**
+	 * Etat (initialement en validation)
+	 */
 	private int etat = VALIDATION;
-	// Message du client;
+	
+	/** 
+	 * Message du client;
+	 */
 	private String str = "";
-	// Offset pour les ports temporaires
+	
+	/** 
+	 * Offset pour les ports temporaires
+	 */
 	private static int offset_port = 5000;
-	// Debug
-	private final static boolean DEBUG = false;
+
 	/**
 	 * Niveau d'affichage des messages
 	 */
@@ -54,15 +74,14 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param serveur
 	 *            Le serveur de jeu associé au joueur.
 	 */
-	protected JoueurDistant(int ID, CanalTCP canal, ServeurJeu serveur)
+	public JoueurDistant(int ID, CanalTCP canal, ServeurJeu serveur)
 	{
-		this.canal = canal;
+		this.canal    = canal;
 		this.idJoueur = ID;
-		this.serveur = serveur;
+		this.serveur  = serveur;
 
 		log("Nouveau client");
-		thread = new Thread(this);
-		thread.start();
+		(new Thread(this)).start();
 	}
 
 	@Override
@@ -70,22 +89,35 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		// En cas de déréférencement de l'objet, on aura tendance à couper le
 		// canal de communication
-		couperLeCanal();
+		fermerCanal();
 	}
 
-	@Override
+	/**
+	 * Tache d'écoute du canal
+	 */
 	public void run()
 	{
 		while (true)
 		{
-			try
-			{
-				finalStateMachin();
-			} catch (JSONException e)
-			{
+			try {
+				actionsEtats();
+			}
+			catch (JSONException e) {
 				log("ERROR : récéption inconnue \"" + str + "\"");
 				e.printStackTrace();
+				return;
 			} 
+			catch (CanalException e) {
+			    log("ERROR : canal erroné \"" + str + "\"");
+                e.printStackTrace();
+                return;
+            } 
+			catch (IOException e)
+            {
+			    log("ERROR : canal erroné \"" + str + "\"");
+			    e.printStackTrace();
+                return;
+            } 
 		}
 	}
 
@@ -95,7 +127,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @return Une chaine de caractère.
 	 * @throws CanalException 
 	 */
-	public String getMessage() throws CanalException
+	private String attendreMessage() throws CanalException
 	{
 		// Récéption du message du client
 		synchronized (canal)
@@ -105,115 +137,133 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 			return str;
 		}
 	}
-
+	
 	/**
 	 * Machine d'état du client
 	 * 
 	 * @throws JSONException
 	 *             Erreur levée si la chaine de caractère reçu du serveur n'est
 	 *             pas un format JSON
+	 * @throws CanalException 
+	 * @throws IOException 
 	 */
-	private void finalStateMachin() throws JSONException
+	private void actionsEtats() throws JSONException, CanalException, IOException
 	{
-		log("Etat : " + nomEtat(etat));
+		log("Etat : " + getNomEtat(etat));
 
-		try
-        {
-    		switch (etat)
-    		{
-    		case VALIDATION:
-    			// Envoi de la version du serveur au client
-    			send(ServeurJeu.VERSION);
-    			// Réservation du port pour le canal temporaire
-    			Port port = new Port(offset_port++);
+		switch (etat)
+    	{
+        	case VALIDATION: 
+        	    actionsEtatValidation();                   
+        		break;
     			
-    			try
-                {
-                    port.reserver();
-                    
-                    // Envoi du numéro de port utilisé
-                    send(port.getNumeroPort());
-                    // Création du canal de mise à jour et attente de la connexion
-                    log("Création du canal de synchronisation");
-                    try
-                    {
-                        canal_update = new CanalTCP(port, DEBUG);
-                    
-                        log("Canal crée");
-                        // Passage en état EN_ATTENTE
-                       
-                        envoyerSurCanalMAJ(Protocole.construireMsgJoueursEtat(serveur.getJoueurs()));
-                        
-                        etat = EN_ATTENTE; 
-                    } 
-                    catch (CanalException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-    			catch (IOException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        	case EN_ATTENTE:
+        		actionsEtatEnAttente();
+        		break;
     			
-    			break;
-    		case EN_ATTENTE:
-    			// Le thread se met en attente sur le serveur de jeu
-    			/*
-    			 * try // FIXME { serveur.wait(); } catch (InterruptedException e) {
-    			 * e.printStackTrace(); }
-    			 */
-    			// Début de la partie
-    			etat = EN_JEU;
-    			break;
-    		case EN_JEU:
-    			// Interprétation de la chaine
-    			log("Attente d'un message sur le canal global");
-    			parse(getMessage());
-    			break;
-    		case EN_PAUSE:
-    			// La partie continue
-    			etat = EN_JEU;
-    			break;
-    		case PARTIE_TERMINEE:
-    			// TODO
-    
-    			break;
-    		case QUITTE:
-    			log("Terminaison de la liaison avec le client");
-    			// On clos la liaison avec le client
-    			couperLeCanal();
-    			// On supprime le joueur distant de la liste des clients
-    			desenregistrement();
-    			break;
-    		default:
-    			break;
-    		}
-    		
-        } 
-		catch (CanalException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        	case EN_JEU:
+        	    actionsEtatEnJeu();
+        	    break;
+ 
+        	default:
+        		logErreur("Etat inconnu");
+		} 
 	}
 
-	/**
+	private void actionsEtatValidation() throws CanalException, IOException
+    {
+	    // Envoi de la version du serveur au client
+        envoyer(ServeurJeu.VERSION);
+        
+        // Réservation du port pour le canal temporaire
+        Port port = new Port(offset_port++);
+        port.reserver();
+        
+        // Envoi du numéro de port utilisé
+        envoyer(port.getNumeroPort());
+        
+        // Création du canal de mise à jour et attente de la connexion
+        log("Création du canal de synchronisation");
+        
+        // Création du canal
+        canal_update = new CanalTCP(port, verbeux);
+    
+        log("Canal crée");
+        
+        // envoie de l'etat de la partie
+        envoyerSurCanalMAJ(Protocole.construireMsgJoueursEtat(serveur.getJoueurs()));
+        
+        // Passage en état EN_ATTENTE
+        etat = EN_ATTENTE; 
+    }
+
+    /**
+	 * Attente 
+	 * 
+	 * @throws JSONException
+	 * @throws CanalException
+	 */
+	private void actionsEtatEnAttente() throws JSONException, CanalException
+    {
+	    // Attente d'un message
+        JSONObject json = new JSONObject(attendreMessage());
+        
+        // Extraction du type du message
+        int type = json.getInt("TYPE");
+        log("Récéption d'un message de type " + type + " dans l'état : "+ etat);
+        
+        switch (type)
+        {
+    	    // Changement d'equipe
+            case JOUEUR_CHANGER_EQUIPE:
+                
+                int idEquipe = json.getInt("ID_EQUIPE");
+                int idJoueur2 = json.getInt("ID_JOUEUR");
+                
+                // joueur identique ou admin
+                if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
+                    envoyer(serveur.changerEquipe(idJoueur2,idEquipe));
+                else
+                    repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
+        
+                break;
+            
+             // Changement d'equipe
+            case JOUEUR_PRET:
+                
+                log("Entre en jeu");
+                etat = EN_JEU;
+                break; 
+                
+            // Changement d'equipe
+            case JOUEUR_DECONNEXION:
+                
+                log("Terminaison de la liaison avec le client");
+                
+                // On clos la liaison avec le client
+                fermerCanal();
+                
+                // On supprime le joueur distant de la liste des clients
+                desenregistrement();
+                
+                break;      
+        }
+    }
+
+    /**
 	 * Envoi un message au client
 	 * 
 	 * @param msg
 	 *            Le message à envoyer.
 	 * @throws CanalException 
 	 */
-	public synchronized void send(final String msg) throws CanalException
+	public synchronized void envoyer(final String msg) throws CanalException
 	{
 		log("Envoi du String " + msg);
 		canal.envoyerString(msg);
 	}
 
-	public void send(final int msg) throws CanalException
+	public synchronized void envoyer(final int msg) throws CanalException
 	{
 		synchronized (canal)
 		{
@@ -222,143 +272,122 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		}
 	}
 
-	private void parse(String str) throws JSONException
+	private void actionsEtatEnJeu() throws JSONException, CanalException
 	{
-	    try
-        {
-    		// Interprétation de la chaine JSON
-    		JSONObject json = new JSONObject(str);
-    		// Extraction du type du message
-    		int type = json.getInt("TYPE");
-    		log("Récéption d'un message de type " + type);
-    		int code;
-    		switch (type)
-    		{
+		// Attente d'un message
+		JSONObject json = new JSONObject(attendreMessage());
+		
+		// Extraction du type du message
+		int type = json.getInt("TYPE");
+		
+		log("Récéption d'un message de type " + type + " dans l'état : "+ etat);
+		
+		switch (type)
+		{
     		// Récéption d'un message texte
     		case MSG:
-    			log("Message reçu de " + idJoueur);
-    			// Extraction du message
-    			JSONObject message = json.getJSONObject("CONTENU");
-    			// Extraction de la cible du message
-    			int cible = message.getInt("CIBLE");
-    			log("Message pour " + cible);
-    			// Extraction du texte du message
-    			String text = message.getString("MESSAGE");
-    			log("Texte : " + text);
-    			if (cible == A_TOUS)
-    			{
-    				// On broadcast le message à tous les clients
-    				serveur.direATous(idJoueur, text);
-    			} else
-    			{
-    				// On envoi un message à un client en particulier
-    				serveur.direAuClient(idJoueur, cible, text);
-    			}
+    		    receptionMsgDemandeEnvoieMessage(json);
     			break;
-    		// Changement d'état d'un joueur
-    		case JOUEUR_ETAT:
-    			// Récupération du nouvel état
-    			int nouvelEtat = json.getInt("ETAT");
-    			// Le le nouvelEtat n'est pas une commanque QUITTER
-    			if (nouvelEtat == PARTIE_QUITTER)
-    			{
-    				couperLeCanal();
-    				desenregistrement();
-    			} 
-    			else
-    			{
-    				// TODO
-    			    // Appelle de la fonction de gestion des états et récupération
-    				// du
-    				// code d'état
-    				//code = serveur.changementEtatJoueur(ID, nouvelEtat);
-    				// Réponse du code d'état au client
-    				//repondreEtat(JOUEUR_ETAT, code);
-    			}
-    			break;
-    			
-    		// Changement d'equipe
-            case JOUEUR_CHANGER_EQUIPE:
-                
-                int idEquipe = json.getInt("ID_EQUIPE");
-                int idJoueur2 = json.getInt("ID_JOUEUR");
-                
-                // joueur identique ou admin
-                if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
-                    send(serveur.changerEquipe(idJoueur2,idEquipe));
-                else
-                    repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
-
-                break;
+    		
     		// Action sur une vague
     		case VAGUE:
-    			// Récupération du type de vague
-    		    int nbCreatures = json.getInt("NB_CREATURES");
-    			int typeCreature = json.getInt("TYPE_CREATURE");
-    			
-    			// Demande de lancement d'une vague
-    			code = serveur.lancerVague(idJoueur, nbCreatures, typeCreature);
-    			
-    			// Retour au client de l'information
-    			repondreEtat(VAGUE, code);
+    		    receptionMsgDemandeLancementVague(json);
     			break;
-    			
-    		// Changement d'état d'une partie
-    		/* TODO 
-    		 case PARTIE_ETAT:
-    			// Récupération du nouvel état
-    			int nouvelEtatPartie = json.getInt("ETAT");
-    			// Envoi de l'information au serveur principal
-    			code = serveur.changementEtatPartie(ID, nouvelEtatPartie);
-    			// Retour du code au client
-    			repondreEtat(PARTIE_ETAT, code);
-    			break;*/
     			
     		// Requête de création d'une tour
     		case TOUR_AJOUT:
-    			// Extraction des coordonnées
-    			int x = json.getInt("X");
-    			int y = json.getInt("Y");
-    			// Extraction du type de tour
-    			int typeTour = json.getInt("TYPE_TOUR");
-    			// Demande d'ajout au serveur
-    			code = serveur.poserTour(idJoueur, typeTour, x, y);
-    			// Retour au client du code
-    			repondreEtat(TOUR_AJOUT, code);
+    		    receptionMsgDemandeAjoutTour(json);
     			break;
+    			
     		// Requête d'amélioration d'une tour
     		case TOUR_AMELIORATION:
-    			// Récupération de la tour cible
-    			int tourCible = json.getInt("ID_TOWER");
-    			// Demande au serveur de l'opération
-    			code = serveur.ameliorerTour(idJoueur, tourCible);
-    			// Retour au client de code
-    			repondreEtat(TOUR_AMELIORATION, code);
+    		    receptionMsgDemandeAmeliorerTour(json);
     			break;
+    			
     		// Requete de suppresion d'une tour
     		case TOUR_SUPRESSION:
-    			// Récupération de la tour cible
-    			int tourCibleDel = json.getInt("ID_TOWER");
-    			// Demande au serveur de l'opération
-    			code = serveur.supprimerTour(idJoueur, tourCibleDel);
-    			// Retour au client de code
-    			repondreEtat(TOUR_SUPRESSION, code);
+    			receptionMsgDemandeSuppressionTour(json);
     			break;
+    			
     		default:
-    			log("Type de message inconnu : " + type);
+    			logErreur("Type de message inconnu : " + type);
     			// Signaler au client qu'il envoi quelque chose d'incorecte
     			repondreEtat(ERREUR, ERREUR);
     			break;
     		}
-    		
-        } catch (CanalException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 	}
 
-	/**
+	private void receptionMsgDemandeSuppressionTour(JSONObject json) throws JSONException, CanalException
+    {
+	    // Récupération de la tour cible
+        int tourCibleDel = json.getInt("ID_TOWER");
+        // Demande au serveur de l'opération
+        int code = serveur.supprimerTour(idJoueur, tourCibleDel);
+        // Retour au client de code
+        repondreEtat(TOUR_SUPRESSION, code);
+    }
+
+    private void receptionMsgDemandeAmeliorerTour(JSONObject json) throws JSONException, CanalException
+    {
+	    // Récupération de la tour cible
+        int tourCible = json.getInt("ID_TOWER");
+        // Demande au serveur de l'opération
+        int code = serveur.ameliorerTour(idJoueur, tourCible);
+        // Retour au client de code
+        repondreEtat(TOUR_AMELIORATION, code);
+    }
+
+    private void receptionMsgDemandeAjoutTour(JSONObject json) throws JSONException, CanalException
+    {
+        // Extraction des coordonnées
+        int x = json.getInt("X");
+        int y = json.getInt("Y");
+        // Extraction du type de tour
+        int typeTour = json.getInt("TYPE_TOUR");
+        // Demande d'ajout au serveur
+        int code = serveur.poserTour(idJoueur, typeTour, x, y);
+        // Retour au client du code
+        repondreEtat(TOUR_AJOUT, code); 
+    }
+
+    private void receptionMsgDemandeLancementVague(JSONObject json) throws JSONException, CanalException
+    {
+	    // Récupération du type de vague
+        int nbCreatures = json.getInt("NB_CREATURES");
+        int typeCreature = json.getInt("TYPE_CREATURE");
+        // Demande de lancement d'une vague
+        int code = serveur.lancerVague(idJoueur, nbCreatures, typeCreature);  
+        // Retour au client de l'information
+        repondreEtat(VAGUE, code);
+    }
+
+    private void receptionMsgDemandeEnvoieMessage(JSONObject json) throws JSONException, CanalException
+    {
+	    log("Message reçu de " + idJoueur);
+	    
+        // Extraction du message
+        JSONObject message = json.getJSONObject("CONTENU");
+        
+        // Extraction de la cible du message
+        int cible = message.getInt("CIBLE");
+        log("Message pour " + cible);
+        
+        // Extraction du texte du message
+        String text = message.getString("MESSAGE");
+        
+        log("Texte : " + text);
+        
+        if (cible == A_TOUS) {
+            // On broadcast le message à tous les clients
+            serveur.direATous(idJoueur, text);
+        } 
+        else {
+            // On envoi un message à un client en particulier
+            serveur.direAuClient(idJoueur, cible, text);
+        }
+    }
+
+    /**
 	 * Répond au client un code d'état pour une réponse donnée
 	 * 
 	 * @param player
@@ -376,114 +405,23 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		message.put("TYPE", type);
 		message.put("STATUS", code);
 		// Envoi de la structure à travers le réseau
-		send(message.toString());
-	}
-
-	/**
-	 * Signal un changement d'état d'un joueur quelconque au joueur géré par le
-	 * module.
-	 * 
-	 * @param pseudoFrom
-	 * @param nouvelEtat
-	 * @throws JSONException 
-	 * @throws CanalException 
-	 */
-	public void signalerNouvelEtat(String pseudoFrom, int nouvelEtat) throws JSONException, CanalException
-	{
-		// Message JSON
-		JSONObject message = new JSONObject();
-	
-		// Construction de la structure JSON
-		message.put("TYPE", JOUEUR_ETAT);
-		message.put("PSEUDO", pseudoFrom);
-		message.put("ETAT", nouvelEtat);
-		// Envoi de la structure à travers le réseau
-		send(message.toString());
-	}
-
-	/**
-	 * Envoi un message texte au joueur géré par le module.
-	 * 
-	 * @param IDFrom
-	 * @param contenu
-	 * @throws JSONException 
-	 * @throws CanalException 
-	 */
-	public void envoyerMessageTexte(int IDFrom, String contenu) throws JSONException, CanalException
-	{
-		// Message JSON
-		JSONObject message = new JSONObject();
-	
-		// Construction de la structure JSON
-		message.put("TYPE", MSG);
-		message.put("PSEUDO", IDFrom);
-		message.put("MESSAGE", contenu);
-		// Envoi de la structure à travers le réseau
-		send(message.toString());	
-	}
-
-	public void afficherObjet(int ID_Objet, int x, int y, int etat) 
-	    throws JSONException, CanalException
-	{
-		// Message JSON
-		JSONObject message = new JSONObject();
-		
-		// Construction de la structure JSON
-		message.put("TYPE", OBJET);
-		message.put("OBJECT", ID_Objet);
-		message.put("ETAT", etat);
-		message.put("X", x);
-		message.put("Y", y);
-		// Envoi de la structure à travers le réseau
-		send(message.toString());
+		envoyer(message.toString());
 	}
 
 	/**
 	 * Termine la liaison avec le client
 	 * @throws CanalException 
 	 */
-	public void couperLeCanal() throws CanalException
+	private void fermerCanal() throws CanalException
 	{
 		canal.fermer();
 	}
-
-	@Override
-	public String toString()
-	{
-		// FIXME
-		return "[CLIENT]\n" + "ID : " + idJoueur + "\n" + "Pseudo : " + "unknown"
-				+ "\n" + "IP : " + canal.getIpClient() + "\n" + "Etat : "
-				+ nomEtat(etat);
-	}
-
-	private void log(String msg)
-	{
-		if(DEBUG)
-		    ServeurJeu.log("[JOUEUR " + idJoueur + "]" + msg);
-	}
-
+	
 	private void desenregistrement()
-	{
-		log("Suppression du joueur " + idJoueur);
-		serveur.supprimerJoueur(idJoueur);
-	}
-
-	/**
-	 * Met le client en pause
-	 */
-	public void mettreEnPause()
-	{
-		etat = EN_PAUSE;
-	}
-
-	/**
-	 * Reprend la partie
-	 */
-	public void lancerPartie()
-	{
-		// Mise en place de l'état de la partie
-		etat = EN_JEU;
-	}
+    {
+        log("Suppression du joueur");
+        serveur.supprimerJoueur(idJoueur);
+    }
 
 	/**
 	 * Donne une représentation sous forme de chaine de caractère de l'état
@@ -493,7 +431,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 *            L'état actuel du client
 	 * @return Une chaine de caractère
 	 */
-	public static String nomEtat(int etat)
+	private static String getNomEtat(int etat)
 	{
 		switch (etat)
 		{
@@ -514,11 +452,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		}
 	}
 
-	public void partieTerminee()
-	{
-		etat = PARTIE_TERMINEE;
-	}
-
 	/**
 	 * Envoi sur le canal de mise à jour le message en paramêtre
 	 * 
@@ -526,12 +459,33 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 *            Le message à envoyer
 	 * @throws CanalException 
 	 */
-	public void envoyerSurCanalMAJ(String message) 
+	public synchronized void envoyerSurCanalMAJ(String message) 
 	    throws CanalException
 	{
-		log("Broadcast "+message); //FIXME supprimer pour la version production
-		
 		if(canal_update != null)
 		    canal_update.envoyerString(message);
+		else
+		    logErreur("Canal_update null");
 	}
+	
+	/**
+	 * Permet d'afficher une message log
+	 * 
+	 * @param msg le message
+	 */
+	private void log(String msg)
+    {
+        if(verbeux)
+            ServeurJeu.log("[JOUEUR " + idJoueur + "]" + msg);
+    }
+	
+    /**
+     * Permet d'afficher des message log d'erreur
+     * 
+     * @param msg le message
+     */
+    private void logErreur(String msg)
+    {
+        System.err.println("[JOUEUR " + idJoueur + "]" + msg);
+    }
 }

@@ -10,9 +10,7 @@ import reseau.jeu.serveur.Protocole;
 import models.animations.GainDePiecesOr;
 import models.creatures.*;
 import models.jeu.Jeu_Client;
-import models.joueurs.EmplacementJoueur;
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
+import models.joueurs.*;
 import models.terrains.Terrain;
 import models.tours.*;
 import exceptions.*;
@@ -51,8 +49,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      */
     private EcouteurDeClientJeu edcj;
     
-    
-    
     /**
      * Constructeur
      * 
@@ -89,16 +85,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         catch (JSONException e1){
             e1.printStackTrace(); 
         } 
-
-        // FIXME
-        /*
-        try{
-            jeu.ajouterJoueur(joueur);  
-        } 
-        catch (JeuEnCoursException e){e.printStackTrace();} 
-        catch (AucunePlaceDisponibleException e){e.printStackTrace();}
-        */
-        
         
         // reception de la version du serveur
         String version = canalPingPong.recevoirString();
@@ -114,8 +100,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         (new Thread(this)).start();
     }
 	
-	
-
     /**
 	 * Envoyer un message chat
 	 * 
@@ -296,19 +280,20 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         try
         {
             int typeDeCreature = message.getInt("TYPE_TOUR");
-            
             tour = TypeDeTour.getTour(typeDeCreature);
             
             // initialisation des tours
             tour.x = message.getInt("X");
             tour.y = message.getInt("Y");
             tour.setId(message.getInt("ID_TOUR"));
+            int idJoueur = message.getInt("ID_PROPRIETAIRE");
+            tour.setProprietaire(jeu.getJoueur(idJoueur));
             
             jeu.poserTourDirect(tour);  
         } 
         catch (TypeDeTourInvalideException e)
         {
-            logErreur("Tour inconnue");
+            logErreur("Ajout d'une tour : Tour de type inconnu");
         }
 	}
 
@@ -318,21 +303,24 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	public void run() 
 	{
 	    while(true)
-            try
-            {
+	    {
+            try {
                 attendreMessageCanalAsynchrone();
             } 
-	        catch (CanalException e)
-            {
+	        catch (CanalException e) {
+                e.printStackTrace();
+                return;
+            } 
+	        catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
+	    }
 	}
 
-	private void attendreMessageCanalAsynchrone() throws CanalException
+	private void attendreMessageCanalAsynchrone() throws CanalException, JSONException
     {
-	    try{  
-    	    
+	   
 	        //log("Attente d'un String sur le canal 2...");
             
     	    JSONObject resultat = new JSONObject(canalAsynchrone.recevoirString());
@@ -389,10 +377,6 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 default :
                     logErreur("Réception d'un objet de type : Inconnu.");      
             }
-        } 
-        catch (JSONException jsone) {
-            jsone.printStackTrace();
-        }
     }
 
     private void receptionEtatJoueurs(JSONObject resultat) throws JSONException
@@ -436,20 +420,34 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             edcj.joueursMisAJour();
     }
 
-    private void receptionEtatPartie(JSONObject resultat) throws JSONException
+    private void receptionEtatPartie(JSONObject resultat) throws JSONException, CanalException
     {
         switch(resultat.getInt("ETAT"))
         {
             case PARTIE_INITIALISEE :
-                log("Partie initialisee");
+                
+                log("Partie initialisée");
                 jeu.initialiser();
+                
+                // envoye de la requete d'ajout
+                JSONObject json = new JSONObject();
+                json.put("TYPE", JOUEUR_PRET);
+
+                canalPingPong.envoyerString(json.toString());
+ 
                 break;
             
             case PARTIE_LANCEE :
+                
                 jeu.demarrer();
                 log("Partie lancee");
                 break;
+                
+            default :
+                logErreur("Etat d'une partie : Etat inconnu");
         }
+        
+        
     }
 
     private void receptionCreatureArrivee(JSONObject message) throws JSONException
@@ -457,13 +455,18 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	    log("Réception de l'arrivée d'une créature");
 	    
         int idCreature = message.getInt("ID_CREATURE");
-        jeu.supprimerCreatureDirect(idCreature);
+        
+        Creature creature = jeu.getCreature(idCreature);
+        
+        if(creature != null)
+            jeu.supprimerCreatureDirect(creature);
+        else
+            logErreur("Créature arrivée : Créature inconnue");      
     }
 
     private void receptionInitialisationJoueur(JSONObject message) throws JSONException, AucunEmplacementDisponibleException
     {
 	    log("Réception des donnees d'initialisation du joueur");
-        
         
         switch(message.getInt("STATUS"))
         {
@@ -497,23 +500,23 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                             edcj.joueurInitialise();  
                     }
                     else
-                        logErreur("Equipe ou emplacementJoueur inconnu");
+                        logErreur("Initialisation du joueur : Equipe ou emplacementJoueur inconnu");
                     
                 } 
                 catch (IOException e) {
-                    logErreur("Terrain inconnu");
+                    logErreur("Initialisation du joueur : Terrain inconnu");
                 } 
                 catch (ClassNotFoundException e) {
-                    logErreur(e.getMessage());
+                    logErreur("Initialisation du joueur : "+e.getMessage());
                 }
                 catch (ClassCastException e)
                 {
-                    logErreur("Format de terrain erroné");
+                    logErreur("Initialisation du joueur : Format de terrain erroné");
                 } 
                 catch (EmplacementOccupeException e)
                 {
                     // ca n'arrivera pas, l'info vient du serveur
-                    logErreur("Emplacement occupé");
+                    logErreur("Initialisation du joueur : Emplacement occupé");
                 }
  
                 break;
@@ -548,7 +551,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             joueur.getEquipe().setNbViesRestantes(nbViesRestantes);
         }
         else
-            logErreur("Joueur inconnu (id:"+idJoueur+")");
+            logErreur("Etat d'un joueur : Joueur inconnu (id:"+idJoueur+")");
     }
 
     /**
@@ -561,7 +564,13 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         log("Réception de l'amélioration d'une tour");
         
         int idTour = message.getInt("ID_TOUR");
-        jeu.ameliorerTourDirect(idTour);  
+        
+        Tour tour = jeu.getTour(idTour);
+        
+        if(tour != null)
+            jeu.ameliorerTourDirect(tour); 
+        else
+            logErreur("Amélioration d'une tour : Tour inconnue");
     }
 
     /**
@@ -574,7 +583,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         log("Réception de la suppression d'une tour");
         
         int idTour = message.getInt("ID_TOUR");
-        jeu.supprimerTourDirect(idTour); 
+        Tour tour = jeu.getTour(idTour);
+        
+        if(tour != null)
+            jeu.supprimerTourDirect(tour); 
+        else
+            logErreur("Vente d'une tour : Tour inconnue");
     }
     
     /**
@@ -588,6 +602,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         int id = message.getInt("ID_CREATURE");
         int typeCreature = message.getInt("TYPE_CREATURE");
+        int idEquipe = message.getInt("ID_EQUIPE_CIBLEE");
         
         int x = message.getInt("X");
         int y = message.getInt("Y");
@@ -595,25 +610,24 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         double vitesse = message.getDouble("VITESSE");
         
-        Creature creature = TypeDeCreature.getCreature(typeCreature);
-        
+        Creature creature = TypeDeCreature.getCreature(typeCreature, true);
+        Equipe equipeCiblee = jeu.getEquipe(idEquipe);
+            
         if(creature != null)
         {
             creature.setId(id);
             creature.setX(x);
             creature.setY(y);
+            creature.setEquipeCiblee(equipeCiblee);
             
             creature.setSanteMax(santeMax);
             creature.setNbPiecesDOr(nbPiecesDOr);
             creature.setVitesse(vitesse);
             
-            
             jeu.ajouterCreatureDirect(creature);
         }
         else
-        {
-            logErreur("Créature inconnue");
-        }
+            logErreur("Ajout d'une créature : Créature de type inconnu");
     }
     
     /**
@@ -639,6 +653,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             creature.setSante(sante);
             creature.setAngle(angle);
         }
+        else
+           logErreur("Etat d'une créature : Créature inconnue");
     }
     
     /**
@@ -650,15 +666,17 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     {
         int id = message.getInt("ID_CREATURE");
         
-        // TODO A REVOIR... pas sur que ca doit ici.
         Creature creature = jeu.getCreature(id);
-        
         if(creature != null)
+        {
             jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                                                 (int)creature.getCenterY(),
                                                 creature.getNbPiecesDOr()));
         
-        jeu.supprimerCreatureDirect(id); 
+            jeu.supprimerCreatureDirect(creature);
+        }
+        else
+            logErreur("Suppression d'une créature : Créature inconnue");
     }
     
     /**
@@ -713,5 +731,33 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     public void setEcouteurDeClientJeu(EcouteurDeClientJeu edcj)
     {
         this.edcj = edcj;
+    }
+
+    public void annoncerDeconnexion() throws CanalException
+    {
+       try{
+        // envoye de la requete de vente
+        JSONObject json = new JSONObject();
+        json.put("TYPE", JOUEUR_DECONNEXION);
+        
+        log("Envoye d'une deconnexion");
+            
+        canalPingPong.envoyerString(json.toString());
+   
+        
+        
+        
+        /*
+        String resultat = canalPingPong.recevoirString();
+        JSONObject resultatJSON = new JSONObject(resultat);
+        switch(resultatJSON.getInt("STATUS"))
+        {
+            case PAS_DE_PLACE :
+                throw new AucunEmplacementDisponibleException("Pas de place dans cette équipe");
+        }*/
+        } 
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

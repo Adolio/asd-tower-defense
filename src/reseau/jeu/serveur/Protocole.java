@@ -155,7 +155,7 @@ public class Protocole implements ConstantesServeurJeu
         try
         {
             msg.put("TYPE", TOUR_AJOUT);
-            msg.put("JOUEUR", tour.getPrioprietaire().getId());
+            msg.put("ID_PROPRIETAIRE", tour.getPrioprietaire().getId());
             msg.put("ID_TOUR", tour.getId());
             msg.put("X", tour.x);
             msg.put("Y", tour.y);
@@ -232,7 +232,7 @@ public class Protocole implements ConstantesServeurJeu
             msg.put("TYPE", CREATURE_AJOUT);
             msg.put("TYPE_CREATURE", TypeDeCreature.getTypeCreature(creature));
             msg.put("ID_CREATURE", creature.getId());
-             
+            msg.put("ID_EQUIPE_CIBLEE", creature.getEquipeCiblee().getId());
             msg.put("X", creature.x);
             msg.put("Y", creature.y);
             msg.put("SANTE_MAX", creature.getSanteMax());
@@ -356,6 +356,24 @@ public class Protocole implements ConstantesServeurJeu
         try {
             msg.put("TYPE", CREATURE_ARRIVEE);
             msg.put("ID_CREATURE", creature.getId());
+        }
+        catch (JSONException jsone){
+            jsone.printStackTrace();
+        }
+        
+        return msg.toString();
+    }
+    
+    
+    public static String construireMsgMessage(int idAuteur, String contenu)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try {
+            // Construction de la structure JSON
+            msg.put("TYPE", MSG);
+            msg.put("ID_JOUEUR", idAuteur);
+            msg.put("MESSAGE", contenu);
         }
         catch (JSONException jsone){
             jsone.printStackTrace();

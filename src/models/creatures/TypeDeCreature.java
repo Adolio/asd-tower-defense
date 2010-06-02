@@ -18,30 +18,41 @@ public class TypeDeCreature
     private static final int ELEPHANT        = 5;
     private static final int GRANDE_ARAIGNEE = 6;
 
-	public static Creature getCreature(int typeDeCreature)
+	public static Creature getCreature(int typeDeCreature, boolean invincible)
 	{
 	    double vitesse = 20;
 	    
+	    Creature c = null;
 	    switch(typeDeCreature)
         {
             case MOUTON :
-                return new Mouton(100, 5, vitesse);
+                c = new Mouton(100, 5, vitesse); 
+                break;
             case ARAIGNEE : 
-                return new Araignee(200, 10, vitesse);
+                c = new Araignee(200, 10, vitesse);
+                break;
             case PIGEON :
-                return new Pigeon(300, 15, vitesse);     
+                c = new Pigeon(300, 15, vitesse);    
+                break;
             case AIGLE : 
-                return new Aigle(600, 30, vitesse);  
+                c = new Aigle(600, 30, vitesse); 
+                break;
             case RHINOCEROS :
-                return new Rhinoceros(1200, 60, vitesse);
+                c = new Rhinoceros(1200, 60, vitesse);
+                break;
             case ELEPHANT : 
-                return new Elephant(2000, 100, vitesse);
+                c = new Elephant(2000, 100, vitesse);
+                break;
             case GRANDE_ARAIGNEE :
-                return new GrandeAraignee(3000, 150, vitesse);
-                
+                c = new GrandeAraignee(3000, 150, vitesse); 
+                break;
             default :
                 return null; // TODO erreur
         }
+	    
+	    c.setInvincible(invincible);
+	    
+        return c;
 	}
 
     public static int getTypeCreature(Creature creature)

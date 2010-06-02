@@ -102,6 +102,16 @@ public interface ConstantesServeurJeu
      */
     public final int JOUEURS_ETAT = 304;
     
+    /**
+     * Type de message : un message texte
+     */
+    public final int JOUEUR_PRET = 305;
+    
+    /**
+     * Type de message : un message texte
+     */
+    public final int JOUEUR_DECONNEXION = 306;
+    
 	/**
      * Type de message : un message texte
      */

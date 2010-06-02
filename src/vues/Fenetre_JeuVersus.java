@@ -246,6 +246,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         //-- demarrage du jeu --
         //----------------------
 		// TODO faire un 5.. 4.. 3.. 2.. 1..
+		jeu.demarrer();
 		jeu.setEcouteurDeJeu(this);
 	
 		//---------------------------------------
