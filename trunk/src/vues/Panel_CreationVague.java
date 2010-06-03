@@ -2,6 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import exceptions.ArgentInsuffisantException;
@@ -13,7 +14,7 @@ public class Panel_CreationVague extends JPanel
 {
     private static final long serialVersionUID = 1L;
     private Panel_Table tb = new Panel_Table();
-    
+   
     private Creature[] creatures = new Creature[]
     {
         TypeDeCreature.getCreature(0,true),
@@ -25,12 +26,17 @@ public class Panel_CreationVague extends JPanel
         TypeDeCreature.getCreature(6,true)
     };
     
+    Jeu jeu;
+    
+    private JButton[] bLancers = new JButton[creatures.length];
+    private JComboBox[] cbNbCreatures = new JComboBox[creatures.length];
+    
+    
     public Panel_CreationVague(final Jeu jeu, final Joueur cible, 
             final EcouteurDeLanceurDeVagues edlv)                          
     {
-        //setOpaque(false);
-        //tb.setOpaque(false);
-        setBackground(LookInterface.COULEUR_DE_FOND_2);
+        this.jeu = jeu;
+        
         tb.setOpaque(false);
         
         tb.add(new JLabel("Créature"),0,0);
@@ -44,6 +50,8 @@ public class Panel_CreationVague extends JPanel
             ImageIcon image = new ImageIcon(creature.getImage());
 
             final JComboBox cbNbCreatures = new JComboBox();
+            
+            this.cbNbCreatures[i] = cbNbCreatures;
             cbNbCreatures.addItem("1");
             cbNbCreatures.addItem("2");
             cbNbCreatures.addItem("3");
@@ -53,6 +61,15 @@ public class Panel_CreationVague extends JPanel
             cbNbCreatures.addItem("15");
             cbNbCreatures.addItem("20");
             cbNbCreatures.addItem("30");
+            
+            cbNbCreatures.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                   miseAJour();
+                }
+            });
             
             JPanel p = new JPanel(new FlowLayout());
             p.setOpaque(false);
@@ -64,6 +81,7 @@ public class Panel_CreationVague extends JPanel
             tb.add(new JLabel(""+creature.getNbPiecesDOr()),1,i+1);    
             
             JButton bLancer = new JButton("Lancer");
+            bLancers[i] = bLancer;
             tb.add(bLancer,3,i+1);
             bLancer.setBackground(LookInterface.COULEUR_BOUTON);
             bLancer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
@@ -89,5 +107,19 @@ public class Panel_CreationVague extends JPanel
         }
         
         add(tb);
+    }
+    
+    public void miseAJour()
+    {
+       int nbPiecesDOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
+       JButton bouton;
+       for(int i=0; i < bLancers.length; i++)
+       {
+           bouton = bLancers[i];
+           
+           int nbCreatures = Integer.parseInt((String) cbNbCreatures[i].getSelectedItem());
+           
+           bouton.setEnabled(nbPiecesDOr >= creatures[i].getNbPiecesDOr() * nbCreatures);
+       }
     }
 }

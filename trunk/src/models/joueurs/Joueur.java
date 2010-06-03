@@ -267,6 +267,10 @@ public class Joueur
         revenu += somme;
     }
     
+    public void setRevenu(double revenu)
+    {
+        this.revenu = revenu;
+    }
     
     /**
      * Permet de donner le revenu au joueur
@@ -277,4 +281,6 @@ public class Joueur
     {
         setNbPiecesDOr((int) (getNbPiecesDOr() + revenu * (temps / 1000.0)));
     }
+
+    
 }

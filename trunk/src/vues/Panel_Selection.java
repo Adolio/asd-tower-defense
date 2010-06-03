@@ -40,7 +40,7 @@ public class Panel_Selection extends JPanel
 		
 		setOpaque(false);
 		
-		setPreferredSize(new Dimension(280,0));
+		setPreferredSize(new Dimension(280,300));
 		//setBackground(LookInterface.COULEUR_DE_FOND_2);
 		
 		JLabel titre = new JLabel("Information sur la selection");
@@ -131,5 +131,12 @@ public class Panel_Selection extends JPanel
     public Panel_InfoCreature getPanelInfoCreature()
     {
         return pInfoCreature;
+    }
+    
+    
+    public void deselection()
+    {
+        pInfoTour.setVisible(false);
+        pInfoCreature.setVisible(false);
     }
 }

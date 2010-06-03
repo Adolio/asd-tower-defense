@@ -27,6 +27,15 @@ public class Panel_Table extends JPanel
 	}
 
 	/**
+     * Constructor without params
+     */
+    public Panel_Table(GridBagConstraints ct)
+    {
+        this();
+        this.ct = ct;
+    }
+	
+	/**
 	 * add
 	 * 
 	 * @param cp1
@@ -43,4 +52,21 @@ public class Panel_Table extends JPanel
     		add(comp);
 		}
 	}
+	
+	/**
+     * add
+     * 
+     * @param cp1
+     * @param cp2
+     * @param cp3
+     */
+    public void ajouter(Component comp, GridBagConstraints ct)
+    {
+        if(ct != null)
+        {
+            gbl.setConstraints(comp, ct);
+            add(comp);
+        }
+    }
+	
 }

@@ -79,21 +79,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	 */
 	private Panel_Terrain panelTerrain;
 	
-	/**
-	 * panel contenant le menu d'interaction
-	 */
-	private Panel_MenuInteraction panelMenuInteraction;
-	
-	/**
-	 * panel pour afficher les caracteristiques d'une tour 
-	 * et permet d'ameliorer ou de vendre la tour en question
-	 */
-	private Panel_InfoTour panelInfoTour;
-	
-	/**
-	 * panel pour afficher les caracteristiques d'une creature
-	 */
-	private Panel_InfoCreature panelInfoCreature;
+	// TODO
+	private Panel_InfosJoueurEtPartie panelInfoJoueurEtPartie;
+	private Panel_Selection panelSelection;
+	private Panel_AjoutTour panelAjoutTour;
 
     /**
      * Console d'affichages des vagues suivantes
@@ -118,8 +107,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	/**
 	 * Panel de cröation d'une vague
 	 */
-    private Panel_CreationVague pCreationVague;
-	
+    private Panel_CreationVague panelCreationVague;
+
 	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
@@ -135,11 +124,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		setTitle(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
 		setResizable(false);
+		//setPreferredSize(new Dimension(1024,768));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
 		
 		pFormulaire.setOpaque(false);
+		//pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND_2);
 		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 		
@@ -198,12 +189,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         pConsole.add(scrollConsole,BorderLayout.WEST);
         
         // panel de création de vagues
-        pCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
+        panelCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
 
-        JScrollPane js = new JScrollPane(pCreationVague);
-        js.setOpaque(false);
-        js.setPreferredSize(new Dimension(300,100));
-        pConsole.add(js,BorderLayout.CENTER);
+        JScrollPane jsCreationVague = new JScrollPane(panelCreationVague);
+        jsCreationVague.setOpaque(false);
+        jsCreationVague.setPreferredSize(new Dimension(280,300));
+        
+        //pConsole.add(jsCreationVague,BorderLayout.CENTER);
             
         pFormulaire.add(pConsole,BorderLayout.SOUTH);
 		
@@ -220,32 +212,54 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(this,jeu,timer);
+		
+		panelInfoJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, timer);
 		timer.start();
 		
-		
-		panelInfoTour = panelMenuInteraction.getPanelInfoTour();
-		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
-		
-		
+		JTabbedPane panelSelectionEtVague = new JTabbedPane();
+		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
+		panelSelectionEtVague.setOpaque(false);
+	
+		panelSelection = new Panel_Selection(this);
+		panelAjoutTour = new Panel_AjoutTour(jeu, panelSelection, this);
+        panelSelectionEtVague.add("Selection", panelSelection);
+        panelSelectionEtVague.add("Vagues", jsCreationVague);
+       
+        // set background
+        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
+        SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
+        panelSelectionEtVague.setOpaque(true);
+ 
 		// ajout des panels
-		JPanel pMarge = new JPanel(new BorderLayout());
-        pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
-        pMarge.setOpaque(false);
-		pMarge.add(conteneurTerrain);
-		pFormulaire.add(pMarge,BorderLayout.WEST);
-		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
+		JPanel pMargeTerrain = new JPanel(new BorderLayout());
+        pMargeTerrain.setBorder(new EmptyBorder(5, 5, 5, 5));
+        pMargeTerrain.setOpaque(false);
+		pMargeTerrain.add(conteneurTerrain);
+		pFormulaire.add(pMargeTerrain,BorderLayout.WEST);
 		
-		// on demarre la musique au dernier moment
-		jeu.getTerrain().demarrerMusiqueDAmbiance();
+		JPanel pN1 = new JPanel(new BorderLayout());
+		pN1.add(panelInfoJoueurEtPartie,BorderLayout.NORTH);
 		
+		JPanel pN2 = new JPanel(new BorderLayout());
+        pN2.add(panelAjoutTour,BorderLayout.NORTH);
+		
+        JPanel pN3 = new JPanel(new BorderLayout());
+        pN3.add(panelSelectionEtVague,BorderLayout.NORTH);
+		 
+        pN2.add(pN3,BorderLayout.CENTER);
+        pN1.add(pN2,BorderLayout.CENTER);
+        
+		pFormulaire.add(pN1,BorderLayout.EAST);
 		add(pFormulaire,BorderLayout.CENTER);
-		
 		
 	    //----------------------
         //-- demarrage du jeu --
         //----------------------
 		// TODO faire un 5.. 4.. 3.. 2.. 1..
+		
+		// on demarre la musique au dernier moment
+        jeu.getTerrain().demarrerMusiqueDAmbiance();
+		
 		jeu.demarrer();
 		jeu.setEcouteurDeJeu(this);
 	
@@ -362,7 +376,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             Tour nouvelleTour = tour.getCopieOriginale();
             nouvelleTour.setProprietaire(tour.getPrioprietaire());
             setTourAAcheter(nouvelleTour);
-            panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
+            panelSelection.setSelection(tour, Panel_InfoTour.MODE_ACHAT);
 	    }
 	    catch(Exception e)
 	    {
@@ -378,7 +392,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         {
 	        jeu.ameliorerTour(tour);
 	          
-            panelInfoTour.setTour(tour, Panel_InfoTour.MODE_SELECTION);
+	        panelSelection.setSelection(tour, Panel_InfoTour.MODE_SELECTION);
         }
 	    catch(Exception e)
         {
@@ -393,7 +407,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         try
         {
             jeu.vendreTour(tour);
-            panelInfoTour.effacerTour();
+            panelSelection.deselection();
             panelTerrain.setTourSelectionnee(null);
             
             jeu.ajouterAnimation(
@@ -425,7 +439,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	@Override
 	public void tourSelectionnee(Tour tour,int mode)
 	{
-		panelMenuInteraction.setTourSelectionnee(tour,mode);
+	    panelSelection.setSelection(tour, mode);
 	}
 	
 	/**
@@ -435,7 +449,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
      */
     public void creatureSelectionnee(Creature creature)
     {
-        panelMenuInteraction.setCreatureSelectionnee(creature);
+        panelSelection.setSelection(creature, 0);
     }
 
 	/**
@@ -446,35 +460,15 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	public void setTourAAcheter(Tour tour)
 	{
 		panelTerrain.setTourAAjouter(tour);
-		panelInfoTour.setTour(tour, Panel_InfoTour.MODE_ACHAT);
+		panelSelection.setSelection(tour, Panel_InfoTour.MODE_ACHAT);
 	}
 
-	/**
-     * Permet de mettre a jour la reference vers le panel d'information
-     * d'une tour.
-     * 
-     * @param panelInfoTour le panel
-     */
-	public void setPanelInfoTour(Panel_InfoTour panelInfoTour)
-	{
-		this.panelInfoTour = panelInfoTour;
-	}
 	
-	/**
-     * Permet de mettre a jour la reference vers le panel d'information
-     * d'une creature.
-     * 
-     * @param panelInfoCreature le panel
-     */
-    public void setPanelInfoCreature(Panel_InfoCreature panelInfoCreature)
-    {
-        this.panelInfoCreature = panelInfoCreature;
-    }
-    
+	
     @Override
 	public void creatureBlessee(Creature creature)
 	{
-	    panelInfoCreature.miseAJourInfosVariables();
+	    panelSelection.setSelection(creature, 0);
 	}
 
 	@Override
@@ -483,7 +477,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    // on efface la creature des panels d'information
         if(creature == panelTerrain.getCreatureSelectionnee())
         {
-            panelInfoCreature.effacerCreature();
+            panelSelection.deselection();
             panelTerrain.setCreatureSelectionnee(null);
         }
 
@@ -505,7 +499,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         // si c'est la creature selectionnee
         if(panelTerrain.getCreatureSelectionnee() == creature)
         {
-            panelInfoCreature.setCreature(null);
+            panelSelection.deselection();
             panelTerrain.setCreatureSelectionnee(null);
         }
 	}
@@ -587,7 +581,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void partieTerminee()
     {
-        panelMenuInteraction.partieTerminee();
+        panelSelection.partieTerminee();
+        panelAjoutTour.partieTerminee();
         
         // FIXME continuer...
     }
@@ -623,7 +618,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     public void joueurMisAJour(Joueur joueur)
     {
         if(jeu.getJoueurPrincipal() == joueur)
-            panelMenuInteraction.miseAJourInfoJoueur();
+        {
+            panelCreationVague.miseAJour();
+            panelAjoutTour.miseAJour();
+            panelInfoJoueurEtPartie.miseAJour();
+        }
     }
 
     @Override
