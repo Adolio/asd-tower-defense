@@ -8,7 +8,11 @@ import javax.swing.*;
 import javax.swing.border.*;
 import exceptions.*;
 import outils.myTimer;
+import reseau.CanalException;
+import reseau.jeu.client.EcouteurDeClientJeu;
+import reseau.jeu.serveur.ServeurJeu;
 import models.outils.GestionnaireSons;
+import models.outils.Outils;
 import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
@@ -31,6 +35,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                                                     EcouteurDeJeu,
                                                     EcouteurDeLanceurDeVagues,
                                                     EcouteurDePanelTerrain,
+                                                    EcouteurDeClientJeu,
                                                     WindowListener,
                                                     KeyListener
                                                     
@@ -46,8 +51,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
+	private static final ImageIcon I_ENVOYER_MSG = new ImageIcon("img/icones/msg_go.png"); 
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
 	private static final int VOLUME_PAR_DEFAUT = 20;
+	private static final int LARGEUR_MENU_DROITE = 280;
+	
 	
 	//---------------------------
 	//-- declaration des menus --
@@ -60,12 +68,15 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private final JMenuItem itemRegles      = new JMenuItem("Règles du jeu...",I_REGLES);
 	private final JMenuItem itemAPropos	    = new JMenuItem("A propos...",I_AIDE);
 
+	
+	
 	private final JMenuItem itemActiverDesactiverSon 
 	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
-	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem("Activer / Désactiver le mode debug");
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem("Activer / Désactiver l'affichage des rayons de portée");
+	private final JMenuItem itemAfficherZonesJoueurs       
+    = new JMenuItem("Activer / Désactiver l'affichage des zones et nom de joueurs");
+	
 	private final JMenuItem itemQuitter	    
 	    = new JMenuItem("Quitter",I_QUITTER);
 	private final JMenuItem itemRetourMenu  
@@ -83,11 +94,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private Panel_InfosJoueurEtPartie panelInfoJoueurEtPartie;
 	private Panel_Selection panelSelection;
 	private Panel_AjoutTour panelAjoutTour;
-
+	private JTabbedPane panelSelectionEtVague;
+	
+	// TODO
+	private JTextField tfChat = new JTextField();
+	private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
+	
     /**
      * Console d'affichages des vagues suivantes
      */
     private JEditorPane taConsole  = new JEditorPane("text/html","");
+    private JScrollPane scrollConsole;
+    
     
     /**
      * Formulaire principale de la fenêtre
@@ -117,6 +135,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	public Fenetre_JeuVersus(Jeu_Client jeu)
 	{
 	    this.jeu = jeu;
+	    jeu.setEcouteurDeClientJeu(this);
+	    
 
 	    //-------------------------------
 		//-- preferances de le fenetre --
@@ -143,8 +163,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		menuPrincipal.add(menuFichier);
 		
 		// menu Edition
-		menuEdition.add(itemAfficherMaillage);
 		menuEdition.add(itemAfficherRayonsPortee);
+		menuEdition.add(itemAfficherZonesJoueurs);
 		menuPrincipal.add(menuEdition);
 		
 		// menu Jeu
@@ -162,12 +182,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		// ajout des ecouteurs
 		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
-		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
+		itemAfficherZonesJoueurs.addActionListener(this);
 		itemActiverDesactiverSon.addActionListener(this);
 		itemRegles.addActionListener(this);
 		itemAPropos.addActionListener(this);
-		
 		
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
@@ -183,59 +202,83 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
 
         taConsole.setEditable(false);
-        JScrollPane scrollConsole = new JScrollPane(taConsole);
+        scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(
                 (int) jeu.getTerrain().getTaillePanelTerrain().getWidth(),50));
         pConsole.add(scrollConsole,BorderLayout.WEST);
         
-        // panel de création de vagues
-        panelCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
-
-        JScrollPane jsCreationVague = new JScrollPane(panelCreationVague);
-        jsCreationVague.setOpaque(false);
-        jsCreationVague.setPreferredSize(new Dimension(280,300));
+        bEnvoyerMsg.addActionListener(this);
+        getRootPane().setDefaultButton(bEnvoyerMsg); // def button
+        pConsole.add(bEnvoyerMsg,BorderLayout.EAST);
         
-        //pConsole.add(jsCreationVague,BorderLayout.CENTER);
-            
+        pConsole.add(tfChat,BorderLayout.SOUTH);
+        
         pFormulaire.add(pConsole,BorderLayout.SOUTH);
 		
-		//----------------------------------------
-		//-- panel du jeu et menu d'interaction --
-		//----------------------------------------
-		// creation des panels
-         
+		//-------------
+		//-- Terrain --
+		//-------------
+		
+        // creation des panels
 		JPanel conteneurTerrain = new JPanel(new BorderLayout());
 		conteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
 		panelTerrain = new Panel_Terrain(jeu, this);
 		panelTerrain.addKeyListener(this);
-		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
 		conteneurTerrain.setOpaque(false);
-		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
+
+	    // ajout
+        JPanel pMargeTerrain = new JPanel(new BorderLayout());
+        pMargeTerrain.setBorder(new EmptyBorder(5, 5, 5, 5));
+        pMargeTerrain.setOpaque(false);
+        pMargeTerrain.add(conteneurTerrain);
+        pFormulaire.add(pMargeTerrain,BorderLayout.WEST);
 		
+        // affichage des znoes et joueurs
+        if(panelTerrain.basculerAffichageZonesJoueurs())
+            itemAfficherZonesJoueurs.setIcon(I_ACTIF);
+        else
+            itemAfficherZonesJoueurs.setIcon(I_INACTIF);
+        
+        
+        //--------------------
+        //-- Menu de droite --
+        //--------------------
+		
+        // Info jeu et joueur
 		panelInfoJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, timer);
-		timer.start();
 		
-		JTabbedPane panelSelectionEtVague = new JTabbedPane();
-		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
-		panelSelectionEtVague.setOpaque(false);
-	
-		panelSelection = new Panel_Selection(this);
-		panelAjoutTour = new Panel_AjoutTour(jeu, panelSelection, this);
-        panelSelectionEtVague.add("Selection", panelSelection);
-        panelSelectionEtVague.add("Vagues", jsCreationVague);
-       
-        // set background
+		// Ajout de tour
+		panelAjoutTour = new Panel_AjoutTour(jeu, this, LARGEUR_MENU_DROITE, 80);
+		
+		// Selection (tour et créature)
+        panelSelection = new Panel_Selection(this);
+        
+        // Conteneur en onglets
+		panelSelectionEtVague = new JTabbedPane();
+		
+		// Background
         UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
         SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
         panelSelectionEtVague.setOpaque(true);
+		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,360));
+		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
+        panelSelectionEtVague.add("Info séléction", panelSelection);
+           
+        // panel de création de vagues
+        panelCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
+        JScrollPane jsCreationVague = new JScrollPane(panelCreationVague);
+        jsCreationVague.setOpaque(false);
+        jsCreationVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,300));
+        panelSelectionEtVague.add("Lanceur de créatures", jsCreationVague);
+        
+        
  
-		// ajout des panels
-		JPanel pMargeTerrain = new JPanel(new BorderLayout());
-        pMargeTerrain.setBorder(new EmptyBorder(5, 5, 5, 5));
-        pMargeTerrain.setOpaque(false);
-		pMargeTerrain.add(conteneurTerrain);
-		pFormulaire.add(pMargeTerrain,BorderLayout.WEST);
+
+		
+		
+		
+		
 		
 		JPanel pN1 = new JPanel(new BorderLayout());
 		pN1.add(panelInfoJoueurEtPartie,BorderLayout.NORTH);
@@ -259,8 +302,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
 		// on demarre la musique au dernier moment
         jeu.getTerrain().demarrerMusiqueDAmbiance();
-		
 		jeu.demarrer();
+		timer.start();
 		jeu.setEcouteurDeJeu(this);
 	
 		//---------------------------------------
@@ -309,20 +352,37 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		// a propos
 		else if(source == itemAPropos)
 			new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
-		
-		// basculer affichage du maillage
-		else if(source == itemAfficherMaillage)
-			if(panelTerrain.basculerAffichageMaillage())
-			   itemAfficherMaillage.setIcon(I_ACTIF);
-			else
-			    itemAfficherMaillage.setIcon(I_INACTIF);
-		
+
 		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)
 		    if(panelTerrain.basculerAffichageRayonPortee())
 		        itemAfficherRayonsPortee.setIcon(I_ACTIF);
 		    else
 		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
+		
+		else if(source == itemAfficherZonesJoueurs)
+            if(panelTerrain.basculerAffichageZonesJoueurs())
+                itemAfficherZonesJoueurs.setIcon(I_ACTIF);
+            else
+                itemAfficherZonesJoueurs.setIcon(I_INACTIF);
+
+		else if(source == bEnvoyerMsg)
+		{
+		    try{
+                
+		        // on envoie pas de chaines vides
+		        if(!tfChat.getText().trim().equals(""))
+                {
+                    jeu.envoyerMsg(tfChat.getText(), ServeurJeu.A_TOUS);
+                    tfChat.setText("");
+                    tfChat.requestFocus();
+                }
+            } 
+		    catch (CanalException e)
+            {
+                e.printStackTrace();
+            }
+		}   
 	}
 
 	/**
@@ -433,12 +493,21 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         taConsole.setText( s.substring(0,s.indexOf("</body>")) 
                            + texte + 
                            s.substring(s.indexOf("</body>")));
+        
+        // reposition le curseur en fin 
+        taConsole.setCaretPosition( taConsole.getDocument().getLength() - 1 );
     }
-    
     
 	@Override
 	public void tourSelectionnee(Tour tour,int mode)
 	{
+	    if(tour == null)
+	        // selection de l'onglet création de vague
+	        panelSelectionEtVague.setSelectedIndex(1);
+	    else
+	        // selection de l'onglet selection
+	        panelSelectionEtVague.setSelectedIndex(0);
+	    
 	    panelSelection.setSelection(tour, mode);
 	}
 	
@@ -449,6 +518,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
      */
     public void creatureSelectionnee(Creature creature)
     {
+        if(creature == null)
+            // selection de l'onglet création de vague
+            panelSelectionEtVague.setSelectedIndex(1);
+        else
+            // selection de l'onglet selection
+            panelSelectionEtVague.setSelectedIndex(0);
+        
         panelSelection.setSelection(creature, 0);
     }
 
@@ -534,37 +610,14 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void windowOpened(WindowEvent e){}
 
-    
-    /**
-     * TODO [DEBUG] a effacer
-     * 
-     * Permet d'ajouter des pieces d'or
-     * 
-     * @param nbPiecesDOr le nombre de piece d'or a ajouter
-     */
-    public void ajouterPiecesDOr(int nbPiecesDOr)
-    {
-        jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
-    }
+    @Override
+    public void keyPressed(KeyEvent ke){}
 
     @Override
-    public void keyPressed(KeyEvent ke)
-    {
-        // TODO [DEBUG] enlever pour version finale
-        // raccourci de gain d'argent (debug)
-        if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
-        {
-            ajouterPiecesDOr(1000);
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e)
-    {}
+    public void keyTyped(KeyEvent e){}
     
     @Override
-    public void keyReleased(KeyEvent e)
-    {}
+    public void keyReleased(KeyEvent e){}
 
     @Override
     public void lancerVague(VagueDeCreatures vague) throws ArgentInsuffisantException
@@ -637,4 +690,26 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void miseAJourInfoJeu()
     {}
+
+    @Override
+    public void joueurInitialise()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void joueursMisAJour()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void messageRecu(String message, Joueur auteur)
+    {
+        String couleurHexa = Outils.ColorToHexa(auteur.getEquipe().getCouleur());
+        
+        ajouterTexteHTMLDansConsole("<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b> dit : "+message+" <br />");
+    }
 }

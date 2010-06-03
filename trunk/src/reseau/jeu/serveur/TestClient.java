@@ -70,7 +70,7 @@ public class TestClient implements ConstantesServeurJeu
 	void envoyerMessage(CanalTCP canal, String msg) throws JSONException, CanalException
 	{
 		JSONObject json = new JSONObject();
-		json.put("TYPE", MSG);
+		json.put("TYPE", JOUEUR_MESSAGE);
 		JSONObject content = new JSONObject();
 		content.put("CIBLE", A_TOUS);
 		content.put("MESSAGE", msg);

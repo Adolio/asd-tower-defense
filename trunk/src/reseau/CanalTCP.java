@@ -23,7 +23,7 @@ public class CanalTCP
    
    // Pour savoir si on affiche les messages de debug dans la console
    // (pratique...).
-   private boolean afficherMessagesDebug = false;
+   private boolean verbeux = false;
    
    /**
     * L'appelant de ce constructeur veut attendre des connexions entrantes sur
@@ -47,7 +47,7 @@ public class CanalTCP
       
       try
       {
-         if (this.afficherMessagesDebug)
+         if (this.verbeux)
          {
             System.out
                   .print("     Canal: en attente de connexion sur le port <"
@@ -539,12 +539,12 @@ public class CanalTCP
     */
    public boolean isAfficherMessagesDebug()
    {
-      return afficherMessagesDebug;
+      return verbeux;
    }
    
    public void log(String msg)
    {
-       if(afficherMessagesDebug)
+       if(verbeux)
            System.out.println("    "+msg);
    }
    

@@ -176,4 +176,9 @@ public class Jeu_Client extends Jeu
     {
         clientJeu.annoncerDeconnexion();
     }
+
+    public void envoyerMsg(String message, int cible) throws CanalException
+    {
+        clientJeu.envoyerMessage(message, cible);
+    }
 }

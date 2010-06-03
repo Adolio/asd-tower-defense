@@ -8,8 +8,10 @@ import javax.swing.*;
 import exceptions.ArgentInsuffisantException;
 import models.creatures.*;
 import models.jeu.Jeu;
+import models.joueurs.GestionnaireDeRevenu;
 import models.joueurs.Joueur;
 
+// TODO comment
 public class Panel_CreationVague extends JPanel
 {
     private static final long serialVersionUID = 1L;
@@ -31,17 +33,23 @@ public class Panel_CreationVague extends JPanel
     private JButton[] bLancers = new JButton[creatures.length];
     private JComboBox[] cbNbCreatures = new JComboBox[creatures.length];
     
-    
     public Panel_CreationVague(final Jeu jeu, final Joueur cible, 
             final EcouteurDeLanceurDeVagues edlv)                          
     {
+        super(new BorderLayout());
+        
         this.jeu = jeu;
+        setBackground(LookInterface.COULEUR_DE_FOND);
         
-        tb.setOpaque(false);
         
+        JLabel titre = new JLabel("Lancement des creatures");
+        titre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        add(titre,BorderLayout.NORTH);
+        
+        tb.setBackground(LookInterface.COULEUR_DE_FOND_2);
         tb.add(new JLabel("Créature"),0,0);
-        tb.add(new JLabel("Prix"),2,0);
-        tb.add(new JLabel("Revenu"),3,0);
+        tb.add(new JLabel("Prix"),1,0);
+        tb.add(new JLabel("Revenu"),2,0);
         
         for(int i=0;i < creatures.length;i++)
         {
@@ -79,7 +87,9 @@ public class Panel_CreationVague extends JPanel
             tb.add(p,0,i+1);    
             
             tb.add(new JLabel(""+creature.getNbPiecesDOr()),1,i+1);    
-            
+            tb.add(new JLabel(""+creature.getNbPiecesDOr() * 
+                    GestionnaireDeRevenu.POURCENTAGE_NB_PIECES_OR_CREATURE),2,i+1); 
+               
             JButton bLancer = new JButton("Lancer");
             bLancers[i] = bLancer;
             tb.add(bLancer,3,i+1);
@@ -106,7 +116,7 @@ public class Panel_CreationVague extends JPanel
             
         }
         
-        add(tb);
+        add(tb,BorderLayout.CENTER);
     }
     
     public void miseAJour()

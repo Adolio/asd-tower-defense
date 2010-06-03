@@ -6,6 +6,7 @@ import javax.swing.*;
 import outils.myTimer;
 import models.jeu.Jeu;
 
+// TODO comment
 public class Panel_InfosJoueurEtPartie extends JPanel
 {
     // constantes finales

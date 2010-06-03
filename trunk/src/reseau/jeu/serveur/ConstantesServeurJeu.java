@@ -115,7 +115,7 @@ public interface ConstantesServeurJeu
 	/**
      * Type de message : un message texte
      */
-    public final int MSG = 309;
+    public final int JOUEUR_MESSAGE = 309;
 	
     
 	// CREATURE 310-319

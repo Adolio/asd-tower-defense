@@ -321,11 +321,9 @@ public class Protocole implements ConstantesServeurJeu
         
         try 
         {
-            msg.put("TYPE", MSG);
-            JSONObject content = new JSONObject();
-            content.put("CIBLE", A_TOUS);
-            content.put("MESSAGE", message);
-            msg.put("CONTENU", content);
+            msg.put("TYPE", JOUEUR_MESSAGE);
+            msg.put("CIBLE", cible);
+            msg.put("MESSAGE", message);
         } 
         catch (JSONException e)
         {
@@ -372,7 +370,7 @@ public class Protocole implements ConstantesServeurJeu
         
         try {
             // Construction de la structure JSON
-            msg.put("TYPE", MSG);
+            msg.put("TYPE", JOUEUR_MESSAGE);
             msg.put("ID_JOUEUR", idAuteur);
             msg.put("MESSAGE", contenu);
         }

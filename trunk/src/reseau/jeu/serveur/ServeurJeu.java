@@ -593,11 +593,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * @throws CanalException 
 	 * @throws JSONException 
 	 */
-	public synchronized void direATous(int IDPlayer, String message) throws JSONException, CanalException
+	public synchronized void envoyerMessageChatPourTous(int idJoueur, String message) throws JSONException, CanalException
 	{
-		log("Le joueur " + IDPlayer + " dit : " + message);
+		log("Le joueur " + idJoueur + " dit : " + message);
+		
 		for (Entry<Integer, JoueurDistant> joueur : clients.entrySet())
-			joueur.getValue().envoyer(Protocole.construireMsgMessage(IDPlayer, message));
+			joueur.getValue().envoyerSurCanalMAJ(Protocole.construireMsgMessage(idJoueur, message));
 	}
 
 	/**
@@ -612,11 +613,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * @throws CanalException 
 	 * @throws JSONException 
 	 */
-	public synchronized void direAuClient(int IDPlayer, int IDTo, String message) throws JSONException, CanalException
+	public synchronized void envoyerMsgClient(int idJoueur, int IDTo, String message) throws JSONException, CanalException
 	{
-		log("Le joueur " + IDPlayer + " désire envoyer un message à " + IDTo
+		log("Le joueur " + idJoueur + " désire envoyer un message à " + IDTo
 				+ "(" + message + ")");
-		clients.get(IDTo).envoyer(Protocole.construireMsgMessage(IDPlayer, message));
+		clients.get(IDTo).envoyerSurCanalMAJ(Protocole.construireMsgMessage(idJoueur, message));
 	}
 
 	/**
