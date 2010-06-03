@@ -540,6 +540,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         int score = message.getInt("SCORE");
+        double revenu = message.getDouble("REVENU");
         int nbViesRestantes = message.getInt("NB_VIES_RESTANTES_EQUIPE");
         
         Joueur joueur = jeu.getJoueur(idJoueur);
@@ -549,6 +550,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             joueur.setNbPiecesDOr(nbPiecesDOr);
             joueur.setScore(score);
             joueur.getEquipe().setNbViesRestantes(nbViesRestantes);
+            joueur.setRevenu(revenu);
         }
         else
             logErreur("Etat d'un joueur : Joueur inconnu (id:"+idJoueur+")");

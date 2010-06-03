@@ -131,6 +131,7 @@ public class Protocole implements ConstantesServeurJeu
             msg.put("ID_JOUEUR", joueur.getId());
             msg.put("NB_PIECES_OR", joueur.getNbPiecesDOr());
             msg.put("NB_VIES_RESTANTES_EQUIPE", joueur.getEquipe().getNbViesRestantes());
+            msg.put("REVENU", joueur.getRevenu());
             msg.put("SCORE", joueur.getScore());
         }
         catch (JSONException e)

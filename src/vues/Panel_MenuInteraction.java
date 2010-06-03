@@ -35,8 +35,10 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private static final ImageIcon I_PIECES         = new ImageIcon("img/icones/coins.png");
 	private static final ImageIcon I_VIES 	        = new ImageIcon("img/icones/heart.png");
 	private static final ImageIcon I_ETOILE         = new ImageIcon("img/icones/star.png");
-	private static final ImageIcon I_TEMPS         = new ImageIcon("img/icones/time.png");
-	private static final ImageIcon I_SCORE         = new ImageIcon("img/icones/cup.png");
+	private static final ImageIcon I_TEMPS          = new ImageIcon("img/icones/time.png");
+	private static final ImageIcon I_SCORE          = new ImageIcon("img/icones/cup.png");
+	private static final ImageIcon I_REVENU         = new ImageIcon("img/icones/income.png");
+	
 	
 	// membres graphiques
 	private JButton bTourArcher 			= new JButton(new ImageIcon(TourArcher.ICONE));
@@ -59,6 +61,9 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	private JLabel lTitrePiecesOr 			= new JLabel(I_PIECES);
 	private JLabel lEtoiles                 = new JLabel();
 	private JLabel lTitreEtoiles            = new JLabel(I_ETOILE);
+	private JLabel lRevenu                  = new JLabel();
+    private JLabel lTitreRevenu             = new JLabel(I_REVENU);
+	
 		
 	// autres membres
 	private EcouteurDePanelTerrain edpt;
@@ -132,6 +137,12 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
             pTours.add(bTour);
         }
          
+		
+	    //------------------------------------------
+        //-- panel des donnees du joueur          --
+        //-- (score, nb pieces or, vies restante) --
+        //------------------------------------------
+		
         JPanel pGlobalInfo = new JPanel();
         pGlobalInfo.setOpaque(false);
         
@@ -147,11 +158,14 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         miseAJourNbEtoiles();
         
+        // revenu
+        pGlobalInfo.add(lTitreRevenu);
+        pGlobalInfo.add(lRevenu);
+        lRevenu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        miseAJourRevenu();
+        
 
-		//------------------------------------------
-        //-- panel des donnees du joueur          --
-		//-- (score, nb pieces or, vies restante) --
-        //------------------------------------------
+
 		JPanel pJoueur = new JPanel();
 		pJoueur.setOpaque(false);
 		
@@ -174,16 +188,10 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 		pJoueur.add(lVies);
 		lVies.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		miseAJourNbViesRestantes();
-		
-		
-		
-		
-		
+			
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
 		pToursEtJoueur.setOpaque(false);
-		
-		
-		
+
 		JPanel pAlignADroite = new JPanel(new BorderLayout());
         pAlignADroite.setOpaque(false);
         pAlignADroite.add(pGlobalInfo,BorderLayout.EAST);
@@ -300,6 +308,14 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
 	}
 	
 	/**
+     * Permet de demander une mise a jour du nombre de vies restantes du joueur
+     */
+    private void miseAJourRevenu()
+    {
+        lRevenu.setText(String.format("%02.2f",jeu.getJoueurPrincipal().getRevenu()));
+    }
+
+	/**
      * Permet de demander une mise a jour du nombre d'étoiles gagnées
      */
 	private void miseAJourNbEtoiles()
@@ -372,6 +388,7 @@ public class Panel_MenuInteraction extends JPanel implements ActionListener
         miseAJourNbViesRestantes();
         miseAJourScore();
         miseAJourNbPiecesOr();
-        miseAJourNbEtoiles();
+        miseAJourNbEtoiles(); 
+        miseAJourRevenu();
     }
 }
