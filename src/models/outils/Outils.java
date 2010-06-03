@@ -1,5 +1,6 @@
 package models.outils;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -9,9 +10,7 @@ import java.awt.image.BufferedImage;
  * <p>
  * Elle fournie plusieurs methodes pratiques et souvent inclassables.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
+ * @author Aurelien Da Campo
  * @version 1.0 | 15 decembre 2009
  * @since jdk1.6.0_16
  */
@@ -64,4 +63,12 @@ public class Outils
     {
         return min + (int) Math.round(Math.random() * (max - min)); 
     }
+    
+    /**
+     * Color -> hexa color
+     */
+    public static String ColorToHexa(Color color)
+    {
+        return Integer.toHexString(color.getRGB() & 0x00ffffff); 
+    } 
 }

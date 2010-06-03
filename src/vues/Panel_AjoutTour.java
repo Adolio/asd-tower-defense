@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
 import models.tours.*;
 
+// TODO comment
 public class Panel_AjoutTour extends JPanel implements ActionListener
 {
     private static final long serialVersionUID = 1L;
@@ -22,14 +23,12 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
     private JButton bTourDeTerre            = new JButton(new ImageIcon(TourDeTerre.ICONE));
     private JButton bTourElectrique         = new JButton(new ImageIcon(TourElectrique.ICONE));
     private ArrayList<JButton> boutonsTours = new ArrayList<JButton>();
-    private Panel_Selection pSelection;
     private Jeu jeu;
     private EcouteurDePanelTerrain edpt;
 
-    public Panel_AjoutTour(Jeu jeu, Panel_Selection pSelection,EcouteurDePanelTerrain edpt)
+    public Panel_AjoutTour(Jeu jeu, EcouteurDePanelTerrain edpt, int largeur, int hauteur)
     {  
         this.jeu = jeu;
-        this.pSelection = pSelection;
         this.edpt = edpt;
         
         setBackground(LookInterface.COULEUR_DE_FOND);
@@ -39,7 +38,8 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
         //---------------------
         JPanel pTours = new JPanel(new GridLayout(2,0));
         pTours.setOpaque(false);
-        //pTours.setPreferredSize(new Dimension(200,80));
+        pTours.setPreferredSize(new Dimension(largeur,hauteur));
+        
         
         boutonsTours.add(bTourArcher);
         bTourArcher.setToolTipText("Prix : "+TourArcher.PRIX_ACHAT);
@@ -73,7 +73,7 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
             pTours.add(bTour);
         }
         
-        add(pTours,BorderLayout.NORTH);
+        add(pTours,BorderLayout.CENTER);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
         
         tour.setProprietaire(jeu.getJoueurPrincipal());
         
-        pSelection.setSelection(tour,Panel_InfoTour.MODE_ACHAT);
+        edpt.tourSelectionnee(tour, Panel_InfoTour.MODE_ACHAT);
         edpt.setTourAAcheter(tour);
     }
 

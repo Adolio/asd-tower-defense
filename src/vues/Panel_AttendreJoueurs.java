@@ -16,6 +16,7 @@ import models.jeu.*;
 import models.joueurs.*;
 import models.tours.Tour;
 
+// TODO comment
 @SuppressWarnings("serial")
 public class Panel_AttendreJoueurs extends JPanel implements 
     ActionListener, EcouteurDeJeu, EcouteurDeClientJeu
@@ -263,18 +264,14 @@ public class Panel_AttendreJoueurs extends JPanel implements
             }
             else
             {
-                try
-                {
+                try {
                     jeuClient.annoncerDeconnexion();
                 } 
-                catch (CanalException e1)
-                {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                catch (CanalException e1){
+                    // on peut rien faire...
                 }
             }
-            
-            
+
             // retour
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
@@ -446,74 +443,34 @@ public class Panel_AttendreJoueurs extends JPanel implements
     }
 
     @Override
-    public void animationAjoutee(Animation animation)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void animationAjoutee(Animation animation){}
 
     @Override
-    public void animationTerminee(Animation animation)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void animationTerminee(Animation animation){}
 
     @Override
-    public void creatureAjoutee(Creature creature)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void creatureAjoutee(Creature creature){}
 
     @Override
-    public void creatureArriveeEnZoneArrivee(Creature creature)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void creatureArriveeEnZoneArrivee(Creature creature){}
 
     @Override
-    public void creatureBlessee(Creature creature)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void creatureBlessee(Creature creature){}
 
     @Override
-    public void creatureTuee(Creature creature)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void creatureTuee(Creature creature){}
 
     @Override
-    public void etoileGagnee()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void etoileGagnee(){}
 
     @Override
-    public void joueurAjoute(Joueur joueur)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void joueurAjoute(Joueur joueur){}
 
     @Override
-    public void joueurMisAJour(Joueur joueur)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void joueurMisAJour(Joueur joueur){}
 
     @Override
-    public void partieDemarree()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void partieDemarree(){}
 
     @Override
     public void partieInitialisee()
@@ -525,7 +482,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
                 break;
             
             case ModeDeJeu.MODE_COOP :
-                new Fenetre_JeuVersus(jeuClient); // FIXME
+                new Fenetre_JeuVersus(jeuClient); // FIXME créer Fenetre_JeuCoop
                 break;
         }
         
@@ -533,39 +490,19 @@ public class Panel_AttendreJoueurs extends JPanel implements
     }
 
     @Override
-    public void partieTerminee()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void partieTerminee(){}
 
     @Override
-    public void tourAmelioree(Tour tour)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void tourAmelioree(Tour tour){}
 
     @Override
-    public void tourPosee(Tour tour)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void tourPosee(Tour tour){}
 
     @Override
-    public void tourVendue(Tour tour)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void tourVendue(Tour tour){}
 
     @Override
-    public void vagueEntierementLancee(VagueDeCreatures vague)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void vagueEntierementLancee(VagueDeCreatures vague){}
 
     @Override
     public void joueurInitialise()
@@ -584,5 +521,11 @@ public class Panel_AttendreJoueurs extends JPanel implements
         pTmp.add(js, BorderLayout.NORTH);
         pTmp.revalidate();
         pEmplacementsTerrain.repaint();
+    }
+
+    @Override
+    public void messageRecu(String message, Joueur auteur)
+    {
+        // TODO voir pour un chat dans le panel d'attente de joueur.
     }
 }

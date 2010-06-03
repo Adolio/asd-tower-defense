@@ -62,7 +62,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static boolean verbeux = true;
+	public static boolean verbeux = false;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -285,7 +285,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		switch (type)
 		{
     		// Récéption d'un message texte
-    		case MSG:
+    		case JOUEUR_MESSAGE:
     		    receptionMsgDemandeEnvoieMessage(json);
     			break;
     		
@@ -364,26 +364,23 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
     private void receptionMsgDemandeEnvoieMessage(JSONObject json) throws JSONException, CanalException
     {
 	    log("Message reçu de " + idJoueur);
-	    
-        // Extraction du message
-        JSONObject message = json.getJSONObject("CONTENU");
-        
+	   
         // Extraction de la cible du message
-        int cible = message.getInt("CIBLE");
+        int cible = json.getInt("CIBLE");
         log("Message pour " + cible);
         
         // Extraction du texte du message
-        String text = message.getString("MESSAGE");
+        String text = json.getString("MESSAGE");
         
         log("Texte : " + text);
         
         if (cible == A_TOUS) {
             // On broadcast le message à tous les clients
-            serveur.direATous(idJoueur, text);
+            serveur.envoyerMessageChatPourTous(idJoueur, text);
         } 
         else {
             // On envoi un message à un client en particulier
-            serveur.direAuClient(idJoueur, cible, text);
+            serveur.envoyerMsgClient(idJoueur, cible, text);
         }
     }
 

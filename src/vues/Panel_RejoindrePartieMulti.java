@@ -649,4 +649,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     {
         // on peut rien faire. (traité par le formulaire d'attente de joueurs)
     }
+
+    @Override
+    public void messageRecu(String message, Joueur auteur)
+    {
+        // On peut pas recevoir de message dans cette partie
+    }
 }

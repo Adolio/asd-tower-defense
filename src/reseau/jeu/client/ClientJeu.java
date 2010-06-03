@@ -333,8 +333,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 // PARTIE
                 case PARTIE_ETAT : 
                     receptionEtatPartie(resultat);
-                break; 
-            
+                break;
+                
                 // JOUEURS
                 case JOUEUR_ETAT :    
                     receptionEtatJoueur(resultat);
@@ -342,6 +342,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 
                 case JOUEURS_ETAT :    
                     receptionEtatJoueurs(resultat);
+                break;
+                
+                case JOUEUR_MESSAGE :    
+                    receptionMsgJoueur(resultat);
                 break;
     
                 // TOURS
@@ -377,6 +381,21 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 default :
                     logErreur("Réception d'un objet de type : Inconnu.");      
             }
+    }
+
+    private void receptionMsgJoueur(JSONObject resultat) throws JSONException
+    {
+        log("Réception d'une message");
+        
+        int idAuteur    = resultat.getInt("ID_JOUEUR");
+        String message  = resultat.getString("MESSAGE");
+       
+        Joueur joueur = jeu.getJoueur(idAuteur);
+        
+        if(joueur != null)
+            edcj.messageRecu(message, joueur);
+        else
+            logErreur("Message recu : Auteur inconnu");    
     }
 
     private void receptionEtatJoueurs(JSONObject resultat) throws JSONException

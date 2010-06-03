@@ -1,5 +1,7 @@
 package reseau.jeu.client;
 
+import models.joueurs.Joueur;
+
 /**
  * Interface permettant de mettre en oeuvre le pattern Observable/ Observé pour la
  * classe ClientJeu.
@@ -19,4 +21,9 @@ public interface EcouteurDeClientJeu
      * Permet d'informer l'ecouteur que les joueurs ont été mis à jour
      */
     public void joueursMisAJour();
+    
+    /**
+     * Message recu
+     */
+    public void messageRecu(String message, Joueur auteur);
 }

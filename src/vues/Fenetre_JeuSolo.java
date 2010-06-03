@@ -483,6 +483,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         taConsole.setText( s.substring(0,s.indexOf("</body>")) 
                            + texte + 
                            s.substring(s.indexOf("</body>")));
+        
+        // reposition le curseur en fin 
+        taConsole.setCaretPosition( taConsole.getDocument().getLength() - 1 );
     }
     
     

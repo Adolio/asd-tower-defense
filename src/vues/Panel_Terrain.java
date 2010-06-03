@@ -209,6 +209,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private boolean afficherMaillage;
 	
 	/**
+     * Permet d'afficher ou non les noms des joueurs
+     */
+    private boolean afficherZonesJoueurs;
+	
+	/**
 	 * Permet d'afficher ou non tous les rayons de portee des tours
 	 */
 	private boolean afficherRayonsDePortee;
@@ -368,6 +373,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
     {
         return afficherRayonsDePortee = !afficherRayonsDePortee;
     }
+    
+    /**
+     * TODO
+     */
+    public boolean basculerAffichageZonesJoueurs()
+    {
+        return afficherZonesJoueurs = !afficherZonesJoueurs;
+    }
+    
 	
 	@Override
 	public void paintComponent(Graphics g)
@@ -443,9 +457,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
         //-- Affichage de la zone de depart et d'arrivee --
         //-------------------------------------------------
-        //if(afficherMaillage)
-        //{ 
-            // modification de la transparence
+  
+        if(afficherZonesJoueurs)
+        {
             setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
             
             Stroke tmpStroke = g2.getStroke();
@@ -468,13 +482,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
                     g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo+2 , zoneC.y+yOffsetPseudo+2);
                 //}
             }
+            
             g2.setFont(tmpFont);
-            g2.setStroke(tmpStroke);
+            g2.setStroke(tmpStroke); 
             
             setTransparence(1.f, g2);
-        //}
-		
-		
+        }
+
 		//------------------------------------
 		//-- Affichage du maillage (graphe) --
 		//------------------------------------
