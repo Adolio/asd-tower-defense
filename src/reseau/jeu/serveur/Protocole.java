@@ -380,4 +380,20 @@ public class Protocole implements ConstantesServeurJeu
         
         return msg.toString();
     }
+
+    public static String construireMsgJoueurDeconnecte(int idJoueur)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try {
+            // Construction de la structure JSON
+            msg.put("TYPE", JOUEUR_DECONNEXION);
+            msg.put("ID_JOUEUR", idJoueur);
+        }
+        catch (JSONException jsone){
+            jsone.printStackTrace();
+        }
+        
+        return msg.toString();
+    }
 }

@@ -83,11 +83,10 @@ public class CanalTCP
          // sur le
          // canal de transmission.
          configurerFlux();
-      } catch (Exception e)
-      {
-         log("Canal: une erreur est survenue pendant l'attente d'une connexion " +
+      } 
+      catch (Exception e){
+         logErreur("Survenue pendant l'attente d'une connexion " +
          	  "entrante sur le port " + port.getNumeroPort());
-         e.printStackTrace();
          throw new CanalException(e);
       }
    }
@@ -149,9 +148,8 @@ public class CanalTCP
       {
          // Un problème de connexion est survenu. Considéré comme une erreur
          // fatale.
-          log("Canal: une erreur est survenue lors de la tentative " +
+         logErreur("Survenue lors de la tentative " +
               "de connexion à l'adresse " + adresseIp + " sur le port " + numeroPort);
-         e.printStackTrace();
          throw new CanalException(e);
       }
    }
@@ -191,8 +189,7 @@ public class CanalTCP
          canalIn = new ObjectInputStream(generalIn);
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant la configuration des flux In/Out");
-         e.printStackTrace();
+         logErreur("Survenue pendant la configuration des flux In/Out");
          throw new CanalException(e);
       }
    }
@@ -218,8 +215,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'envoi du String");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'envoi du String");
          throw new CanalException(e);
       }
    }
@@ -243,10 +239,8 @@ public class CanalTCP
       }
       catch (Exception e)
       {
-    	  // P-Do : Suppression de l'affichage brutal de la pile d'erreur, on prefera
-    	  // laisser le choix d'affichage au programme client dans la gestion des
-    	  // exceptions associée.
-         // e.printStackTrace();
+    	 // On laisse le choix d'affichage au programme client dans la gestion des
+    	 // exceptions associée.
          throw new CanalException(e);
       }
       
@@ -274,8 +268,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'envoi de l'int");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'envoi de l'int");
          throw new CanalException(e);
       }
    }
@@ -299,8 +292,7 @@ public class CanalTCP
       } 
       catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'attente de réception d'un int");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'attente de réception d'un int");
          throw new CanalException(e);
       }
       
@@ -328,8 +320,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'envoi du double");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'envoi du double");
          throw new CanalException(e);
       }
    }
@@ -352,8 +343,7 @@ public class CanalTCP
          doubleRecu = canalIn.readDouble();
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'attente de réception d'un double");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'attente de réception d'un double");
          throw new CanalException(e);
       }
       
@@ -381,8 +371,7 @@ public class CanalTCP
          canalOut.flush();
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'envoi des bytes");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'envoi des bytes");
          throw new CanalException(e);
       }
    }
@@ -406,8 +395,7 @@ public class CanalTCP
          canalIn.readFully(bytesRecus);
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'attente de réception des bytes");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'attente de réception des bytes");
          throw new CanalException(e);
       }
 
@@ -437,8 +425,7 @@ public class CanalTCP
 
       catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'envoi du paquet");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'envoi du paquet");
          throw new CanalException(e);
       }
    }
@@ -470,8 +457,7 @@ public class CanalTCP
          }
       } catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant l'attente de réception d'un paquet");
-         e.printStackTrace();
+         logErreur("Survenue pendant l'attente de réception d'un paquet");
          throw new CanalException(e);
       }
       return paquetRecu;
@@ -504,8 +490,7 @@ public class CanalTCP
       } 
       catch (Exception e)
       {
-         log("Canal: une erreur est survenue pendant la fermeture du canal");
-         e.printStackTrace();
+         logErreur("Survenue pendant la fermeture du canal");
          throw new CanalException(e);
       }
    }
@@ -548,4 +533,13 @@ public class CanalTCP
            System.out.println("    "+msg);
    }
    
+   /**
+    * Permet d'afficher des message log d'erreur
+    * 
+    * @param msg le message
+    */
+   private void logErreur(String msg)
+   {
+       System.err.println("[CANAL][ERREUR]" + msg);
+   }
 }

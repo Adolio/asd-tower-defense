@@ -308,12 +308,11 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 attendreMessageCanalAsynchrone();
             } 
 	        catch (CanalException e) {
-                e.printStackTrace();
+	            logErreur("Canal erroné");
                 return;
             } 
 	        catch (JSONException e) {
-                e.printStackTrace();
-                return;
+	            logErreur("Format JSON erroné");
             }
 	    }
 	}
@@ -345,8 +344,13 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 break;
                 
                 case JOUEUR_MESSAGE :    
-                    receptionMsgJoueur(resultat);
+                    receptionMsgJoueurMessage(resultat);
                 break;
+                
+                case JOUEUR_DECONNEXION :    
+                    receptionMsgJoueurDeconnexion(resultat);
+                break;
+                
     
                 // TOURS
                 case TOUR_AJOUT :
@@ -383,7 +387,21 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             }
     }
 
-    private void receptionMsgJoueur(JSONObject resultat) throws JSONException
+    private void receptionMsgJoueurDeconnexion(JSONObject resultat) throws JSONException
+    {
+        log("Réception deconnexion d'un joueur");
+        
+        int idJoueur    = resultat.getInt("ID_JOUEUR");
+       
+        Joueur joueur = jeu.getJoueur(idJoueur);
+        
+        if(joueur != null)
+            edcj.joueurDeconnecte(joueur);
+        else
+            logErreur("Deconnexion recu : Auteur inconnu");
+    }
+
+    private void receptionMsgJoueurMessage(JSONObject resultat) throws JSONException
     {
         log("Réception d'une message");
         

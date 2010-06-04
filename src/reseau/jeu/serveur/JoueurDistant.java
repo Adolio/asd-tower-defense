@@ -103,19 +103,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				actionsEtats();
 			}
 			catch (JSONException e) {
-				log("ERROR : récéption inconnue \"" + str + "\"");
-				e.printStackTrace();
+				logErreur("Récéption inconnue \"" + str + "\"");
 				return;
 			} 
 			catch (CanalException e) {
-			    log("ERROR : canal erroné \"" + str + "\"");
-                e.printStackTrace();
+			    logErreur("Canal erroné \"" + str + "\"");
                 return;
             } 
 			catch (IOException e)
             {
-			    log("ERROR : canal erroné \"" + str + "\"");
-			    e.printStackTrace();
+			    logErreur("ERROR : canal erroné \"" + str + "\"");
                 return;
             } 
 		}
@@ -484,5 +481,10 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
     private void logErreur(String msg)
     {
         System.err.println("[JOUEUR " + idJoueur + "]" + msg);
+    }
+
+    public int getId()
+    {
+        return idJoueur;
     }
 }

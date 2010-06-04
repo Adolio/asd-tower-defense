@@ -730,4 +730,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         
         ajouterTexteHTMLDansConsole("<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b> dit : "+message+" <br />");
     }
+
+    @Override
+    public void joueurDeconnecte(Joueur joueur)
+    {
+        JOptionPane.showMessageDialog(this,
+                joueur.getPseudo()+" s'est déconnecté !",
+                "Déconnexion d'un joueur",
+                JOptionPane.ERROR_MESSAGE);
+    }
 }
