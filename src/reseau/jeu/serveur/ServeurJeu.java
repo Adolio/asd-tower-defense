@@ -44,7 +44,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean verbeux = false;
+	private static final boolean verbeux = true;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur

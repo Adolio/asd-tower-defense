@@ -62,7 +62,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static boolean verbeux = false;
+	public static boolean verbeux = true;
 
 	/**
 	 * Crée un lien avec un joueur distant.
