@@ -221,12 +221,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	{
         try
         {
+            System.out.println("Creature tuee");
+            
             envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
         } 
         catch (CanalException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            canalErreur(e);
         }
 	}
 

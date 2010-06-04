@@ -524,6 +524,8 @@ public abstract class Creature extends Rectangle
 		// appel des ecouteurs de la creature
 		for( EcouteurDeCreature edc : ecouteursDeCreature)
 			edc.creatureTuee(this,tueur);
+		
+		aDetruire = true;
 	}
 
 	/**

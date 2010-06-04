@@ -97,7 +97,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private JTabbedPane panelSelectionEtVague;
 	
 	// TODO
-	private JTextField tfChat = new JTextField();
+	private JTextField tfSaisieMsg = new JTextField();
 	private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
 	
     /**
@@ -191,29 +191,39 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
 		
+		//------------------------
+        //-- Eléments de gauche --
+        //------------------------
+		
+		JPanel pGauche = new JPanel(new BorderLayout());
+		pGauche.setOpaque(false);
+		
 		//-------------
         //-- Console --
         //-------------
+		// style
+        taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
+        taConsole.setEditable(false);
+        
         JPanel pConsole = new JPanel(new BorderLayout());
         pConsole.setOpaque(false);
-        ajouterInfoVagueSuivanteDansConsole();
-
-        // style du champ de description de la vague suivante 
-        taConsole.setFont(GestionnaireDesPolices.POLICE_CONSOLE);
-
-        taConsole.setEditable(false);
+        
         scrollConsole = new JScrollPane(taConsole);
-        scrollConsole.setPreferredSize(new Dimension(
-                (int) jeu.getTerrain().getTaillePanelTerrain().getWidth(),50));
-        pConsole.add(scrollConsole,BorderLayout.WEST);
-        
+        scrollConsole.setPreferredSize(new Dimension(0,50));
+        pConsole.add(scrollConsole,BorderLayout.CENTER);
+       
+        // Saisie et bouton envoyer
         bEnvoyerMsg.addActionListener(this);
-        getRootPane().setDefaultButton(bEnvoyerMsg); // def button
-        pConsole.add(bEnvoyerMsg,BorderLayout.EAST);
+        getRootPane().setDefaultButton(bEnvoyerMsg); // bouton par def.
         
-        pConsole.add(tfChat,BorderLayout.SOUTH);
+        JPanel pSaisieMsgEtBEnvoyer = new JPanel(new BorderLayout());
+        pSaisieMsgEtBEnvoyer.setOpaque(false);
+        pSaisieMsgEtBEnvoyer.add(tfSaisieMsg,BorderLayout.CENTER);
+        pSaisieMsgEtBEnvoyer.add(bEnvoyerMsg,BorderLayout.EAST);
+        pConsole.add(pSaisieMsgEtBEnvoyer,BorderLayout.SOUTH);
         
-        pFormulaire.add(pConsole,BorderLayout.SOUTH);
+        
+        pGauche.add(pConsole,BorderLayout.SOUTH);
 		
 		//-------------
 		//-- Terrain --
@@ -232,13 +242,17 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         pMargeTerrain.setBorder(new EmptyBorder(5, 5, 5, 5));
         pMargeTerrain.setOpaque(false);
         pMargeTerrain.add(conteneurTerrain);
-        pFormulaire.add(pMargeTerrain,BorderLayout.WEST);
+        pGauche.add(pMargeTerrain,BorderLayout.NORTH);
 		
         // affichage des znoes et joueurs
         if(panelTerrain.basculerAffichageZonesJoueurs())
             itemAfficherZonesJoueurs.setIcon(I_ACTIF);
         else
             itemAfficherZonesJoueurs.setIcon(I_INACTIF);
+        
+        
+        pFormulaire.add(pGauche,BorderLayout.WEST);
+        
         
         
         //--------------------
@@ -261,7 +275,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
         SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
         panelSelectionEtVague.setOpaque(true);
-		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,360));
+		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,440));
 		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
         panelSelectionEtVague.add("Info séléction", panelSelection);
            
@@ -281,12 +295,16 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
 		
 		JPanel pN1 = new JPanel(new BorderLayout());
+		pN1.setOpaque(false);
+
 		pN1.add(panelInfoJoueurEtPartie,BorderLayout.NORTH);
 		
 		JPanel pN2 = new JPanel(new BorderLayout());
+		pN2.setOpaque(false);
         pN2.add(panelAjoutTour,BorderLayout.NORTH);
 		
         JPanel pN3 = new JPanel(new BorderLayout());
+        pN3.setOpaque(false);
         pN3.add(panelSelectionEtVague,BorderLayout.NORTH);
 		 
         pN2.add(pN3,BorderLayout.CENTER);
@@ -371,11 +389,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		    try{
                 
 		        // on envoie pas de chaines vides
-		        if(!tfChat.getText().trim().equals(""))
+		        if(!tfSaisieMsg.getText().trim().equals(""))
                 {
-                    jeu.envoyerMsg(tfChat.getText(), ServeurJeu.A_TOUS);
-                    tfChat.setText("");
-                    tfChat.requestFocus();
+                    jeu.envoyerMsg(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
+                    tfSaisieMsg.setText("");
+                    tfSaisieMsg.requestFocus();
                 }
             } 
 		    catch (CanalException e)
