@@ -76,7 +76,7 @@ public class GestionnaireCreatures implements Runnable
                 creature = eCreatures.nextElement();
                 
                 // efface les creatures mortes
-                if(creature.estMorte() || creature.aDetruire())
+                if(creature.aDetruire())
                     creatures.remove(creature);
                 else
                 {
