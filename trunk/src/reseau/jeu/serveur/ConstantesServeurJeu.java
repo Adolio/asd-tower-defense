@@ -45,32 +45,31 @@ public interface ConstantesServeurJeu
      * Code pour quitter la partie
      */
     public final int PARTIE_QUITTER = 103;
-	
+
 	/**
      * Type de message : état de la partie
      */
     public final int PARTIE_ETAT = 104;
     
     /**
-     * Changement d'état de la partie : en pause
-     */
-    public final int EN_PAUSE = 105;
-    
-    /**
      * Changement d'état de la partie : en jeu
      */
-    public final int EN_JEU = 106;
-
-    /**
-     * Changement d'état de la partie : en jeu
-     */
-    public final int PARTIE_TERMINEE = 107;
+    public final int PARTIE_TERMINEE = 105;
     
     /**
      * Code pour quitter la partie
      */
-    public final int PARTIE_STOPPEE = 108;
+    public final int PARTIE_STOPPEE_BRUTALEMENT = 106;
     
+    /**
+     * Changement d'état de la partie : en pause
+     */
+    public final int EN_PAUSE = 107;
+    
+    /**
+     * Changement d'état de la partie : en jeu
+     */
+    public final int EN_JEU = 108;
     
 	// SUCCES 200-299
 	

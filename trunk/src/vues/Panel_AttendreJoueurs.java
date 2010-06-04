@@ -528,4 +528,10 @@ public class Panel_AttendreJoueurs extends JPanel implements
     {
         // TODO voir pour un chat dans le panel d'attente de joueur.
     }
+
+    @Override
+    public void joueurDeconnecte(Joueur joueur)
+    {
+        // rien de spécial
+    }
 }

@@ -26,4 +26,9 @@ public interface EcouteurDeClientJeu
      * Message recu
      */
     public void messageRecu(String message, Joueur auteur);
+
+    /**
+     * Permet d'informer l'ecouteur de la deconnexion d'un joueur
+     */
+    public void joueurDeconnecte(Joueur joueur);
 }
