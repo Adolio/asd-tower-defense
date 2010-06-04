@@ -59,12 +59,14 @@ public class BouletDeCanon extends Attaque
         this.degats         = degats;
         this.rayonImpact    = rayonImpact;
 
+        /*
         if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_BOULET) < MAX_SONS_BOULET)
         {
             Son son = new Son(FICHIER_SON_BOULET);
             GestionnaireSons.ajouterSon(son);
             son.lire();
         }
+        */
     }
 
     @Override

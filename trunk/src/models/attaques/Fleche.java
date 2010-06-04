@@ -63,12 +63,14 @@ public class Fleche extends Attaque
         
         this.degats = degats;
        
+        /*
         if(GestionnaireSons.getNbSonsEnLecture(FICHIER_SON_ARC) < MAX_SONS_ARC)
         {
             Son son = new Son(FICHIER_SON_ARC);
             GestionnaireSons.ajouterSon(son);
             son.lire();
         }
+        */
         
     }
 

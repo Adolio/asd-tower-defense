@@ -266,7 +266,8 @@ public class CanalTCP
          // Ne pas oublier de vider le flux de sortie après avoir écrit
          // dessus!
          canalOut.flush();
-      } catch (Exception e)
+      } 
+      catch (Exception e)
       {
          logErreur("Survenue pendant l'envoi de l'int");
          throw new CanalException(e);
