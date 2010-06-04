@@ -42,7 +42,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	/**
 	 * Mode verbeux
 	 */
-    private final boolean verbeux = false;
+    private final boolean verbeux = true;
     
     /**
      * Ecouteur de client jeu pour les notifications
