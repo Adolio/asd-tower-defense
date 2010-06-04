@@ -636,9 +636,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     
     private void canalErreur(Exception e)
     {
+        System.out.println("ServeurJeu.canalErreur");
+        
         //
         port.liberer();
-        System.out.println("ServeurJeu.canalErreur");
+        
         
         // envoi si possible...
         /*try
