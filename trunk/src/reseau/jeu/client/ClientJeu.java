@@ -308,11 +308,11 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 attendreMessageCanalAsynchrone();
             } 
 	        catch (CanalException e) {
-	            logErreur("Canal erroné");
+	            logErreur("Canal erroné",e);
                 return;
             } 
 	        catch (JSONException e) {
-	            logErreur("Format JSON erroné");
+	            logErreur("Format JSON erroné",e);
             }
 	    }
 	}
@@ -541,19 +541,19 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     
                 } 
                 catch (IOException e) {
-                    logErreur("Initialisation du joueur : Terrain inconnu");
+                    logErreur("Initialisation du joueur : Terrain inconnu",e);
                 } 
                 catch (ClassNotFoundException e) {
-                    logErreur("Initialisation du joueur : "+e.getMessage());
+                    logErreur("Initialisation du joueur : "+e.getMessage(),e);
                 }
                 catch (ClassCastException e)
                 {
-                    logErreur("Initialisation du joueur : Format de terrain erroné");
+                    logErreur("Initialisation du joueur : Format de terrain erroné",e);
                 } 
                 catch (EmplacementOccupeException e)
                 {
                     // ca n'arrivera pas, l'info vient du serveur
-                    logErreur("Initialisation du joueur : Emplacement occupé");
+                    logErreur("Initialisation du joueur : Emplacement occupé",e);
                 }
  
                 break;
@@ -736,9 +736,20 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      */
     private void logErreur(String msg)
     {
-        System.err.println("[CLIENT ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
+        System.err.println("[CLIENT][ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
     }
 
+    /**
+     * Permet d'afficher des message log d'erreur
+     * 
+     * @param msg le message
+     */
+    private void logErreur(String msg, Exception e)
+    {
+        System.err.println("[CLIENT][ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
+    
+        e.printStackTrace();
+    }
     
     public void demanderChangementEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException, CanalException
     {
