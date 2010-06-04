@@ -103,16 +103,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				actionsEtats();
 			}
 			catch (JSONException e) {
-				logErreur("Récéption inconnue \"" + str + "\"");
+				logErreur("Récéption inconnue \"" + str + "\"",e);
 				return;
 			} 
 			catch (CanalException e) {
-			    logErreur("Canal erroné \"" + str + "\"");
+			    logErreur("Canal erroné \"" + str + "\"",e);
                 return;
             } 
 			catch (IOException e)
             {
-			    logErreur("ERROR : canal erroné \"" + str + "\"");
+			    logErreur("ERROR : canal erroné \"" + str + "\"",e);
                 return;
             } 
 		}
@@ -163,7 +163,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         	    break;
  
         	default:
-        		logErreur("Etat inconnu");
+        		logErreur("Etat inconnu",null);
 		} 
 	}
 
@@ -307,7 +307,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
     			break;
     			
     		default:
-    			logErreur("Type de message inconnu : " + type);
+    			logErreur("Type de message inconnu : " + type,null);
     			// Signaler au client qu'il envoi quelque chose d'incorecte
     			repondreEtat(ERREUR, ERREUR);
     			break;
@@ -344,7 +344,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         // Demande d'ajout au serveur
         int code = serveur.poserTour(idJoueur, typeTour, x, y);
         // Retour au client du code
-        repondreEtat(TOUR_AJOUT, code); 
+        repondreEtat(TOUR_AJOUT, code);
     }
 
     private void receptionMsgDemandeLancementVague(JSONObject json) throws JSONException, CanalException
@@ -459,7 +459,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 		if(canal_update != null)
 		    canal_update.envoyerString(message);
 		else
-		    logErreur("Canal_update null");
+		    logErreur("Canal_update null",null);
 	}
 	
 	/**
@@ -478,9 +478,12 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
      * 
      * @param msg le message
      */
-    private void logErreur(String msg)
+    private void logErreur(String msg, Exception e)
     {
         System.err.println("[JOUEUR " + idJoueur + "]" + msg);
+        
+        if(e != null)
+            e.printStackTrace();
     }
 
     public int getId()

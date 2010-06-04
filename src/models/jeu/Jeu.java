@@ -240,10 +240,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
         
         // mise en jeu de la tour
         tour.mettreEnJeu();
-        
+
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());
+    
+        if(edj != null)
+            edj.tourPosee(tour);
     }
     
     

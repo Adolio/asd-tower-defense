@@ -213,7 +213,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-        System.out.println("Creature tuee");
         envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
 	}
 
@@ -231,12 +230,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public void vagueEntierementLancee(VagueDeCreatures vague){}
 
 	@Override
-	public void animationAjoutee(Animation animation)
-	{
-	    // TODO
-	    //JSONObject requete = Protocole.construireMsgAjoutAnimation();
-        //envoyerATous(requete.toString());
-	}
+	public void animationAjoutee(Animation animation){}
 
 	@Override
 	public void animationTerminee(Animation animation){}
@@ -289,7 +283,13 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	public void tourAmelioree(Tour tour){}
 
 	@Override
-	public void tourPosee(Tour tour){}
+	public void tourPosee(Tour tour)
+	{
+	    System.out.println("coucou");
+	    
+	    // Multicast aux clients
+        envoyerATous(Protocole.construireMsgTourAjout(tour).toString());
+	}
 
 	@Override
 	public void tourVendue(Tour tour){}
@@ -412,8 +412,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 			// Tentative de poser la tour
 			jeuServeur.poserTour(tour);
 			
-			// Multicast aux clients
-	        envoyerATous(Protocole.construireMsgTourAjout(tour).toString());
 		} 
 		catch (TypeDeTourInvalideException e1)
         {
@@ -637,6 +635,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     private void canalErreur(Exception e)
     {
         System.out.println("ServeurJeu.canalErreur");
+        e.printStackTrace();
+        
         
         //
         port.liberer();
@@ -674,6 +674,18 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
      */
     private void logErreur(String msg)
     {
-        System.out.println("[ERREUR][SERVEUR] "+ msg);
+        System.out.println("[SERVEUR][ERREUR] "+ msg);
+    }
+    
+    /**
+     * Permet d'afficher des message log d'erreur
+     * 
+     * @param msg le message
+     */
+    private void logErreur(String msg,Exception e)
+    {
+        System.out.println("[SERVEUR][ERREUR] "+ msg);
+        
+        e.printStackTrace();
     }
 }
