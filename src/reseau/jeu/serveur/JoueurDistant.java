@@ -62,7 +62,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static boolean verbeux = true;
+	public static boolean verbeux = false;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -319,7 +319,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	    // Récupération de la tour cible
         int tourCibleDel = json.getInt("ID_TOWER");
         // Demande au serveur de l'opération
-        int code = serveur.supprimerTour(idJoueur, tourCibleDel);
+        int code = serveur.vendreTour(idJoueur, tourCibleDel);
         // Retour au client de code
         repondreEtat(TOUR_SUPRESSION, code);
     }

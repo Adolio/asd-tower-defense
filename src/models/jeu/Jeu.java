@@ -228,7 +228,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         // si elle bloque le chemin de A vers B
         if (terrain.laTourBloqueraLeChemin(tour))
             throw new CheminBloqueException("Pose impossible : Chemin bloqué");
-
+        
         // desactive la zone dans le maillage qui correspond a la tour
         terrain.desactiverZone(tour, true);
 
@@ -240,7 +240,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         
         // mise en jeu de la tour
         tour.mettreEnJeu();
-
+        
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());
@@ -264,6 +264,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
+    
+        if(edj != null)
+            edj.tourVendue(tour);
     }
  
     
@@ -289,6 +292,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
      
         // amelioration de la tour
         tour.ameliorer();
+        
+        if(edj != null)
+            edj.tourAmelioree(tour);
     }
     
     /**

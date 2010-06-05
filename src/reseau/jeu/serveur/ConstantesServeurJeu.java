@@ -235,6 +235,11 @@ public interface ConstantesServeurJeu
      */
     public final int JOUEUR_INCONNU = 408;
     
+    /**
+     * Code d'erreur : type de tour invalide
+     */
+    public final int TYPE_TOUR_INVALIDE = 409;
+    
 	/**
 	 * Code d'erreur : erreur quelconque
 	 */

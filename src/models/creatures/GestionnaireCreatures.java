@@ -14,7 +14,7 @@ import java.util.Vector;
  * Toutes les tours tournent sous le meme clock.
  * 
  * @author Aurélien Da Campo
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.1 | juin 2010
  * @since jdk1.6.0_16
  * @see Creature
  */
@@ -148,24 +148,18 @@ public class GestionnaireCreatures implements Runnable
      */
     public Vector<Creature> getCreaturesQuiIntersectent(Rectangle rectangle)
     {
-        
-        Vector<Creature> creaturesIntersctees = new Vector<Creature>();
+        Vector<Creature> creaturesIntersectees = new Vector<Creature>();
         Creature creature;
         Enumeration<Creature> eCreatures = creatures.elements();
         while(eCreatures.hasMoreElements())
         {
             creature = eCreatures.nextElement();
     
-            for(int i=0;i<creatures.size();i++)
-            {
-                creature = creatures.get(i);
-
-                if(creature.intersects(rectangle))
-                    creaturesIntersctees.add(creature);
-            }
+            if(creature.intersects(rectangle))
+                creaturesIntersectees.add(creature);
         }
         
-        return creaturesIntersctees;
+        return creaturesIntersectees;
     }
     
     
@@ -179,20 +173,18 @@ public class GestionnaireCreatures implements Runnable
     {
         Vector<Creature> creaturesIntersctees = new Vector<Creature>();
         
-        synchronized (creatures)
-        { 
-            Creature creature;
-            for(int i=0;i<creatures.size();i++)
-            {
-                creature = creatures.get(i);
+        Creature creature;
+        Enumeration<Creature> eCreatures = creatures.elements();
+        while(eCreatures.hasMoreElements())
+        {
+            creature = eCreatures.nextElement();
 
-                Point pCreature = new Point((int)creature.getCenterX(), 
-                                            (int)creature.getCenterY());
-                Point pCercle = new Point(x,y);
-                
-                if(pCreature.distance(pCercle) < rayon + creature.getWidth() / 2)
-                    creaturesIntersctees.add(creature);
-            }
+            Point pCreature = new Point((int)creature.getCenterX(), 
+                                        (int)creature.getCenterY());
+            Point pCercle = new Point(x,y);
+            
+            if(pCreature.distance(pCercle) < rayon + creature.getWidth() / 2)
+                creaturesIntersctees.add(creature);
         }
         
         return creaturesIntersctees;
@@ -206,16 +198,14 @@ public class GestionnaireCreatures implements Runnable
      */
     public Creature getCreature(int id)
     {
-        synchronized (creatures)
-        { 
-            Creature creature;
-            for(int i=0;i<creatures.size();i++)
-            {
-                creature = creatures.get(i);
+        Creature creature;
+        Enumeration<Creature> eCreatures = creatures.elements();
+        while(eCreatures.hasMoreElements())
+        {
+            creature = eCreatures.nextElement();
                 
-                if(creature.getId() == id)
-                    return creature;
-            }
+            if(creature.getId() == id)
+                return creature;
         }
         
         return null;
