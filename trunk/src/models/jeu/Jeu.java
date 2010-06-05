@@ -546,7 +546,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
     }
 
     @Override
-    public void creatureTuee(Creature creature, Joueur tueur)
+    synchronized public void creatureTuee(Creature creature, Joueur tueur)
     {
         // gain de pieces d'or
         tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr());
@@ -564,7 +564,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
  
         // notification de la mort de la créature
         if(edj != null)
-            edj.creatureTuee(creature);
+            edj.creatureTuee(creature,tueur);
     }
 
     @Override

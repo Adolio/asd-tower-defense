@@ -82,6 +82,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private final JMenuItem itemRetourMenu  
 	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
 	
+	private JLabel lblEtat = new JLabel(" ");
+	
 	//----------------------------
 	//-- declaration des panels --
 	//----------------------------
@@ -96,15 +98,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private Panel_AjoutTour panelAjoutTour;
 	private JTabbedPane panelSelectionEtVague;
 	
-	// TODO
-	private JTextField tfSaisieMsg = new JTextField();
-	private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
-	
     /**
-     * Console d'affichages des vagues suivantes
+     * Console d'affichages
      */
-    private JEditorPane taConsole  = new JEditorPane("text/html","");
+    private JEditorPane taConsole = new JEditorPane("text/html","");
     private JScrollPane scrollConsole;
+    private JTextField tfSaisieMsg = new JTextField();
+    private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
     
     
     /**
@@ -210,7 +210,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         
         scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(0,50));
-        pConsole.add(scrollConsole,BorderLayout.CENTER);
+        pConsole.add(scrollConsole,BorderLayout.NORTH);
        
         // Saisie et bouton envoyer
         bEnvoyerMsg.addActionListener(this);
@@ -221,7 +221,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         pSaisieMsgEtBEnvoyer.add(tfSaisieMsg,BorderLayout.CENTER);
         pSaisieMsgEtBEnvoyer.add(bEnvoyerMsg,BorderLayout.EAST);
         pConsole.add(pSaisieMsgEtBEnvoyer,BorderLayout.SOUTH);
-        
         
         pGauche.add(pConsole,BorderLayout.SOUTH);
 		
@@ -275,7 +274,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
         SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
         panelSelectionEtVague.setOpaque(true);
-		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,440));
+		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,420));
 		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
         panelSelectionEtVague.add("Info séléction", panelSelection);
            
@@ -286,13 +285,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         jsCreationVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,300));
         panelSelectionEtVague.add("Lanceur de créatures", jsCreationVague);
         
-        
- 
-
-		
-		
-		
-		
 		
 		JPanel pN1 = new JPanel(new BorderLayout());
 		pN1.setOpaque(false);
@@ -305,10 +297,34 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
         JPanel pN3 = new JPanel(new BorderLayout());
         pN3.setOpaque(false);
-        pN3.add(panelSelectionEtVague,BorderLayout.NORTH);
+        
+        JPanel pPourCentrer = new JPanel();
+        pPourCentrer.setOpaque(false);
+        pPourCentrer.add(lblEtat);
+        
+        pN3.add(pPourCentrer,BorderLayout.NORTH);
 		 
+        
+        JPanel pN4 = new JPanel(new BorderLayout());
+        pN4.setOpaque(false);
+        pN4.add(panelSelectionEtVague,BorderLayout.NORTH);
+        
+        pN3.add(pN4,BorderLayout.CENTER);
         pN2.add(pN3,BorderLayout.CENTER);
         pN1.add(pN2,BorderLayout.CENTER);
+        
+       // pN2.add(lblEtat,BorderLayout.NORTH);
+        
+        
+        
+        
+        /*
+        JPanel ppp = new JPanel();
+        ppp.setOpaque(false);
+        ppp.add(lblEtat,BorderLayout.EAST);
+        
+        pN1.add(ppp,BorderLayout.SOUTH);*/
+        
         
 		pFormulaire.add(pN1,BorderLayout.EAST);
 		add(pFormulaire,BorderLayout.CENTER);
@@ -455,11 +471,16 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             nouvelleTour.setProprietaire(tour.getPrioprietaire());
             setTourAAcheter(nouvelleTour);
             panelSelection.setSelection(tour, Panel_InfoTour.MODE_ACHAT);
+            panelSelectionEtVague.setSelectedIndex(0);
+            
+            
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+            lblEtat.setText("Tour posée");
 	    }
 	    catch(Exception e)
 	    {
-	        ajouterTexteHTMLDansConsole("<font color='red'>" 
-	                               + e.getMessage()+"</font><br />");
+	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+	        lblEtat.setText(e.getMessage());
 	    }
 	}
 	
@@ -471,11 +492,14 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	        jeu.ameliorerTour(tour);
 	          
 	        panelSelection.setSelection(tour, Panel_InfoTour.MODE_SELECTION);
+	        
+	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+            lblEtat.setText("Tour Améliorée");
         }
 	    catch(Exception e)
         {
-	        ajouterTexteHTMLDansConsole("<font color='red'>" 
-                    + e.getMessage()+"</font><br />");
+	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+	        lblEtat.setText(e.getMessage());
         }
 	}
 	
@@ -492,12 +516,15 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                     new GainDePiecesOr((int)tour.getCenterX(),(int)tour.getCenterY(), 
                             tour.getPrixDeVente())
                     );
+            
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+            lblEtat.setText("Tour vendue");
         } 
         catch (ActionNonAutoriseeException e)
         {
-            e.printStackTrace();
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText(e.getMessage());
         }
-        
     }
 	
     /**
@@ -527,6 +554,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	        panelSelectionEtVague.setSelectedIndex(0);
 	    
 	    panelSelection.setSelection(tour, mode);
+	    lblEtat.setText(" ");
 	}
 	
 	/**
@@ -544,6 +572,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             panelSelectionEtVague.setSelectedIndex(0);
         
         panelSelection.setSelection(creature, 0);
+        lblEtat.setText(" ");
     }
 
 	/**
@@ -555,6 +584,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	{
 		panelTerrain.setTourAAjouter(tour);
 		panelSelection.setSelection(tour, Panel_InfoTour.MODE_ACHAT);
+		lblEtat.setText(" ");
 	}
 
 	
@@ -566,7 +596,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	}
 
 	@Override
-	public void creatureTuee(Creature creature)
+	public void creatureTuee(Creature creature,Joueur tueur)
 	{
 	    // on efface la creature des panels d'information
         if(creature == panelTerrain.getCreatureSelectionnee())
@@ -702,7 +732,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void erreurPasAssezDArgent()
     {
-        ajouterTexteHTMLDansConsole("<font color='red'>Vague trop chère</font><br />");
+        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+        lblEtat.setText("Vague trop chère");
+        
+        //ajouterTexteHTMLDansConsole("<font color='red'>Vague trop chère</font><br />");
     }
 
     @Override
@@ -738,5 +771,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                 joueur.getPseudo()+" s'est déconnecté !",
                 "Déconnexion d'un joueur",
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void deselection()
+    {
+        panelSelection.deselection();
+        
+        lblEtat.setText(" ");
     }
 }

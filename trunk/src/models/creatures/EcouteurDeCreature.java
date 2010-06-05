@@ -19,7 +19,7 @@ public interface EcouteurDeCreature
 	 * @param creature la creature qui a subie des degats
 	 * @param tueur 
 	 */
-	void creatureTuee(Creature creature, Joueur tueur);
+    void creatureTuee(Creature creature, Joueur tueur);
 	
 	/**
 	 * Permet de savoir quand une creature a ete tuee.

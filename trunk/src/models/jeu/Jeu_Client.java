@@ -55,7 +55,7 @@ public class Jeu_Client extends Jeu
 
     @Override
     public void ameliorerTour(Tour tour) throws ArgentInsuffisantException, 
-    ActionNonAutoriseeException
+    ActionNonAutoriseeException, NiveauMaxAtteintException
     {
         try
         {

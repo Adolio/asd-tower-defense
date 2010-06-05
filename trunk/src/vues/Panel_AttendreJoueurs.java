@@ -9,11 +9,13 @@ import javax.swing.border.EmptyBorder;
 
 import reseau.CanalException;
 import reseau.jeu.client.EcouteurDeClientJeu;
+import reseau.jeu.serveur.ServeurJeu;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.jeu.*;
 import models.joueurs.*;
+import models.outils.Outils;
 import models.tours.Tour;
 
 // TODO comment
@@ -32,9 +34,13 @@ public class Panel_AttendreJoueurs extends JPanel implements
     private Jeu_Client jeuClient;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
     private JLabel lEtat = new JLabel();
-    private JLabel lIPs = new JLabel();
     private JPanel pTmp;
     private Panel_GridBag pJoueurs;
+    
+    private Console console = new Console(0,80);
+    private JTextField tfSaisieMsg = new JTextField();
+    private static final ImageIcon I_ENVOYER_MSG = new ImageIcon("img/icones/msg_go.png"); 
+    private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
     
     /**
      * Constructeur de créateur de partie
@@ -104,7 +110,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         // -- CENTER --
         // ------------
         
-         pJoueurs = contruirePanelEmplacementsJoueur();
+        pJoueurs = contruirePanelEmplacementsJoueur();
 
         JPanel pCenter = new JPanel(new BorderLayout());
         pCenter.setOpaque(false);
@@ -142,7 +148,51 @@ public class Panel_AttendreJoueurs extends JPanel implements
         
         pCenter.add(pJoueursEtat, BorderLayout.WEST);
 
+        
+        
+        
+        JPanel pConsole = new JPanel(new BorderLayout());
+        pConsole.setOpaque(false);
+        console.setOpaque(false);
+        
+        pConsole.add(console,BorderLayout.NORTH);
+        
+        
+        
+        bEnvoyerMsg.addActionListener(this);
+        parent.getRootPane().setDefaultButton(bEnvoyerMsg); // bouton par def.
+        
+        JPanel pSaisieMsgEtBEnvoyer = new JPanel(new BorderLayout());
+        pSaisieMsgEtBEnvoyer.setOpaque(false);
+        pSaisieMsgEtBEnvoyer.add(tfSaisieMsg,BorderLayout.CENTER);
+        pSaisieMsgEtBEnvoyer.add(bEnvoyerMsg,BorderLayout.EAST);
+        pConsole.add(pSaisieMsgEtBEnvoyer,BorderLayout.SOUTH);
+        
+        pCenter.add(pConsole,BorderLayout.SOUTH);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         add(pCenter, BorderLayout.CENTER);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 
         // ------------
@@ -154,32 +204,31 @@ public class Panel_AttendreJoueurs extends JPanel implements
         // bouton démarrer
         if (ADMIN)
         {
-            bDemarrerMaintenant.setPreferredSize(new Dimension(100, 50));
+            bDemarrerMaintenant.setPreferredSize(new Dimension(150, 50));
             GestionnaireDesPolices.setStyle(bDemarrerMaintenant);
             pBottom.add(bDemarrerMaintenant, BorderLayout.EAST);
             bDemarrerMaintenant.addActionListener(this);
+           
+            try
+            {
+                String s = "Vos adresses IP : ";
+                
+                for (NetworkInterface netint : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                    for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
+                       if (!inetAddress.toString().contains(":") && !inetAddress.toString().contains("127.0.0.1"))
+                       {
+                          s += "[ <b>"+inetAddress.toString().substring(1) + "</b> ] ";
+                       }
+                    }
+                 }
+                
+                console.ajouterTexteHTMLDansConsole(s+"<br />");
+            } 
+            catch (SocketException e)
+            {
+                e.printStackTrace();
+            }
         }
-
-        String s = "Vos IPs : ";
- 
-        try
-        {
-            for (NetworkInterface netint : Collections.list(NetworkInterface.getNetworkInterfaces())) {
-                for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
-                   if (!inetAddress.toString().contains(":") && !inetAddress.toString().contains("127.0.0.1"))
-                   {
-                      s += "[" + inetAddress.toString().substring(1) + "] ou ";
-                   }
-                }
-             }
-        } 
-        catch (SocketException e)
-        {
-            e.printStackTrace();
-        }
-        lIPs.setText(s);
-        pBottom.add(lIPs, BorderLayout.CENTER);
-        
         
         bDeconnecter.addActionListener(this);
         bDeconnecter.setPreferredSize(new Dimension(120, 50));
@@ -194,7 +243,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
             } 
             else
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
                 lblEtat.setText("La connexion avec le serveur central à échouée, "+
                                 "votre serveur n'apparaitra pas dans la liste " +
                                	"des serveurs");
@@ -278,31 +327,23 @@ public class Panel_AttendreJoueurs extends JPanel implements
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
         }
-        else if(src == bTmpJConn)
-        {  
-            //Joueur j = new Joueur("J"+this.nbJoueurs);
-            
-            joueursMisAJour();
-            
-            /*
-            try
-            {
-                jeuServeur.ajouterJoueur(j);
+        else if(src == bEnvoyerMsg)
+        {
+            try{
+                
+                // on envoie pas de chaines vides
+                if(!tfSaisieMsg.getText().trim().equals(""))
+                {
+                    jeuClient.envoyerMsg(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
+                    tfSaisieMsg.setText("");
+                    tfSaisieMsg.requestFocus();
+                }
             } 
-            catch (JeuEnCoursException e1)
-            {
-                e1.printStackTrace();
-            } 
-            catch (AucunePlaceDisponibleException e1)
+            catch (CanalException e1)
             {
                 e1.printStackTrace();
             }
-            
-            ajouterJoueur(j);
-            */
-            if(ADMIN)
-                jeuServeur.miseAJourSE();
-        }
+        }   
     }
 
     private void ajouterJoueur(final Joueur joueur, Panel_GridBag pJoueurs, int pos)
@@ -458,7 +499,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
     public void creatureBlessee(Creature creature){}
 
     @Override
-    public void creatureTuee(Creature creature){}
+    public void creatureTuee(Creature creature,Joueur tueur){}
 
     @Override
     public void etoileGagnee(){}
@@ -526,7 +567,9 @@ public class Panel_AttendreJoueurs extends JPanel implements
     @Override
     public void messageRecu(String message, Joueur auteur)
     {
-        // TODO voir pour un chat dans le panel d'attente de joueur.
+        String couleurHexa = Outils.ColorToHexa(auteur.getEquipe().getCouleur());
+        console.ajouterTexteHTMLDansConsole("<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b> dit : "+message+" <br />");
+
     }
 
     @Override
