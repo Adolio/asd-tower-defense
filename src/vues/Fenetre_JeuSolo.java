@@ -568,22 +568,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getTerrain().getNumVagueCourante()+1)+"]");
     }
 	
-	/**
-	 * methode regissant de l'interface EcouteurDeCreature
-	 * 
-	 * Permet d'etre informe lorsqu'une creature subie des degats.
-	 */
+    @Override
 	public void creatureBlessee(Creature creature)
 	{
 	    panelInfoCreature.miseAJourInfosVariables();
 	}
 
-	/**
-	 * methode regissant de l'interface EcouteurDeCreature
-	 * 
-	 * Permet d'etre informe lorsqu'une creature a ete tuee.
-	 */
-	public void creatureTuee(Creature creature)
+	@Override
+	public void creatureTuee(Creature creature, Joueur tueur)
 	{
 	    // on efface la creature des panels d'information
         if(creature == panelTerrain.getCreatureSelectionnee())
@@ -780,4 +772,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
     @Override
     public void partieInitialisee(){}
+
+    @Override
+    public void deselection()
+    {
+        panelInfoCreature.setCreature(null);
+        panelInfoTour.setTour(null, 0);
+    }
+
 }

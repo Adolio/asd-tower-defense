@@ -915,7 +915,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        // aucun tour trouvee => clique dans le vide.
             tourSelectionnee = null;
             
-            edpt.tourSelectionnee(tourSelectionnee, Panel_InfoTour.MODE_SELECTION);
+            //edpt.tourSelectionnee(tourSelectionnee, Panel_InfoTour.MODE_SELECTION);
 			
             //------------------------------
             //-- selection d'une creature --
@@ -948,9 +948,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 				}
 			}
 			
-			// aucun creature trouvee => clique dans le vide.
 			creatureSelectionnee = null;
-			edpt.creatureSelectionnee(creatureSelectionnee);
+			
+			// aucune tour et aucune creature trouvee => clique dans le vide.
+			if(tourAAjouter == null)
+    			edpt.deselection();
 		}
 		else // clique droit ou autre
 		{
@@ -959,9 +961,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			tourAAjouter 		 = null;
 			creatureSelectionnee = null;
 			
-			edpt.tourSelectionnee(tourSelectionnee,
-                    Panel_InfoTour.MODE_SELECTION);
-			edpt.creatureSelectionnee(creatureSelectionnee);
+			edpt.deselection();
 		}
 	}
 	
@@ -982,7 +982,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
     			setCursor(curNormal);
     			
     			// informe la fenetre qu'une tour a ete selectionnee
-                edpt.tourSelectionnee(tourAAjouter, Panel_InfoTour.MODE_SELECTION);
+                //edpt.tourSelectionnee(tourAAjouter, Panel_InfoTour.MODE_SELECTION);
     		}
         }
 	}

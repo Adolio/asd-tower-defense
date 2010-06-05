@@ -282,14 +282,16 @@ public class Protocole implements ConstantesServeurJeu
      * @param creature la creature
      * @return Une structure JSONObject
      */
-    public static String construireMsgCreatureSuppression(Creature creature)
+    public static String construireMsgCreatureSuppression(Creature creature,Joueur joueur)
     {
         JSONObject msg = new JSONObject();
         
         try
         {
             msg.put("TYPE", CREATURE_SUPPRESSION);
-            msg.put("ID_CREATURE", creature.getId()); 
+            msg.put("ID_CREATURE", creature.getId());
+            msg.put("ID_TUEUR", joueur.getId());
+            
         } 
         catch (JSONException e)
         {

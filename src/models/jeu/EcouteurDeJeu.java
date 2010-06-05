@@ -93,7 +93,7 @@ public interface EcouteurDeJeu
     /**
      * Permet d'informer l'écouteur de la mort d'une créature
      */
-    public void creatureTuee(Creature creature);
+    public void creatureTuee(Creature creature,Joueur tueur);
     
     /**
      * Permet d'informer l'écouteur l'arrivée d'une créature

@@ -211,20 +211,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         
         switch (type)
         {
-    	    // Changement d'equipe
-            case JOUEUR_CHANGER_EQUIPE:
-                
-                int idEquipe = json.getInt("ID_EQUIPE");
-                int idJoueur2 = json.getInt("ID_JOUEUR");
-                
-                // joueur identique ou admin
-                if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
-                    envoyer(serveur.changerEquipe(idJoueur2,idEquipe));
-                else
-                    repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
+            // Récéption d'un message texte
+            case JOUEUR_MESSAGE:
+                receptionMsgDemandeEnvoieMessage(json);
+                break;    
         
+            // Changement d'equipe
+            case JOUEUR_CHANGER_EQUIPE:
+                receptionMsgChangementEquipe(json);
                 break;
-            
+                
              // Changement d'equipe
             case JOUEUR_PRET:
                 
@@ -245,6 +241,18 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
                 
                 break;      
         }
+    }
+
+    private void receptionMsgChangementEquipe(JSONObject json) throws CanalException, JSONException
+    {
+        int idEquipe = json.getInt("ID_EQUIPE");
+        int idJoueur2 = json.getInt("ID_JOUEUR");
+        
+        // joueur identique ou admin
+        if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
+            envoyer(serveur.changerEquipe(idJoueur2,idEquipe));
+        else
+            repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
     }
 
     /**

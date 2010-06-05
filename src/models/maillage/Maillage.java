@@ -130,7 +130,7 @@ public class Maillage
 		construireGraphe();
 		
 		// Affichage d'un petit truc dans la console
-		System.out.println(this);
+		//System.out.println(this);
 	}
 
 	/**

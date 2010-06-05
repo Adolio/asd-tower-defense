@@ -23,8 +23,8 @@ public class GestionnaireDesPolices
     public static final Color COULEUR_TITRE     = Color.BLACK;
     public static final Color COULEUR_TEXTE     = Color.MAGENTA;
     public static final Color COULEUR_INFO      = new Color(30,0,170);
-    public static final Color COULEUR_ERREUR    = Color.ORANGE;
-    public static final Color COULEUR_SUCCES    = Color.CYAN;
+    public static final Color COULEUR_ERREUR    = new Color(152,13,29);
+    public static final Color COULEUR_SUCCES    = Color.ORANGE;
     public static final Color COULEUR_SOUS_TITRE = Color.LIGHT_GRAY;
     public static final Color COULEUR_TXT_BOUTON = Color.WHITE;
     public static final Color COULEUR_TXT_SUR_COULEUR_DE_FOND = new Color(20,60,0);

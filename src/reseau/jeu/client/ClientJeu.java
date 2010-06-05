@@ -14,6 +14,7 @@ import models.joueurs.*;
 import models.terrains.Terrain;
 import models.tours.*;
 import exceptions.*;
+
 import org.json.*;
 
 /**
@@ -80,7 +81,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         try{
             msg = new JSONObject(canalPingPong.recevoirString());
-            receptionInitialisationJoueur(msg);
+            receptionJoueurInitialisation(msg);
         } 
         catch (JSONException e1){
             e1.printStackTrace(); 
@@ -199,8 +200,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @throws ArgentInsuffisantException
 	 * @throws ActionNonAutoriseeException 
 	 * @throws CanalException 
+	 * @throws NiveauMaxAtteintException 
 	 */
-	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException, CanalException
+	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException, CanalException, NiveauMaxAtteintException
 	{
 		try 
 		{
@@ -222,6 +224,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     throw new NullPointerException("Tour inconnue");
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
+                case   NIVEAU_MAX_ATTEINT:
+                    throw new NiveauMaxAtteintException("Niveau max atteint");
                 case ACTION_NON_AUTORISEE :
                     throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
             }
@@ -269,7 +273,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * @param message le message
      * @throws TypeDeTourInvalideException 
      */
-	private void receptionAjoutTour(JSONObject message) throws JSONException
+	private void receptionTourAjoutee(JSONObject message) throws JSONException
 	{
 	   
 	    log("Réception d'un objet de type : Tour.");
@@ -331,51 +335,51 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 
                 // PARTIE
                 case PARTIE_ETAT : 
-                    receptionEtatPartie(resultat);
+                    receptionPartieEtatChange(resultat);
                 break;
                 
                 // JOUEURS
                 case JOUEUR_ETAT :    
-                    receptionEtatJoueur(resultat);
+                    receptionJoueurEtatChange(resultat);
                 break; 
                 
                 case JOUEURS_ETAT :    
-                    receptionEtatJoueurs(resultat);
+                    receptionJoueursEtatChange(resultat);
                 break;
                 
                 case JOUEUR_MESSAGE :    
-                    receptionMsgJoueurMessage(resultat);
+                    receptionJoueurMessage(resultat);
                 break;
                 
                 case JOUEUR_DECONNEXION :    
-                    receptionMsgJoueurDeconnexion(resultat);
+                    receptionJoueurDeconnecte(resultat);
                 break;
                 
     
                 // TOURS
                 case TOUR_AJOUT :
-                    receptionAjoutTour(resultat);
+                    receptionTourAjoutee(resultat);
                     break;
                 
                 case TOUR_AMELIORATION :
-                    receptionAmeliorationTour(resultat);
+                    receptionTourAmelioree(resultat);
                     break;    
                     
                 case TOUR_SUPRESSION :
-                    receptionVendreTour(resultat);
+                    receptionTourVendue(resultat);
                     break;
                     
                 // CREATURES
                 case CREATURE_AJOUT :    
-                    receptionAjoutCreature(resultat);
+                    receptionCreatureAjoutee(resultat);
                     break;
     
                 case CREATURE_ETAT :    
-                    receptionEtatCreature(resultat);
+                    receptionCreatureEtatChange(resultat);
                     break;
                     
                 case CREATURE_SUPPRESSION :    
-                    receptionSuppressionCreature(resultat);
+                    receptionCreatureTuee(resultat);
                     break;  
     
                 case CREATURE_ARRIVEE : 
@@ -387,7 +391,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             }
     }
 
-    private void receptionMsgJoueurDeconnexion(JSONObject resultat) throws JSONException
+    private void receptionJoueurDeconnecte(JSONObject resultat) throws JSONException
     {
         log("Réception deconnexion d'un joueur");
         
@@ -401,7 +405,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             logErreur("Deconnexion recu : Auteur inconnu");
     }
 
-    private void receptionMsgJoueurMessage(JSONObject resultat) throws JSONException
+    private void receptionJoueurMessage(JSONObject resultat) throws JSONException
     {
         log("Réception d'une message");
         
@@ -416,7 +420,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             logErreur("Message recu : Auteur inconnu");    
     }
 
-    private void receptionEtatJoueurs(JSONObject resultat) throws JSONException
+    private void receptionJoueursEtatChange(JSONObject resultat) throws JSONException
     {
         JSONArray joueurs = resultat.getJSONArray("JOUEURS");
         
@@ -457,7 +461,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             edcj.joueursMisAJour();
     }
 
-    private void receptionEtatPartie(JSONObject resultat) throws JSONException, CanalException
+    private void receptionPartieEtatChange(JSONObject resultat) throws JSONException, CanalException
     {
         switch(resultat.getInt("ETAT"))
         {
@@ -501,7 +505,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             logErreur("Créature arrivée : Créature inconnue");      
     }
 
-    private void receptionInitialisationJoueur(JSONObject message) throws JSONException, AucunEmplacementDisponibleException
+    private void receptionJoueurInitialisation(JSONObject message) throws JSONException, AucunEmplacementDisponibleException
     {
 	    log("Réception des donnees d'initialisation du joueur");
         
@@ -569,7 +573,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-	private void receptionEtatJoueur(JSONObject message) throws JSONException
+	private void receptionJoueurEtatChange(JSONObject message) throws JSONException
     {
         int idJoueur = message.getInt("ID_JOUEUR");
         
@@ -598,7 +602,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionAmeliorationTour(JSONObject message) throws JSONException
+    private void receptionTourAmelioree(JSONObject message) throws JSONException
     {
         log("Réception de l'amélioration d'une tour");
         
@@ -617,7 +621,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionVendreTour(JSONObject message) throws JSONException
+    private void receptionTourVendue(JSONObject message) throws JSONException
     {
         log("Réception de la suppression d'une tour");
         
@@ -635,7 +639,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionAjoutCreature(JSONObject message) throws JSONException
+    private void receptionCreatureAjoutee(JSONObject message) throws JSONException
     {
         log("Réception d'un l'ajout d'une créature.");
         
@@ -658,6 +662,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             creature.setX(x);
             creature.setY(y);
             creature.setEquipeCiblee(equipeCiblee);
+            creature.misAJour();
             
             creature.setSanteMax(santeMax);
             creature.setNbPiecesDOr(nbPiecesDOr);
@@ -666,7 +671,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             jeu.ajouterCreatureDirect(creature);
         }
         else
-            logErreur("Ajout d'une créature : Créature de type inconnu");
+            logErreur("Ajout d'une créature : Créature de type inconnu (type : "+typeCreature+")");
     }
     
     /**
@@ -674,15 +679,15 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionEtatCreature(JSONObject message) throws JSONException
+    private void receptionCreatureEtatChange(JSONObject message) throws JSONException
     {
-        int id = message.getInt("ID_CREATURE");
+        int idCreature = message.getInt("ID_CREATURE");
         int x = message.getInt("X");
         int y = message.getInt("Y");
         int sante = message.getInt("SANTE");
         double angle = message.getDouble("ANGLE");
         
-        Creature creature = jeu.getCreature(id);
+        Creature creature = jeu.getCreature(idCreature);
         
         // Elle peut avoir été détruite entre-temps.
         if(creature != null)
@@ -691,9 +696,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             creature.y = y;
             creature.setSante(sante);
             creature.setAngle(angle);
+            creature.misAJour();
         }
         else
-           logErreur("Etat d'une créature : Créature inconnue");
+           logErreur("Etat d'une créature : Créature inconnue (id : "+idCreature+")");
     }
     
     /**
@@ -701,21 +707,23 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      * 
      * @param message le message
      */
-    private void receptionSuppressionCreature(JSONObject message) throws JSONException
+    private void receptionCreatureTuee(JSONObject message) throws JSONException
     {
-        int id = message.getInt("ID_CREATURE");
+        int idCreature = message.getInt("ID_CREATURE");
+        Creature creature = jeu.getCreature(idCreature);
         
-        Creature creature = jeu.getCreature(id);
+        int idTueur = message.getInt("ID_TUEUR");
+        Joueur joueur = jeu.getJoueur(idTueur);
+         
         if(creature != null)
         {
             jeu.ajouterAnimation(new GainDePiecesOr((int)creature.getCenterX(),
                                                 (int)creature.getCenterY(),
                                                 creature.getNbPiecesDOr()));
-        
-            jeu.supprimerCreatureDirect(creature);
+            creature.mourrir(joueur);
         }
         else
-            logErreur("Suppression d'une créature : Créature inconnue");
+            logErreur("Créature tuée : Créature inconnue (id : "+idCreature+")");
     }
     
     /**

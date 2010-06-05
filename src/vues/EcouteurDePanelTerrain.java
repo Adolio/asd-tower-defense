@@ -75,4 +75,10 @@ public interface EcouteurDePanelTerrain
      * @param tour la nouvelle tour a acheter
      */
     public void setTourAAcheter(Tour tour);
+
+    
+    /**
+     * Permet d'informer l'écouteur d'une désélection
+     */
+    public void deselection();
 }

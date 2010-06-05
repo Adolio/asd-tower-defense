@@ -77,9 +77,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		// le serveur ecoute le jeu
 		jeuServeur.setEcouteurDeJeu(this);
 		
-		// Réglage du niveau d'affichage des messages clients
-        JoueurDistant.verbeux = verbeux;
-		
         // Réservation du port d'écoute
         port = new Port(PORT);
         
@@ -209,11 +206,12 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	    // detectable par les clients lors de la mise a jour par l'état d'une creature
 	}
 
+
 	@Override
-	public void creatureTuee(Creature creature)
+	public void creatureTuee(Creature creature,Joueur tueur)
 	{
 	    // Multicast aux clients
-	    envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
+	    envoyerATous(Protocole.construireMsgCreatureSuppression(creature,tueur));
 	}
 
     @Override
@@ -253,12 +251,16 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         
         //envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_LANCEE));
         envoyerATous(Protocole.construireMsgJoueursEtat(getJoueurs()));
-       
+      
+        creerTacheDeMiseAJour();
+	}
 
-		//--------------------------------------
-		//-- tache de mise a jour des clients --
-		//--------------------------------------
-		Thread t = new Thread(new Runnable()
+	private void creerTacheDeMiseAJour()
+    {
+	    //--------------------------------------
+        //-- tache de mise a jour des clients --
+        //--------------------------------------
+        Thread t = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -266,8 +268,11 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                 while(!jeuServeur.estTermine())
                 {
                     for(Creature creature : jeuServeur.getCreatures())
-                        envoyerATous(Protocole.construireMsgCreatureEtat(creature));
-                         
+                    {
+                        if(!creature.estMorte())
+                            envoyerATous(Protocole.construireMsgCreatureEtat(creature));
+                    }
+                    
                     try{
                         Thread.sleep(TEMPS_DE_RAFFRAICHISSEMENT);
                     } 
@@ -279,9 +284,9 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
         });
         
         t.start();
-	}
+    }
 
-	@Override
+    @Override
 	public void tourAmelioree(Tour tour)
 	{
 	    // Multicast aux clients
@@ -403,8 +408,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		log("Le joueur " + idJoueur + " veut poser une tour de type "
 				+ typeTour);
 		
-		System.out.println("   -> AJOUT TOUR ETAPE 1");
-		
 		// Selection de la tour cible
 		Tour tour = null;
         try
@@ -415,12 +418,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             tour.x = x;
             tour.y = y;
             
-            System.out.println("   -> AJOUT TOUR ETAPE 2");
-            
             // Assignation du propriétaire
             tour.setProprietaire(jeuServeur.getJoueur(idJoueur));
-       
-            System.out.println("   -> AJOUT TOUR ETAPE 3");
             
 			// Tentative de poser la tour
 			jeuServeur.poserTour(tour);

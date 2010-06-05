@@ -29,7 +29,7 @@ public abstract class Creature extends Rectangle
 	/**
      * Identificateur unique de la créature
      */
-    private int ID;
+    private int id;
     private static int idCourant = 0;
 	
 	
@@ -47,6 +47,14 @@ public abstract class Creature extends Rectangle
 	 */
 	public static final int TYPE_TERRIENNE 	= 0;
 	public static final int TYPE_AERIENNE 	= 1;
+
+
+	/**
+	 * Temps avant la suppression de la créature si aucune nouvelle n'est recue.
+	 * 
+	 * Valable pour les clients réseau uniquement.
+	 */
+    private static final long TEMPS_AVANT_SUPPRESSION_SI_AUCUNE_MAJ = 3000;
 
 	/**
 	 * nom de la creature
@@ -155,7 +163,7 @@ public abstract class Creature extends Rectangle
 		xReel = x;
 		yReel = y;
 		
-		this.ID             = ++idCourant;
+		this.id             = ++idCourant;
 		this.nbPiecesDOr 	= nbPiecesDOr;
 		this.santeMax		= santeMax;
 		sante 				= santeMax;
@@ -193,7 +201,7 @@ public abstract class Creature extends Rectangle
      */
     public int getId()
     {
-        return ID;
+        return id;
     }
 	
 	/**
@@ -493,7 +501,7 @@ public abstract class Creature extends Rectangle
 		if(!estMorte() && joueur.getEquipe() == equipeCiblee)
 		{
 			// diminution de la sante
-			if(!invincible)
+			if(!invincible) // pour les clients...
 			    sante -= degats;
 			
 			// appel des ecouteurs de la creature
@@ -517,12 +525,12 @@ public abstract class Creature extends Rectangle
 	/**
 	 * Permet de tuer la creature
 	 */
-	private void mourrir(Joueur tueur)
-	{
-		sante = 0;
+	public void mourrir(Joueur tueur)
+	{ 
+	    sante = 0;
 		
 		// appel des ecouteurs de la creature
-		for( EcouteurDeCreature edc : ecouteursDeCreature)
+		for(EcouteurDeCreature edc : ecouteursDeCreature)
 			edc.creatureTuee(this,tueur);
 		
 		aDetruire = true;
@@ -601,7 +609,7 @@ public abstract class Creature extends Rectangle
      */
     public void setId(int id)
     {
-        this.ID = id;
+        this.id = id;
     }
 
     /**
@@ -659,5 +667,30 @@ public abstract class Creature extends Rectangle
     public void setVitesse(double vitesse)
     {
         this.vitesseNormale = vitesse;
+    }
+
+    
+    
+    long tempsDerniereMAJ = 0;
+    public void misAJour()
+    {
+        tempsDerniereMAJ = new Date().getTime();   
+    }
+
+    public void effacerSiPasMisAJour()
+    {
+        long maintenant = new Date().getTime(); 
+        
+        if(tempsDerniereMAJ != 0) // seulement si mis a jour une fois
+        {
+            if(maintenant - tempsDerniereMAJ > TEMPS_AVANT_SUPPRESSION_SI_AUCUNE_MAJ)
+            {
+                System.out.println("CREATURE TUEE PAR FORCE APRES "+
+                       (TEMPS_AVANT_SUPPRESSION_SI_AUCUNE_MAJ / 1000.0)+
+                       " SEC. D'INACTIVITE ! (id : "+id+" )");
+                
+                mourrir(null);
+            }
+        }
     }
 }
