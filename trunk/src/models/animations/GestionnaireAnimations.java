@@ -2,6 +2,7 @@ package models.animations;
 
 import java.awt.Graphics2D;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Vector;
  * Toutes les animations tournent sous le meme clock.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | mai 2010
+ * @version 1.1 | juin 2010
  * @since jdk1.6.0_16
  */
 public class GestionnaireAnimations implements Runnable
@@ -46,10 +47,7 @@ public class GestionnaireAnimations implements Runnable
      */
     public void ajouterAnimation(Animation animation)
     {
-        synchronized(animations)
-        {
-            animations.add(animation);
-        }
+        animations.add(animation);
     }
     
     /**
@@ -57,7 +55,7 @@ public class GestionnaireAnimations implements Runnable
      */
     public void dessinerAnimations(Graphics2D g2, int hauteur)
     {
-        synchronized (animations)
+        try
         {
             Enumeration<Animation> eAnimations = animations.elements();
             Animation animation;
@@ -70,6 +68,17 @@ public class GestionnaireAnimations implements Runnable
                     animation.dessiner(g2);
             }
         }
+        
+        // FIXME Cette erreur vient de la suppression d'une animation
+        // dans la méthode run. J'ai essayé d'utiliser un objet Iterator 
+        // pour pouvoir supprimmer proprement l'animation du vecteur
+        // mais des erreurs de concurrence surviennent! Même en englobant 
+        // l'iterateur d'un synchronized(animations)... pourtant cette structure
+        // est recommandé sur les forums et sitewebs...
+        catch(NoSuchElementException nse)
+        {
+            System.err.println("[ERREUR] Animation introuvable");
+        }
     }
 
     @Override
@@ -77,26 +86,48 @@ public class GestionnaireAnimations implements Runnable
     {
        gestionEnCours = true;
         
-       while(gestionEnCours)
+       /*
+       // FIXME CECI NE MARCHE PAS :
+       // Une erreur de concurrence est levée 
+       
+       synchronized(animations.iterator)
        {
-           synchronized (animations)
-           { 
-               Animation animation;
-               for(int i=0;i<animations.size();i++)
+           Animation animation;
+           Iterator<Animation> iAnimations = animations.iterator();
+           while(iAnimations.hasNext())
+           {
+               animation = iAnimations.next();
+               
+               // detruit l'animation si elle est terminee
+               if(animation.estTerminee())
+                   iAnimations.remove();
+               else
                {
-                   animation = animations.get(i);
-                   
-                   // detruit l'animation si elle est terminee
-                   if(animation.estTerminee())
-                       animations.remove(i--);
-                   else
-                   {
-                       // anime l'animation
-                       animation.animer(TEMPS_ATTENTE);
-                   }
+                   // anime l'animation
+                   animation.animer(TEMPS_ATTENTE);
                }
            }
-           
+       }
+       */
+
+       while(gestionEnCours)
+       {
+           Enumeration<Animation> eAnimations = animations.elements();
+           Animation animation;
+           while(eAnimations.hasMoreElements())
+           {
+               animation = eAnimations.nextElement();
+                   
+               // detruit l'animation si elle est terminee
+               if(animation.estTerminee())
+                   animations.remove(animation);
+               else
+               {
+                   // anime l'animation
+                   animation.animer(TEMPS_ATTENTE);
+               }
+           }
+ 
            // gestion de la pause
            try
            {

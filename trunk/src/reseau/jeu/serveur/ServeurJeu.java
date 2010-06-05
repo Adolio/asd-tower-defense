@@ -44,7 +44,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	/**
 	 * Fanion pour le mode debug
 	 */
-	private static final boolean verbeux = true;
+	private static final boolean verbeux = false;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -201,19 +201,19 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	     *  -> les joueurs de l'equipe qui a perdu une vie
 	     */
         envoyerATous(Protocole.construireMsgCreatureArrivee(creature));
-        
 	}
 
 	@Override
 	public void creatureBlessee(Creature creature)
 	{
-	    // detectable lors de la mise a jour par l'état d'une creature
+	    // detectable par les clients lors de la mise a jour par l'état d'une creature
 	}
 
 	@Override
 	public void creatureTuee(Creature creature)
 	{
-        envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
+	    // Multicast aux clients
+	    envoyerATous(Protocole.construireMsgCreatureSuppression(creature));
 	}
 
     @Override
@@ -223,6 +223,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void partieTerminee()
 	{
+	    // Multicast aux clients
 	    envoyerATous(Protocole.construireMsgPartieTerminee());
 	}
 
@@ -238,7 +239,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	@Override
 	public void creatureAjoutee(Creature creature)
 	{ 
-        envoyerATous(Protocole.construireMsgCreatureAjout(creature));
+	    // Multicast aux clients
+	    envoyerATous(Protocole.construireMsgCreatureAjout(creature));
 	}
 
     @Override
@@ -280,25 +282,30 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	}
 
 	@Override
-	public void tourAmelioree(Tour tour){}
+	public void tourAmelioree(Tour tour)
+	{
+	    // Multicast aux clients
+        envoyerATous(Protocole.construireMsgTourAmelioration(tour).toString());
+	}
 
 	@Override
 	public void tourPosee(Tour tour)
 	{
-	    System.out.println("coucou");
-	    
 	    // Multicast aux clients
         envoyerATous(Protocole.construireMsgTourAjout(tour).toString());
 	}
 
 	@Override
-	public void tourVendue(Tour tour){}
+	public void tourVendue(Tour tour)
+	{
+	    // Multicast aux clients
+        envoyerATous(Protocole.construireMsgTourSuppression(tour).toString());
+	}
 
 	@Override
     public void joueurMisAJour(Joueur joueur)
     {
-	    log("Mise à jour du joueur "+joueur.getPseudo());
-	    
+	    // Multicast aux clients
         envoyerATous(Protocole.construireMsgJoueurEtat(joueur));
     }
 	
@@ -396,6 +403,8 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		log("Le joueur " + idJoueur + " veut poser une tour de type "
 				+ typeTour);
 		
+		System.out.println("   -> AJOUT TOUR ETAPE 1");
+		
 		// Selection de la tour cible
 		Tour tour = null;
         try
@@ -406,17 +415,20 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             tour.x = x;
             tour.y = y;
             
+            System.out.println("   -> AJOUT TOUR ETAPE 2");
+            
             // Assignation du propriétaire
             tour.setProprietaire(jeuServeur.getJoueur(idJoueur));
        
+            System.out.println("   -> AJOUT TOUR ETAPE 3");
+            
 			// Tentative de poser la tour
 			jeuServeur.poserTour(tour);
 			
 		} 
 		catch (TypeDeTourInvalideException e1)
         {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            return TYPE_TOUR_INVALIDE;
         }
 		// Pas assez d'argent 
 		catch (ArgentInsuffisantException e){
@@ -430,13 +442,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		catch (CheminBloqueException e){
 			return CHEMIN_BLOQUE; 
 		} 
-		// Autre erreur
-		catch (Exception e){
-			e.printStackTrace();
-			return ERREUR;
-		}
   
-		//setChanged();
 		return OK;
 	}
 
@@ -477,10 +483,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 		    return ACTION_NON_AUTORISEE;
         }
 		
-		// Multicast aux clients
-        envoyerATous(Protocole.construireMsgTourAmelioration(tour).toString());
-        
-		
 		return OK;
 	}
 
@@ -489,7 +491,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 * @param tourCibleDel
 	 * @return
 	 */
-	public synchronized int supprimerTour(int IDPlayer, int tourCible)
+	public synchronized int vendreTour(int IDPlayer, int tourCible)
 	{
 		log("Le joueur " + IDPlayer + " désire supprimer la tour " + tourCible);
 		
@@ -509,10 +511,6 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
             jeuServeur.vendreTour(tour);
         } 
 		catch (ActionNonAutoriseeException e){}
-		
-		// Multicast aux clients
-        envoyerATous(Protocole.construireMsgTourSuppression(tour).toString());
-        
 		
 		return OK;
 	}

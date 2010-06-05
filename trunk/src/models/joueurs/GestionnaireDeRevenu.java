@@ -13,7 +13,6 @@ import models.joueurs.Joueur;
 public class GestionnaireDeRevenu implements Runnable
 {
     public static final double POURCENTAGE_NB_PIECES_OR_CREATURE = 0.005;
-    
     private static final long TEMPS_REVENU_CREATURE = 5000; // ms
     private boolean gestionEnCours;
     private boolean enPause = false;
@@ -45,6 +44,7 @@ public class GestionnaireDeRevenu implements Runnable
         while(gestionEnCours)
         {
             // donne de l'argent
+            // pas de problème de concurrence car c'est une copie.
             for(Joueur joueur : jeu.getJoueurs())
                 joueur.donnerRevenu(TEMPS_REVENU_CREATURE);
               

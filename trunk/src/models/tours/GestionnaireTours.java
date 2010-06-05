@@ -2,7 +2,6 @@ package models.tours;
 
 import java.util.Enumeration;
 import java.util.Vector;
-
 import models.creatures.Creature;
 import models.jeu.Jeu;
 
@@ -13,6 +12,11 @@ import models.jeu.Jeu;
  * aleger le processeur.
  * 
  * Toutes les tours tournent sous le meme clock.
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.1 | juin 2010
+ * @since jdk1.6.0_16
+ * @see Tour
  */
 public class GestionnaireTours implements Runnable
 {
@@ -55,10 +59,7 @@ public class GestionnaireTours implements Runnable
         // arret du thread
         tour.arreter();
 
-        synchronized (tours)
-        {
-            tours.remove(tour);
-        }
+        tours.remove(tour);
         
         // reactive la zone dans le maillage qui correspond a la tour
         jeu.getTerrain().activerZone(tour, true);
@@ -71,10 +72,7 @@ public class GestionnaireTours implements Runnable
      */
     public void ajouterTour(Tour tour)
     {
-        synchronized(tours)
-        {
-            tours.add(tour);
-        }
+        tours.add(tour);
     }
     
     @Override
@@ -84,33 +82,28 @@ public class GestionnaireTours implements Runnable
         
         while(gestionEnCours)
         {
-            synchronized (tours)
-            { 
-                Tour tour;
-                for(int i=0;i<tours.size();i++)
-                {
-                    tour = tours.get(i);
-                    
-                    // anime l'animation
-                    if(tour.estEnJeu())
-                        tour.action(TEMPS_ATTENTE); 
-                }
-            }
-            
-            // gestion de la pause
-            try
+            Tour tour;
+            Enumeration<Tour> eTours = tours.elements();
+            while(eTours.hasMoreElements())
             {
+                tour = eTours.nextElement();
+  
+                // anime l'animation
+                if(tour.estEnJeu())
+                    tour.action(TEMPS_ATTENTE); 
+            }
+          
+            // gestion de la pause
+            try{
                 synchronized (pause)
                 {
                     if(enPause)
                         pause.wait();
                 } 
             } 
-            catch (InterruptedException e1)
-            {
+            catch (InterruptedException e1){
                 e1.printStackTrace();
             }
-            
             
             try{
                  Thread.sleep(TEMPS_ATTENTE);
@@ -179,11 +172,14 @@ public class GestionnaireTours implements Runnable
             return false;
         
         // il n'y a pas deja une tour
-        synchronized (tours)
+        Tour tourCourante;
+        Enumeration<Tour> eTours = tours.elements();
+        while(eTours.hasMoreElements())
         {
-            for (Tour tourCourante : tours)
-                if (tour.intersects(tourCourante))
-                    return false;
+            tourCourante = eTours.nextElement();
+
+            if (tour.intersects(tourCourante))
+                return false;
         }
         
         // elle est dans la zone de construction du joueur
@@ -231,18 +227,16 @@ public class GestionnaireTours implements Runnable
      */
     public Tour getTour(int idTour)
     {
-        synchronized (tours)
-        { 
-            Tour tour;
-            for(int i=0;i<tours.size();i++)
-            {
-                tour = tours.get(i);
-                
-                if(tour.getId() == idTour)
-                    return tour;
-            }
+        Tour tour;
+        Enumeration<Tour> eTours = tours.elements();
+        while(eTours.hasMoreElements())
+        {
+            tour = eTours.nextElement();
+            
+            if(tour.getId() == idTour)
+                return tour;
         }
-        
+      
         return null;
     }
 }
