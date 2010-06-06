@@ -291,9 +291,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    // ajout au panel
 		    pBoutonsTerrains.add(pInfoTerrain);
 		}
-	
-		
-		
+
 		JPanel pCentre = new JPanel(new BorderLayout());
 		pCentre.setOpaque(false);
 		
@@ -302,7 +300,12 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		JLabel lblAstuce = new JLabel("\""+Astuces.getAstuceAleatoirement()+"\"");
 		lblAstuce.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		lblAstuce.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
-		pCentre.add(lblAstuce,BorderLayout.EAST);
+		
+		JPanel pPourCentrer = new JPanel();
+		pPourCentrer.setOpaque(false);
+		pPourCentrer.add(lblAstuce);
+		pPourCentrer.setBorder(new EmptyBorder(0, 0, 100, 0));
+		pCentre.add(pPourCentrer,BorderLayout.SOUTH);
         
 		pFormulaire.add(pCentre,BorderLayout.CENTER);
 		

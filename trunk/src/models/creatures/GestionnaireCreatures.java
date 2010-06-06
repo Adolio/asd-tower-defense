@@ -3,6 +3,7 @@ package models.creatures;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
@@ -69,23 +70,31 @@ public class GestionnaireCreatures implements Runnable
         
         while(gestionEnCours)
         {
-            Creature creature;
-            Enumeration<Creature> eCreatures = creatures.elements();
-            while(eCreatures.hasMoreElements())
+            try
             {
-                creature = eCreatures.nextElement();
-                
-                creature.effacerSiPasMisAJour();
-                
-                // efface les creatures mortes
-                if(creature.aDetruire())
-                    creatures.remove(creature);
-                else
+                Creature creature;
+                Enumeration<Creature> eCreatures = creatures.elements();
+                while(eCreatures.hasMoreElements())
                 {
-                    // anime la creature
-                    creature.action(TEMPS_ATTENTE);
+                    creature = eCreatures.nextElement();
+                    
+                    creature.effacerSiPasMisAJour();
+                    
+                    // efface les creatures mortes
+                    if(creature.aDetruire())
+                        creatures.remove(creature);
+                    else
+                    {
+                        // anime la creature
+                        creature.action(TEMPS_ATTENTE);
+                    }
                 }
             }
+            catch(NoSuchElementException nse)
+            {
+                System.err.println("[ERREUR] Créature introuvable");
+            }
+            
             
             // gestion de la pause
             try
@@ -151,16 +160,24 @@ public class GestionnaireCreatures implements Runnable
     public Vector<Creature> getCreaturesQuiIntersectent(Rectangle rectangle)
     {
         Vector<Creature> creaturesIntersectees = new Vector<Creature>();
-        Creature creature;
-        Enumeration<Creature> eCreatures = creatures.elements();
-        while(eCreatures.hasMoreElements())
-        {
-            creature = eCreatures.nextElement();
-    
-            if(creature.intersects(rectangle))
-                creaturesIntersectees.add(creature);
-        }
         
+        try
+        {
+            Creature creature;
+            Enumeration<Creature> eCreatures = creatures.elements();
+            while(eCreatures.hasMoreElements())
+            {
+                creature = eCreatures.nextElement();
+        
+                if(creature.intersects(rectangle))
+                    creaturesIntersectees.add(creature);
+            }
+        }
+        catch(NoSuchElementException nse)
+        {
+            System.err.println("[ERREUR] Créature introuvable");
+        }
+
         return creaturesIntersectees;
     }
     
@@ -175,18 +192,25 @@ public class GestionnaireCreatures implements Runnable
     {
         Vector<Creature> creaturesIntersctees = new Vector<Creature>();
         
-        Creature creature;
-        Enumeration<Creature> eCreatures = creatures.elements();
-        while(eCreatures.hasMoreElements())
+        try
         {
-            creature = eCreatures.nextElement();
-
-            Point pCreature = new Point((int)creature.getCenterX(), 
-                                        (int)creature.getCenterY());
-            Point pCercle = new Point(x,y);
-            
-            if(pCreature.distance(pCercle) < rayon + creature.getWidth() / 2)
-                creaturesIntersctees.add(creature);
+            Creature creature;
+            Enumeration<Creature> eCreatures = creatures.elements();
+            while(eCreatures.hasMoreElements())
+            {
+                creature = eCreatures.nextElement();
+    
+                Point pCreature = new Point((int)creature.getCenterX(), 
+                                            (int)creature.getCenterY());
+                Point pCercle = new Point(x,y);
+                
+                if(pCreature.distance(pCercle) < rayon + creature.getWidth() / 2)
+                    creaturesIntersctees.add(creature);
+            }
+        }
+        catch(NoSuchElementException nse)
+        {
+            System.err.println("[ERREUR] Créature introuvable");
         }
         
         return creaturesIntersctees;
@@ -200,14 +224,21 @@ public class GestionnaireCreatures implements Runnable
      */
     public Creature getCreature(int id)
     {
-        Creature creature;
-        Enumeration<Creature> eCreatures = creatures.elements();
-        while(eCreatures.hasMoreElements())
+        try
         {
-            creature = eCreatures.nextElement();
-                
-            if(creature.getId() == id)
-                return creature;
+            Creature creature;
+            Enumeration<Creature> eCreatures = creatures.elements();
+            while(eCreatures.hasMoreElements())
+            {
+                creature = eCreatures.nextElement();
+                    
+                if(creature.getId() == id)
+                    return creature;
+            }
+        }
+        catch(NoSuchElementException nse)
+        {
+            System.err.println("[ERREUR] Créature introuvable");
         }
         
         return null;

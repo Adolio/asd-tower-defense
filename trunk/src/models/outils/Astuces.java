@@ -16,9 +16,9 @@ public class Astuces
         "Le cercle blanc autour d'une tour indique la portee de la tour.",
         "Attention a ne pas vous faire surprendre par les vagues volantes",
         "Toutes les tours sont ameliorables moyennant quelques pieces d'or",
-        "Les tours de glaces ralentissent les creatures, placez-les strategiquement",
-        "Les etoiles vous permettent d'acceder a d'autres terrain de jeu",
-        "A chaque fin de partie, vous pouvez sauver votre score",
+        "Les tours de glace ralentissent les creatures, placez-les strategiquement",
+        "Les etoiles vous permettent d'acceder a d'autres terrains de jeu",
+        "A chaque fin de partie, vous pourrez sauver votre score",
         "La vente d'une tour vous fait recuperer 60 pourcent de son prix total",
         "Ce jeu est libre et gratuit, vous pouvez meme acceder au code source"
     };

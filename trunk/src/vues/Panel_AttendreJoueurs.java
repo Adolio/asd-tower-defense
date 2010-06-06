@@ -246,8 +246,8 @@ public class Panel_AttendreJoueurs extends JPanel implements
             else
             {
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                lblEtat.setText("La connexion avec le serveur central à échouée, "+
-                                "votre serveur n'apparaitra pas dans la liste " +
+                lblEtat.setText("La connexion avec le serveur central a échouée, "+
+                                "votre serveur n'apparaîtra pas dans la liste " +
                                	"des serveurs");
             }
 
