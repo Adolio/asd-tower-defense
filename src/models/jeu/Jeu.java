@@ -245,6 +245,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());
     
+       
+        //ajouterAnimation(new Fumee((int)tour.getCenterX(),(int)tour.getCenterY()));
+        
         if(edj != null)
             edj.tourPosee(tour);
     }
@@ -265,6 +268,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
         tour.getPrioprietaire().setNbPiecesDOr(
                 tour.getPrioprietaire().getNbPiecesDOr() + tour.getPrixDeVente());
     
+        ajouterAnimation(new Fumee((int)tour.getCenterX(),(int)tour.getCenterY()));
+        
         if(edj != null)
             edj.tourVendue(tour);
     }
