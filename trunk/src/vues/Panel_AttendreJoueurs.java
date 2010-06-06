@@ -15,6 +15,7 @@ import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
 import models.jeu.*;
 import models.joueurs.*;
+import models.outils.GestionnaireSons;
 import models.outils.Outils;
 import models.tours.Tour;
 
@@ -221,8 +222,8 @@ public class Panel_AttendreJoueurs extends JPanel implements
         }
         else
         {
-            console.ajouterTexteHTMLDansConsole("Attente du démarrage de la partie... " +
-                "Le chat ci-dessous vous permet de communiquer avec les " +
+            console.ajouterTexteHTMLDansConsole("Attente du démarrage de la partie... <br/>" +
+                "Cette console vous permet de communiquer avec les " +
                 "autres joueurs connectés.<br />");
         }
         
@@ -526,6 +527,8 @@ public class Panel_AttendreJoueurs extends JPanel implements
                 new Fenetre_JeuVersus(jeuClient); // FIXME créer Fenetre_JeuCoop
                 break;
         }
+        
+        GestionnaireSons.arreterTousLesSons(Fenetre_MenuPrincipal.FICHIER_MUSIQUE_MENU);
         
         parent.dispose();
     }
