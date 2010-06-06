@@ -2,7 +2,9 @@
 import javax.swing.UIManager;
 
 import models.jeu.Jeu_Solo;
+import models.terrains.ElementTD_Coop;
 import models.terrains.ElementTD_Versus_4;
+import models.terrains.SimpleFiveVersus;
 import models.terrains.Terrain;
 import vues.Fenetre_MenuPrincipal;
 
@@ -46,12 +48,13 @@ public class Main
                   
       // TODO [A EFFACER]
       /*
+      // a reserializer pour le son
       Terrain t1 = new ElementTD_Coop(new Jeu_Solo());      
-      Terrain.serialiser(t1);
+      Terrain.serialiser(t1); 
                
       Terrain t2 = new SimpleFiveVersus(new Jeu_Solo());      
       Terrain.serialiser(t2);
-       
+      
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
       Terrain.serialiser(t3);
       */

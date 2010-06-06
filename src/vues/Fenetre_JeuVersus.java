@@ -337,6 +337,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
 		// on demarre la musique au dernier moment
         jeu.getTerrain().demarrerMusiqueDAmbiance();
+        
 		jeu.demarrer();
 		timer.start();
 		jeu.setEcouteurDeJeu(this);

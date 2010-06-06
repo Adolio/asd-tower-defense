@@ -247,15 +247,15 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		pFormulaire.add(pMarge,BorderLayout.WEST);
 		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
 		
-		// on demarre la musique au dernier moment
-		jeu.getTerrain().demarrerMusiqueDAmbiance();
-		
 		add(pFormulaire,BorderLayout.CENTER);
 		
 		
 	    //----------------------
         //-- demarrage du jeu --
         //----------------------
+		// on demarre la musique au dernier moment
+        jeu.getTerrain().demarrerMusiqueDAmbiance();
+		
 		jeu.setEcouteurDeJeu(this);
         jeu.demarrer();
         

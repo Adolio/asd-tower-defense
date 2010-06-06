@@ -144,7 +144,7 @@ public abstract class Terrain implements Serializable
     /**
      * musique d'ambiance du terrain
      */
-    transient protected File fichierMusiqueDAmbiance;
+    protected File fichierMusiqueDAmbiance;
 
     /**
      * Stockage du jeu
