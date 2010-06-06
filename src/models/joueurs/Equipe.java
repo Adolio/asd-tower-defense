@@ -369,7 +369,23 @@ public class Equipe implements Serializable
      */
     public boolean aPerdu()
     {
-        return nbViesRestantes <= 0;
+        return nbViesRestantes <= 0 || estHorsJeu();
+    }
+
+    private boolean estHorsJeu()
+    {
+        Joueur joueur;
+        Enumeration<Joueur> e = joueurs.elements(); 
+        while(e.hasMoreElements())
+        {
+            joueur = e.nextElement();
+            
+            // si il y au moins un joueur pas hors jeu
+            if(!joueur.estHorsJeu())
+                return false; 
+        }
+        
+        return true;
     }
 
     /**
@@ -379,20 +395,16 @@ public class Equipe implements Serializable
      */
     public void vider()
     {
-        synchronized (joueurs)
+        // retire tous les joueurs de leur emplacement
+        Joueur joueur;
+        Enumeration<Joueur> e = joueurs.elements(); 
+        while(e.hasMoreElements())
         {
-            // retire tous les joueurs de leur emplacement
-            Enumeration<Joueur> e = joueurs.elements();
-            
-            Joueur joueur;
-            while(e.hasMoreElements())
-            {
-                joueur = e.nextElement();
-                retirerJoueur(joueur);
-            }
-                          
-            // vide la liste des joueurs
-            joueurs.clear();
+            joueur = e.nextElement();
+            retirerJoueur(joueur);
         }
+                      
+        // vide la liste des joueurs
+        joueurs.clear();
     }
 }

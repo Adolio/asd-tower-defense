@@ -43,7 +43,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	/**
 	 * Mode verbeux
 	 */
-    private final boolean verbeux = false;
+    private final boolean verbeux = true;
     
     /**
      * Ecouteur de client jeu pour les notifications
@@ -393,7 +393,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 
     private void receptionJoueurDeconnecte(JSONObject resultat) throws JSONException
     {
-        log("Réception deconnexion d'un joueur");
+        log("Réception d'une déconnexion d'un joueur");
         
         int idJoueur    = resultat.getInt("ID_JOUEUR");
        
@@ -794,6 +794,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     public void annoncerDeconnexion() throws CanalException
     {
        try{
+        
         // envoye de la requete de vente
         JSONObject json = new JSONObject();
         json.put("TYPE", JOUEUR_DECONNEXION);
@@ -801,18 +802,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         log("Envoye d'une deconnexion");
             
         canalPingPong.envoyerString(json.toString());
-   
-        
-        
-        
-        /*
-        String resultat = canalPingPong.recevoirString();
-        JSONObject resultatJSON = new JSONObject(resultat);
-        switch(resultatJSON.getInt("STATUS"))
-        {
-            case PAS_DE_PLACE :
-                throw new AucunEmplacementDisponibleException("Pas de place dans cette équipe");
-        }*/
+  
         } 
         catch (JSONException e) {
             e.printStackTrace();

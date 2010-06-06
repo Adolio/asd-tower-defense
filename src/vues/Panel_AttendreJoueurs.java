@@ -29,7 +29,6 @@ public class Panel_AttendreJoueurs extends JPanel implements
     private JButton bDemarrerMaintenant = new JButton("Démarrer maintenant");
     private JLabel lblEtat = new JLabel();
     private JButton bDeconnecter = new JButton("Se Deconnecter");
-    private JButton bTmpJConn = new JButton("...Un joueur se connect");
     private Jeu_Serveur jeuServeur;
     private Jeu_Client jeuClient;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
@@ -37,7 +36,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
     private JPanel pTmp;
     private Panel_GridBag pJoueurs;
     
-    private Console console = new Console(0,80);
+    private Console console;
     private JTextField tfSaisieMsg = new JTextField();
     private static final ImageIcon I_ENVOYER_MSG = new ImageIcon("img/icones/msg_go.png"); 
     private JButton bEnvoyerMsg = new JButton(I_ENVOYER_MSG);
@@ -150,63 +149,54 @@ public class Panel_AttendreJoueurs extends JPanel implements
 
         
         
-        
-        JPanel pConsole = new JPanel(new BorderLayout());
-        pConsole.setOpaque(false);
-        console.setOpaque(false);
-        
-        pConsole.add(console,BorderLayout.NORTH);
-        
-        
-        
-        bEnvoyerMsg.addActionListener(this);
-        parent.getRootPane().setDefaultButton(bEnvoyerMsg); // bouton par def.
-        
-        JPanel pSaisieMsgEtBEnvoyer = new JPanel(new BorderLayout());
-        pSaisieMsgEtBEnvoyer.setOpaque(false);
-        pSaisieMsgEtBEnvoyer.add(tfSaisieMsg,BorderLayout.CENTER);
-        pSaisieMsgEtBEnvoyer.add(bEnvoyerMsg,BorderLayout.EAST);
-        pConsole.add(pSaisieMsgEtBEnvoyer,BorderLayout.SOUTH);
-        
-        pCenter.add(pConsole,BorderLayout.SOUTH);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+   
         add(pCenter, BorderLayout.CENTER);
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         
 
         // ------------
         // -- BOTTOM --
         // ------------
+
+        
         JPanel pBottom = new JPanel(new BorderLayout());
         pBottom.setOpaque(false);
+
+        
+        // CONSOLE
+        console = new Console(0,80);
+        console.setOpaque(false);
+        
+        JPanel pChat = new JPanel(new BorderLayout());
+        pChat.setOpaque(false);
+        
+        pChat.add(console,BorderLayout.NORTH);
+        
+        bEnvoyerMsg.addActionListener(this);
+        parent.getRootPane().setDefaultButton(bEnvoyerMsg); // bouton par def.
+        JPanel pSaisieMsgEtBEnvoyer = new JPanel(new BorderLayout());
+        pSaisieMsgEtBEnvoyer.setOpaque(false);
+        pSaisieMsgEtBEnvoyer.add(tfSaisieMsg,BorderLayout.CENTER);
+        pSaisieMsgEtBEnvoyer.add(bEnvoyerMsg,BorderLayout.EAST);
+        pChat.add(pSaisieMsgEtBEnvoyer,BorderLayout.SOUTH);
+        
+        pBottom.add(pChat,BorderLayout.CENTER);
+        
 
         // bouton démarrer
         if (ADMIN)
         {
             bDemarrerMaintenant.setPreferredSize(new Dimension(150, 50));
             GestionnaireDesPolices.setStyle(bDemarrerMaintenant);
-            pBottom.add(bDemarrerMaintenant, BorderLayout.EAST);
+            
+            JPanel pSud = new JPanel(new BorderLayout());
+            pSud.setOpaque(false);
+            pSud.add(bDemarrerMaintenant,BorderLayout.SOUTH);
+            
+            pBottom.add(pSud, BorderLayout.EAST);
             bDemarrerMaintenant.addActionListener(this);
            
             try
@@ -229,11 +219,23 @@ public class Panel_AttendreJoueurs extends JPanel implements
                 e.printStackTrace();
             }
         }
+        else
+        {
+            console.ajouterTexteHTMLDansConsole("Attente du démarrage de la partie... " +
+                "Le chat ci-dessous vous permet de communiquer avec les " +
+                "autres joueurs connectés.<br />");
+        }
         
         bDeconnecter.addActionListener(this);
         bDeconnecter.setPreferredSize(new Dimension(120, 50));
         GestionnaireDesPolices.setStyle(bDeconnecter);
-        pBottom.add(bDeconnecter, BorderLayout.WEST);
+        
+        JPanel pSud = new JPanel(new BorderLayout());
+        pSud.setOpaque(false);
+        pSud.add(bDeconnecter,BorderLayout.SOUTH);
+        
+        
+        pBottom.add(pSud, BorderLayout.WEST);
 
         if (ADMIN)
             if (jeuServeur.estEnregisterSurSE())
@@ -294,8 +296,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         {
             if (ADMIN)
             {
-                if(jeuServeur.estEnregisterSurSE())
-                    jeuServeur.desenregistrerSurSE();
+                jeuServeur.desenregistrerSurSE();
  
                 // reférence différente entre client et serveur
                 jeuServeur.initialiser();
@@ -306,8 +307,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         {
             if (ADMIN)
             {
-                if(jeuServeur.estEnregisterSurSE())
-                    jeuServeur.desenregistrerSurSE();
+                jeuServeur.desenregistrerSurSE();
                 
                 jeuServeur.stopperServeurDeJeu();
             }
@@ -562,6 +562,10 @@ public class Panel_AttendreJoueurs extends JPanel implements
         pTmp.add(js, BorderLayout.NORTH);
         pTmp.revalidate();
         pEmplacementsTerrain.repaint();
+        
+        // mise a jour de la partie sur le serveur d'enregistrement
+        if(ADMIN)
+            jeuServeur.miseAJourSE();
     }
 
     @Override
@@ -575,6 +579,6 @@ public class Panel_AttendreJoueurs extends JPanel implements
     @Override
     public void joueurDeconnecte(Joueur joueur)
     {
-        // rien de spécial
+        console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>#Déconnexion : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
     }
 }

@@ -2,6 +2,8 @@ package reseau.jeu.serveur;
 
 import java.io.IOException;
 
+import models.joueurs.Joueur;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import reseau.CanalTCP;
@@ -37,7 +39,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * identificateur du jeu
 	 */
-	private int idJoueur;
+	private Joueur joueur;
 	
 	/**
 	 * Serveur de jeu
@@ -62,7 +64,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static boolean verbeux = false;
+	public static boolean verbeux = true;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -74,13 +76,13 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	 * @param serveur
 	 *            Le serveur de jeu associé au joueur.
 	 */
-	public JoueurDistant(int ID, CanalTCP canal, ServeurJeu serveur)
+	public JoueurDistant(Joueur joueur, CanalTCP canal, ServeurJeu serveur)
 	{
 		this.canal    = canal;
-		this.idJoueur = ID;
+		this.joueur   = joueur;
 		this.serveur  = serveur;
 
-		log("Nouveau client");
+		log("Nouveau client +"+joueur.getId());
 		(new Thread(this)).start();
 	}
 
@@ -107,11 +109,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 				return;
 			} 
 			catch (CanalException e) {
+			    
+			    serveur.joueurDeconnecte(joueur);
+			    
 			    logErreur("Canal erroné \"" + str + "\"",e);
                 return;
             } 
 			catch (IOException e)
             {
+			    serveur.joueurDeconnecte(joueur);
+			    
 			    logErreur("ERROR : canal erroné \"" + str + "\"",e);
                 return;
             } 
@@ -228,16 +235,16 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
                 etat = EN_JEU;
                 break; 
                 
-            // Changement d'equipe
+            // deconnexion
             case JOUEUR_DECONNEXION:
                 
                 log("Terminaison de la liaison avec le client");
                 
+                // On supprime le joueur distant de la liste des clients
+                serveur.joueurDeconnecte(joueur);
+                
                 // On clos la liaison avec le client
                 fermerCanal();
-                
-                // On supprime le joueur distant de la liste des clients
-                desenregistrement();
                 
                 break;      
         }
@@ -249,7 +256,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         int idJoueur2 = json.getInt("ID_JOUEUR");
         
         // joueur identique ou admin
-        if(idJoueur2 == idJoueur || idJoueur == serveur.getIdCreateur())
+        if(idJoueur2 == joueur.getId() || joueur.getId() == serveur.getIdCreateur())
             envoyer(serveur.changerEquipe(idJoueur2,idEquipe));
         else
             repondreEtat(JOUEUR_CHANGER_EQUIPE, ACTION_NON_AUTORISEE);
@@ -314,6 +321,19 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
     			receptionMsgDemandeSuppressionTour(json);
     			break;
     			
+    		// deconnexion
+            case JOUEUR_DECONNEXION:
+                
+                log("Terminaison de la liaison avec le client");
+                
+                // On supprime le joueur distant de la liste des clients
+                serveur.joueurDeconnecte(joueur);
+                
+                // On clos la liaison avec le client
+                fermerCanal();
+                
+                break; 	
+    			
     		default:
     			logErreur("Type de message inconnu : " + type,null);
     			// Signaler au client qu'il envoi quelque chose d'incorecte
@@ -322,12 +342,12 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
     		}
 	}
 
-	private void receptionMsgDemandeSuppressionTour(JSONObject json) throws JSONException, CanalException
+    private void receptionMsgDemandeSuppressionTour(JSONObject json) throws JSONException, CanalException
     {
 	    // Récupération de la tour cible
         int tourCibleDel = json.getInt("ID_TOWER");
         // Demande au serveur de l'opération
-        int code = serveur.vendreTour(idJoueur, tourCibleDel);
+        int code = serveur.vendreTour(joueur.getId(), tourCibleDel);
         // Retour au client de code
         repondreEtat(TOUR_SUPRESSION, code);
     }
@@ -337,7 +357,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	    // Récupération de la tour cible
         int tourCible = json.getInt("ID_TOWER");
         // Demande au serveur de l'opération
-        int code = serveur.ameliorerTour(idJoueur, tourCible);
+        int code = serveur.ameliorerTour(joueur.getId(), tourCible);
         // Retour au client de code
         repondreEtat(TOUR_AMELIORATION, code);
     }
@@ -350,7 +370,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         // Extraction du type de tour
         int typeTour = json.getInt("TYPE_TOUR");
         // Demande d'ajout au serveur
-        int code = serveur.poserTour(idJoueur, typeTour, x, y);
+        int code = serveur.poserTour(joueur.getId(), typeTour, x, y);
         // Retour au client du code
         repondreEtat(TOUR_AJOUT, code);
     }
@@ -361,14 +381,14 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         int nbCreatures = json.getInt("NB_CREATURES");
         int typeCreature = json.getInt("TYPE_CREATURE");
         // Demande de lancement d'une vague
-        int code = serveur.lancerVague(idJoueur, nbCreatures, typeCreature);  
+        int code = serveur.lancerVague(joueur.getId(), nbCreatures, typeCreature);  
         // Retour au client de l'information
         repondreEtat(VAGUE, code);
     }
 
     private void receptionMsgDemandeEnvoieMessage(JSONObject json) throws JSONException, CanalException
     {
-	    log("Message reçu de " + idJoueur);
+	    log("Message reçu de " + joueur.getId());
 	   
         // Extraction de la cible du message
         int cible = json.getInt("CIBLE");
@@ -381,11 +401,11 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         
         if (cible == A_TOUS) {
             // On broadcast le message à tous les clients
-            serveur.envoyerMessageChatPourTous(idJoueur, text);
+            serveur.envoyerMessageChatPourTous(joueur.getId(), text);
         } 
         else {
             // On envoi un message à un client en particulier
-            serveur.envoyerMsgClient(idJoueur, cible, text);
+            serveur.envoyerMsgClient(joueur.getId(), cible, text);
         }
     }
 
@@ -418,12 +438,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		canal.fermer();
 	}
-	
-	private void desenregistrement()
-    {
-        log("Suppression du joueur");
-        serveur.supprimerJoueur(idJoueur);
-    }
 
 	/**
 	 * Donne une représentation sous forme de chaine de caractère de l'état
@@ -478,7 +492,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	private void log(String msg)
     {
         if(verbeux)
-            ServeurJeu.log("[JOUEUR " + idJoueur + "]" + msg);
+            ServeurJeu.log("[JOUEUR " + joueur.getId() + "]" + msg);
     }
 	
     /**
@@ -488,7 +502,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
      */
     private void logErreur(String msg, Exception e)
     {
-        System.err.println("[JOUEUR " + idJoueur + "]" + msg);
+        System.err.println("[JOUEUR " + joueur.getId() + "]" + msg);
         
         if(e != null)
             e.printStackTrace();
@@ -496,6 +510,6 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 
     public int getId()
     {
-        return idJoueur;
+        return joueur.getId();
     }
 }

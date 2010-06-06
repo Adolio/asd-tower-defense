@@ -71,6 +71,14 @@ public class Joueur
     private double revenu = 1.0;
     
     /**
+     * Le joueur est hors jeu.
+     * 
+     * Si tout les joueurs de l'équipe son hors jeu, l'équipe 
+     * sera hors jeu et aura perdu.
+     */
+    private boolean estHorsJeu;
+
+    /**
      * Constructeur
      */
     public Joueur(String pseudo)
@@ -96,6 +104,27 @@ public class Joueur
     public int getScore()
     {
         return score.getValeur();
+    }
+    
+    /**
+     * Permet savoir si le joueur est hors jeu
+     * 
+     * @return true s'il l'est, false sinon.
+     */
+    public boolean estHorsJeu()
+    {
+        return estHorsJeu;
+    }
+
+    /**
+     * Permet mettre le joueur hors jeu suite à 
+     * une déconnexion
+     * 
+     * @return true s'il l'est, false sinon.
+     */
+    public void mettreHorsJeu()
+    {
+        estHorsJeu = true;
     }
     
     /**

@@ -23,7 +23,7 @@ import reseau.*;
  * @author Aurelien Da Campo
  * @version 1.0 | mai 2010
  */
-public class ServeurJeu extends Observable implements ConstantesServeurJeu,
+public class ServeurJeu implements ConstantesServeurJeu,
 		EcouteurDeJeu, Runnable
 {
 	/**
@@ -171,7 +171,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                 canal.envoyerString(Protocole.construireMsgJoueurInitialisation(joueur, jeuServeur.getTerrain()));
     
     		    // On inscrit le joueur à la partie
-                JoueurDistant jd = new JoueurDistant(joueur.getId(), canal, this);
+                JoueurDistant jd = new JoueurDistant(joueur, canal, this);
     			clients.put(joueur.getId(), jd);
     			
     			// Notification des clients
@@ -321,17 +321,15 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
 	 *            l'ID du joueur à supprimer
 	 * @throws CanalException 
 	 */
-	public synchronized void supprimerJoueur(int idJoueur)
+	private synchronized void supprimerJoueur(Joueur joueur)
 	{
-		clients.remove(idJoueur);
-		
-		Joueur joueur = jeuServeur.getJoueur(idJoueur);
-		
 		if(joueur != null)
 		{
+		    envoyerATous(Protocole.construireMsgJoueurDeconnecte(joueur.getId()));
+		    
 		    joueur.getEquipe().retirerJoueur(joueur);
 		    
-            envoyerATous(Protocole.construireMsgJoueursEtat(getJoueurs())); 
+		    envoyerATous(Protocole.construireMsgJoueursEtat(jeuServeur.getJoueurs()));
 		}
 		else
 		    logErreur("Joueur inconnu");
@@ -364,7 +362,7 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
     		    
     		    if(argentApresAchat >= 0)
     		    {
-    		        // TODO... 
+    		        // TODO...
     		        int tempsLancement = 500;
     		        
     		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
@@ -571,18 +569,36 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
                 catch (CanalException e)
                 {
                     // le joueur à un canal corrompu
-                    clients.remove(joueur.getKey());
                     joueurSupprimes.add(joueur.getValue().getId());
                 }
                 
+
             // pour chaque suppression on indique aux autres joueurs 
             // la deconnexion du joueur
             for (Integer integer : joueurSupprimes) 
-                envoyerATous(Protocole.construireMsgJoueurDeconnecte(integer));
+            {
+                Joueur joueur = jeuServeur.getJoueur(integer);
+                
+                joueurDeconnecte(joueur);
+            }
         }
 	}
 	
-
+	
+    public void joueurDeconnecte(Joueur joueur)
+    { 
+        // si il est pas déjà deconnecte ?
+        if(clients.containsKey(joueur.getId()))
+        {
+            clients.remove(joueur.getId());
+            
+            if(jeuServeur.estDemarre())
+                mettreHorsJeu(joueur);
+            else
+                supprimerJoueur(joueur);  
+        }
+    }
+    
 
     public String changerEquipe(int idJoueur, int idEquipe)
     {
@@ -679,10 +695,18 @@ public class ServeurJeu extends Observable implements ConstantesServeurJeu,
      * 
      * @param msg le message
      */
+    @SuppressWarnings("unused")
     private void logErreur(String msg,Exception e)
     {
         System.out.println("[SERVEUR][ERREUR] "+ msg);
         
         e.printStackTrace();
+    }
+
+    private void mettreHorsJeu(Joueur joueur)
+    {
+        joueur.mettreHorsJeu();
+        
+        envoyerATous(Protocole.construireMsgJoueurDeconnecte(joueur.getId()));
     }
 }

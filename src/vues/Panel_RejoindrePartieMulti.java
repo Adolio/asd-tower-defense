@@ -260,7 +260,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         bottomCenter.add(lblPseudo);
+        
+        tfPseudo.setText(config.getProprety("PSEUDO_JOUEUR"));
         bottomCenter.add(tfPseudo);
+        
         pPseudo.add(pTmp, BorderLayout.EAST);
         pBottom.add(bottomCenter, BorderLayout.CENTER);
 
@@ -340,7 +343,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 JSONArray jsonArray = jsonResultat.getJSONArray("parties");
                 
                 // ajout des serveurs de jeu
-                for(int i=0;i < jsonArray.length(); i++)
+                int i = 0;
+                for(;i < jsonArray.length(); i++)
                 {
                     JSONObject serveur = jsonArray.getJSONObject(i);
                     
@@ -353,6 +357,9 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                                    serveur.getInt("placesRestantes"));
   
                 }
+                
+                if(i > 0)
+                    tbServeurs.setRowSelectionInterval(0, 0);
                 
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
                 lblEtat.setText("Connexion au serveur central établie!");
@@ -409,9 +416,16 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         filtre = tfFiltre.getText();
 
         // ajout des serveurs dans la table s'il respect le filtre
+        int nbLignes = 0;
         for (ServeurInfo srvInfo : serveurs)
             if (filtre.equals(FILTRE_DEFAUT) || srvInfo.contientLaChaine(filtre))
+            {
                 model.addRow(srvInfo.toStringArray());
+                nbLignes++;
+            }
+        
+        if(nbLignes > 0)
+            tbServeurs.setRowSelectionInterval(0, 0);
     }
 
     /**
@@ -437,8 +451,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
             try
             {
-                if (tfPseudo.getText().isEmpty())
+                if (tfPseudo.getText().trim().isEmpty())
                     throw new Exception("Erreur : Pseudo vide.");
+                
+                config.setProperty("PSEUDO_JOUEUR", tfPseudo.getText());
                 
                 connexion(recupererIP(),recupererPort());
             } 

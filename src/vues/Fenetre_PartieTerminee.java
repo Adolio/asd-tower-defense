@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import outils.fichierDeConfiguration;
+
 import models.outils.MeilleursScores;
 
 /**
@@ -28,7 +30,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     // membrea graphiques
     private JButton bOk             = new JButton("OK");
     private JButton bAnnuler        = new JButton("Fermer");
-    private JTextField tfNomJoueur  = new JTextField();
+    private JTextField tfPseudo  = new JTextField();
     private JPanel pFormulaire;
     private String nomFichier;
     private String nomTerrain;
@@ -36,6 +38,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     // autres membres
     private int score;
     private long dureePartie;
+    private fichierDeConfiguration config;
     
     /**
      * Constructeur de la fenetre
@@ -49,6 +52,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         setResizable(false);
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
         
+        config = new fichierDeConfiguration("cfg/config.cfg");
         
         // init attributs membres
         this.score      = score;
@@ -64,8 +68,9 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         pFormulaire.add(new JLabel("Score obtenu : "));
         pFormulaire.add(new JLabel(score+""));
         
-        pFormulaire.add(new JLabel("Votre nom : "));
-        pFormulaire.add(tfNomJoueur);
+        pFormulaire.add(new JLabel("Votre pseudo : "));
+        tfPseudo.setText(config.getProprety("PSEUDO_JOUEUR"));
+        pFormulaire.add(tfPseudo);
         pFormulaire.add(bAnnuler);
         bAnnuler.addActionListener(this);
         GestionnaireDesPolices.setStyle(bAnnuler);
@@ -106,11 +111,11 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         if(source == bOk)
         {
             // le nom n'est pas vide
-            if(!tfNomJoueur.getText().isEmpty())
+            if(!tfPseudo.getText().isEmpty())
             {
                 // ajout du nouveau score
                 MeilleursScores ms = new MeilleursScores(nomFichier);
-                ms.ajouterMeilleurScore(tfNomJoueur.getText(), score, dureePartie);
+                ms.ajouterMeilleurScore(tfPseudo.getText(), score, dureePartie);
                 
                 dispose(); // fermeture
                 

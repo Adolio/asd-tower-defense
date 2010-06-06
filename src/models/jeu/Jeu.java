@@ -120,7 +120,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
     /**
      * Permet de savoir si la partie est à été démarrée
      */
-    private boolean partieDemarree;
+    private boolean estDemarre;
     
     /**
      * Constructeur
@@ -179,7 +179,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         if(!estInitialise)
             throw new IllegalStateException("Le jeu n'est pas initialisé");
             
-        if(partieDemarree)
+        if(estDemarre)
             throw new IllegalStateException("Le jeu est déjà démarré");
         
         // demarrage des gestionnaires
@@ -187,7 +187,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireCreatures.demarrer();
         gestionnaireAnimations.demarrer();
         
-        partieDemarree = true;
+        estDemarre = true;
         
         // notification
         if(edj != null)
@@ -474,7 +474,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
     public void ajouterJoueur(Joueur joueur) throws JeuEnCoursException, AucunePlaceDisponibleException
     {
         // si la partie est en court
-        if(partieDemarree)
+        if(estDemarre)
             throw new JeuEnCoursException("La partie à déjà démarrée");
         
         // ajout du joueur dans le premier emplacement disponible
@@ -756,21 +756,40 @@ public abstract class Jeu implements EcouteurDeJoueur,
     }
 
     /**
-     * Permet de recuperer l'equipe suivante (qui contient un joueur)
+     * Permet de recuperer l'equipe valide suivante 
+     * (qui contient au moins un joueur)
      * 
-     * @param equipe
-     * @return
+     * Les équipes qui ont perdue ne sont pas prises en compte.
+     * 
+     * S'il n'y a pas d'équipe valide suivante, l'équipe en paramètre 
+     * est retournée.
+     * 
+     * @param equipe l'équipe suivante de quelle équipe ?
+     * @return l'équipe suivant qui peut-être la même équipe (si seule)
      */
     public Equipe getEquipeSuivanteNonVide(Equipe equipe)
     {
         // on trouve l'equipe directement suivante
         int i = (equipes.indexOf(equipe)+1) % equipes.size();
         
-        // tant qu'il n'y a pas de joueur, on prend la suivante...
+        // tant qu'il n'y a pas de joueur ou que l'équipe a perdue
+        // on prend la suivante...
         // au pire on retombera sur la même equipe qu'en argument
-        while(equipes.get(i).getJoueurs().size() == 0)
+        while(equipes.get(i).getJoueurs().size() == 0 || equipes.get(i).aPerdu())
             i = ++i % equipes.size();
         
         return equipes.get(i);
     }
+
+
+    public boolean estInitialise()
+    {
+        return estInitialise;
+    }
+    
+    public boolean estDemarre()
+    {
+        return estDemarre;
+    }
+
 }
