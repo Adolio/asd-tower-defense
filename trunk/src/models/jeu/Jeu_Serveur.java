@@ -144,7 +144,7 @@ public class Jeu_Serveur extends Jeu
     public void desenregistrerSurSE()
     {
         // fermeture du canal s'il est ouvert
-        if (canalServeurEnregistrement != null)
+        if (canalServeurEnregistrement != null && estEnregisterSurSE())
         {
             try
             {

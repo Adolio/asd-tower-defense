@@ -272,7 +272,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
 		// Background
         UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
-        SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
+        //SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
+     
         panelSelectionEtVague.setOpaque(true);
 		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,420));
 		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
@@ -419,6 +420,20 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		}   
 	}
 
+	private void deconnexionDuJoueur()
+	{
+	    // on envoie la deconnexion
+        try
+        {
+            jeu.annoncerDeconnexion();
+        } 
+        catch (CanalException e)
+        {
+            e.printStackTrace();
+        }
+	    
+	}
+	
 	/**
 	 * Permet de proposer au joueur s'il veut quitter le programme
 	 */
@@ -428,6 +443,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
+	        deconnexionDuJoueur();
+	        
 	        System.exit(0); // Fermeture correcte du logiciel
 	    }
     }
@@ -450,6 +467,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	 */
 	private void retourAuMenuPrincipal()
     {
+	    deconnexionDuJoueur();
+	    
 	    GestionnaireSons.arreterTousLesSons();
         jeu.terminer();
         
@@ -767,10 +786,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void joueurDeconnecte(Joueur joueur)
     {
-        JOptionPane.showMessageDialog(this,
-                joueur.getPseudo()+" s'est déconnecté !",
-                "Déconnexion d'un joueur",
-                JOptionPane.ERROR_MESSAGE);
+        ajouterTexteHTMLDansConsole("<font color='#FF0000'>#Déconnexion : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
     }
 
     @Override
