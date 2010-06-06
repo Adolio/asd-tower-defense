@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import outils.Configuration;
 import outils.fichierDeConfiguration;
 
 import models.outils.MeilleursScores;
@@ -52,8 +53,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         setResizable(false);
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
         
-        config = new fichierDeConfiguration("cfg/config.cfg");
-        
         // init attributs membres
         this.score      = score;
         this.dureePartie = dureePartie;
@@ -69,7 +68,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         pFormulaire.add(new JLabel(score+""));
         
         pFormulaire.add(new JLabel("Votre pseudo : "));
-        tfPseudo.setText(config.getProprety("PSEUDO_JOUEUR"));
+        tfPseudo.setText(Configuration.getPseudoJoueur());
         pFormulaire.add(tfPseudo);
         pFormulaire.add(bAnnuler);
         bAnnuler.addActionListener(this);

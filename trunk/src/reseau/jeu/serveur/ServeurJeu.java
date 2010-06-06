@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import org.json.JSONException;
 
+import outils.Configuration;
+
 import exceptions.*;
 import models.animations.Animation;
 import models.creatures.*;
@@ -30,11 +32,6 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 * La version courante du serveur
 	 */
 	public static final String VERSION = "0.2";
-
-	/**
-	 * Le port sur lequel le serveur écoute par defaut
-	 */
-	public final static int PORT = 2357;
 
 	/**
      * Temps de rafraichissement des éléments
@@ -78,7 +75,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 		jeuServeur.setEcouteurDeJeu(this);
 		
         // Réservation du port d'écoute
-        port = new Port(PORT);
+        port = new Port(Configuration.getPortSJ());
         
         // reservation du port
         port.reserver();
@@ -101,7 +98,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
                 try
                 {
                     // On attend qu'un joueur se présente
-                    log("Ecoute sur le port " + PORT);
+                    log("Ecoute sur le port " + Configuration.getPortSJ());
                     
                     // Bloquant en attente d'une connexion
                     canal = new CanalTCP(port, verbeux);

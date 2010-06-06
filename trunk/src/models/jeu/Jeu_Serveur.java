@@ -2,12 +2,10 @@ package models.jeu;
 
 import java.io.IOException;
 import java.net.ConnectException;
-
 import models.joueurs.GestionnaireDeRevenu;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import outils.fichierDeConfiguration;
+import outils.Configuration;
 import reseau.CanalTCP;
 import reseau.CanalException;
 import reseau.jeu.serveur.ServeurJeu;
@@ -95,18 +93,15 @@ public class Jeu_Serveur extends Jeu
      */
     public boolean enregistrerSurSE(String nomServeur, int nbJoueurs, String nomTerrain, int mode)
     {
-        // recuperation des configurations
-        fichierDeConfiguration config = new fichierDeConfiguration("cfg/config.cfg");
-        String IP_SE = config.getProprety("IP_SE");
-        int PORT_SE  = Integer.parseInt(config.getProprety("PORT_SE"));
-
         try
         {
-            canalServeurEnregistrement = new CanalTCP(IP_SE, PORT_SE, true);
+            canalServeurEnregistrement = new CanalTCP(Configuration.getIpSE(), 
+                                                      Configuration.getPortSE(), 
+                                                      true);
             
             // Création de la requete d'enregistrement
             String requete = RequeteEnregistrement.getRequeteEnregistrer(
-                    nomServeur, ServeurJeu.PORT, nbJoueurs, nomTerrain, ModeDeJeu.getNomMode(mode));
+                    nomServeur, Configuration.getPortSJ(), nbJoueurs, nomTerrain, ModeDeJeu.getNomMode(mode));
 
             // Envoie de la requete
             canalServeurEnregistrement.envoyerString(requete);

@@ -1,6 +1,8 @@
 
 import javax.swing.UIManager;
 
+import outils.Configuration;
+
 import models.jeu.Jeu_Solo;
 import models.terrains.ElementTD_Coop;
 import models.terrains.ElementTD_Versus_4;
@@ -30,7 +32,6 @@ public class Main
     */
    public static void main(String[] args) 
    {
-       
        // essaye de mettre le nouveau look and feel "Nimbus" fourni par Java
        for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels())
            if ("Nimbus".equals(laf.getName())) 
@@ -58,7 +59,7 @@ public class Main
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
       Terrain.serialiser(t3);
       */
-               
+              
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();
    }
