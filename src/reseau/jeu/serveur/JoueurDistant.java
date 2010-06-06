@@ -6,6 +6,8 @@ import models.joueurs.Joueur;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import outils.Configuration;
 import reseau.CanalTCP;
 import reseau.CanalException;
 import reseau.Port;
@@ -59,7 +61,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/** 
 	 * Offset pour les ports temporaires
 	 */
-	private static int offset_port = 5000;
+	private static int offset_port = Configuration.getPortSJ_JD();
 
 	/**
 	 * Niveau d'affichage des messages

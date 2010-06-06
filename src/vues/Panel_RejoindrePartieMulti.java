@@ -1,34 +1,20 @@
 package vues;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.net.ConnectException;
-import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import models.jeu.Jeu_Client;
 import models.joueurs.Joueur;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.json.*;
 import exceptions.AucunEmplacementDisponibleException;
-import outils.fichierDeConfiguration;
-import reseau.CanalTCP;
-import reseau.CanalException;
+import outils.Configuration;
+import reseau.*;
 import reseau.jeu.client.EcouteurDeClientJeu;
-import reseau.jeu.serveur.ServeurJeu;
-import serveur.enregistrement.CodeEnregistrement;
-import serveur.enregistrement.RequeteEnregistrement;
+import serveur.enregistrement.*;
 
 /**
  * Panel pour rejoindre une partie réseau.
@@ -39,10 +25,7 @@ import serveur.enregistrement.RequeteEnregistrement;
 @SuppressWarnings("serial")
 public class Panel_RejoindrePartieMulti extends JPanel implements
         ActionListener, KeyListener, MouseListener, EcouteurDeClientJeu
-{
-    private static int PORT_SE;
-    private static String IP_SE;
-    
+{  
     private final int MARGES_PANEL = 40;
     private JFrame parent;
 
@@ -69,7 +52,6 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
     private CanalTCP canalServeurEnregistrement;
     
-    private fichierDeConfiguration config;
     private Jeu_Client jeu;
     private Joueur joueur;
     
@@ -156,12 +138,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
         setBackground(LookInterface.COULEUR_DE_FOND);
-        
-        // recuperation des configurations
-        config  = new fichierDeConfiguration("cfg/config.cfg");
-        IP_SE   = config.getProprety("IP_SE");
-        PORT_SE = Integer.parseInt(config.getProprety("PORT_SE"));
-                
+           
         // ---------
         // -- TOP --
         // ---------
@@ -216,7 +193,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // Création du canal avec le serveur d'enregistrement
         try
         {
-            canalServeurEnregistrement = new CanalTCP(IP_SE,PORT_SE,true);
+            canalServeurEnregistrement = new CanalTCP(
+                    Configuration.getIpSE(),
+                    Configuration.getPortSE(),
+                    true);
             
             mettreAJourListeDesServeurs();
         } 
@@ -261,7 +241,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         bottomCenter.add(lblPseudo);
         
-        tfPseudo.setText(config.getProprety("PSEUDO_JOUEUR"));
+        tfPseudo.setText(Configuration.getPseudoJoueur());
         bottomCenter.add(tfPseudo);
         
         pPseudo.add(pTmp, BorderLayout.EAST);
@@ -453,8 +433,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             {
                 if (tfPseudo.getText().trim().isEmpty())
                     throw new Exception("Erreur : Pseudo vide.");
-                
-                config.setProperty("PSEUDO_JOUEUR", tfPseudo.getText());
+
+                Configuration.setPseudoJoueur(tfPseudo.getText());
                 
                 connexion(recupererIP(),recupererPort());
             } 
@@ -551,8 +531,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         if (tbServeurs.getSelectedRow() != -1)
             return Integer.parseInt((String) model.getValueAt(tbServeurs.getSelectedRow(),2));  
         else
-            return ServeurJeu.PORT;
-    } 
+            return Configuration.getPortSJ();
+    }
     
     /**
      * Etablisssement d'une connexion avec le serveur

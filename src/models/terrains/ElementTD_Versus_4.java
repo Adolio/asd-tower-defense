@@ -47,7 +47,7 @@ public class ElementTD_Versus_4 extends Terrain
         super(  jeu,
                 960,  // largeur
                 1000,  // hauteur
-                10000,  // nbPiecesOrInitiales
+                100,  // nbPiecesOrInitiales
                 20,   // nbViesInitiales
                 0,    // positionMaillageX
                 0,    // positionMaillageY

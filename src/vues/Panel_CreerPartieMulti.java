@@ -15,7 +15,6 @@ import models.joueurs.Joueur;
 import models.terrains.*;
 import outils.*;
 import reseau.CanalException;
-import reseau.jeu.serveur.ServeurJeu;
 
 /**
  * Panel de création d'une partie réseau.
@@ -30,9 +29,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private final Dimension DEFAULT_DIMENTION_COMP = new Dimension(120, 25);
 
     private JFrame parent;
-    private fichierDeConfiguration config;
-    
-    
+ 
     // form
     private JLabel lblNomServeur = new JLabel("Nom du serveur :");
     private JTextField tfNomServeur = new JTextField("Test");
@@ -68,9 +65,6 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         setBackground(LookInterface.COULEUR_DE_FOND);
 
-        config = new fichierDeConfiguration("cfg/config.cfg");
-        
-        
         // ---------
         // -- TOP --
         // ---------
@@ -301,7 +295,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
         pMilieu.add(lblPseudo);
         
-        tfPseudo.setText(config.getProprety("PSEUDO_JOUEUR"));
+        tfPseudo.setText(Configuration.getPseudoJoueur());
         pMilieu.add(tfPseudo);
         
         
@@ -362,9 +356,8 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 return;
             }
             
-            config.setProperty("PSEUDO_JOUEUR", tfPseudo.getText());
-            
-            
+            Configuration.setPseudoJoueur(tfPseudo.getText());
+
             //---------------------
             //-- Création du jeu --
             //---------------------
@@ -401,7 +394,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     // TODO port dynamique
                     try
                     {
-                        jeuClient.connexionAvecLeServeur("127.0.0.1", ServeurJeu.PORT);
+                        jeuClient.connexionAvecLeServeur("127.0.0.1", Configuration.getPortSJ());
                     
                         // ---------------------------------------------------------------
                         // -- Enregistrement du serveur sur le serveur d'enregistrement --
