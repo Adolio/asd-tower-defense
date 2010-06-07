@@ -2,7 +2,11 @@ package models.jeu;
 
 import java.io.IOException;
 import java.net.ConnectException;
+
+import models.creatures.Creature;
 import models.joueurs.GestionnaireDeRevenu;
+import models.joueurs.Joueur;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.Configuration;
@@ -47,6 +51,29 @@ public class Jeu_Serveur extends Jeu
         super.demarrer();
         
         gRevenus.demarrer();
+    }
+    
+    
+    @Override
+    synchronized public void creatureTuee(Creature creature, Joueur tueur)
+    {
+        // gain de pieces d'or
+        tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr() / 5);
+        
+        // nombre d'etoile avant l'ajout du score
+        int nbEtoilesAvantAjoutScore = tueur.getNbEtoiles();
+        
+        // augmentation du score
+        tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());
+
+        // nouvelle étoile ?
+        if(nbEtoilesAvantAjoutScore < tueur.getNbEtoiles())
+            if(edj != null)  
+                edj.etoileGagnee();
+ 
+        // notification de la mort de la créature
+        if(edj != null)
+            edj.creatureTuee(creature,tueur);
     }
 
     /**
