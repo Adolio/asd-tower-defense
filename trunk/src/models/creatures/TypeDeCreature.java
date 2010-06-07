@@ -13,38 +13,37 @@ public class TypeDeCreature
     private static final int MOUTON          = 0;
     private static final int ARAIGNEE        = 1;
     private static final int PIGEON          = 2;
-    private static final int AIGLE           = 3;
-    private static final int RHINOCEROS      = 4;
+    private static final int RHINOCEROS      = 3;
+    private static final int AIGLE           = 4;
     private static final int ELEPHANT        = 5;
     private static final int GRANDE_ARAIGNEE = 6;
 
 	public static Creature getCreature(int typeDeCreature, boolean invincible)
 	{
-	    double vitesse = 20;
 	    
 	    Creature c = null;
 	    switch(typeDeCreature)
         {
             case MOUTON :
-                c = new Mouton(100, 5, vitesse); 
+                c = new Mouton(100, 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
                 break;
             case ARAIGNEE : 
-                c = new Araignee(200, 10, vitesse);
+                c = new Araignee(200, 10, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
                 break;
             case PIGEON :
-                c = new Pigeon(300, 15, vitesse);    
-                break;
-            case AIGLE : 
-                c = new Aigle(600, 30, vitesse); 
+                c = new Pigeon(300, 15, VagueDeCreatures.VITESSE_CREATURE_NORMALE);    
                 break;
             case RHINOCEROS :
-                c = new Rhinoceros(1200, 60, vitesse);
+                c = new Rhinoceros(600, 60, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
+                break;
+            case AIGLE : 
+                c = new Aigle(1200, 30, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
                 break;
             case ELEPHANT : 
-                c = new Elephant(2000, 100, vitesse);
+                c = new Elephant(3000, 100, VagueDeCreatures.VITESSE_CREATURE_LENTE);
                 break;
             case GRANDE_ARAIGNEE :
-                c = new GrandeAraignee(3000, 150, vitesse); 
+                c = new GrandeAraignee(3000, 150, VagueDeCreatures.VITESSE_CREATURE_RAPIDE); 
                 break;
             default :
                 return null; // TODO erreur
