@@ -1202,12 +1202,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
         else
         {
             // recupère le point après le changement d'echelle
-            Point pAprès = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+            Point pApres = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
             
             // adapte le décalage pour que le point ciblé reste au même
             // endroit en proportion du panel
-            decaleX +=  pAprès.x - pAvant.x;
-            decaleY +=  pAprès.y - pAvant.y;
+            decaleX +=  pApres.x - pAvant.x;
+            decaleY +=  pApres.y - pAvant.y;
         }
     }
     

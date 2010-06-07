@@ -278,9 +278,9 @@ public class VagueDeCreatures implements Runnable
         this.edv = edv;
     }
 
-    private static final double VITESSE_CREATURE_LENTE = 20.0;
-    private static final double VITESSE_CREATURE_RAPIDE = 50.0;
-    private static final double VITESSE_CREATURE_NORMALE = 40.0;
+    public static final double VITESSE_CREATURE_LENTE = 20.0;
+    public static final double VITESSE_CREATURE_RAPIDE = 50.0;
+    public static final double VITESSE_CREATURE_NORMALE = 40.0;
 
     private static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
     private static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
