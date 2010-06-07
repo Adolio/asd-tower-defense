@@ -282,15 +282,15 @@ public class VagueDeCreatures implements Runnable
     public static final double VITESSE_CREATURE_RAPIDE = 50.0;
     public static final double VITESSE_CREATURE_NORMALE = 40.0;
 
-    private static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
-    private static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
-    private static final long TEMPS_APPARITION_CREATURE_NORMALE = 1000;
+    public static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
+    public static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
+    public static final long TEMPS_APPARITION_CREATURE_NORMALE = 1000;
 
-    private static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
-    private static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
-    private static final double COEF_SANTE_CREATURE_AERIENNE = 0.8;
-    private static final double COEF_SANTE_PRE_BOSS = 4.0;
-    private static final double COEF_SANTE_BOSS = 8.0;
+    public static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
+    public static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
+    public static final double COEF_SANTE_CREATURE_AERIENNE = 0.8;
+    public static final double COEF_SANTE_PRE_BOSS = 4.0;
+    public static final double COEF_SANTE_BOSS = 8.0;
 
     private static final boolean DEPART_ALEATOIRE_CREATURES = true;
 
@@ -305,7 +305,7 @@ public class VagueDeCreatures implements Runnable
      */
     public static VagueDeCreatures genererVagueStandard(int indiceVagueCourante)
     {
-        int noVague = indiceVagueCourante + 1;
+        int noVague = indiceVagueCourante;
         int uniteVague = noVague % 10;
 
         final long SANTE_CREATURE_NORMALE = fSante(noVague);
@@ -397,7 +397,7 @@ public class VagueDeCreatures implements Runnable
      * 
      * @return la valeur de la sante
      */
-    private static long fSante(int noVague)
+    public static long fSante(int noVague)
     {
         // 0.01 * noVague^4 + 0.25 * noVague + 70
         return (long) (0.01 * noVague * noVague * noVague * noVague + 0.25

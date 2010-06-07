@@ -1,5 +1,7 @@
 package reseau.jeu.serveur;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -43,6 +45,9 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 */
 	private static final boolean verbeux = false;
 
+	// TODO
+	private static final int TEMPS_ENTRE_CHAQUE_LEVEL = 60;
+
 	/**
 	 * Liste des clients enregistrés sur le serveur
 	 */
@@ -82,6 +87,28 @@ public class ServeurJeu implements ConstantesServeurJeu,
           
 		// Lancement du thread serveur.
 		(new Thread(this)).start();
+		
+		
+		jeuServeur.getTimer().addActionListener(new ActionListener()
+        {  
+            int secondes = 0;
+		    
+		    @Override
+            public void actionPerformed(ActionEvent e)
+            {
+		        secondes++;
+		        
+		        // TODO CONSTANTE
+		        if(secondes == TEMPS_ENTRE_CHAQUE_LEVEL)
+		        {
+		            jeuServeur.passerALaProchaineVague();
+		            secondes = 0;
+		            
+		            // TODO noLogged
+		            System.out.println("Nouveau level du serveur "+jeuServeur.getNumVagueCourante());
+		        } 
+            }
+        });
 	}
 
 	@Override
@@ -321,7 +348,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	private synchronized void supprimerJoueur(Joueur joueur)
 	{
 		if(joueur != null)
-		{
+		{ 
 		    envoyerATous(Protocole.construireMsgJoueurDeconnecte(joueur.getId()));
 		    
 		    joueur.getEquipe().retirerJoueur(joueur);
@@ -340,49 +367,50 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 * @param typeVague
 	 * @return
 	 */
-	public synchronized int lancerVague(int IDPlayer, int nbCreatures, int typeCreature)
+	public synchronized int lancerVague(Joueur joueur, int nbCreatures, int typeCreature)
 	{
+	    if(joueur == null)
+	        return JOUEUR_INCONNU;
 	    
 	    // TODO FROM le terrain
-	    Creature creature = TypeDeCreature.getCreature(typeCreature, false);
+	    Creature creature = TypeDeCreature.getCreature(typeCreature, jeuServeur.getNumVagueCourante(), false);
     
-        log("Le joueur " + IDPlayer + " désire lancer une vague de "+nbCreatures+" créatures de type"
+        log("Le joueur " + joueur.getPseudo() + " désire lancer une vague de "+nbCreatures+" créatures de type"
                 + creature.getNom());
         
-		Joueur j = jeuServeur.getJoueur(IDPlayer);
-		
-		if(j != null)
-		{
-    		synchronized (j)
-            {
-    		    int argentApresAchat = j.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
-    		    
-    		    if(argentApresAchat >= 0)
-    		    {
-    		        // TODO...
-    		        int tempsLancement = 500;
-    		        
-    		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
-    
-    		        j.setNbPiecesDOr(argentApresAchat);
-    	            try
-                    {
-                        jeuServeur.lancerVague(j, jeuServeur.getEquipeSuivanteNonVide(j.getEquipe()),vague);
-                    } 
-    	            catch (ArgentInsuffisantException e)
-                    {
-                        // impossible que ca arrive... 
-    	                // c'est pas très propre mais j'en avais besoins pour 
-                    }
-    	            
-    	            return OK;
-    		    }
-    		    else
-    		        return ARGENT_INSUFFISANT;
-            }
-		}
-		else
-		    return JOUEUR_INCONNU;  
+	    // si le joueur n'a pas perdu
+        if(joueur.getEquipe().aPerdu())
+            return JOUEUR_HORS_JEU; 
+	    
+	    synchronized (joueur)
+        {
+		    int argentApresAchat = joueur.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
+		    
+		    if(argentApresAchat >= 0)
+		    {
+		        // TODO...
+		        int tempsLancement = 500;
+		        
+		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
+
+		        joueur.setNbPiecesDOr(argentApresAchat);
+	            try
+                {
+                    jeuServeur.lancerVague(joueur, jeuServeur.getEquipeSuivanteNonVide(joueur.getEquipe()),vague);
+                } 
+	            catch (ArgentInsuffisantException e)
+                {
+                    // impossible que ca arrive... 
+	                // c'est pas très propre mais j'en avais besoins pour 
+                }
+	            
+	            return OK;
+		    }
+		    else
+		        return ARGENT_INSUFFISANT;
+        }  
+	    
+	    
 	}
 	
     //-----------------------
@@ -398,10 +426,14 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 * @param y la position y de la tour
 	 * @return l'état de l'action
 	 */
-	public synchronized int poserTour(int idJoueur, int typeTour, int x, int y)
+	public synchronized int poserTour(Joueur joueur, int typeTour, int x, int y)
 	{
-		log("Le joueur " + idJoueur + " veut poser une tour de type "
+		log("Le joueur " + joueur.getPseudo() + " veut poser une tour de type "
 				+ typeTour);
+		
+        // si le joueur n'a pas perdu
+        if(joueur.getEquipe().aPerdu())
+            return JOUEUR_HORS_JEU;
 		
 		// Selection de la tour cible
 		Tour tour = null;
@@ -414,7 +446,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
             tour.y = y;
             
             // Assignation du propriétaire
-            tour.setProprietaire(jeuServeur.getJoueur(idJoueur));
+            tour.setProprietaire(joueur);
             
 			// Tentative de poser la tour
 			jeuServeur.poserTour(tour);
@@ -448,9 +480,13 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 * 
 	 * @return l'état de l'action
 	 */
-	public synchronized int ameliorerTour(int idJoueur, int idTour)
+	public synchronized int ameliorerTour(Joueur joueur, int idTour)
 	{
-		log("Le joueur " + idJoueur + " désire améliorer la tour " + idTour);
+		log("Le joueur " + joueur.getPseudo() + " désire améliorer la tour " + idTour);
+		
+		// si le joueur n'a pas perdu
+        if(joueur.getEquipe().aPerdu())
+            return JOUEUR_HORS_JEU; 
 		
 		// Récupération de la tour à améliorer
 		Tour tour = jeuServeur.getTour(idTour);
@@ -459,7 +495,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 			return TOUR_INCONNUE;
 		
 		// si le joueur est bien le propriétaire de la tour
-		if(tour.getPrioprietaire().getId() != idJoueur)
+		if(tour.getPrioprietaire().getId() != joueur.getId())
 		    return ACTION_NON_AUTORISEE;
 		
 		// On effectue l'action
@@ -485,9 +521,14 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 * @param tourCibleDel
 	 * @return
 	 */
-	public synchronized int vendreTour(int IDPlayer, int tourCible)
+	public synchronized int vendreTour(Joueur joueur, int tourCible)
 	{
-		log("Le joueur " + IDPlayer + " désire supprimer la tour " + tourCible);
+		log("Le joueur " + joueur.getPseudo() + " désire supprimer la tour " + tourCible);
+		
+        // si le joueur n'a pas perdu
+        if(joueur.getEquipe().aPerdu())
+            return JOUEUR_HORS_JEU;
+		
 		
 		// Repérage de la tour à supprimer
 		Tour tour = jeuServeur.getTour(tourCible);
@@ -496,7 +537,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 			return ERREUR;
 		
 		// seul le proprio peut vendre la tour
-		if(tour.getPrioprietaire().getId() != IDPlayer)
+		if(tour.getPrioprietaire().getId() != joueur.getId())
 		    return ACTION_NON_AUTORISEE;
 		
 		// On effectue l'action

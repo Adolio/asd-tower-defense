@@ -135,13 +135,6 @@ public abstract class Terrain implements Serializable
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
   
     /**
-     * Gestion des vagues de creatures. C'est le joueur que decident le moment
-     * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
-     * de creatures ont ete detruites, le jeu est considere comme termine.
-     */
-    protected int indiceVagueCourante;
-
-    /**
      * musique d'ambiance du terrain
      */
     protected File fichierMusiqueDAmbiance;
@@ -286,16 +279,6 @@ public abstract class Terrain implements Serializable
     public int getNbViesInitiales()
     {
         return NB_VIES_INITIALES;
-    }
-
-    /**
-     * Permet de recuperer le numero de la vague courante
-     * 
-     * @return le numero de la vague courante
-     */
-    public int getNumVagueCourante()
-    {
-        return indiceVagueCourante;
     }
 
     /**
@@ -532,28 +515,20 @@ public abstract class Terrain implements Serializable
      * 
      * @return la vague de creatures suivante
      */
-    public VagueDeCreatures getVagueDeCreaturesSuivante()
+    public VagueDeCreatures getVagueDeCreatures(int noVague)
     {
-        return VagueDeCreatures.genererVagueStandard(indiceVagueCourante);
+        return VagueDeCreatures.genererVagueStandard(noVague);
     }
-    
-    /**
-     * Permet de passer à la prochaine vague
-     */
-    public void passerALaProchaineVague()
-    {
-        indiceVagueCourante++;
-    }
-    
+
     /**
      * Permet de recuperer la description vague suivante
      * 
      * @return la description de la vague suivante
      */
-    public String getDescriptionVagueSuivante()
+    public String getDescriptionVague(int noVague)
     {   
         // récupération de la vague suivante
-        VagueDeCreatures vagueSuivante = getVagueDeCreaturesSuivante();
+        VagueDeCreatures vagueSuivante = getVagueDeCreatures(noVague);
         
         // s'il y a une description, on la retourne
         String descriptionVague = vagueSuivante.getDescription();

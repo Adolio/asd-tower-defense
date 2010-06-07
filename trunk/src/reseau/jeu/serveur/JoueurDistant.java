@@ -66,7 +66,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	/**
 	 * Niveau d'affichage des messages
 	 */
-	public static boolean verbeux = true;
+	public static boolean verbeux = false;
 
 	/**
 	 * Crée un lien avec un joueur distant.
@@ -334,7 +334,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
                 // On clos la liaison avec le client
                 fermerCanal();
                 
-                break; 	
+                break;
     			
     		default:
     			logErreur("Type de message inconnu : " + type,null);
@@ -349,7 +349,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	    // Récupération de la tour cible
         int tourCibleDel = json.getInt("ID_TOWER");
         // Demande au serveur de l'opération
-        int code = serveur.vendreTour(joueur.getId(), tourCibleDel);
+        int code = serveur.vendreTour(joueur, tourCibleDel);
         // Retour au client de code
         repondreEtat(TOUR_SUPRESSION, code);
     }
@@ -359,7 +359,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	    // Récupération de la tour cible
         int tourCible = json.getInt("ID_TOWER");
         // Demande au serveur de l'opération
-        int code = serveur.ameliorerTour(joueur.getId(), tourCible);
+        int code = serveur.ameliorerTour(joueur, tourCible);
         // Retour au client de code
         repondreEtat(TOUR_AMELIORATION, code);
     }
@@ -371,8 +371,9 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         int y = json.getInt("Y");
         // Extraction du type de tour
         int typeTour = json.getInt("TYPE_TOUR");
+        
         // Demande d'ajout au serveur
-        int code = serveur.poserTour(joueur.getId(), typeTour, x, y);
+        int code = serveur.poserTour(joueur, typeTour, x, y);
         // Retour au client du code
         repondreEtat(TOUR_AJOUT, code);
     }
@@ -383,7 +384,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         int nbCreatures = json.getInt("NB_CREATURES");
         int typeCreature = json.getInt("TYPE_CREATURE");
         // Demande de lancement d'une vague
-        int code = serveur.lancerVague(joueur.getId(), nbCreatures, typeCreature);  
+        int code = serveur.lancerVague(joueur, nbCreatures, typeCreature);  
         // Retour au client de l'information
         repondreEtat(VAGUE, code);
     }

@@ -3,7 +3,6 @@ package vues;
 import java.awt.BorderLayout;
 import java.awt.event.*;
 import javax.swing.*;
-import outils.myTimer;
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 
@@ -35,18 +34,18 @@ public class Panel_InfosJoueurEtPartie extends JPanel
     // autres membres
     private Jeu jeu;
     
-    public Panel_InfosJoueurEtPartie(Jeu jeu, final myTimer timer, int modeDeJeu)
+    public Panel_InfosJoueurEtPartie(final Jeu jeu, int modeDeJeu)
     {
         this.jeu = jeu;
               
         setBackground(LookInterface.COULEUR_DE_FOND);
         
-        timer.addActionListener(new ActionListener()
+        jeu.getTimer().addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                lTimer.setText(timer.toString());
+                lTimer.setText(jeu.getTimer().toString());
             }
         });
         

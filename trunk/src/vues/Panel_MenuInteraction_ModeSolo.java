@@ -2,10 +2,7 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
-import outils.myTimer;
 import models.creatures.*;
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
@@ -41,7 +38,7 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
 	 * @param jeu le jeu avec lequel on interagit (le model)
 	 * @param fenJeu la fenetre de jeu
 	 */
-	public Panel_MenuInteraction_ModeSolo(EcouteurDePanelTerrain edpt,Jeu jeu, final myTimer timer)
+	public Panel_MenuInteraction_ModeSolo(EcouteurDePanelTerrain edpt,Jeu jeu)
 	{
 		super(new BorderLayout());
 		setBackground(LookInterface.COULEUR_DE_FOND);
@@ -53,7 +50,7 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
 		JPanel pToursEtJoueur = new JPanel(new BorderLayout());
         pToursEtJoueur.setOpaque(false);
 		
-        pInfosJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, timer, ModeDeJeu.MODE_SOLO);
+        pInfosJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, ModeDeJeu.MODE_SOLO);
         pToursEtJoueur.add(pInfosJoueurEtPartie,BorderLayout.NORTH);
         
         pAjoutTour = new Panel_AjoutTour(jeu, edpt, 280, 80);

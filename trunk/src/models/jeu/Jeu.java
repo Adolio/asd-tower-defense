@@ -1,30 +1,14 @@
 package models.jeu;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Vector;
-
-import exceptions.ActionNonAutoriseeException;
-import exceptions.AucunePlaceDisponibleException;
-import exceptions.ZoneInaccessibleException;
-import exceptions.JeuEnCoursException;
-import exceptions.NiveauMaxAtteintException;
-import exceptions.ArgentInsuffisantException;
-import exceptions.CheminBloqueException;
-import exceptions.TerrainDejaInitialise;
+import java.util.*;
+import outils.myTimer;
+import exceptions.*;
 import models.animations.*;
-import models.creatures.Creature;
-import models.creatures.EcouteurDeCreature;
-import models.creatures.EcouteurDeVague;
-import models.creatures.GestionnaireCreatures;
-import models.creatures.VagueDeCreatures;
-import models.joueurs.EcouteurDeJoueur;
-import models.joueurs.EmplacementJoueur;
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
-import models.terrains.Terrain;
-import models.tours.GestionnaireTours;
-import models.tours.Tour;
+import models.creatures.*;
+import models.joueurs.*;
+import models.terrains.*;
+import models.tours.*;
 
 /**
  * Classe de gestion du jeu.
@@ -123,6 +107,19 @@ public abstract class Jeu implements EcouteurDeJoueur,
     private boolean estDemarre;
     
     /**
+     * Gestion des vagues de creatures. C'est le joueur que decident le moment
+     * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
+     * de creatures ont ete detruites, le jeu est considere comme termine.
+     */
+    protected int indiceVagueCourante = 1;
+    
+    /**
+     * Timer pour gérer le temps de jeu
+     */
+    private myTimer timer = new myTimer(1000,null);
+    
+    
+    /**
      * Constructeur
      */
     public Jeu()
@@ -186,6 +183,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireTours.demarrer();
         gestionnaireCreatures.demarrer();
         gestionnaireAnimations.demarrer();
+        
+        timer.start();
         
         estDemarre = true;
         
@@ -318,9 +317,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	public void lancerVagueSuivante(Joueur joueur, Equipe cible)
 	{
 	    // lancement de la vague
-	    VagueDeCreatures vagueCourante = terrain.getVagueDeCreaturesSuivante();
+	    VagueDeCreatures vagueCourante = terrain.getVagueDeCreatures(indiceVagueCourante);
         
-	    terrain.passerALaProchaineVague();
+	    passerALaProchaineVague();
 	    
         vagueCourante.lancerVague(this, joueur, cible, this, this);
 	}
@@ -341,12 +340,15 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void terminer()
     {
-        estTermine = true;
-        
-        arreterTout();
-        
-        if(edj != null)
-            edj.partieTerminee();
+        if(!estTermine)
+        {
+            estTermine = true;
+            
+            arreterTout();
+            
+            if(edj != null)
+                edj.partieTerminee();
+        }
     }
 
     /**
@@ -392,7 +394,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
     /**
      * Permet de stope tous les threads des elements
      */
-    public void arreterTout()
+    private void arreterTout()
     {
         // arret de toutes les tours
         gestionnaireTours.arreterTours();
@@ -402,6 +404,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
 
         // arret de toutes les animations
         gestionnaireAnimations.arreterAnimations();
+        
+        // arret du timer
+        timer.stop();
     }
 
     /**
@@ -417,6 +422,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
             gestionnaireCreatures.sortirDeLaPause();
             gestionnaireAnimations.sortirDeLaPause();
             terrain.sortirDeLaPause();
+            timer.play();
         }
         else
         {
@@ -424,6 +430,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
             gestionnaireCreatures.mettreEnPause();
             gestionnaireAnimations.mettreEnPause();
             terrain.mettreEnPause();
+            timer.pause();
         }
         
         return enPause = !enPause;  
@@ -806,4 +813,33 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return estDemarre;
     }
 
+    /**
+     * Permet de recuperer le numero de la vague courante
+     * 
+     * @return le numero de la vague courante
+     */
+    public int getNumVagueCourante()
+    {
+        return indiceVagueCourante;
+    }
+    
+    /**
+     * Permet de passer à la prochaine vague
+     */
+    public void passerALaProchaineVague()
+    {
+        ++indiceVagueCourante;
+    }
+
+
+    /**
+     * Permet de recuperer le timer
+     * 
+     * @return
+     */
+    public myTimer getTimer()
+    {
+        return timer;
+    }
+    
 }

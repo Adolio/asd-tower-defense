@@ -43,7 +43,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	/**
 	 * Mode verbeux
 	 */
-    private final boolean verbeux = true;
+    private final boolean verbeux = false;
     
     /**
      * Ecouteur de client jeu pour les notifications
@@ -653,7 +653,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         double vitesse = message.getDouble("VITESSE");
         
-        Creature creature = TypeDeCreature.getCreature(typeCreature, true);
+        Creature creature = TypeDeCreature.getCreature(typeCreature, 1, true);
         Equipe equipeCiblee = jeu.getEquipe(idEquipe);
             
         if(creature != null)

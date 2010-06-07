@@ -8,9 +8,7 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
 import exceptions.ActionNonAutoriseeException;
-import outils.myTimer;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
@@ -114,11 +112,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * Formulaire principale de la fenêtre
      */
     private JPanel pFormulaire = new JPanel(new BorderLayout());
-    
-    /**
-     * Timer pour gérer le temps de jeu
-     */
-    private myTimer timer = new myTimer(1000,null);
     
     /**
      * Lien vers le jeu
@@ -231,10 +224,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu,timer);
-		timer.start();
+		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu);
 		
-		
+
 		panelInfoTour     = panelMenuInteraction.getPanelInfoTour();
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
 		
@@ -292,7 +284,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
 		// quitter
 		else if(source == itemQuitter)
-			quitter();
+			demanderQuitter();
 		
 		// retour au menu principal
 		else if(source == itemRetourMenu)
@@ -338,12 +330,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	/**
 	 * Permet de proposer au joueur s'il veut quitter le programme
 	 */
-	private void quitter()
+	private void demanderQuitter()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
+	        jeu.terminer();
+	        
 	        demanderEnregistrementDuScore();
 	        
 	        System.exit(0); // Fermeture correcte du logiciel
@@ -359,6 +353,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir arrêter la partie ?", 
 	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
+	        jeu.terminer();
+	        
 	        demanderEnregistrementDuScore();
 	        
 	        retourAuMenuPrincipal();
@@ -380,7 +376,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-                new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getNom()); 
             }
         }
 	}
@@ -391,10 +387,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void retourAuMenuPrincipal()
     {
 	    GestionnaireSons.arreterTousLesSons();
-	    
-	    if(!jeu.estTermine())
-	        jeu.terminer();
-        
+         
         dispose(); // destruction de la fenetre
         System.gc(); // passage du remasse miette
         new Fenetre_MenuPrincipal();  
@@ -563,9 +556,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void ajouterInfoVagueSuivanteDansConsole()
     {
-        ajouterTexteHTMLDansConsole("["+(jeu.getTerrain().getNumVagueCourante()+1)+"] Vague suivante : "+jeu.getTerrain().getDescriptionVagueSuivante()+"<br />");
+        ajouterTexteHTMLDansConsole("["+(jeu.getNumVagueCourante())+"] Vague suivante : "+jeu.getTerrain().getDescriptionVague(jeu.getNumVagueCourante())+"<br />");
         
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getTerrain().getNumVagueCourante()+1)+"]");
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getNumVagueCourante())+"]");
     }
 	
     @Override
@@ -632,7 +625,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     @Override
     public void windowClosing(WindowEvent e)
     {
-       quitter(); 
+       demanderQuitter(); 
     }
 
     @Override
@@ -700,11 +693,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {
         boolean enPause = jeu.togglePause();
         
-        if(enPause)
-            timer.pause();
-        else
-            timer.play();
-        
         // inhibation
         panelMenuInteraction.setPause(enPause);
         
@@ -730,7 +718,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         if(jeu.getJoueurPrincipal().getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
             demandeDEnregistrementDuScoreEffectuee = true;
-            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), timer.getTime() / 1000, jeu.getTerrain().getNom()); 
+            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getNom()); 
         }
     }
     

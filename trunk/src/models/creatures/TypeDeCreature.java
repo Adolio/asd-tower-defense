@@ -18,12 +18,38 @@ public class TypeDeCreature
     private static final int ELEPHANT        = 5;
     private static final int GRANDE_ARAIGNEE = 6;
 
-	public static Creature getCreature(int typeDeCreature, boolean invincible)
+	public static Creature getCreature(int typeDeCreature, int noVague, boolean invincible)
 	{
 	    
 	    Creature c = null;
 	    switch(typeDeCreature)
         {
+	    
+            case MOUTON :
+                c = new Mouton(100*noVague, 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
+                break;
+            case ARAIGNEE : 
+                c = new Araignee(200*noVague, 10, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
+                break;
+            case PIGEON :
+                c = new Pigeon(300*noVague, 15, VagueDeCreatures.VITESSE_CREATURE_NORMALE);    
+                break;
+            case RHINOCEROS :
+                c = new Rhinoceros(600*noVague, 60, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
+                break;
+            case AIGLE : 
+                c = new Aigle(1200*noVague, 30, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
+                break;
+            case ELEPHANT :
+                c = new Elephant(3000*noVague, 100, VagueDeCreatures.VITESSE_CREATURE_LENTE);
+                break;
+            case GRANDE_ARAIGNEE :
+                c = new GrandeAraignee(3000*noVague, 150, VagueDeCreatures.VITESSE_CREATURE_RAPIDE); 
+                break;
+            default :
+                return null; // TODO erreur
+            
+	    /*
             case MOUTON :
                 c = new Mouton(100, 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
                 break;
@@ -47,6 +73,7 @@ public class TypeDeCreature
                 break;
             default :
                 return null; // TODO erreur
+           */
         }
 	    
 	    c.setInvincible(invincible);
