@@ -593,9 +593,18 @@ public abstract class Jeu implements EcouteurDeJoueur,
                 for(Joueur joueur : equipe.getJoueurs())
                     edj.joueurMisAJour(joueur);
             }
-            // le joueur n'a plus de vie
+            
+            // controle de la terminaison du jeu.
             if(equipe.aPerdu())
-                terminer();
+            {
+                for(Equipe tmpEquipe : equipes)
+                {
+                    if(!tmpEquipe.aPerdu())
+                        return;
+                        
+                    terminer();
+                } 
+            }
         } 
     }
 

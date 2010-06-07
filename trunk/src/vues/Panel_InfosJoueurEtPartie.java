@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import outils.myTimer;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 
 // TODO comment
 public class Panel_InfosJoueurEtPartie extends JPanel
@@ -34,10 +35,10 @@ public class Panel_InfosJoueurEtPartie extends JPanel
     // autres membres
     private Jeu jeu;
     
-    public Panel_InfosJoueurEtPartie(Jeu jeu, final myTimer timer)
+    public Panel_InfosJoueurEtPartie(Jeu jeu, final myTimer timer, int modeDeJeu)
     {
         this.jeu = jeu;
-        
+              
         setBackground(LookInterface.COULEUR_DE_FOND);
         
         timer.addActionListener(new ActionListener()
@@ -59,16 +60,22 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
             
         // etoiles gagnées
-        pGlobalInfo.add(lTitreEtoiles);
-        pGlobalInfo.add(lEtoiles);
-        lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        miseAJourNbEtoiles();
+        if(modeDeJeu == ModeDeJeu.MODE_SOLO)
+        {
+            pGlobalInfo.add(lTitreEtoiles);
+            pGlobalInfo.add(lEtoiles);
+            lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            miseAJourNbEtoiles();
+        }
         
         // revenu
-        pGlobalInfo.add(lTitreRevenu);
-        pGlobalInfo.add(lRevenu);
-        lRevenu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        miseAJourRevenu();
+        if(modeDeJeu != ModeDeJeu.MODE_SOLO)
+        {
+            pGlobalInfo.add(lTitreRevenu);
+            pGlobalInfo.add(lRevenu);
+            lRevenu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            miseAJourRevenu();
+        }
         
         //------------------------------------------
         //-- panel des donnees du joueur          --
@@ -108,6 +115,8 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         pAlignADroite2.setOpaque(false);
         pAlignADroite2.add(pJoueur,BorderLayout.EAST);
         pToursEtJoueur.add(pAlignADroite2,BorderLayout.CENTER);
+        
+        miseAJour();
         
         add(pToursEtJoueur,BorderLayout.NORTH); 
     }
@@ -161,5 +170,15 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         miseAJourNbPiecesOr();
         miseAJourNbEtoiles(); 
         miseAJourRevenu();
+    }
+
+    public void setPause(boolean enPause)
+    {
+        // TODO Auto-generated method stub
+    }
+
+    public void partieTerminee()
+    {
+        // TODO Auto-generated method stub 
     }
 }

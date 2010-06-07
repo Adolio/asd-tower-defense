@@ -87,7 +87,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	/**
 	 * panel contenant le menu d'interaction
 	 */
-	private Panel_MenuInteraction panelMenuInteraction;
+	private Panel_MenuInteraction_ModeSolo panelMenuInteraction;
 	
 	/**
 	 * panel pour afficher les caracteristiques d'une tour 
@@ -231,7 +231,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		conteneurTerrain.setOpaque(false);
 		
 		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
-		panelMenuInteraction = new Panel_MenuInteraction(this,jeu,timer);
+		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu,timer);
 		timer.start();
 		
 		
