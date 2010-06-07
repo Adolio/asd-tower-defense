@@ -34,7 +34,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
-    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(220,120);
+    private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,120);
     
 	// membres graphiques
 	private JLabel lNom 			 = new JLabel();
@@ -291,7 +291,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				else if(tour.peutEncoreEtreAmelioree())
     				{
     					bAmeliorer.setEnabled(true);
-    					bAmeliorer.setText(TXT_AMELIORER);
+    					bAmeliorer.setText(TXT_AMELIORER+"["+tour.getPrixAchat()+"]");
     				}
     				else
     				{
