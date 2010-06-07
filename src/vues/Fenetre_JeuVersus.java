@@ -17,6 +17,7 @@ import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu_Client;
+import models.jeu.ModeDeJeu;
 import models.joueurs.Joueur;
 
 /**
@@ -259,7 +260,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         //--------------------
 		
         // Info jeu et joueur
-		panelInfoJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, timer);
+		panelInfoJoueurEtPartie = new Panel_InfosJoueurEtPartie(jeu, timer, ModeDeJeu.MODE_VERSUS);
 		
 		// Ajout de tour
 		panelAjoutTour = new Panel_AjoutTour(jeu, this, LARGEUR_MENU_DROITE, 80);

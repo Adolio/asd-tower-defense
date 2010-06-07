@@ -73,6 +73,8 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
             pTours.add(bTour);
         }
         
+        miseAJour();
+        
         add(pTours,BorderLayout.CENTER);
     }
 
@@ -131,5 +133,14 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
         bTourDeFeu.setEnabled(nbPiecesOr >= TourDeFeu.PRIX_ACHAT);
         bTourDAir.setEnabled(nbPiecesOr >= TourDAir.PRIX_ACHAT);
         bTourDeTerre.setEnabled(nbPiecesOr >= TourDeTerre.PRIX_ACHAT);
+    }
+    
+    public void setPause(boolean pause)
+    {
+        if(pause)
+            for(JButton bTour : boutonsTours)
+                bTour.setEnabled(false);   
+        else
+            miseAJour();
     }
 }

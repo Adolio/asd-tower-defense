@@ -94,6 +94,11 @@ public abstract class Creature extends Rectangle
 	private int nbPiecesDOr;
 	
 	/**
+     * le prix de la créature
+     */
+    // TODO private int prixAchat;
+	
+	/**
 	 * Image actuelle de la creature
 	 */
 	protected Image image;
