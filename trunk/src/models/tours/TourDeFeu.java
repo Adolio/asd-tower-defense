@@ -14,7 +14,6 @@ import models.creatures.Creature;
  * mais qui fait de gros degats de zone.
  * Cette tour attaque tous types de creatures
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009

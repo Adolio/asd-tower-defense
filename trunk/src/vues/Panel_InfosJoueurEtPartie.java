@@ -6,7 +6,13 @@ import javax.swing.*;
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 
-// TODO comment
+/**
+ * Panel d'affichage des informations du joueur et de la partie en cours
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Panel_InfosJoueurEtPartie extends JPanel
 {
     // constantes finales

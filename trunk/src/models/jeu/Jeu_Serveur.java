@@ -1,5 +1,7 @@
 package models.jeu;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ConnectException;
 
@@ -17,11 +19,13 @@ import serveur.enregistrement.CodeEnregistrement;
 import serveur.enregistrement.RequeteEnregistrement;
 
 /**
- * Classe de gestion du jeu réseau.
+ * Classe de gestion du moteur de jeu réseau.
  * 
  * @author Aurelien Da Campo
  * @version 1.1 | mai 2010
  * @since jdk1.6.0_16
+ * 
+ * @see serveurDeJeu
  */
 public class Jeu_Serveur extends Jeu
 {
@@ -45,14 +49,43 @@ public class Jeu_Serveur extends Jeu
      */
     private GestionnaireDeRevenu gRevenus = new GestionnaireDeRevenu(this);
 
+    /**
+     * Temps avant que le serveur incrémente son niveau
+     * 
+     * Le niveau du jeu influ sur la santé des créatures lancées
+     * En effet, la santé des créatures est générer en fonction du niveau du jeu.
+     */
+    private static final int TEMPS_ENTRE_CHAQUE_LEVEL = 20; // secondes
+    
     @Override
     public void demarrer()
     {
         super.demarrer();
         
         gRevenus.demarrer();
+        
+        
+        // gestionnaire des niveaux (applé toutes les secondes de jeu)
+        timer.addActionListener(new ActionListener()
+        {  
+            int secondes = 0;
+            
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                secondes++;
+                
+                if(secondes == TEMPS_ENTRE_CHAQUE_LEVEL)
+                {
+                    passerALaProchaineVague();
+                    secondes = 0;
+                    
+                    // TODO effacer et informer les clients ou non.
+                    System.out.println("Nouveau level du serveur "+getNumVagueCourante());
+                } 
+            }
+        });
     }
-    
     
     @Override
     synchronized public void creatureTuee(Creature creature, Joueur tueur)
@@ -60,17 +93,9 @@ public class Jeu_Serveur extends Jeu
         // gain de pieces d'or
         tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr() / 5);
         
-        // nombre d'etoile avant l'ajout du score
-        int nbEtoilesAvantAjoutScore = tueur.getNbEtoiles();
-        
         // augmentation du score
         tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());
 
-        // nouvelle étoile ?
-        if(nbEtoilesAvantAjoutScore < tueur.getNbEtoiles())
-            if(edj != null)  
-                edj.etoileGagnee();
- 
         // notification de la mort de la créature
         if(edj != null)
             edj.creatureTuee(creature,tueur);
@@ -208,9 +233,21 @@ public class Jeu_Serveur extends Jeu
             } 
             catch (CanalException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+        }
+    }
+    
+    public void terminer(ResultatJeu resultatJeu)
+    {
+        if(!estTermine)
+        {
+            estTermine = true;
+            
+            arreterTout();
+            
+            if(edj != null)
+                edj.partieTerminee(resultatJeu);
         }
     }
 }

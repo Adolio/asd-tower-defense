@@ -475,6 +475,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
                 g2.setColor(joueur.getEmplacement().getCouleur());
                 g2.drawRect(zoneC.x , zoneC.y, zoneC.width, zoneC.height);
             
+                if(joueur.getEquipe().aPerdu())
+                {
+                    g2.drawLine(zoneC.x , zoneC.y, zoneC.x + zoneC.width, zoneC.y + zoneC.height);
+                    g2.drawLine(zoneC.x , zoneC.y + zoneC.height, zoneC.x + zoneC.width, zoneC.y);
+                }
+                
                 // TODO
                 //if(joueur != this.joueur){
                     g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo , zoneC.y+yOffsetPseudo);
@@ -850,7 +856,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void run()
 	{
 		// Tant que la partie est en cours...
-		while(!jeu.estTermine())
+		while(!jeu.estDetruit())
 		{
 			// Raffraichissement du panel
 			repaint(); // -> appel paintComponent

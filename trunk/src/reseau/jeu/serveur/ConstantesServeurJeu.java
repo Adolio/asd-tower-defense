@@ -117,6 +117,15 @@ public interface ConstantesServeurJeu
     public final int JOUEUR_MESSAGE = 309;
 	
     
+    /**
+     * Type de message : une equipe a perdue
+     */
+    public final int EQUIPE_A_PERDUE = 30101;
+    
+    
+    
+    
+    
 	// CREATURE 310-319
 	
 	/**

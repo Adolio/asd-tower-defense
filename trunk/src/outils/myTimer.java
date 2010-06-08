@@ -1,10 +1,15 @@
 package outils;
 
 import java.awt.event.ActionListener;
-
 import javax.swing.Timer;
 
-//TODO commenter
+/**
+ * Classe d'un chrono.
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class myTimer extends Timer
 {
     private static final long serialVersionUID = 1L;

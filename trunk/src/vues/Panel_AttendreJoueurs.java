@@ -7,6 +7,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import exceptions.MessageChatInvalide;
+
 import reseau.CanalException;
 import reseau.jeu.client.EcouteurDeClientJeu;
 import reseau.jeu.serveur.ServeurJeu;
@@ -19,11 +21,16 @@ import models.outils.GestionnaireSons;
 import models.outils.Outils;
 import models.tours.Tour;
 
-// TODO comment
-@SuppressWarnings("serial")
+/**
+ * Formulaire d'attente de joueurs
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | mai 2010
+ */
 public class Panel_AttendreJoueurs extends JPanel implements 
     ActionListener, EcouteurDeJeu, EcouteurDeClientJeu
 {
+    private static final long serialVersionUID = 1L;
     private final int MARGES_PANEL = 40;
     private final boolean ADMIN;
     private JFrame parent;
@@ -309,7 +316,6 @@ public class Panel_AttendreJoueurs extends JPanel implements
             if (ADMIN)
             {
                 jeuServeur.desenregistrerSurSE();
-                
                 jeuServeur.stopperServeurDeJeu();
             }
             else
@@ -335,9 +341,17 @@ public class Panel_AttendreJoueurs extends JPanel implements
                 // on envoie pas de chaines vides
                 if(!tfSaisieMsg.getText().trim().equals(""))
                 {
-                    jeuClient.envoyerMsg(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
-                    tfSaisieMsg.setText("");
-                    tfSaisieMsg.requestFocus();
+                    try
+                    {
+                        jeuClient.envoyerMsgChat(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
+                        
+                        tfSaisieMsg.setText("");
+                        tfSaisieMsg.requestFocus();
+                    } 
+                    catch (MessageChatInvalide e1)
+                    {
+                       console.ajouterTexteHTMLDansConsole("<font color='red'>#Quotes ouvrantes et fermantes interdites</font> <br/>");
+                    }
                 }
             } 
             catch (CanalException e1)
@@ -522,10 +536,12 @@ public class Panel_AttendreJoueurs extends JPanel implements
             case ModeDeJeu.MODE_VERSUS :
                 new Fenetre_JeuVersus(jeuClient);
                 break;
-            
+            /*
+            TODO implémenter le mode de jeu coopératif
             case ModeDeJeu.MODE_COOP :
-                new Fenetre_JeuVersus(jeuClient); // FIXME créer Fenetre_JeuCoop
+                new Fenetre_JeuCoop(jeuClient);
                 break;
+            */
         }
         
         GestionnaireSons.arreterTousLesSons(Fenetre_MenuPrincipal.FICHIER_MUSIQUE_MENU);
@@ -534,7 +550,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
     }
 
     @Override
-    public void partieTerminee(){}
+    public void partieTerminee(ResultatJeu resultatJeu){}
 
     @Override
     public void tourAmelioree(Tour tour){}
@@ -583,5 +599,13 @@ public class Panel_AttendreJoueurs extends JPanel implements
     public void joueurDeconnecte(Joueur joueur)
     {
         console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>#Déconnexion : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
+    }
+
+    @Override
+    public void receptionEquipeAPerdue(Equipe equipe){}
+
+    @Override
+    public void equipeAPerdue(Equipe equipe)
+    {
     }
 }

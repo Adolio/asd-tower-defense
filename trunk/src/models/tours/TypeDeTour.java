@@ -2,6 +2,14 @@ package models.tours;
 
 import exceptions.TypeDeTourInvalideException;
 
+/**
+ * Classe de gestion des types de tour pour les communications réseaux
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ * @see Tour
+ */
 public class TypeDeTour
 {
 	private static final int TOUR_ARCHER        = 1;

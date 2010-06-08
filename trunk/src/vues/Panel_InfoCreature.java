@@ -13,9 +13,7 @@ import models.creatures.*;
  * Le joueur pourra voir les proprietes d'une creature caracterisee par
  * sa sante, son type (terrestre ou aerienne), sa vitesse, etc.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 18 decembre 2009
  * @since jdk1.6.0_16
  * @see Creature

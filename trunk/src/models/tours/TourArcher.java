@@ -12,7 +12,6 @@ import models.creatures.Creature;
  * La tour d'archer est une tour qui est rapide, 
  * mais elle fait peu de degats. Elle attaque tous types de creatures.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009

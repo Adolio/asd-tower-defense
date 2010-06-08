@@ -1,5 +1,6 @@
 package reseau.jeu.client;
 
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
@@ -31,4 +32,9 @@ public interface EcouteurDeClientJeu
      * Permet d'informer l'ecouteur de la deconnexion d'un joueur
      */
     public void joueurDeconnecte(Joueur joueur);
+
+    /**
+     * Permet d'informer l'ecouteur qu'une equipe perdue
+     */
+    public void receptionEquipeAPerdue(Equipe equipe);
 }

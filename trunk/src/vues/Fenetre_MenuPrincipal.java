@@ -14,9 +14,7 @@ import models.outils.Son;
  * <p>
  * Affiche un menu permettant au joueur de choisir son mode de jeu.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 20 avril 2010
  * @since jdk1.6.0_16
  */

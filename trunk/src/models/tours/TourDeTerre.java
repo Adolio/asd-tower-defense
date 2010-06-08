@@ -13,7 +13,6 @@ import models.creatures.Creature;
  * et qui a une tres grande portee. Malheureusement, elle n'attaque
  * que les creatures terrestre.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009

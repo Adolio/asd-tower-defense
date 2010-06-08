@@ -1,15 +1,10 @@
 package reseau.jeu.serveur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
-
 import org.json.JSONException;
-
 import outils.Configuration;
-
 import exceptions.*;
 import models.animations.Animation;
 import models.creatures.*;
@@ -27,26 +22,22 @@ import reseau.*;
  * @author Aurelien Da Campo
  * @version 1.0 | mai 2010
  */
-public class ServeurJeu implements ConstantesServeurJeu,
-		EcouteurDeJeu, Runnable
+public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
 {
 	/**
 	 * La version courante du serveur
 	 */
-	public static final String VERSION = "0.2";
+	public static final String VERSION = "2_0_beta";
 
 	/**
      * Temps de rafraichissement des éléments
      */
-	private long TEMPS_DE_RAFFRAICHISSEMENT = 100;
+	private long TEMPS_DE_RAFFRAICHISSEMENT = 80;
 	
 	/**
 	 * Fanion pour le mode debug
 	 */
 	private static final boolean verbeux = false;
-
-	// TODO
-	private static final int TEMPS_ENTRE_CHAQUE_LEVEL = 60;
 
 	/**
 	 * Liste des clients enregistrés sur le serveur
@@ -58,12 +49,20 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	 */
 	private Jeu jeuServeur;
 
+	
 	/**
-	 * FIXME libérer le port !
+	 * Canal d'attente de connexion de joueur
+	 */
+	private CanalTCP canalAttenteConnexion = null;
+	
+	/**
+	 * Port du canal
 	 */
 	private Port port;
 	
-	
+	/**
+	 * Référence vers le créateur du jeu
+	 */
 	private Joueur createur;
 	
 	/**
@@ -87,36 +86,11 @@ public class ServeurJeu implements ConstantesServeurJeu,
           
 		// Lancement du thread serveur.
 		(new Thread(this)).start();
-		
-		
-		jeuServeur.getTimer().addActionListener(new ActionListener()
-        {  
-            int secondes = 0;
-		    
-		    @Override
-            public void actionPerformed(ActionEvent e)
-            {
-		        secondes++;
-		        
-		        // TODO CONSTANTE
-		        if(secondes == TEMPS_ENTRE_CHAQUE_LEVEL)
-		        {
-		            jeuServeur.passerALaProchaineVague();
-		            secondes = 0;
-		            
-		            // TODO noLogged
-		            System.out.println("Nouveau level du serveur "+jeuServeur.getNumVagueCourante());
-		        } 
-            }
-        });
 	}
 
 	@Override
 	public void run()
 	{  
-	    // Canal d'écoute
-        CanalTCP canal = null;
-        
         try
         {
     	    // Boucle d'attente de connections
@@ -128,27 +102,27 @@ public class ServeurJeu implements ConstantesServeurJeu,
                     log("Ecoute sur le port " + Configuration.getPortSJ());
                     
                     // Bloquant en attente d'une connexion
-                    canal = new CanalTCP(port, verbeux);
+                    canalAttenteConnexion = new CanalTCP(port, verbeux);
                     
-                    String ip = canal.getIpClient();
+                    String ip = canalAttenteConnexion.getIpClient();
                     
                     // Log
                     log("Récéption de " + ip); 
                     
                     // Récéption du pseudo du joueur
-                    String pseudo = canal.recevoirString();
+                    String pseudo = canalAttenteConnexion.recevoirString();
                     
                     // Création du joueur
                     Joueur joueur = new Joueur(pseudo);
                     
-                    enregistrerClient(joueur, canal);
+                    enregistrerClient(joueur, canalAttenteConnexion);
                 } 
                 catch (JeuEnCoursException e){
     
                     log("Joueur refusé - jeu est en cours");
                     
                     // Envoye de la réponse
-                    canal.envoyerString(Protocole.construireMsgJoueurInitialisation(JEU_EN_COURS));   
+                    canalAttenteConnexion.envoyerString(Protocole.construireMsgJoueurInitialisation(JEU_EN_COURS));   
                 }
                 
                 catch (AucunePlaceDisponibleException e){
@@ -156,7 +130,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
                     log("Joueur refusé - aucune place disponible");
     
                     // Envoye de la réponse
-                    canal.envoyerString(Protocole.construireMsgJoueurInitialisation(PAS_DE_PLACE));
+                    canalAttenteConnexion.envoyerString(Protocole.construireMsgJoueurInitialisation(PAS_DE_PLACE));
                 }
             }
         }  
@@ -181,8 +155,8 @@ public class ServeurJeu implements ConstantesServeurJeu,
     		if (clients.containsKey(joueur.getId()))
     		{
     			log("ERROR : Le client " + joueur.getId() + " est déjà dans la partie");
-    			// On déconnecte le client; // FIXME
     			
+    			// FIXME On déconnecte le client; 
                 canal.fermer();
     		} 
     		else
@@ -198,10 +172,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
                 JoueurDistant jd = new JoueurDistant(joueur, canal, this);
     			clients.put(joueur.getId(), jd);
     			
-    			// Notification des clients
-    			// TODO réellement nécessaire ?
-    	        //envoyerATous(Protocole.construireMsgJoueurAjout(joueur));
-    	        
+    			// Notification des clients 
     	        envoyerATous(Protocole.construireMsgJoueursEtat(jeuServeur.getJoueurs()));
     		}
 		
@@ -217,11 +188,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	@Override
 	public void creatureArriveeEnZoneArrivee(Creature creature)
 	{
-	    /*
-	     *  TODO uniquement pour les joueurs concernée
-	     *  -> les joueurs de l'equipe qui a perdu une vie
-	     */
-        envoyerATous(Protocole.construireMsgCreatureArrivee(creature));
+	    envoyerATous(Protocole.construireMsgCreatureArrivee(creature));
 	}
 
 	@Override
@@ -243,10 +210,10 @@ public class ServeurJeu implements ConstantesServeurJeu,
 
 	
 	@Override
-	public void partieTerminee()
+	public void partieTerminee(ResultatJeu resultatJeu)
 	{
-	    // Multicast aux clients
-	    envoyerATous(Protocole.construireMsgPartieTerminee());
+	    // TODO CHECK Multicast aux clients
+	    envoyerATous(Protocole.construireMsgPartieTerminee(jeuServeur));
 	}
 
 	@Override
@@ -372,7 +339,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 	    if(joueur == null)
 	        return JOUEUR_INCONNU;
 	    
-	    // TODO FROM le terrain
+	    // TODO les créatures disponibles dervaient être dans le terrain
 	    Creature creature = TypeDeCreature.getCreature(typeCreature, jeuServeur.getNumVagueCourante(), false);
     
         log("Le joueur " + joueur.getPseudo() + " désire lancer une vague de "+nbCreatures+" créatures de type"
@@ -388,10 +355,7 @@ public class ServeurJeu implements ConstantesServeurJeu,
 		    
 		    if(argentApresAchat >= 0)
 		    {
-		        // TODO...
-		        int tempsLancement = 500;
-		        
-		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, tempsLancement, true);
+		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()), true);
 
 		        joueur.setNbPiecesDOr(argentApresAchat);
 	            try
@@ -511,6 +475,9 @@ public class ServeurJeu implements ConstantesServeurJeu,
 		catch (ActionNonAutoriseeException e)
         {
 		    return ACTION_NON_AUTORISEE;
+        } catch (JoueurHorsJeu e)
+        {
+            return JOUEUR_HORS_JEU;
         }
 		
 		return OK;
@@ -630,6 +597,10 @@ public class ServeurJeu implements ConstantesServeurJeu,
         {
             clients.remove(joueur.getId());
             
+            // l'hote met fin à la partie
+            //if(joueur.getId() == createur.getId())
+            //    envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_STOPPEE_BRUTALEMENT));
+            
             if(jeuServeur.estDemarre())
                 mettreHorsJeu(joueur);
             else
@@ -680,7 +651,6 @@ public class ServeurJeu implements ConstantesServeurJeu,
         port.liberer();
         
         envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_STOPPEE_BRUTALEMENT));
-      
     }
     
     private void canalErreur(Exception e)
@@ -688,26 +658,10 @@ public class ServeurJeu implements ConstantesServeurJeu,
         System.out.println("ServeurJeu.canalErreur");
         e.printStackTrace();
         
-        
-        //
-        port.liberer();
-        
-        
-        // envoi si possible...
-        /*try
-        {
-            envoyerATous(Protocole.construireMsgPartieChangementEtat(PARTIE_STOPPEE));
-        } 
-        catch (CanalException e1)
-        {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }*/
-        
-        //e.printStackTrace();   
+        // libération du port
+        port.liberer(); 
     }
 
-    // TODO peut faire mieux
     public ArrayList<Joueur> getJoueurs()
     { 
         return jeuServeur.getJoueurs();
@@ -746,5 +700,11 @@ public class ServeurJeu implements ConstantesServeurJeu,
         joueur.mettreHorsJeu();
         
         envoyerATous(Protocole.construireMsgJoueurDeconnecte(joueur.getId()));
+    }
+
+    @Override
+    public void equipeAPerdue(Equipe equipe)
+    {
+        envoyerATous(Protocole.construireMsgEquipeAPerdue(equipe.getId()));
     }
 }

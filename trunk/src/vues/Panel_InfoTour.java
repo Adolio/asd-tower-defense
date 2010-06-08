@@ -13,9 +13,7 @@ import models.tours.*;
  * 
  * C'est dans ce panel que le joueur peut ameliorer une tour ou la vendre.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurélien Da Campo
- * @author Lazhar Farjallah
+ * @author Aurelien Da Campo
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  * @see JPanel

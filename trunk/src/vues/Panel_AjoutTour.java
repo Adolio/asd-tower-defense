@@ -8,7 +8,13 @@ import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
 import models.tours.*;
 
-// TODO comment
+/**
+ * Panel de sélection d'une tour pour achat
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Panel_AjoutTour extends JPanel implements ActionListener
 {
     private static final long serialVersionUID = 1L;

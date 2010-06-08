@@ -15,8 +15,6 @@ import java.util.Date;
  * Cette classe implemente deux interfaces : {@link Serializable} et
  * {@link Comparable}
  * 
- * @author Aurelien Da Campo
- * @author Pierre-Dominique Putallaz
  * @author Lazhar Farjallah
  * @version 16 dec. 2009
  * @since jdk1.6.0_16

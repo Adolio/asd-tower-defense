@@ -18,8 +18,6 @@ import java.util.*;
  * Remarques : <br>
  * Cette classe ne peut pas être derivee.
  * 
- * @author Aurelien Da Campo
- * @author Pierre-Dominique Putallaz
  * @author Lazhar Farjallah
  * @version 16 dec. 2009
  * @since jdk1.6.0_16

@@ -11,9 +11,7 @@ import models.outils.*;
 /**
  * Fenetre de gestion de l'affichage des meilleurs scores
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 17 decembre 2009
  * @since jdk1.6.0_16
  */

@@ -3,7 +3,6 @@ package models.tours;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import models.attaques.BouletDeCanon;
 import models.creatures.Creature;
 
 /**
@@ -12,9 +11,8 @@ import models.creatures.Creature;
  * Le tour canon est une tour lente avec de bons degats de zone. 
  * De plus, elle n'attaque que les creatures terrestres
  * 
- * @author Pierre-Dominique Putallaz
+ * @author Romain Poulain
  * @author Aurélien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009
  * @since jdk1.6.0_16
  * @see Tour
@@ -26,7 +24,6 @@ public class TourBalistique extends Tour
 	public static final Image IMAGE;
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
-    private static final double RAYON_IMPACT = 30.0;
     public static final int PRIX_ACHAT = 15;
     private static final String DESCRIPTION = 
         "La tour canon est une tour avec de bons dégâts mais lente. " +

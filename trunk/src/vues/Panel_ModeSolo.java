@@ -28,9 +28,7 @@ import models.terrains.*;
  * Les boutons des terrains ont ete fait completement statiques 
  * pour gagner un temps precieux.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 15 decembre 2009
  * @since jdk1.6.0_16
  */

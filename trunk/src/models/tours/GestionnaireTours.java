@@ -239,4 +239,10 @@ public class GestionnaireTours implements Runnable
       
         return null;
     }
+
+    public void detruire()
+    {
+        arreterTours();
+        tours.clear();
+    }
 }

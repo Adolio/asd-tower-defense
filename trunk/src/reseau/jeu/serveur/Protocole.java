@@ -2,6 +2,8 @@ package reseau.jeu.serveur;
 
 import java.util.ArrayList;
 import models.creatures.*;
+import models.jeu.Jeu;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.terrains.Terrain;
 import models.tours.*;
@@ -301,14 +303,36 @@ public class Protocole implements ConstantesServeurJeu
         return msg.toString();  
     }
 
-    public static String construireMsgPartieTerminee()
+    public static String construireMsgPartieTerminee(Jeu jeu)
     {
         JSONObject msg = new JSONObject();
         
         try
         {
-            msg.put("TYPE", PARTIE_TERMINEE);
-        } 
+            msg.put("TYPE", PARTIE_ETAT);
+            msg.put("ETAT", PARTIE_TERMINEE);
+            
+            // construction des états des équipes
+            JSONArray JSONequipes = new JSONArray();  
+            for(Equipe e : jeu.getEquipes())
+            {
+                JSONObject JSONequipe = new JSONObject();
+                
+                JSONequipe.put("ID_EQUIPE", e.getId());
+                
+                if(e.estHorsJeu())
+                    JSONequipe.put("NB_VIES_RESTANTES", 0); 
+                else
+                    JSONequipe.put("NB_VIES_RESTANTES", e.getNbViesRestantes()); 
+                
+                
+                JSONequipes.put(JSONequipe);
+            }
+            msg.put("EQUIPES", JSONequipes);
+            
+            // TODO construction des états des joueurs
+            // ...
+        }
         catch (JSONException e)
         {
             e.printStackTrace();
@@ -391,6 +415,23 @@ public class Protocole implements ConstantesServeurJeu
             // Construction de la structure JSON
             msg.put("TYPE", JOUEUR_DECONNEXION);
             msg.put("ID_JOUEUR", idJoueur);
+        }
+        catch (JSONException jsone){
+            jsone.printStackTrace();
+        }
+        
+        return msg.toString();
+    }
+
+    
+    public static String construireMsgEquipeAPerdue(int id)
+    {
+        JSONObject msg = new JSONObject();
+        
+        try {
+            // Construction de la structure JSON
+            msg.put("TYPE", EQUIPE_A_PERDUE);
+            msg.put("ID_EQUIPE", id);
         }
         catch (JSONException jsone){
             jsone.printStackTrace();

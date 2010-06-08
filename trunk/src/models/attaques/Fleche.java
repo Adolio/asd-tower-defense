@@ -7,9 +7,6 @@ import java.awt.Polygon;
 import java.io.File;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.outils.GestionnaireSons;
-import models.outils.MeilleursScores;
-import models.outils.Son;
 import models.tours.Tour;
 
 /**
@@ -22,7 +19,6 @@ import models.tours.Tour;
  * @author Romain Poulain
  * @version 1.0 | 30 decembre 2009
  * @since jdk1.6.0_16
- * @see MeilleursScores
  */
 public class Fleche extends Attaque
 {
@@ -31,7 +27,7 @@ public class Fleche extends Attaque
     private static final int LONGUEUR_FLECHE   = 10;
     private static final Color COULEUR_FLECHE  = new Color(128,0,0);
     public static final File FICHIER_SON_ARC   = new File("snd/fleche.mp3");
-    private static final int MAX_SONS_ARC      = 3;
+    //private static final int MAX_SONS_ARC      = 3;
     
     // attributs membres
     /**

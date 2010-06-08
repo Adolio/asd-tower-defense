@@ -18,22 +18,24 @@ import exceptions.*;
 import org.json.*;
 
 /**
- * Classe de gestion d'un client de communication réseau.
+ * Classe de gestion du moteur de jeu réseau (partie client).
  * 
  * @author Romain Poulain
  * @author Da Campo Aurélien
+ * @version 1.1 | mai 2010
+ * @since jdk1.6.0_16
  */
 public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	
     /**
      * Canal de ping-pong envoie / reception
      */
-	private CanalTCP canalPingPong;
+	private CanalTCP canalEnvoi;
 	
 	/**
-	 * Canal d'écoute du serveur
+	 * Canal d'écoute asynchrone du serveur
 	 */
-	private CanalTCP canalAsynchrone;
+	private CanalTCP canalEcoute;
 	
 	/**
 	 * Le jeu du client
@@ -53,34 +55,38 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     /**
      * Constructeur
      * 
-     * @param jeu
-     * @param IPServeur
-     * @param portServeur
-     * @param pseudo
-     * @throws ConnectException
-     * @throws CanalException
-     * @throws AucunEmplacementDisponibleException 
+     * @param jeu le moteur de jeu
      */
 	public ClientJeu(Jeu_Client jeu)                
 	{
 		this.jeu = jeu;
 	}
 	
+	/**
+	 * Permet d'établir une connexion avec le serveur
+	 * 
+	 * @param IP l'ip du serveur
+	 * @param port le port du serveur
+	 * 
+	 * @throws ConnectException
+	 * @throws CanalException
+	 * @throws AucunEmplacementDisponibleException
+	 */
 	public void etablirConnexion(String IP, int port) 
 	    throws ConnectException, CanalException, AucunEmplacementDisponibleException 
     {
        
 	    // création du canal 1 (Requête / réponse)
-        canalPingPong = new CanalTCP(IP, port, true);
+        canalEnvoi = new CanalTCP(IP, port, true);
         
         // demande de connexion au serveur (canal 1)
-        canalPingPong.envoyerString(jeu.getJoueurPrincipal().getPseudo());
+        canalEnvoi.envoyerString(jeu.getJoueurPrincipal().getPseudo());
         
         // le serveur nous retourne notre identificateur
         JSONObject msg;
         
         try{
-            msg = new JSONObject(canalPingPong.recevoirString());
+            msg = new JSONObject(canalEnvoi.recevoirString());
             receptionJoueurInitialisation(msg);
         } 
         catch (JSONException e1){
@@ -88,14 +94,14 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         } 
         
         // reception de la version du serveur
-        String version = canalPingPong.recevoirString();
+        String version = canalEnvoi.recevoirString();
         log("Version du jeu : "+version);
         
         // reception du port du canal 2
-        int portCanal2 = canalPingPong.recevoirInt();
+        int portCanal2 = canalEnvoi.recevoirInt();
         
         // création du canal 2 (Reception asynchrone)
-        canalAsynchrone = new CanalTCP(IP, portCanal2, true);
+        canalEcoute = new CanalTCP(IP, portCanal2, true);
 
         // lancement de la tache d'écoute du canal 2
         (new Thread(this)).start();
@@ -109,10 +115,15 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @param message le message
 	 * @param cible le joueur visé
      * @throws CanalException 
+     * @throws MessageChatInvalide 
 	 */
-	public void envoyerMessage(String message, int cible) throws CanalException
+	public void envoyerMessage(String message, int cible) throws CanalException, MessageChatInvalide
 	{
-	    canalPingPong.envoyerString(Protocole.construireMsgChat(message, cible));
+	    // pré controle
+	    if(message.indexOf('<') != -1 || message.indexOf('>') != -1)
+	        throw new MessageChatInvalide("Quotes interdites");
+
+	    canalEnvoi.envoyerString(Protocole.construireMsgChat(message, cible));
 	}
 	
 	/**
@@ -132,17 +143,17 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			json.put("TYPE_CREATURE", TypeDeCreature.getTypeCreature(vague.getNouvelleCreature()));
 			json.put("NB_CREATURES", vague.getNbCreatures());
 			
-			canalPingPong.envoyerString(json.toString());
+			canalEnvoi.envoyerString(json.toString());
 			
 			// attente de la réponse
-            String resultat = canalPingPong.recevoirString();
+            String resultat = canalEnvoi.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
                 case JOUEUR_INCONNU :
-                    logErreur("Joueur inconnu"); // TODO
+                    logErreur("Joueur inconnu");
             }	
 		} 
 		catch (JSONException e) {
@@ -159,7 +170,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @throws ZoneInaccessibleException si la pose est impossible 
 	 * @throws CanalException 
 	 */
-	public void demanderCreationTour(Tour tour) 
+	public void demanderPoseTour(Tour tour) 
 	    throws ArgentInsuffisantException, ZoneInaccessibleException, CanalException
 	{
 		try 
@@ -173,10 +184,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			
             log("Envoye d'une demande de pose d'une tour");
 			
-			canalPingPong.envoyerString(json.toString());
+			canalEnvoi.envoyerString(json.toString());
 			
 			// attente de la réponse
-			String resultat = canalPingPong.recevoirString();
+			String resultat = canalEnvoi.recevoirString();
 			JSONObject resultatJSON = new JSONObject(resultat);
 			switch(resultatJSON.getInt("STATUS"))
 			{
@@ -186,6 +197,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     throw new ZoneInaccessibleException("Zone non accessible");
 			    case CHEMIN_BLOQUE :
                     throw new ZoneInaccessibleException("La tour bloque le chemin");
+                // TODO
+                //case JOUEUR_HORS_JEU:
+                //   throw new JoueurHorsJeu("Tour inconnue");
 			}
 		} 
 		catch (JSONException e) {
@@ -201,8 +215,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	 * @throws ActionNonAutoriseeException 
 	 * @throws CanalException 
 	 * @throws NiveauMaxAtteintException 
+	 * @throws JoueurHorsJeu 
 	 */
-	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException, CanalException, NiveauMaxAtteintException
+	public void demanderAmeliorationTour(Tour tour) throws ArgentInsuffisantException, ActionNonAutoriseeException, CanalException, NiveauMaxAtteintException, JoueurHorsJeu
 	{
 		try 
 		{
@@ -213,14 +228,14 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			
 			log("Envoye d'une demande de vente d'une tour");
                 
-			canalPingPong.envoyerString(json.toString());
+			canalEnvoi.envoyerString(json.toString());
 			
-			String resultat = canalPingPong.recevoirString(); // pas d'erreur possible...
+			String resultat = canalEnvoi.recevoirString(); // pas d'erreur possible...
 
 			JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
-                case TOUR_INCONNUE: // TODO CHECK
+                case TOUR_INCONNUE:
                     throw new NullPointerException("Tour inconnue");
                 case ARGENT_INSUFFISANT :
                     throw new ArgentInsuffisantException("Pas assez d'argent");
@@ -228,6 +243,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     throw new NiveauMaxAtteintException("Niveau max atteint");
                 case ACTION_NON_AUTORISEE :
                     throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
+                case JOUEUR_HORS_JEU:
+                    throw new JoueurHorsJeu("Tour inconnue");
             }
 			
 		} 
@@ -251,15 +268,20 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 		    JSONObject json = new JSONObject();
 			json.put("TYPE", TOUR_SUPRESSION);
 			json.put("ID_TOWER", tour.getId());
-			canalPingPong.envoyerString(json.toString());
+			canalEnvoi.envoyerString(json.toString());
 			
 			// reponse
-			String resultat = canalPingPong.recevoirString();
+			String resultat = canalEnvoi.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
                 case ACTION_NON_AUTORISEE :
                     throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
+                    
+                // TODO
+                //case JOUEUR_HORS_JEU:
+                //   throw new JoueurHorsJeu("Tour inconnue");
+            
             }
 		} 
 		catch (JSONException e) {
@@ -321,74 +343,90 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	    }
 	}
 
-	private void attendreMessageCanalAsynchrone() throws CanalException, JSONException
+    private void attendreMessageCanalAsynchrone() throws CanalException, JSONException
     {
-	   
-	        //log("Attente d'un String sur le canal 2...");
+	    JSONObject resultat = new JSONObject(canalEcoute.recevoirString());
+        
+        switch(resultat.getInt("TYPE"))
+        {
             
-    	    JSONObject resultat = new JSONObject(canalAsynchrone.recevoirString());
+            // PARTIE
+            case PARTIE_ETAT : 
+                receptionPartieEtatChange(resultat);
+            break;
             
-            //log("Canal 2 recoit : "+resultat);
+            // JOUEURS
+            case JOUEUR_ETAT :    
+                receptionJoueurEtatChange(resultat);
+            break; 
             
-            switch(resultat.getInt("TYPE"))
-            {
+            case JOUEURS_ETAT :    
+                receptionJoueursEtatChange(resultat);
+            break;
+            
+            case JOUEUR_MESSAGE :    
+                receptionJoueurMessage(resultat);
+            break;
+            
+            case JOUEUR_DECONNEXION :    
+                receptionJoueurDeconnecte(resultat);
+            break;
+            
+            case EQUIPE_A_PERDUE :    
+                receptionEquipeAPerdue(resultat);
+            break;
+            
+            
+            // TOURS
+            case TOUR_AJOUT :
+                receptionTourAjoutee(resultat);
+                break;
+            
+            case TOUR_AMELIORATION :
+                receptionTourAmelioree(resultat);
+                break;    
                 
-                // PARTIE
-                case PARTIE_ETAT : 
-                    receptionPartieEtatChange(resultat);
+            case TOUR_SUPRESSION :
+                receptionTourVendue(resultat);
                 break;
                 
-                // JOUEURS
-                case JOUEUR_ETAT :    
-                    receptionJoueurEtatChange(resultat);
-                break; 
-                
-                case JOUEURS_ETAT :    
-                    receptionJoueursEtatChange(resultat);
+            // CREATURES
+            case CREATURE_AJOUT :    
+                receptionCreatureAjoutee(resultat);
+                break;
+
+            case CREATURE_ETAT :    
+                receptionCreatureEtatChange(resultat);
                 break;
                 
-                case JOUEUR_MESSAGE :    
-                    receptionJoueurMessage(resultat);
+            case CREATURE_SUPPRESSION :    
+                receptionCreatureTuee(resultat);
+                break;  
+
+            case CREATURE_ARRIVEE : 
+                receptionCreatureArrivee(resultat);
                 break;
                 
-                case JOUEUR_DECONNEXION :    
-                    receptionJoueurDeconnecte(resultat);
-                break;
-                
-    
-                // TOURS
-                case TOUR_AJOUT :
-                    receptionTourAjoutee(resultat);
-                    break;
-                
-                case TOUR_AMELIORATION :
-                    receptionTourAmelioree(resultat);
-                    break;    
-                    
-                case TOUR_SUPRESSION :
-                    receptionTourVendue(resultat);
-                    break;
-                    
-                // CREATURES
-                case CREATURE_AJOUT :    
-                    receptionCreatureAjoutee(resultat);
-                    break;
-    
-                case CREATURE_ETAT :    
-                    receptionCreatureEtatChange(resultat);
-                    break;
-                    
-                case CREATURE_SUPPRESSION :    
-                    receptionCreatureTuee(resultat);
-                    break;  
-    
-                case CREATURE_ARRIVEE : 
-                    receptionCreatureArrivee(resultat);
-                    break;
-                    
-                default :
-                    logErreur("Réception d'un objet de type : Inconnu.");      
-            }
+            default :
+                logErreur("Réception d'un objet de type : Inconnu.");      
+        }
+    }
+
+    private void receptionEquipeAPerdue(JSONObject resultat) throws JSONException
+    {
+        int idEquipe = resultat.getInt("ID_EQUIPE");
+
+        Equipe equipe = jeu.getEquipe(idEquipe);
+
+        if(equipe != null)
+        {
+            equipe.setNbViesRestantes(0);
+            
+            if(edcj != null)
+                edcj.receptionEquipeAPerdue(equipe);
+        }
+        else
+            logErreur("Equipe à perdue recu : Equipe inconnue"); 
     }
 
     private void receptionJoueurDeconnecte(JSONObject resultat) throws JSONException
@@ -400,7 +438,10 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         Joueur joueur = jeu.getJoueur(idJoueur);
         
         if(joueur != null)
-            edcj.joueurDeconnecte(joueur);
+        {
+            if(edcj != null)
+                edcj.joueurDeconnecte(joueur);
+        }
         else
             logErreur("Deconnexion recu : Auteur inconnu");
     }
@@ -474,7 +515,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 JSONObject json = new JSONObject();
                 json.put("TYPE", JOUEUR_PRET);
 
-                canalPingPong.envoyerString(json.toString());
+                canalEnvoi.envoyerString(json.toString());
  
                 break;
             
@@ -483,6 +524,38 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 jeu.demarrer();
                 log("Partie lancee");
                 break;
+                
+            case PARTIE_TERMINEE :
+ 
+                System.out.println("PARTIE_TERMINEE : "+resultat);
+ 
+                // mise a jour des equipes locales !
+                Equipe equipe;
+                JSONArray JSONequipes = resultat.getJSONArray("EQUIPES");
+                for (int i = 0; i < JSONequipes.length(); i++)
+                {
+                    JSONObject JSONequipe = JSONequipes.getJSONObject(i);
+                    
+                    int idEquipe = JSONequipe.getInt("ID_EQUIPE");
+                    
+                    equipe = jeu.getEquipe(idEquipe);
+                    
+                    if(equipe != null)
+                        equipe.setNbViesRestantes(JSONequipe.getInt("NB_VIES_RESTANTES"));
+                    else
+                        logErreur("Partie terminée : Equipe inconnue");      
+                }
+
+                // FIXME mise a jour des joueurs locales !
+                // IMPORTANT POUR LE SCORE DE L'EQUIPE !
+                
+                
+                jeu.terminer();
+                
+                log("Partie terminee");
+                break;
+                
+                
                 
             default :
                 logErreur("Etat d'une partie : Etat inconnu");
@@ -771,9 +844,9 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             
             log("Envoye d'une demande de changement d'équipe");
                 
-            canalPingPong.envoyerString(json.toString());
+            canalEnvoi.envoyerString(json.toString());
             
-            String resultat = canalPingPong.recevoirString();
+            String resultat = canalEnvoi.recevoirString();
             JSONObject resultatJSON = new JSONObject(resultat);
             switch(resultatJSON.getInt("STATUS"))
             {
@@ -801,7 +874,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         log("Envoye d'une deconnexion");
             
-        canalPingPong.envoyerString(json.toString());
+        canalEnvoi.envoyerString(json.toString());
   
         } 
         catch (JSONException e) {

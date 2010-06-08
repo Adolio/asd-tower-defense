@@ -194,8 +194,6 @@ public class VagueDeCreatures implements Runnable
     public void run()
     {
         // recuperation des zones
-        //final Rectangle ZONE_DEPART = jeu.getTerrain().getZoneDepart();
-        //final Rectangle ZONE_ARRIVEE = jeu.getTerrain().getZoneArrivee();
         // TODO pour chaque zone de depart, lancer la vague...
         final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
         final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
@@ -282,10 +280,6 @@ public class VagueDeCreatures implements Runnable
     public static final double VITESSE_CREATURE_RAPIDE = 50.0;
     public static final double VITESSE_CREATURE_NORMALE = 40.0;
 
-    public static final long TEMPS_APPARITION_CREATURE_LENTE = 2000;
-    public static final long TEMPS_APPARITION_CREATURE_RAPIDE = 500;
-    public static final long TEMPS_APPARITION_CREATURE_NORMALE = 1000;
-
     public static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
     public static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
     public static final double COEF_SANTE_CREATURE_AERIENNE = 0.8;
@@ -317,13 +311,13 @@ public class VagueDeCreatures implements Runnable
         case 1: // 5 normales
             return new VagueDeCreatures(5, new Mouton(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
-                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    getTempsLancement(VITESSE_CREATURE_NORMALE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 2: // 10 normales
             return new VagueDeCreatures(10, new Araignee(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
-                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    getTempsLancement(VITESSE_CREATURE_NORMALE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 3: // 10 volantes
@@ -332,7 +326,7 @@ public class VagueDeCreatures implements Runnable
                     new Aigle(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
-                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    getTempsLancement(VITESSE_CREATURE_NORMALE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 4: // 10 resistantes
@@ -341,7 +335,8 @@ public class VagueDeCreatures implements Runnable
                     new Rhinoceros(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_LENTE),
-                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_LENTE), 
+                            DEPART_ALEATOIRE_CREATURES);
 
         case 5: // 10 rapides
             return new VagueDeCreatures(
@@ -349,13 +344,13 @@ public class VagueDeCreatures implements Runnable
                     new Mouton(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_RAPIDE),
-                    TEMPS_APPARITION_CREATURE_RAPIDE,
+                            getTempsLancement(VITESSE_CREATURE_RAPIDE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 6: // 15 normales
             return new VagueDeCreatures(15, new Mouton(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
-                    TEMPS_APPARITION_CREATURE_NORMALE,
+                    getTempsLancement(VITESSE_CREATURE_NORMALE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 7: // 15 resistantes
@@ -364,7 +359,8 @@ public class VagueDeCreatures implements Runnable
                     new Elephant(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
                             (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_LENTE),
-                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_LENTE), 
+                            DEPART_ALEATOIRE_CREATURES);
 
         case 8: // 30 volantes
             return new VagueDeCreatures(
@@ -372,23 +368,36 @@ public class VagueDeCreatures implements Runnable
                     new Pigeon(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
                             (int) (GAIN_VAGUE_COURANTE / 30), VITESSE_CREATURE_NORMALE),
-                            TEMPS_APPARITION_CREATURE_RAPIDE,
+                            getTempsLancement(VITESSE_CREATURE_NORMALE),
                     DEPART_ALEATOIRE_CREATURES);
 
         case 9: // 3 pre-boss
             return new VagueDeCreatures(3, new Araignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_PRE_BOSS),
                     (int) (GAIN_VAGUE_COURANTE / 3), VITESSE_CREATURE_LENTE),
-                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_LENTE), DEPART_ALEATOIRE_CREATURES);
 
         default: // boss
             return new VagueDeCreatures(1, new GrandeAraignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_BOSS),
                     (int) GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
-                    TEMPS_APPARITION_CREATURE_LENTE, DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_LENTE), DEPART_ALEATOIRE_CREATURES);
         }
     }
 
+    /**
+     * Permet de recuperer le temps de lancement (standard) entre chaque créature
+     * selon une vitesse donnée.
+     * 
+     * @param vitesse la vitesse normale de la créature
+     * @return le temps (standard) entre chaque lancement
+     */
+    public static long getTempsLancement(double vitesse)
+    {
+        return (long) (1000.0 / (vitesse / 40.0));
+    }
+    
+    
     /**
      * Permet de calculer la sante d'une creature de facon exponentielle pour
      * rendre le jeu de plus en plus dur.
@@ -435,10 +444,4 @@ public class VagueDeCreatures implements Runnable
             pause.notify(); 
         }
     }
-
-    public void getProprietaire()
-    {
-        // TODO Auto-generated method stub
-        
-    } 
 }

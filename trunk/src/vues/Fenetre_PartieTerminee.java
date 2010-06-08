@@ -4,10 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import outils.Configuration;
-import outils.fichierDeConfiguration;
-
 import models.outils.MeilleursScores;
 
 /**
@@ -15,9 +12,7 @@ import models.outils.MeilleursScores;
  * 
  * Permet aussi d'ajouter un score au fichier des meilleurs scores.
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurelien Da Campo
- * @author Lazhar Farjallah
  * @version 1.0 | 17 decembre 2009
  * @since jdk1.6.0_16
  * @see MeilleursScores
@@ -39,7 +34,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     // autres membres
     private int score;
     private long dureePartie;
-    private fichierDeConfiguration config;
     
     /**
      * Constructeur de la fenetre
@@ -112,6 +106,9 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
             // le nom n'est pas vide
             if(!tfPseudo.getText().isEmpty())
             {
+                // mise à jour du pseudo par defaut
+                Configuration.setPseudoJoueur(tfPseudo.getText());
+                
                 // ajout du nouveau score
                 MeilleursScores ms = new MeilleursScores(nomFichier);
                 ms.ajouterMeilleurScore(tfPseudo.getText(), score, dureePartie);
