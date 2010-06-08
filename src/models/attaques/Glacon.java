@@ -19,7 +19,7 @@ public class Glacon extends Attaque
     // constantes finales
     private static final long serialVersionUID  = 1L;
     private static final Image IMAGE;
-    private long DUREE_RALENTISSEMENT;
+    private final long DUREE_RALENTISSEMENT;
     private long tempsPasse;
     
     static
@@ -68,6 +68,6 @@ public class Glacon extends Attaque
         }
         // si la cible meurt, l'animation meurt aussi
         else if(cible.estMorte())
-            estTerminee = true;     
+            estTerminee = true;
     }
 }

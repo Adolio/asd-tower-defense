@@ -2,6 +2,7 @@ package models.creatures;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -68,11 +69,14 @@ public class GestionnaireCreatures implements Runnable
     {
         gestionEnCours = true;
         
+        ArrayList<Creature> creaturesASupprimer = new ArrayList<Creature>();
+        Creature creature;
+        
         while(gestionEnCours)
-        {
+        { 
             try
             {
-                Creature creature;
+               
                 Enumeration<Creature> eCreatures = creatures.elements();
                 while(eCreatures.hasMoreElements())
                 {
@@ -82,12 +86,11 @@ public class GestionnaireCreatures implements Runnable
                     
                     // efface les creatures mortes
                     if(creature.aDetruire())
-                        creatures.remove(creature);
+                        // ajout dans la liste des créatures à supprimer
+                        creaturesASupprimer.add(creature);
                     else
-                    {
                         // anime la creature
                         creature.action(TEMPS_ATTENTE);
-                    }
                 }
             }
             catch(NoSuchElementException nse)
@@ -95,6 +98,10 @@ public class GestionnaireCreatures implements Runnable
                 System.err.println("[ERREUR] Créature introuvable");
             }
             
+            // suppression des créatures
+            for(Creature creatureASupprimer : creaturesASupprimer)
+                creatures.remove(creatureASupprimer);
+            creaturesASupprimer.clear();
             
             // gestion de la pause
             try
@@ -121,9 +128,8 @@ public class GestionnaireCreatures implements Runnable
         gestionEnCours = false;
     }
     
-    // TODO [PAS PROPRE] faire mieux, perd l'encapsulation
     /**
-     * Permet de recuperer la collection des creatures
+     * Permet de recuperer une copie de la collection des creatures
      */
     @SuppressWarnings("unchecked")
     public Vector<Creature> getCreatures()
@@ -242,5 +248,12 @@ public class GestionnaireCreatures implements Runnable
         }
         
         return null;
+    }
+
+    public void detruire()
+    {
+        arreterCreatures();
+        
+        creatures.clear();
     }
 }

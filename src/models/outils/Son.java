@@ -15,8 +15,6 @@ import javazoom.jl.player.Player;
  * Cette classe est "threadee", elle permet de lire plusieurs fois la meme
  * musique en concurrence.
  * 
- * @author Pierre-Dominique Putallaz
- * @author Aurelien Da Campo
  * @author Lazhar Farjallah
  * @version 17 dec. 2009
  * @since jdk1.6.0_16

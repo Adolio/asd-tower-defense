@@ -11,9 +11,9 @@ import models.creatures.Creature;
  * Classe de gestion d'une tour électrique.
  * <p>
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
+ * @author Romain Poulain
  * @version 1.0 | 5 mai 2009
  * @since jdk1.6.0_16
  * @see Tour

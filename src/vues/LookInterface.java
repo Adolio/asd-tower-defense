@@ -2,6 +2,13 @@ package vues;
 
 import java.awt.Color;
 
+/**
+ * Classe de gestion des styles graphique
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public interface LookInterface
 {
     // bleu Color(0,112,112)

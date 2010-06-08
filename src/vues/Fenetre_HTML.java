@@ -12,6 +12,8 @@ import java.awt.*;
  * Fenetre premettant d'afficher une page HTML.
  * 
  * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
  */
 class Fenetre_HTML extends JFrame implements ActionListener
 {

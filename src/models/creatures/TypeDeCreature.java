@@ -20,60 +20,33 @@ public class TypeDeCreature
 
 	public static Creature getCreature(int typeDeCreature, int noVague, boolean invincible)
 	{
-	    
 	    Creature c = null;
 	    switch(typeDeCreature)
         {
-	    
+	        
             case MOUTON :
-                c = new Mouton(100*noVague, 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
+                c = new Mouton((long) (VagueDeCreatures.fSante(noVague)), 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
                 break;
             case ARAIGNEE : 
-                c = new Araignee(200*noVague, 10, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
+                c = new Araignee((long) (VagueDeCreatures.fSante(noVague)*1.2), 10, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
                 break;
             case PIGEON :
-                c = new Pigeon(300*noVague, 15, VagueDeCreatures.VITESSE_CREATURE_NORMALE);    
+                c = new Pigeon((long) (VagueDeCreatures.fSante(noVague)*1.4), 15, VagueDeCreatures.VITESSE_CREATURE_NORMALE);    
                 break;
             case RHINOCEROS :
-                c = new Rhinoceros(600*noVague, 60, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
+                c = new Rhinoceros((long) (VagueDeCreatures.fSante(noVague)*1.6), 30, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
                 break;
             case AIGLE : 
-                c = new Aigle(1200*noVague, 30, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
+                c = new Aigle((long) (VagueDeCreatures.fSante(noVague)*1.8), 60, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
                 break;
             case ELEPHANT :
-                c = new Elephant(3000*noVague, 100, VagueDeCreatures.VITESSE_CREATURE_LENTE);
+                c = new Elephant((long) (VagueDeCreatures.fSante(noVague)*2.0), 100, VagueDeCreatures.VITESSE_CREATURE_LENTE);
                 break;
             case GRANDE_ARAIGNEE :
-                c = new GrandeAraignee(3000*noVague, 150, VagueDeCreatures.VITESSE_CREATURE_RAPIDE); 
+                c = new GrandeAraignee((long) (VagueDeCreatures.fSante(noVague)*2.2), 150, VagueDeCreatures.VITESSE_CREATURE_RAPIDE); 
                 break;
             default :
-                return null; // TODO erreur
-            
-	    /*
-            case MOUTON :
-                c = new Mouton(100, 5, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
-                break;
-            case ARAIGNEE : 
-                c = new Araignee(200, 10, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
-                break;
-            case PIGEON :
-                c = new Pigeon(300, 15, VagueDeCreatures.VITESSE_CREATURE_NORMALE);    
-                break;
-            case RHINOCEROS :
-                c = new Rhinoceros(600, 60, VagueDeCreatures.VITESSE_CREATURE_RAPIDE);
-                break;
-            case AIGLE : 
-                c = new Aigle(1200, 30, VagueDeCreatures.VITESSE_CREATURE_NORMALE); 
-                break;
-            case ELEPHANT : 
-                c = new Elephant(3000, 100, VagueDeCreatures.VITESSE_CREATURE_LENTE);
-                break;
-            case GRANDE_ARAIGNEE :
-                c = new GrandeAraignee(3000, 150, VagueDeCreatures.VITESSE_CREATURE_RAPIDE); 
-                break;
-            default :
-                return null; // TODO erreur
-           */
+                return null;
         }
 	    
 	    c.setInvincible(invincible);

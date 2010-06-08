@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 /**
  * Use to create vertical form.
  * 
- * @author Aur�lien Da Campo
+ * @author Aurelien Da Campo
  */
 public class Panel_GridBag extends JPanel
 {

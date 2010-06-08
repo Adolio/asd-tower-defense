@@ -14,6 +14,8 @@ import models.tours.Tour;
 import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu;
+import models.jeu.ResultatJeu;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
@@ -336,9 +338,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
-	        jeu.terminer();
+	        //demanderEnregistrementDuScore();
 	        
-	        demanderEnregistrementDuScore();
+	        jeu.terminer();
+            jeu.detruire();
 	        
 	        System.exit(0); // Fermeture correcte du logiciel
 	    }
@@ -353,9 +356,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	            "Etes-vous sûr de vouloir arrêter la partie ?", 
 	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
-	        jeu.terminer();
+	        //demanderEnregistrementDuScore();
 	        
-	        demanderEnregistrementDuScore();
+	        jeu.terminer();
+	        jeu.detruire();
 	        
 	        retourAuMenuPrincipal();
         }
@@ -369,7 +373,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
 	    if(jeu.getJoueurPrincipal().getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
-            
 	        demandeDEnregistrementDuScoreEffectuee = true;
 	        
 	        if(JOptionPane.showConfirmDialog(this, 
@@ -646,6 +649,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
+    
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
@@ -656,14 +660,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     @Override
     public void keyPressed(KeyEvent ke)
     {
+        /*
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
         {
             ajouterPiecesDOr(1000);
-            
-            //jeu.getGestionnaireAnimations().ajouterAnimation(new GainEtoile(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;  
-            //jeu.getGestionnaireAnimations().ajouterAnimation(new PerteVie(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())) ;
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
@@ -672,6 +674,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
+        */
     }
 
     @Override
@@ -704,7 +707,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {}
 
     @Override
-    public void partieTerminee()
+    public void partieTerminee(ResultatJeu resultatJeu)
     {
         panelMenuInteraction.partieTerminee();
         
@@ -714,12 +717,15 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bLancerVagueSuivante.setText("Retour au menu");
         bLancerVagueSuivante.setIcon(I_RETOUR);
 
+        
+        demanderEnregistrementDuScore();
+        /*
         // si le joueur a un score > 0 et que le score n'a pas été déjà sauvé
         if(jeu.getJoueurPrincipal().getScore() > 0 && !demandeDEnregistrementDuScoreEffectuee)
         {
             demandeDEnregistrementDuScoreEffectuee = true;
             new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getNom()); 
-        }
+        }*/
     }
     
     @Override
@@ -768,4 +774,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         panelInfoTour.setTour(null, 0);
     }
 
+    public void receptionEquipeAPerdue(Equipe equipe){}
+
+    @Override
+    public void equipeAPerdue(Equipe equipe){}
 }

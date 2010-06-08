@@ -4,8 +4,6 @@ import java.awt.*;
 import java.io.File;
 import models.creatures.Creature;
 import models.jeu.Jeu;
-import models.outils.GestionnaireSons;
-import models.outils.Son;
 import models.tours.Tour;
 
 /**
@@ -25,7 +23,7 @@ public class BouletDeCanon extends Attaque
     private static final int DIAMETRE_BOULET    = 8;
     private static final Image IMAGE_BOULET;
     public static final File FICHIER_SON_BOULET   = new File("snd/boulet.mp3");
-    private static final int MAX_SONS_BOULET      = 3;
+    //private static final int MAX_SONS_BOULET      = 3;
     
     // attributs membres
     /**

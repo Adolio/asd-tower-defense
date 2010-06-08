@@ -152,23 +152,4 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
          }
       }
    }
-   
-   /**
-    * 
-    */
-   private void miseAJourEnregistrements()
-   {
-      for (Enregistrement e : SEInscription.getJeuxEnregistres())
-      {
-         try {
-            CanalTCP c = new CanalTCP(e.getAdresseIp(), e.getPort().getNumeroPort(), true);
-            //c.envoyerString("TEST");
-            c.fermer();
-         }
-         catch (Exception exc)
-         {
-            SEInscription.enleverEnregistrement(e);
-         }
-      }
-   }
 }

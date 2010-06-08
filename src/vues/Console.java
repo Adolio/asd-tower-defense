@@ -6,6 +6,13 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+/**
+ * Classe de gestion d'une console HTML
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Console extends JPanel
 {
     private static final long serialVersionUID = 1L;

@@ -3,6 +3,7 @@ package models.jeu;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.tours.Tour;
 
@@ -20,7 +21,9 @@ public interface EcouteurDeJeu
     
     // ETAT DU JEU
     
-    // TODO
+    /**
+     * Permet d'informer l'écouteur que la partie à été initialisée
+     */
     public void partieInitialisee();
     
     /**
@@ -31,7 +34,7 @@ public interface EcouteurDeJeu
     /**
      * Permet d'informer l'écouteur que la partie est terminee
      */
-    public void partieTerminee();
+    public void partieTerminee(ResultatJeu resultatJeu);
     
     /**
      * Permet d'informer l'écouteur que le joueur a gagné une étoile
@@ -50,6 +53,12 @@ public interface EcouteurDeJeu
      * Permet d'informer l'écouteur qu'un joueur a été mis à jour
      */
     public void joueurMisAJour(Joueur joueur);
+    
+    /**
+     * Permet d'informer l'écouteur qu'une equipe a perdue
+     */
+    public void equipeAPerdue(Equipe equipe);
+    
     
     // TOURS
     

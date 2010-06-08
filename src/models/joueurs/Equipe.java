@@ -372,7 +372,7 @@ public class Equipe implements Serializable
         return nbViesRestantes <= 0 || estHorsJeu();
     }
 
-    private boolean estHorsJeu()
+    public boolean estHorsJeu()
     {
         Joueur joueur;
         Enumeration<Joueur> e = joueurs.elements(); 

@@ -7,6 +7,13 @@ import java.awt.Toolkit;
 import javax.swing.JPanel;
 import models.outils.Score;
 
+/**
+ * Panel d'affichage des étoiles
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Panel_Etoiles extends JPanel
 {
     private static final long serialVersionUID = 1L;

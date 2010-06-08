@@ -12,7 +12,6 @@ import models.creatures.Creature;
  * La tour anti aerienne est une tour qui est tres performante, 
  * mais elle n'attaque que les creatures volantes. 
  * 
- * @author Pierre-Dominique Putallaz
  * @author Aurélien Da Campo
  * @author Lazhar Farjallah
  * @version 1.0 | 27 novemenbre 2009

@@ -3,6 +3,14 @@ package vues;
 import exceptions.ArgentInsuffisantException;
 import models.creatures.VagueDeCreatures;
 
+
+/**
+ * Classe Observeur du lancer de vague de créatures
+ * 
+ * @author Aurélien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public interface EcouteurDeLanceurDeVagues
 {
     /**

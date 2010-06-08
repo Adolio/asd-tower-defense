@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import models.jeu.Jeu_Client;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import org.json.*;
 import exceptions.AucunEmplacementDisponibleException;
@@ -657,4 +658,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     {
         // On ne peut rien faire. (traité par le formulaire d'attente de joueurs)
     }
+
+    @Override
+    public void receptionEquipeAPerdue(Equipe equipe){}
 }

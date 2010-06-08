@@ -18,6 +18,8 @@ import models.creatures.*;
 import models.jeu.EcouteurDeJeu;
 import models.jeu.Jeu_Client;
 import models.jeu.ModeDeJeu;
+import models.jeu.ResultatJeu;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 
 /**
@@ -410,9 +412,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		        // on envoie pas de chaines vides
 		        if(!tfSaisieMsg.getText().trim().equals(""))
                 {
-                    jeu.envoyerMsg(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
-                    tfSaisieMsg.setText("");
-                    tfSaisieMsg.requestFocus();
+                    try
+                    {
+                        jeu.envoyerMsgChat(tfSaisieMsg.getText(), ServeurJeu.A_TOUS);
+                    
+                        tfSaisieMsg.setText("");
+                        tfSaisieMsg.requestFocus();
+                    } 
+                    catch (MessageChatInvalide e)
+                    {
+                        ajouterTexteHTMLDansConsole("<font color='red'>#Quotes ouvrantes et fermantes interdites</font> <br/>");
+                    }
+                    
                 }
             } 
 		    catch (CanalException e)
@@ -447,6 +458,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    {
 	        deconnexionDuJoueur();
 	        
+	        jeu.detruire();
+	        
 	        System.exit(0); // Fermeture correcte du logiciel
 	    }
     }
@@ -472,7 +485,9 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	    deconnexionDuJoueur();
 	    
 	    GestionnaireSons.arreterTousLesSons();
-        jeu.terminer();
+        
+	    jeu.terminer();
+        jeu.detruire();
         
         dispose(); // destruction de la fenetre
         System.gc(); // passage du remasse miette
@@ -701,12 +716,18 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     public void lancerVagueSuivante() {}
 
     @Override
-    public void partieTerminee()
+    public void partieTerminee(ResultatJeu resultatJeu)
     {
         panelSelection.partieTerminee();
         panelAjoutTour.partieTerminee();
         
         // FIXME continuer...
+        if(resultatJeu.getEquipeGagnante() == null)
+            JOptionPane.showMessageDialog(this, " Personne n'a gagné !");
+        else if(resultatJeu.getEquipeGagnante() == jeu.getJoueurPrincipal().getEquipe())
+            JOptionPane.showMessageDialog(this, " Vous avez gagné!");
+        else
+            JOptionPane.showMessageDialog(this, " L'équipe \""+resultatJeu.getEquipeGagnante().getNom()+"\" gagne!");
     }
 
     @Override
@@ -797,5 +818,17 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         panelSelection.deselection();
         
         lblEtat.setText(" ");
+    }
+
+    @Override
+    public void receptionEquipeAPerdue(Equipe equipe)
+    {
+        JOptionPane.showMessageDialog(this, " L'équipe \""+equipe.getNom()+"\" a perdue!");
+    }
+
+    @Override
+    public void equipeAPerdue(Equipe equipe)
+    {
+        // ca vient du jeu... on s'en fou, c'est les infos du serveur qui comptent.
     }
 }

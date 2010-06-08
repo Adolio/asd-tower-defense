@@ -1,6 +1,7 @@
 package models.animations;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -9,7 +10,7 @@ import java.util.Vector;
  * Classe d'encapsulation des animations.
  * 
  * Permet de faire vivre toutes les animation sous le meme thread et ainsi 
- * aleger le processeur.
+ * alléger le processeur.
  * 
  * Toutes les animations tournent sous le meme clock.
  * 
@@ -69,7 +70,7 @@ public class GestionnaireAnimations implements Runnable
             }
         }
         
-        // FIXME Cette erreur vient de la suppression d'une animation
+        // Cette erreur vient de la suppression d'une animation
         // dans la méthode run. J'ai essayé d'utiliser un objet Iterator 
         // pour pouvoir supprimmer proprement l'animation du vecteur
         // mais des erreurs de concurrence surviennent! Même en englobant 
@@ -87,8 +88,10 @@ public class GestionnaireAnimations implements Runnable
        gestionEnCours = true;
         
        /*
-       // FIXME CECI NE MARCHE PAS :
+       // CECI NE MARCHE PAS :
+       // Poutant Iterator doit normalement gérer cela ?!?
        // Une erreur de concurrence est levée 
+       // j'utilise alors un tableau temporaire de suppression
        
        synchronized(animations.iterator)
        {
@@ -110,24 +113,37 @@ public class GestionnaireAnimations implements Runnable
        }
        */
 
+       ArrayList<Animation> animationsASupprimer = new ArrayList<Animation>();
+       Animation animation;
+       
        while(gestionEnCours)
        {
-           Enumeration<Animation> eAnimations = animations.elements();
-           Animation animation;
-           while(eAnimations.hasMoreElements())
+           try
            {
-               animation = eAnimations.nextElement();
-                   
-               // detruit l'animation si elle est terminee
-               if(animation.estTerminee())
-                   animations.remove(animation);
-               else
+               Enumeration<Animation> eAnimations = animations.elements();
+               while(eAnimations.hasMoreElements())
                {
-                   // anime l'animation
-                   animation.animer(TEMPS_ATTENTE);
+                   animation = eAnimations.nextElement();
+                     
+                   // detruit l'animation si elle est terminee
+                   if(animation.estTerminee())
+                       animationsASupprimer.add(animation);
+                   else
+                       // anime l'animation
+                       animation.animer(TEMPS_ATTENTE);
                }
            }
+           catch(NoSuchElementException nse)
+           {
+               System.err.println("[ERREUR] Animation introuvable");
+           }
  
+           // suppression des créatures
+           for(Animation animationASupprimer : animationsASupprimer)
+               animations.remove(animationASupprimer);
+           animationsASupprimer.clear();
+           
+
            // gestion de la pause
            try
            {
@@ -177,5 +193,11 @@ public class GestionnaireAnimations implements Runnable
             enPause = false;
             pause.notify(); 
         }
+    }
+
+    public void detruire()
+    {
+        arreterAnimations();
+        animations.clear();
     }
 }

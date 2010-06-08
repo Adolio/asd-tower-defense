@@ -1,15 +1,5 @@
 
-import java.net.InetAddress;
-
 import javax.swing.UIManager;
-
-import outils.Configuration;
-
-import models.jeu.Jeu_Solo;
-import models.terrains.ElementTD_Coop;
-import models.terrains.ElementTD_Versus_4;
-import models.terrains.SimpleFiveVersus;
-import models.terrains.Terrain;
 import vues.Fenetre_MenuPrincipal;
 
 /**
@@ -60,7 +50,7 @@ public class Main
       
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
       Terrain.serialiser(t3);
-      */         
+      */
               
       // creation du menu principal
 	  new Fenetre_MenuPrincipal();

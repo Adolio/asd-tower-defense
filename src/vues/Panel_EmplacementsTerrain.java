@@ -11,6 +11,13 @@ import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.terrains.Terrain;
 
+/**
+ * Panel de visualisation des emplacement de jeu
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Panel_EmplacementsTerrain extends JPanel
 {
     private static final long serialVersionUID = 1L;

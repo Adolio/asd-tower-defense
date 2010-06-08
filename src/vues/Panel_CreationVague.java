@@ -11,7 +11,13 @@ import models.jeu.Jeu;
 import models.joueurs.GestionnaireDeRevenu;
 import models.joueurs.Joueur;
 
-// TODO comment
+/**
+ * Panel de création d'une vague de créature
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class Panel_CreationVague extends JPanel
 {
     private static final long serialVersionUID = 1L;

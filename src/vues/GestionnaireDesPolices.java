@@ -9,6 +9,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.JComponent;
 
+/**
+ * Classe de gestion des polices d'écriture (Font)
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juin 2010
+ * @since jdk1.6.0_16
+ */
 public class GestionnaireDesPolices
 {
     public static Font POLICE_TITRE;

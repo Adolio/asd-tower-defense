@@ -11,22 +11,20 @@ import models.terrains.*;
 import models.tours.*;
 
 /**
- * Classe de gestion du jeu.
+ * C'est la classe principale du jeu (Moteur)
  * 
- * Cette classe contient :
- * <br>
- * - Le terrain qui contient les tours et les creatures
- * <br>
- * - Les informations du jeu et du joueur (score, pieces d'or, etc.)
- * <p>
- * Elle sert principalement de classe d'encapsulation du terrain.
- * Elle gere egalement tout ce qui concerne les pieces d'or du joueur 
- * (achat, amelioration et vente des tours)
+ * Elle encapsule tous les éléments du jeu.
+ * 
+ * Elle utilise des gestionnaires pour gérer ces éléments
+ * 
  * 
  * @author Aurelien Da Campo
  * @version 2.1 | mai 2010
  * @since jdk1.6.0_16
- * @see Tour
+ * @see Terrain
+ * @see GestionnaireTours
+ * @see GestionnaireCreatures
+ * @see GestionnaireAnimations
  */
 public abstract class Jeu implements EcouteurDeJoueur,
                                      EcouteurDeCreature, 
@@ -36,7 +34,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	 * version du jeu
 	 */
     private static final String VERSION 
-        = "ASD - Tower Defense v2.0 [dev. version] | juin 2010 | heig-vd";
+        = "ASD - Tower Defense v2.0 (beta) | juin 2010 | heig-vd";
 
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
@@ -77,19 +75,37 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	protected boolean enPause;
   
     /**
+     * Gestion des vagues de creatures. C'est le joueur que decident le moment
+     * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
+     * de creatures ont ete detruites, le jeu est considere comme termine.
+     */
+    protected int indiceVagueCourante = 1;
+	
+    /**
      * Stockage de la vagues courante
      */
     VagueDeCreatures vagueCourante;
-
-    /**
-     * Permet de savoir si la partie est terminée
-     */
-    protected boolean estTermine;
-
+    
+    
     /**
      * Permet de savoir si la partie est initialisée
      */
     protected boolean estInitialise;
+    
+    /**
+     * Permet de savoir si la partie est à été démarrée
+     */
+    private boolean estDemarre;
+    
+    /**
+     * Permet de savoir si la partie est terminée
+     */
+    protected boolean estTermine;
+    
+    /**
+     * Permet de savoir si la partie est détruite
+     */
+    protected boolean estDetruit;
     
     /**
      * Pour notifications (observable)
@@ -102,21 +118,11 @@ public abstract class Jeu implements EcouteurDeJoueur,
     protected Joueur joueur;
 
     /**
-     * Permet de savoir si la partie est à été démarrée
-     */
-    private boolean estDemarre;
-    
-    /**
-     * Gestion des vagues de creatures. C'est le joueur que decident le moment
-     * ou il veut lancer une vague de creatures. Une fois que toutes les vagues
-     * de creatures ont ete detruites, le jeu est considere comme termine.
-     */
-    protected int indiceVagueCourante = 1;
-    
-    /**
      * Timer pour gérer le temps de jeu
      */
-    private myTimer timer = new myTimer(1000,null);
+    protected myTimer timer = new myTimer(1000,null);
+
+
     
     
     /**
@@ -128,8 +134,6 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireCreatures  = new GestionnaireCreatures();
         gestionnaireAnimations = new GestionnaireAnimations();
     }
-    
-    
     
     /**
      * Permet d'initialiser la partie avant le commencement
@@ -282,8 +286,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
      * @throws ArgentInsuffisantException si pas assez d'argent 
      * @throws NiveauMaxAtteintException si niveau max de la tour atteint
      * @throws ActionNonAutoriseeException 
+     * @throws JoueurHorsJeu 
      */
-    public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException, ActionNonAutoriseeException
+    public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException, ActionNonAutoriseeException, JoueurHorsJeu
     {
         if(!tour.peutEncoreEtreAmelioree())
             throw new NiveauMaxAtteintException("Amélioration impossible : Niveau max atteint");
@@ -345,9 +350,30 @@ public abstract class Jeu implements EcouteurDeJoueur,
             estTermine = true;
             
             arreterTout();
+              
+            
+            Equipe equipeGagnante = null;
+            int maxScore = -1;
+            
+            // FIXME gestion des égalités !
+
+            // selection des equipes en jeu
+            ArrayList<Equipe> equipesEnJeu = new ArrayList<Equipe>();
+            for(Equipe equipe : equipes)
+                if(!equipe.aPerdu())
+                {
+                    // selection de l'equipe gagnante
+                    if(equipe.getScore() > maxScore)
+                    {
+                        equipeGagnante = equipe;
+                        maxScore = equipe.getScore();
+                    }
+                    
+                    equipesEnJeu.add(equipe);
+                }
             
             if(edj != null)
-                edj.partieTerminee();
+                edj.partieTerminee(new ResultatJeu(equipeGagnante)); // TODO
         }
     }
 
@@ -394,7 +420,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
     /**
      * Permet de stope tous les threads des elements
      */
-    private void arreterTout()
+    protected void arreterTout()
     {
         // arret de toutes les tours
         gestionnaireTours.arreterTours();
@@ -595,7 +621,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
                 
                 // FIXME IMPORTANT faire plutot une mise a jour des donnees de l'equipe 
                 // -> ajout au protocole EQUIPE_ETAT
-                // et appler plutot edj.equipeMiseAJour(equipe) 
+                // et appeler plutot edj.equipeMiseAJour(equipe) 
                 // pour tous les joueurs de l'equipe
                 for(Joueur joueur : equipe.getJoueurs())
                     edj.joueurMisAJour(joueur);
@@ -604,13 +630,19 @@ public abstract class Jeu implements EcouteurDeJoueur,
             // controle de la terminaison du jeu.
             if(equipe.aPerdu())
             {
+                if(edj != null)
+                    edj.equipeAPerdue(equipe);
+                
+                // s'il il reste au moins deux equipes en jeu
+                // la partie n'est pas terminée
+                int nbEquipesRestantes = 0;
                 for(Equipe tmpEquipe : equipes)
-                {
                     if(!tmpEquipe.aPerdu())
-                        return;
-                        
+                        nbEquipesRestantes++;
+             
+                // fin de la partie
+                if(nbEquipesRestantes <= 1)
                     terminer();
-                } 
             }
         } 
     }
@@ -840,6 +872,21 @@ public abstract class Jeu implements EcouteurDeJoueur,
     public myTimer getTimer()
     {
         return timer;
+    }
+
+    
+    public void detruire()
+    {
+        estDetruit = true;
+        
+        gestionnaireCreatures.detruire();
+        gestionnaireTours.detruire();
+        gestionnaireAnimations.detruire();
+    }
+    
+    public boolean estDetruit()
+    {
+        return estDetruit;
     }
     
 }
