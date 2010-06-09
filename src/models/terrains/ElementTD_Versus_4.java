@@ -48,7 +48,7 @@ public class ElementTD_Versus_4 extends Terrain
                 960,  // largeur
                 1000,  // hauteur
                 100,  // nbPiecesOrInitiales
-                1,   // nbViesInitiales
+                10,   // nbViesInitiales
                 0,    // positionMaillageX
                 0,    // positionMaillageY
                 960,  // largeurMaillage
