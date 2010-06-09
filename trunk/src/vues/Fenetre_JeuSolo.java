@@ -660,7 +660,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     @Override
     public void keyPressed(KeyEvent ke)
     {
-        /*
+        
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
@@ -674,7 +674,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
-        */
+        
     }
 
     @Override
