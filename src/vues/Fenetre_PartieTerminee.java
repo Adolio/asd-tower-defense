@@ -28,7 +28,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     private JButton bAnnuler        = new JButton("Fermer");
     private JTextField tfPseudo  = new JTextField();
     private JPanel pFormulaire;
-    private String nomFichier;
     private String nomTerrain;
     
     // autres membres
@@ -51,7 +50,6 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         this.score      = score;
         this.dureePartie = dureePartie;
         this.nomTerrain = nomTerrain;
-        this.nomFichier = "donnees/"+nomTerrain+".ms";
         
         // constructeur du formulaire
         pFormulaire = new JPanel(new GridLayout(0,2));
@@ -110,7 +108,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
                 Configuration.setPseudoJoueur(tfPseudo.getText());
                 
                 // ajout du nouveau score
-                MeilleursScores ms = new MeilleursScores(nomFichier);
+                MeilleursScores ms = new MeilleursScores(nomTerrain);
                 ms.ajouterMeilleurScore(tfPseudo.getText(), score, dureePartie);
                 
                 dispose(); // fermeture

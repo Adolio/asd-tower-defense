@@ -37,12 +37,12 @@ public final class MeilleursScores
     * echeant de le creer automatiquement). Le fichier en question contiendra (si ce
     * n'est pas deja le cas) les donnees serialisees relatives au scores des joueurs.
     * 
-    * @param nomFichier
-    *        Le nom du fichier avec lequel traiter.
+    * @param nomTerrain
+    *        Le nom du terrain avec lequel traiter.
     */
-   public MeilleursScores (String nomFichier)
+   public MeilleursScores (String nomTerrain)
    {
-      FICHIER = new File(nomFichier);
+      FICHIER = new File("donnees/scores/"+nomTerrain+".ms");
       lireDonneesFichier();
    }
    
