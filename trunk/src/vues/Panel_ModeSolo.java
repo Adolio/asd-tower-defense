@@ -131,7 +131,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
         
         for(int i=0; i < nomTerrains.length; i++)
         {  
-            ms = new MeilleursScores("donnees/"+nomTerrains[i]+".ms");
+            ms = new MeilleursScores(nomTerrains[i]);
             
             if(ms.getScores().size() > 0)
             {

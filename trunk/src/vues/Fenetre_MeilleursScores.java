@@ -104,7 +104,7 @@ public class Fenetre_MeilleursScores extends JDialog
         tbScores.getColumnModel().getColumn(4).setPreferredWidth(120);
   
         
-        ms = new MeilleursScores("donnees/"+nomTerrain+".ms");
+        ms = new MeilleursScores(nomTerrain);
         
         int i=1;
         for(Score score : ms.getScores())
