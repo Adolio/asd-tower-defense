@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 import reseau.*;
 
-
 /**
  * 
  * @author lazhar
- *
+ * 
  */
-public class SEInscription {
+public class SEInscription
+{
    
    private static ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
    private Port port;
@@ -23,7 +23,8 @@ public class SEInscription {
     * @param port
     * @param avecLog
     */
-   public SEInscription(Port port, boolean avecLog) {
+   public SEInscription(Port port, boolean avecLog)
+   {
       this.port = port;
       this.avecLog = avecLog;
    }
@@ -31,31 +32,36 @@ public class SEInscription {
    /**
     * 
     */
-   public void lancer() {
+   public void lancer()
+   {
       try
       {
          port.reserver();
-        
-         while (true) {
-            System.out.println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
+         
+         while (true)
+         {
+            System.out
+                  .println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
             // Fonction bloquante qui attend que quelqu'un se connecte
             creerCanal();
             (new Thread(new SEConnexion(canal))).start();
          }
-      } 
-      catch (IOException e)
+      } catch (IOException e)
       {
          System.err.println("Serveur déjà lancé !");
-      } 
+      }
    }
    
    /**
     * 
     */
-   private void creerCanal() {
-      try {
+   private void creerCanal()
+   {
+      try
+      {
          canal = new CanalTCP(port, avecLog);
-      } catch (CanalException ce) {
+      } catch (CanalException ce)
+      {
          System.out.println("\tProbleme de connexion : " + ce.getMessage());
       }
    }
@@ -65,9 +71,12 @@ public class SEInscription {
     * @param e
     * @return
     */
-   public static synchronized boolean ajouterEnregistrement(Enregistrement e) {
-      // TODO : surcharger les contains() pour pas que ce soit les réf. qui sont comparées
-      if (!jeuxEnregistres.contains(e)) {
+   public static synchronized boolean ajouterEnregistrement(Enregistrement e)
+   {
+      // TODO : surcharger les contains() pour pas que ce soit les réf. qui sont
+      // comparées
+      if (!jeuxEnregistres.contains(e))
+      {
          jeuxEnregistres.add(e);
          System.out.println("Nb d'enreg. : " + jeuxEnregistres.size());
          return true;
@@ -79,7 +88,8 @@ public class SEInscription {
     * 
     * @param e
     */
-   public static synchronized void enleverEnregistrement(Enregistrement e) {
+   public static synchronized void enleverEnregistrement(Enregistrement e)
+   {
       jeuxEnregistres.remove(e);
    }
    
@@ -87,7 +97,8 @@ public class SEInscription {
     * 
     * @return
     */
-   public static synchronized int getNombreEnregistrements() {
+   public static synchronized int getNombreEnregistrements()
+   {
       return jeuxEnregistres.size();
    }
    
@@ -95,7 +106,8 @@ public class SEInscription {
     * 
     * @return
     */
-   public static synchronized ArrayList<Enregistrement> getJeuxEnregistres() {
+   public static synchronized ArrayList<Enregistrement> getJeuxEnregistres()
+   {
       return jeuxEnregistres;
    }
 }
