@@ -35,10 +35,15 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
     */
    @Override
    public void run() {
-      bouclePrincipale: 
-      while (true)
-      {
-         try {
+      
+          
+      try 
+      {   
+          bouclePrincipale: 
+          
+          while (true)
+          {
+        
             messageRecu = canal.recevoirString();
             messageJsonRecu = new JSONObject(messageRecu);
             code = messageJsonRecu.getJSONObject("donnees").getInt("code");
@@ -141,15 +146,14 @@ public class SEConnexion implements Runnable, CodeEnregistrement {
                   break;
             }
          }
-         catch (JSONException e1) {
-            // JSON exception
-            e1.printStackTrace();
-         } 
-         catch (CanalException e)
-         {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-         }
+      }
+      catch (JSONException e1) 
+      {
+         e1.printStackTrace();
+      } 
+      catch (CanalException e)
+      {
+         // canal erroné, on tue le client
       }
    }
 }
