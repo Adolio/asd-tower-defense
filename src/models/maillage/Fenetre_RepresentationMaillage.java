@@ -18,8 +18,8 @@ public class Fenetre_RepresentationMaillage extends JFrame
     {
         private GraphePondere_MA graphe;
         private final int NB_CHEMINS_VISIBLES   = 1000;
-        private final int NB_NOEUDS_LARGEUR     = 60;
-        private final int NB_NOEUDS_HAUTEUR     = 60;
+        private final int NB_NOEUDS_LARGEUR     = 80;
+        private final int NB_NOEUDS_HAUTEUR     = 80;
         private final int LARGEUR_NOEUD         = 10;
 
         private InfoNoeud[] infoNoeuds;
