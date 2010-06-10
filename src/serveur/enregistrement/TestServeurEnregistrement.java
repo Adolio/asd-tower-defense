@@ -1,5 +1,6 @@
 package serveur.enregistrement;
 
+import outils.Configuration;
 import reseau.*;
 
 /**
@@ -14,7 +15,10 @@ public class TestServeurEnregistrement {
     * @param args
     */
    public static void main (String[] args)
-   {
+   {   
+      new SEInscription(new Port(Configuration.getPortSE()), true).lancer();
+       
+      /* 
       switch (args.length)
       {
       // Il y a exactement 1 argument donné au programme.
@@ -29,5 +33,6 @@ public class TestServeurEnregistrement {
          System.out.println("Usage : java ServeurEnregistrement <numeroPort> [true|false]");
          break;
       }
+      */
    }
 }
