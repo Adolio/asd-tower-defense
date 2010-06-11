@@ -112,6 +112,7 @@ public class Panel_CreationVague extends JPanel
                     try
                     {
                         edlv.lancerVague(vague);
+                        miseAJour();
                     } 
                     catch (ArgentInsuffisantException e1)
                     {
@@ -127,7 +128,7 @@ public class Panel_CreationVague extends JPanel
     
     public void miseAJour()
     {
-       int nbPiecesDOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
+       double nbPiecesDOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
        JButton bouton;
        for(int i=0; i < bLancers.length; i++)
        {

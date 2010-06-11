@@ -155,7 +155,7 @@ public class Panel_InfosJoueurEtPartie extends JPanel
      */
     private void miseAJourScore()
     {
-        lScore.setText(String.format("%06d",jeu.getJoueurPrincipal().getScore()));
+        lScore.setText(String.format("%05d",jeu.getJoueurPrincipal().getScore()));
         miseAJourNbEtoiles();
     }
     
@@ -164,8 +164,8 @@ public class Panel_InfosJoueurEtPartie extends JPanel
      */
     private void miseAJourNbPiecesOr()
     {
-        int nbPiecesOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
-        lNbPiecesOr.setText(String.format("%04d",nbPiecesOr));
+        double nbPiecesOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
+        lNbPiecesOr.setText(String.format("%05d",  (int) nbPiecesOr)); // tronc
     }
     
     public void miseAJour()

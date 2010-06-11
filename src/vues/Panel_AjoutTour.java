@@ -129,7 +129,7 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
     
     public void miseAJour()
     {
-        int nbPiecesOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
+        double nbPiecesOr = jeu.getJoueurPrincipal().getNbPiecesDOr();
         
         bTourArcher.setEnabled(nbPiecesOr >= TourArcher.PRIX_ACHAT);
         bTourCanon.setEnabled(nbPiecesOr >= TourCanon.PRIX_ACHAT);

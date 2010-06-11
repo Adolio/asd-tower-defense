@@ -39,8 +39,10 @@ public class Joueur
      * <br>
      * Cette variable fluctue en fonction des creatures tuees et de 
      * l'achat et vente des tours.
+     * 
+     * Elle est en double pour gérer les revenus flottant (voir gestionnaireDeRevenus)
      */
-    private int nbPiecesDOr = 0;
+    private double nbPiecesDOr = 0;
     
     /**
      * Equipe du joueur
@@ -132,7 +134,7 @@ public class Joueur
      * 
      * @param nbPiecesDOr le nouveau nombre de pieces d'or
      */
-    public void setNbPiecesDOr(int nbPiecesDOr)
+    public void setNbPiecesDOr(double nbPiecesDOr)
     {
         this.nbPiecesDOr = nbPiecesDOr;
         
@@ -145,7 +147,7 @@ public class Joueur
      * 
      * @return le nombre de pieces d'or du joueur
      */
-    public int getNbPiecesDOr()
+    public double getNbPiecesDOr()
     {
         return nbPiecesDOr;
     }
@@ -308,7 +310,7 @@ public class Joueur
      */
     public synchronized void donnerRevenu(long temps)
     {
-        setNbPiecesDOr((int) (getNbPiecesDOr() + revenu * (temps / 1000.0)));
+        setNbPiecesDOr(getNbPiecesDOr() + revenu * (temps / 1000.0));
     }
 
     

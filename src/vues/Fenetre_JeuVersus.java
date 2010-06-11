@@ -95,7 +95,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	 */
 	private Panel_Terrain panelTerrain;
 	
-	// TODO
+	// TODO commenter
 	private Panel_InfosJoueurEtPartie panelInfoJoueurEtPartie;
 	private Panel_Selection panelSelection;
 	private Panel_AjoutTour panelAjoutTour;
@@ -721,13 +721,26 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         panelSelection.partieTerminee();
         panelAjoutTour.partieTerminee();
         
+        Equipe equipeGagnante = resultatJeu.getEquipeGagnante();
+        
         // FIXME continuer...
-        if(resultatJeu.getEquipeGagnante() == null)
-            JOptionPane.showMessageDialog(this, " Personne n'a gagné !");
-        else if(resultatJeu.getEquipeGagnante() == jeu.getJoueurPrincipal().getEquipe())
-            JOptionPane.showMessageDialog(this, " Vous avez gagné!");
+        if(equipeGagnante == null)
+            new Dialog_Message (this, "Pas de gagant!", "Personne n'a gagné !");         
+        else if(equipeGagnante == jeu.getJoueurPrincipal().getEquipe())
+        {
+            new Dialog_Message (this, "Gagné!", "Vous avez gagné :) Bravo!");
+            ajouterTexteHTMLDansConsole("<b>Vous avez gagné !</b><br/>"); 
+        }
         else
-            JOptionPane.showMessageDialog(this, " L'équipe \""+resultatJeu.getEquipeGagnante().getNom()+"\" gagne!");
+        {
+            new Dialog_Message (this, "Résultat de la partie", 
+                    " L'équipe \""+equipeGagnante.getNom()+"\" " +
+                    "remporte la partie!");  
+            
+            String couleurHexa = Outils.ColorToHexa(equipeGagnante.getCouleur());
+            ajouterTexteHTMLDansConsole("L'équipe \"<b><font color='#"+couleurHexa+"'>"+equipeGagnante.getNom()+"</font></b>\" remporte la partie!<br/>"); 
+        }
+        
     }
 
     @Override
@@ -776,27 +789,16 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
         lblEtat.setText("Vague trop chère");
-        
-        //ajouterTexteHTMLDansConsole("<font color='red'>Vague trop chère</font><br />");
     }
 
     @Override
-    public void miseAJourInfoJeu()
-    {}
+    public void miseAJourInfoJeu(){}
 
     @Override
-    public void joueurInitialise()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void joueurInitialise(){}
 
     @Override
-    public void joueursMisAJour()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+    public void joueursMisAJour(){}
 
     @Override
     public void messageRecu(String message, Joueur auteur)
@@ -823,7 +825,16 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void receptionEquipeAPerdue(Equipe equipe)
     {
-        JOptionPane.showMessageDialog(this, " L'équipe \""+equipe.getNom()+"\" a perdue!");
+        if(equipe == jeu.getJoueurPrincipal().getEquipe())
+        {
+            new Dialog_Message (this, "Perdu!", "Vous avez perdu :(");
+            ajouterTexteHTMLDansConsole("<b>Vous avez perdu!</b><br />");
+        }
+        else
+        {   
+            String couleurHexa = Outils.ColorToHexa(equipe.getCouleur());
+            ajouterTexteHTMLDansConsole("L'équipe \"<b><font color='#"+couleurHexa+"'>"+equipe.getNom()+"</font></b>\" a perdue!<br />");
+        }
     }
 
     @Override
