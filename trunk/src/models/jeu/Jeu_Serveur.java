@@ -91,7 +91,7 @@ public class Jeu_Serveur extends Jeu
     synchronized public void creatureTuee(Creature creature, Joueur tueur)
     {
         // gain de pieces d'or
-        tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr() / 5);
+        tueur.setNbPiecesDOr(tueur.getNbPiecesDOr() + creature.getNbPiecesDOr() / 5.0);
         
         // augmentation du score
         tueur.setScore(tueur.getScore() + creature.getNbPiecesDOr());

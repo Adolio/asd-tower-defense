@@ -652,7 +652,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         
         log("Réception de l'état d'un joueur (id:"+idJoueur+")");
         
-        int nbPiecesDOr = message.getInt("NB_PIECES_OR");
+        double nbPiecesDOr = message.getDouble("NB_PIECES_OR");
         int score = message.getInt("SCORE");
         double revenu = message.getDouble("REVENU");
         int nbViesRestantes = message.getInt("NB_VIES_RESTANTES_EQUIPE");

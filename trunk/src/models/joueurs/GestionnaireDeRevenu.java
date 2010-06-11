@@ -46,7 +46,8 @@ public class GestionnaireDeRevenu implements Runnable
             // donne de l'argent
             // pas de problème de concurrence car c'est une copie.
             for(Joueur joueur : jeu.getJoueurs())
-                joueur.donnerRevenu(TEMPS_REVENU_CREATURE);
+                if(!joueur.aPerdu() && !joueur.estHorsJeu())
+                    joueur.donnerRevenu(TEMPS_REVENU_CREATURE);
               
             // gestion de la pause
             try

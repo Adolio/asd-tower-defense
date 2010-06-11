@@ -351,9 +351,9 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
 	    
 	    synchronized (joueur)
         {
-		    int argentApresAchat = joueur.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
+		    double argentApresAchat = joueur.getNbPiecesDOr() - creature.getNbPiecesDOr() * nbCreatures;
 		    
-		    if(argentApresAchat >= 0)
+		    if( (int) argentApresAchat >= 0)
 		    {
 		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()), true);
 
