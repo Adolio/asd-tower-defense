@@ -103,27 +103,28 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
 	{
 		while (true)
 		{
-			try {
+			try 
+			{
 				actionsEtats();
 			}
-			catch (JSONException e) {
+			catch (JSONException e) 
+			{
 				logErreur("Récéption inconnue \"" + str + "\"",e);
-				return;
-			} 
+			}
 			catch (CanalException e) {
 			    
 			    serveur.joueurDeconnecte(joueur);
 			    
 			    logErreur("Canal erroné \"" + str + "\"",e);
                 return;
-            } 
+            }
 			catch (IOException e)
             {
 			    serveur.joueurDeconnecte(joueur);
 			    
 			    logErreur("ERROR : canal erroné \"" + str + "\"",e);
                 return;
-            } 
+            }
 		}
 	}
 

@@ -330,7 +330,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	{
 	    while(true)
 	    {
-            try {
+            try 
+            {
                 attendreMessageCanalAsynchrone();
             } 
 	        catch (CanalException e) {
