@@ -124,7 +124,6 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
                     // Envoye de la réponse
                     canalAttenteConnexion.envoyerString(Protocole.construireMsgJoueurInitialisation(JEU_EN_COURS));   
                 }
-                
                 catch (AucunePlaceDisponibleException e){
                     
                     log("Joueur refusé - aucune place disponible");
