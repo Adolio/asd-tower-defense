@@ -504,7 +504,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    setTransparence(ALPHA_MAILLAGE, g2);
 			
 		    // recuperation de la liste des arcs actifs
-			ArrayList<Line2D> arcsActifs = jeu.getTerrain().getArcsActifs();
+			Line2D[] arcsActifs = jeu.getTerrain().getArcsActifs();
 			
 			if(arcsActifs != null)
 			{
