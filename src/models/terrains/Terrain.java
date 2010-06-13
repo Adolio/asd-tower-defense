@@ -213,10 +213,10 @@ public abstract class Terrain implements Serializable
     public void initialiser()
     {
         // creation des deux maillages
-        MAILLAGE_TERRESTRE = new Maillage(largeurMaillage, hauteurMaillage,
+        MAILLAGE_TERRESTRE = new Maillage_v1(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
         
-        MAILLAGE_AERIEN = new Maillage(largeurMaillage, hauteurMaillage,
+        MAILLAGE_AERIEN = new Maillage_v1(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);  
         
         // activation des murs
@@ -485,7 +485,7 @@ public abstract class Terrain implements Serializable
                             .getCenterX(), (int) zoneArrivee.getCenterY(),
                     Creature.TYPE_TERRIENNE);
 
-            double longueur = Maillage.getLongueurChemin(chemin);
+            double longueur = MAILLAGE_TERRESTRE.getLongueurChemin(chemin);
             
             
             // mise a jour du chemin
@@ -689,7 +689,7 @@ public abstract class Terrain implements Serializable
      * @return une collection de java.awt.geom.Line2D representant les arcs
      *         actifs du maillage
      */
-    public ArrayList<Line2D> getArcsActifs()
+    public Line2D[] getArcsActifs()
     {
         return MAILLAGE_TERRESTRE.getArcs();
     }
@@ -699,7 +699,7 @@ public abstract class Terrain implements Serializable
      * 
      * @return Une collection de noeuds
      */
-    public ArrayList<Noeud> getNoeuds()
+    public Noeud[] getNoeuds()
     {
         return MAILLAGE_TERRESTRE.getNoeuds();
     }

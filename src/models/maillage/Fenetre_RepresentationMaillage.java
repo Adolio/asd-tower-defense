@@ -1,78 +1,26 @@
 package models.maillage;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import javax.swing.*;
+
 import models.outils.Outils;
-import models.maillage.Dijkstra_MA.InfoNoeud;
 
 @SuppressWarnings("serial")
 public class Fenetre_RepresentationMaillage extends JFrame
 {
     class Panel_Maillage extends JPanel implements ActionListener
     {
-        private GraphePondere_MA graphe;
-        private final int NB_CHEMINS_VISIBLES   = 1000;
-        private final int NB_NOEUDS_LARGEUR     = 80;
-        private final int NB_NOEUDS_HAUTEUR     = 80;
-        private final int LARGEUR_NOEUD         = 10;
-
-        private InfoNoeud[] infoNoeuds;
-        
+        private final int NB_CHEMINS_VISIBLES   = 5000;
+        private Maillage m;
         private JButton bRecalculer;
         private JButton bCalculerDijsktra;
-         
-        public Panel_Maillage()
+        
+        
+        public Panel_Maillage(Maillage maillage)
         {
-            graphe = new GraphePondere_MA(NB_NOEUDS_LARGEUR*NB_NOEUDS_HAUTEUR);
-            
-            // construction du graphe
-            Noeud n;
-            int iNoeud = 0;
-
-            for(int i=0;i<NB_NOEUDS_LARGEUR;i++)
-            {
-                for(int j=0;j<NB_NOEUDS_HAUTEUR;j++)
-                {
-                    //--------------------------
-                    //-- mise a jour du noeud --
-                    //--------------------------
-                    n = new Noeud(i*LARGEUR_NOEUD,j*LARGEUR_NOEUD,LARGEUR_NOEUD);
-                    graphe.setNoeud(iNoeud,n);
-                    
-                    //--------------------
-                    //-- ajout des arcs --
-                    //--------------------
-                    int poids;
-                    
-                    poids = tirerPoids();  
-                    // pas la derniere colonne
-                    if(i != NB_NOEUDS_LARGEUR-1)
-                        graphe.ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR, poids);
-                    
-                    poids = tirerPoids();
-                    // pas la derniere ligne
-                    if(j != NB_NOEUDS_HAUTEUR-1)
-                        graphe.ajouterArc(iNoeud, iNoeud+1, poids);
-                    
-                    poids = tirerPoids(); 
-                    // pas la derniere ligne et la derniere colonne
-                    if(i != NB_NOEUDS_LARGEUR-1 && j != NB_NOEUDS_HAUTEUR-1)
-                        graphe.ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR+1, poids);
-
-                    poids = tirerPoids();
-                    // pas la première ligne et la derniere colonne
-                    if(j != 0 && i != NB_NOEUDS_LARGEUR-1)
-                        graphe.ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR-1, poids);
-                    
-                    iNoeud++;
-                } 
-            }
+            m = maillage;
             
             // boutons
             bCalculerDijsktra = new JButton("Calculer une fois Dijkstra");
@@ -83,15 +31,7 @@ public class Fenetre_RepresentationMaillage extends JFrame
             bRecalculer.addActionListener(this);
             add(bRecalculer);
 
-            setPreferredSize(new Dimension(NB_NOEUDS_LARGEUR*LARGEUR_NOEUD,NB_NOEUDS_HAUTEUR*LARGEUR_NOEUD)); 
-        }
-        
-        private int tirerPoids()
-        {
-            if(Outils.tirerNombrePseudoAleatoire(0, 1) == 1)
-                return 1;
-            else
-                return Integer.MAX_VALUE;
+            setPreferredSize(new Dimension(m.getLargeurPixels(),m.getHauteurPixels())); 
         }
 
         @Override
@@ -106,16 +46,20 @@ public class Fenetre_RepresentationMaillage extends JFrame
             // affichage des arcs
             g2.setColor(Color.yellow);
             
-            for(Arc arc : graphe.getArcs())
+            for(Line2D arc : m.getArcs())
                 dessinerArc(arc, g2);
             
             // affichage des noeuds
             g2.setColor(Color.RED);
-            for(Noeud noeud : graphe.getNoeuds())
+            for(Noeud noeud : m.getNoeuds())
                 g2.fillOval(noeud.x - 1, noeud.y - 1, 2, 2);
             
+            g2.setColor(Color.GREEN);
             for(int i=0;i<NB_CHEMINS_VISIBLES;i++)
-                afficherCheminPourNoeud(Outils.tirerNombrePseudoAleatoire(0, graphe.getNbNoeuds()-1),g2);
+                afficherCheminPourNoeud(
+                        Outils.tirerNombrePseudoAleatoire(0, m.getLargeurPixels()),
+                        Outils.tirerNombrePseudoAleatoire(0, m.getHauteurPixels()),
+                        g2);
         }
         
         @Override
@@ -125,63 +69,76 @@ public class Fenetre_RepresentationMaillage extends JFrame
             
             if(source == bCalculerDijsktra)
             {
-                try
-                {
-                    infoNoeuds = Dijkstra_MA.dijkstra(graphe, NB_NOEUDS_LARGEUR * NB_NOEUDS_HAUTEUR / 2 + NB_NOEUDS_HAUTEUR / 2);
-                } 
-                catch (IllegalAccessException e1){
-                     e1.printStackTrace();
-                     
-                     infoNoeuds = null;
-                }  
+                m.activerZone(new Rectangle()); //TODO
+                //m.desactiverZone(new Rectangle(50,50,50,50)); //TODO
             }
-            
+
             repaint();
         }
         
-        private void afficherCheminPourNoeud(int idNoeud, Graphics2D g2)
-        {
-            g2.setColor(Color.GREEN);
-            if(infoNoeuds != null)
+        private void afficherCheminPourNoeud(int x, int y, Graphics2D g2)
+        {  
+            ArrayList<Point> chemin;
+            
+            try 
             {
-                int in = infoNoeuds[idNoeud].id;
+                chemin = m.plusCourtChemin(x, y, 0, 0);
                 
-                while(in != -1)
+                if(chemin.size() > 0)
                 {
-                    int pred = infoNoeuds[in].pred;
-                    
-                    if(pred == -1)
-                        break;
-                    
-                    dessinerArc(graphe.getArc(in,pred), g2);
-                    
-                    in = pred;
-                }  
+                    Point pPrec = chemin.get(0);
+                    for(int i=1;i<chemin.size();i++)
+                    {
+                        Point p =  chemin.get(i);
+                        
+                        g2.drawLine((int) pPrec.x, 
+                                (int) pPrec.y, 
+                                (int) p.x, 
+                                (int) p.y);
+                        
+                        pPrec = p; 
+                    }
+                }
+                else
+                    System.out.println("Pas de chemin");
+            } 
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+            } 
+            catch (PathNotFoundException e){
+                e.printStackTrace();
             }
         }
 
-        private void dessinerArc(Arc arc, Graphics2D g2)
+        private void dessinerArc(Line2D arc, Graphics2D g2)
         {
-            g2.drawLine((int) arc.getDepart().x, 
-                    (int) arc.getDepart().y, 
-                    (int) arc.getArrivee().x, 
-                    (int) arc.getArrivee().y);
+            g2.drawLine((int) arc.getX1(), 
+                    (int) arc.getY1(), 
+                    (int) arc.getX2(), 
+                    (int) arc.getY2());
         }
     }
     
-    public Fenetre_RepresentationMaillage()
+    public Fenetre_RepresentationMaillage(Maillage maillage)
     {
         super("Représentation du maillage"); 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
-        add(new Panel_Maillage());
+
+        add(new Panel_Maillage(maillage));
         
         setVisible(true);
         pack();
+        setLocationRelativeTo(null);
     }
     
     public static void main(String[] args) 
     {
-        new Fenetre_RepresentationMaillage();
+        int largeur = 600;
+        int hauteur = 600;
+        
+        //Maillage maillage_v1 = new Maillage_v1(largeur, hauteur, 10);
+        Maillage maillage_v2 = new Maillage_v2(largeur, hauteur, 10, largeur/2, hauteur/2);
+        
+        new Fenetre_RepresentationMaillage(maillage_v2);
     }
 }
