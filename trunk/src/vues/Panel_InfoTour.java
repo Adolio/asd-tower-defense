@@ -3,6 +3,7 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import models.tours.*;
 
 /**
@@ -31,7 +32,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private static final String TXT_VENDRE     = "Vendre";
     private static final String TXT_PRIX_ACHAT = "Prix d'achat";
     private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
-    private static final Dimension DIMENSION_PANEL = new Dimension(280, 300);
+    private static final Dimension DIMENSION_PANEL = new Dimension(280, 350);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,120);
     
 	// membres graphiques
@@ -56,6 +57,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     private JLabel lCadenceTirLvlS   = new JLabel();
     private JLabel lDPSLvlS          = new JLabel();
       
+    private JComboBox cbTypeCiblage = new JComboBox();
+    
     // autres membres
 	private Tour tour;
 	private EcouteurDePanelTerrain edpt;
@@ -88,13 +91,13 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 
 		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.setOpaque(false);
-		int nbChamp = 0;
+		int nbChamps = 0;
 		pCaracteristiques.setOpaque(false);
 		
 		
 		// champ nom
 		lNom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-		ajouterChamp(pCaracteristiques, lNom, 0, nbChamp++, 3);
+		ajouterChamp(pCaracteristiques, lNom, 0, nbChamps++, 3);
 		
 		// champ description
         taDescrition.setEditable(false);
@@ -105,51 +108,51 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         taDescrition.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
         spDescription = new JScrollPane(taDescrition);
         spDescription.setPreferredSize(DIMENSION_DESCRIPTION);
-        ajouterChamp(pCaracteristiques, spDescription, 0, nbChamp++, 3);
+        ajouterChamp(pCaracteristiques, spDescription, 0, nbChamps++, 3);
 		
 		lTitreLvl.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		lTitreLvlS.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		ajouterChamp(pCaracteristiques, lTitreLvl, 1, nbChamp, 1);
-		ajouterChamp(pCaracteristiques, lTitreLvlS, 2, nbChamp++, 1);
+		ajouterChamp(pCaracteristiques, lTitreLvl, 1, nbChamps, 1);
+		ajouterChamp(pCaracteristiques, lTitreLvlS, 2, nbChamps++, 1);
 		
 		// champ prix
-		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamps, 1);
 		lPrix.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lPrixLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamp, 1);
-        ajouterChamp(pCaracteristiques, lPrixLvlS, 2, nbChamp++, 1);
+		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamps, 1);
+        ajouterChamp(pCaracteristiques, lPrixLvlS, 2, nbChamps++, 1);
 		
 		// champ degats
-		ajouterChamp(pCaracteristiques, new JLabel("Dégâts"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Dégâts"), 0, nbChamps, 1);
 		lDegats.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lDegatsLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamp, 1);
-		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamp++, 1);
+		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamps, 1);
+		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamps++, 1);
 		
 		// champ rayon de portee
-		ajouterChamp(pCaracteristiques, new JLabel("Portée"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Portée"), 0, nbChamps, 1);
 		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lRayonPorteeLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamp, 1);
-		ajouterChamp(pCaracteristiques, lRayonPorteeLvlS, 2, nbChamp++, 1);
+		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamps, 1);
+		ajouterChamp(pCaracteristiques, lRayonPorteeLvlS, 2, nbChamps++, 1);
 		
 		// champ cadence de tir
-		ajouterChamp(pCaracteristiques, new JLabel("Tirs / sec."), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("Tirs / sec."), 0, nbChamps, 1);
 		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lCadenceTirLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamp, 1);
-		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamp++, 1);
+		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamps, 1);
+		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamps++, 1);
 		
 		// champ DPS : dégats par seconde
-		ajouterChamp(pCaracteristiques, new JLabel("DPS"), 0, nbChamp, 1);
+		ajouterChamp(pCaracteristiques, new JLabel("DPS"), 0, nbChamps, 1);
 		lDPS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lDPSLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
-        ajouterChamp(pCaracteristiques, lDPS, 1, nbChamp, 1);
-        ajouterChamp(pCaracteristiques, lDPSLvlS, 2, nbChamp++, 1);
+        ajouterChamp(pCaracteristiques, lDPS, 1, nbChamps, 1);
+        ajouterChamp(pCaracteristiques, lDPSLvlS, 2, nbChamps++, 1);
 		
 		// les boutons
-        ajouterChamp(pCaracteristiques, bVendre, 0, nbChamp, 2);
-        ajouterChamp(pCaracteristiques, bAmeliorer, 2, nbChamp++, 1);
+        ajouterChamp(pCaracteristiques, bVendre, 0, nbChamps, 2);
+        ajouterChamp(pCaracteristiques, bAmeliorer, 2, nbChamps++, 1);
         
         Font f = new Font("", Font.BOLD, 9);
         
@@ -162,7 +165,21 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         bAmeliorer.addActionListener(this);
         bVendre.addActionListener(this);
 		
-	
+       
+        JPanel pCiblage = new JPanel();
+        pCiblage.setOpaque(false);
+        pCiblage.add(new JLabel("Attaque la créature : "));
+        
+        cbTypeCiblage.addItem("la plus proche");
+        cbTypeCiblage.addItem("la plus loin");
+        cbTypeCiblage.addItem("la plus faible (pv)");
+        cbTypeCiblage.addItem("la plus forte (pv)");
+        cbTypeCiblage.addActionListener(this);
+        GestionnaireDesPolices.setStyle(cbTypeCiblage);
+        
+        pCiblage.add(cbTypeCiblage);
+        ajouterChamp(pCaracteristiques, pCiblage, 0, nbChamps++, 3);
+        
 		pConteneurCaract.add(pCaracteristiques,BorderLayout.CENTER);
 		
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
@@ -173,6 +190,10 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		add(pConteneurCaraEtBoutons,BorderLayout.WEST);
 	
+		
+		
+		
+		
 		// initialisation a vide
 		effacerTour();
 	}
@@ -247,7 +268,6 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		    JScrollBar horizontalScrollBar = spDescription.getHorizontalScrollBar();
 		    verticalScrollBar.setValue(verticalScrollBar.getMinimum());
 		    horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
-		    
 		    updateUI();
 		    
 			// Améliorations
@@ -267,8 +287,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			    lDegatsLvlS.setText("");
                 lRayonPorteeLvlS.setText("");
                 lCadenceTirLvlS.setText("");
-                lDPSLvlS.setText("");
-                
+                lDPSLvlS.setText(""); 
 			}
 			
 			// tour selectionnee pour information
@@ -318,6 +337,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 			// sauvegarde de la tour pour les operations
 			this.tour = tour;
 			
+			cbTypeCiblage.setSelectedIndex(tour.getTypeCiblage());
+			
 			pCaracteristiques.setVisible(true);
 		}
 		// mode sans tour selectionnee
@@ -346,6 +367,11 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		else if(source == bVendre)
 			edpt.vendreTour(tour);
+		
+		else if(source == cbTypeCiblage)
+		{
+		    tour.setTypeCiblage(cbTypeCiblage.getSelectedIndex());
+		}
 	}
 
     public void setPause(boolean enPause)

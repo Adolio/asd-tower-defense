@@ -12,11 +12,10 @@ public class Fenetre_RepresentationMaillage extends JFrame
 {
     class Panel_Maillage extends JPanel implements ActionListener
     {
-        private final int NB_CHEMINS_VISIBLES   = 5000;
+        private final int NB_CHEMINS_VISIBLES = 100;
         private Maillage m;
         private JButton bRecalculer;
         private JButton bCalculerDijsktra;
-        
         
         public Panel_Maillage(Maillage maillage)
         {
@@ -69,8 +68,9 @@ public class Fenetre_RepresentationMaillage extends JFrame
             
             if(source == bCalculerDijsktra)
             {
-                m.activerZone(new Rectangle()); //TODO
-                //m.desactiverZone(new Rectangle(50,50,50,50)); //TODO
+                //m.activerZone(new Rectangle()); //TODO
+                m.desactiverZone(new Rectangle(Outils.tirerNombrePseudoAleatoire(0, m.getLargeurPixels()),
+                        Outils.tirerNombrePseudoAleatoire(0, m.getHauteurPixels()),50,50)); //TODO
             }
 
             repaint();
