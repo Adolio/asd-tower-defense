@@ -140,7 +140,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		//-------------------------------
 		setTitle(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
-		setResizable(false);
+		//setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
@@ -225,7 +225,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
 		conteneurTerrain.setOpaque(false);
 		
-		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
+		conteneurTerrain.add(panelTerrain,BorderLayout.CENTER);
 		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu);
 		
 
@@ -238,7 +238,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
         pMarge.setOpaque(false);
 		pMarge.add(conteneurTerrain);
-		pFormulaire.add(pMarge,BorderLayout.WEST);
+		pFormulaire.add(pMarge,BorderLayout.CENTER);
 		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
 		
 		add(pFormulaire,BorderLayout.CENTER);
