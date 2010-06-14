@@ -107,7 +107,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                                                        + " [niveau 1]");
     /**
      * Console d'affichages des vagues suivantes
-     */
+     */  
     private JEditorPane taConsole  = new JEditorPane("text/html","");
     
     /**
@@ -190,11 +190,33 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
 		
-		//--------------------
-        //-- vague suivante --
-        //--------------------
-        JPanel pVagueSuivante = new JPanel(new BorderLayout());
-        pVagueSuivante.setOpaque(false);
+		
+		JPanel pGauche = new JPanel(new BorderLayout());
+		pGauche.setOpaque(false);
+		
+		//----------------------
+		//-- panel du terrain --
+		//----------------------
+		// creation des panels
+         
+		JPanel pConteneurTerrain = new JPanel(new BorderLayout());
+		pConteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
+		panelTerrain = new Panel_Terrain(jeu, this);
+		panelTerrain.addKeyListener(this);
+		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
+		pConteneurTerrain.setOpaque(false);
+		pConteneurTerrain.add(panelTerrain,BorderLayout.CENTER);
+		
+        JPanel pMarge = new JPanel(new BorderLayout());
+        pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
+        pMarge.setOpaque(false);
+        pMarge.add(pConteneurTerrain);
+		
+		pGauche.add(pMarge,BorderLayout.CENTER);
+		
+		//-------------
+        //-- console --
+        //-------------
         ajouterInfoVagueSuivanteDansConsole();
 
         // style du champ de description de la vague suivante 
@@ -203,42 +225,26 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         taConsole.setEditable(false);
         JScrollPane scrollConsole = new JScrollPane(taConsole);
         scrollConsole.setPreferredSize(new Dimension(jeu.getTerrain().getLargeur(),50));
-        pVagueSuivante.add(scrollConsole,BorderLayout.WEST);
+
+        pGauche.add(scrollConsole,BorderLayout.SOUTH);
+		
+        pFormulaire.add(pGauche,BorderLayout.CENTER);
         
-        // bouton
-        GestionnaireDesPolices.setStyle(bLancerVagueSuivante);
-        bLancerVagueSuivante.addActionListener(this);
-        pVagueSuivante.add(bLancerVagueSuivante,BorderLayout.CENTER);
-            
-        pFormulaire.add(pVagueSuivante,BorderLayout.SOUTH);
-		
+        
+        //--------------------
+        //-- menu de droite --
+        //--------------------
 
-		//----------------------------------------
-		//-- panel du jeu et menu d'interaction --
-		//----------------------------------------
-		// creation des panels
-         
-		JPanel conteneurTerrain = new JPanel(new BorderLayout());
-		conteneurTerrain.setBorder(new LineBorder(Color.BLACK,4));
-		panelTerrain = new Panel_Terrain(jeu, this);
-		panelTerrain.addKeyListener(this);
-		//conteneurTerrain.setBorder(new EmptyBorder(new Insets(10, 10,10, 10)));
-		conteneurTerrain.setOpaque(false);
-		
-		conteneurTerrain.add(panelTerrain,BorderLayout.CENTER);
 		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu);
-		
-
 		panelInfoTour     = panelMenuInteraction.getPanelInfoTour();
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
 		
-		
-		// ajout des panels
-		JPanel pMarge = new JPanel(new BorderLayout());
-        pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
-        pMarge.setOpaque(false);
-		pMarge.add(conteneurTerrain);
-		pFormulaire.add(pMarge,BorderLayout.CENTER);
+	    // bouton de lancement de vague
+        GestionnaireDesPolices.setStyle(bLancerVagueSuivante);
+        bLancerVagueSuivante.addActionListener(this);
+        panelMenuInteraction.add(bLancerVagueSuivante,BorderLayout.SOUTH);
+        bLancerVagueSuivante.setPreferredSize(new Dimension(300,50));
+        
 		pFormulaire.add(panelMenuInteraction,BorderLayout.EAST);
 		
 		add(pFormulaire,BorderLayout.CENTER);
