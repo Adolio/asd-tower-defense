@@ -214,8 +214,8 @@ public class Maillage_v2 implements Maillage
                 //-- mise a jour du noeud --
                 //--------------------------
                 n = new Noeud(i*LARGEUR_NOEUD,j*LARGEUR_NOEUD,LARGEUR_NOEUD);
+                n.setActif(true);
                 noeuds[iNoeud] = n;
-                
                 
                 //--------------------
                 //-- ajout des arcs --
@@ -293,6 +293,8 @@ public class Maillage_v2 implements Maillage
             
             ps.add(new Point(noeuds[pred]));
 
+            System.out.println(in+" -> "+pred);
+            
             in = pred;
         }  
 	    
@@ -321,8 +323,9 @@ public class Maillage_v2 implements Maillage
 	            // pour tous les arcs
 	            for(int j=0;j<nbVoisins[i];j++)
 	            {
-	                poids[i][j] = Integer.MAX_VALUE;
-	                nbArcsActifs--;
+	                n.setActif(false);
+	                //poids[i][j] = Integer.MAX_VALUE;
+	                //nbArcsActifs-=2; // bidirection
 	            }	            
 	        }
 	    }
@@ -351,22 +354,28 @@ public class Maillage_v2 implements Maillage
 	@Override
 	public Line2D[] getArcs()
 	{
-        Line2D[] arcs = new Line2D[nbArcsActifs];
+	    
+	    ArrayList<Line2D> arcs = new ArrayList<Line2D>();
 
 	    int iArc = 0;
 	    Arc arc;
 	    for(int i=0;i<NB_NOEUDS;i++)
-	        for(int j=0;j<nbVoisins[i];j++)
-	        {      
-	            // les arcs de poids infinis sont inexistants.
-	            if(poids[i][j] != Integer.MAX_VALUE)
-	            {
-	                arc = new Arc(noeuds[i], noeuds[voisins[i][j]]);
-	                arcs[iArc++] = arc.toLine2D(); 
-	            }
-	        }
+	        if(noeuds[i].isActif())
+    	        for(int j=0;j<nbVoisins[i];j++)
+    	        {      
+    	            // les arcs de poids infinis sont inexistants.
+    	            if(poids[i][j] != Integer.MAX_VALUE && noeuds[voisins[i][j]].isActif())
+    	            {
+    	                arc = new Arc(noeuds[i], noeuds[voisins[i][j]]);
+    	                arcs.add(arc.toLine2D()); 
+    	            }
+    	        }
 	    
-	    return arcs;
+
+	    Line2D[]tabArcs = new Line2D[arcs.size()];
+	    arcs.toArray(tabArcs);
+	    
+	    return tabArcs;
 	}
 
 	/**
@@ -406,23 +415,29 @@ public class Maillage_v2 implements Maillage
         // Pour chaque noeuds
         for (int i = 0; i < NB_NOEUDS; i++)
         {
-            // Cherche le noeud suivant à traiter
-            final int next = minVertex(infoNoeuds);
-            
-            if(next != -1)
+            if(noeuds[i].isActif())
             {
-                // Traitement du noeud
-                infoNoeuds[next].visited = true;
-    
-                // Pour tous les voisins du noeud
-                for (int j = 0; j < nbVoisins[next]; j++)
+                // Cherche le noeud suivant à traiter
+                final int next = minVertex(infoNoeuds);
+                
+                if(next != -1)
                 {
-                    final int iVoisin = voisins[next][j];
-                    final int distArrivee = infoNoeuds[next].distArrivee + poids[next][j];
-                    if (infoNoeuds[iVoisin].distArrivee > distArrivee)
+                    // Traitement du noeud
+                    infoNoeuds[next].visited = true;
+        
+                    // Pour tous les voisins du noeud
+                    for (int j = 0; j < nbVoisins[next]; j++)
                     {
-                        infoNoeuds[iVoisin].distArrivee = distArrivee;
-                        infoNoeuds[iVoisin].pred = next;
+                        if(noeuds[j].isActif())
+                        { 
+                            final int iVoisin = voisins[next][j];
+                            final int distArrivee = infoNoeuds[next].distArrivee + poids[next][j];
+                            if (infoNoeuds[iVoisin].distArrivee > distArrivee)
+                            {
+                                infoNoeuds[iVoisin].distArrivee = distArrivee;
+                                infoNoeuds[iVoisin].pred = next;
+                            }
+                        }
                     }
                 }
             }
@@ -439,7 +454,7 @@ public class Maillage_v2 implements Maillage
      * @return l'indice du noeud le dont la distance est la plus faible.
      *          ou -1 s'il n'y en a pas
      */
-    private static int minVertex(InfoNoeud[] infoNoeuds)
+    private int minVertex(InfoNoeud[] infoNoeuds)
     {
         int x = Integer.MAX_VALUE;
         int y = -1; // graph not connected, or no unvisited vertices
@@ -447,11 +462,14 @@ public class Maillage_v2 implements Maillage
         // Pour chaque noeuds
         for (int i = 0; i < infoNoeuds.length; i++)
         {
-            // Si pas visité et la distance est plus faible 
-            if (!infoNoeuds[i].visited && infoNoeuds[i].distArrivee < x)
+            if(noeuds[i].isActif())
             {
-                y = i;
-                x = infoNoeuds[i].distArrivee;
+                // Si pas visité et la distance est plus faible 
+                if (!infoNoeuds[i].visited && infoNoeuds[i].distArrivee < x)
+                {
+                    y = i;
+                    x = infoNoeuds[i].distArrivee;
+                }
             }
         }
         

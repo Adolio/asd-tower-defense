@@ -37,7 +37,17 @@ public abstract class Tour extends Rectangle
 	 * de vente de la tour.
 	 */
 	private static final double COEFF_PRIX_VENTE = 0.6;
-
+    
+	public static final int CIBLAGE_CREATURE_PLUS_PROCHE  = 0;
+	public static final int CIBLAGE_CREATURE_PLUS_LOIN    = 1;
+    public static final int CIBLAGE_CREATURE_PLUS_FAIBLE  = 2;
+    public static final int CIBLAGE_CREATURE_PLUS_FORTE   = 3;
+    
+    /**
+     * Type de ciblage
+     */
+    private int typeCiblage = CIBLAGE_CREATURE_PLUS_FAIBLE;
+    
 	/**
      * Identificateur de la tour
      */
@@ -134,7 +144,6 @@ public abstract class Tour extends Rectangle
 	
 	// initialisation pour que la tour puisse tirer directement
     private long tempsDepuisDernierTir;
-    
 	
 	/**
 	 * Constructeur de la tour.
@@ -457,9 +466,26 @@ public abstract class Tour extends Rectangle
         // on a attendu assez pour pouvoir tirer
         if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)
         {
-	        // recuperation de la creature la plus proche et a portee de la tour
-            Creature creature = getCreatureLaPlusProcheEtAPortee();
             
+            Creature creature = null;
+	        switch(typeCiblage)
+	        {
+	            case CIBLAGE_CREATURE_PLUS_PROCHE :
+                    creature = getCreatureLaPlusProcheOuLoin(true);
+	                break;
+	            case CIBLAGE_CREATURE_PLUS_LOIN :
+	                creature = getCreatureLaPlusProcheOuLoin(false);
+                    break;
+	            case CIBLAGE_CREATURE_PLUS_FAIBLE :
+	                creature = getCreatureLaPlusFaibleOuForte(true);
+	                break;
+	            case CIBLAGE_CREATURE_PLUS_FORTE :
+	                creature = getCreatureLaPlusFaibleOuForte(false);
+                    break;
+	            default :
+	                System.err.println("Type de ciblage inconnu");
+	        }
+             
             // si elle existe
             if (creature != null)
             {
@@ -484,10 +510,13 @@ public abstract class Tour extends Rectangle
 	/**
 	 * Permet de recuperer la creature la plus proche et a portee de la tour.
 	 * 
+	 * @param laPlusProche vrai si on veut la créature plus proche sinon false, 
+	 * la créature plus loin
+	 * 
 	 * @return la creature la plus proche et a portee de la tour ou <b>null s'il
 	 *         n'y a pas de creature a portee</b>
 	 */
-	private Creature getCreatureLaPlusProcheEtAPortee()
+	private Creature getCreatureLaPlusProcheOuLoin(boolean laPlusProche)
 	{
 	    // le terrain a bien ete setter ?
 		if (jeu == null)
@@ -495,8 +524,14 @@ public abstract class Tour extends Rectangle
 
 		// variables temporaires pour calcul
 		Creature creatureLaPlusProche = null;
-		double distanceLaPlusProche   = 0;
-		double distance               = 0;
+		
+		double distanceMinMax = -1;
+		
+		// distance la plus proche
+		if(laPlusProche)
+		    distanceMinMax = java.lang.Double.MAX_VALUE ;
+		
+		double tmpDistance = 0;
 
 		// bloque la reference vers la collection des creatures
 		Creature creature;
@@ -511,19 +546,20 @@ public abstract class Tour extends Rectangle
         	    if (creature.peutEtreAttaquee(this))
                 {
         		    // calcul de la distance entre la tour et la creature
-        			distance = getDistance(creature);
+        			tmpDistance = getDistance(creature);
         
         			// est-elle a portee ?
-        			if (distance <= rayonPortee)
+        			if (tmpDistance <= rayonPortee)
         			{
         				// la creature actuelle est-elle plus proche que la derniere
         				// creature a portee testee ?
         				if (creatureLaPlusProche == null 
-        				|| distance < distanceLaPlusProche)
+        				|| laPlusProche && tmpDistance < distanceMinMax
+        				|| !laPlusProche && tmpDistance > distanceMinMax)
         				{ 
         				    // nouvelle creature plus proche trouvee!
         					creatureLaPlusProche = creature;
-        					distanceLaPlusProche = distance;
+        					distanceMinMax = tmpDistance;
         				}
         			}
                 }
@@ -536,6 +572,63 @@ public abstract class Tour extends Rectangle
 		
 		return creatureLaPlusProche;
 	}
+	
+	/**
+     * Permet de recuperer la creature la plus faible et a portee de la tour.
+     * 
+     * @return la creature la plus faible et a portee de la tour ou <b>null s'il
+     *         n'y a pas de creature a portee</b>
+     */
+    private Creature getCreatureLaPlusFaibleOuForte(boolean plusFaible)
+    {
+        // le terrain a bien ete setter ?
+        if (jeu == null)
+            return null;
+
+        // variables temporaires pour calcul
+        Creature creatureLaPlusFaible   = null;
+        
+        long santeMinMax = 0;
+        if(plusFaible) 
+            santeMinMax = Long.MAX_VALUE;
+
+        // bloque la reference vers la collection des creatures
+        Creature creature;
+        Enumeration<Creature> eCreatures = jeu.getCreatures().elements();
+        while(eCreatures.hasMoreElements())
+        {
+            try{
+                
+                creature = eCreatures.nextElement();
+                
+                // si la creature est accessible
+                if (creature.peutEtreAttaquee(this))
+                {
+                    // est-elle a portee ?
+                    if (getDistance(creature) <= rayonPortee)
+                    {
+                        // la creature actuelle est-elle plus proche que la derniere
+                        // creature a portee testee ?
+                        if (plusFaible && creature.getSante() < santeMinMax
+                        || !plusFaible && creature.getSante() > santeMinMax)
+                        {
+                            // nouvelle creature plus proche trouvee!
+                            creatureLaPlusFaible = creature;
+                            santeMinMax = creature.getSante();
+                        }
+                    }
+                }
+            }
+            catch(java.util.NoSuchElementException nsee)
+            {
+                nsee.printStackTrace();
+            }
+        }
+        
+        return creatureLaPlusFaible;
+    }
+	
+	
 
 	/**
 	 * Calcul la distance en vol d'oiseau entre la tour et une creature
@@ -606,5 +699,15 @@ public abstract class Tour extends Rectangle
     public void setId(int id)
     {
        this.ID = id;
+    }
+
+    public void setTypeCiblage(int typeCiblage)
+    {
+        this.typeCiblage = typeCiblage;
+    }
+
+    public int getTypeCiblage()
+    { 
+        return typeCiblage;
     }
 }
