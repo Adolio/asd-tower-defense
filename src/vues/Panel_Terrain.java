@@ -400,13 +400,13 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    Graphics2D g2 = (Graphics2D) g;
  
         if(toucheHautPressee)
-            decaleY -= DECALAGE_CLAVIER;
-        if(toucheGauchePressee)
-            decaleX -= DECALAGE_CLAVIER;
-        if(toucheBasPressee)
             decaleY += DECALAGE_CLAVIER;
+        if(toucheGauchePressee)
+            decaleX += DECALAGE_CLAVIER;
+        if(toucheBasPressee)
+            decaleY -= DECALAGE_CLAVIER;
         if(toucheDroitePressee)
-            decaleX += DECALAGE_CLAVIER;    
+            decaleX -= DECALAGE_CLAVIER;    
 	    
 	    // echelle du rendu et positionnement
 	    g2.scale(coeffTaille, coeffTaille);
