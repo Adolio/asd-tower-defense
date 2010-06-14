@@ -106,27 +106,25 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	Stroke traitTmp;
 	
 	// 0.0f = 100% transparent et 1.0f vaut 100% opaque.
-	private static final float ALPHA_PERIMETRE_PORTEE = .6f;
-	private static final float ALPHA_SURFACE_PORTEE   = .3f;
-	private static final float ALPHA_MAILLAGE   	  = .4f;
-	private static final float ALPHA_SURFACE_ZONE_DA  = .5f;
-	private static final float ALPHA_TOUR_A_AJOUTER   = .7f;
-	private static final float ALPHA_CHEMIN_CREATURE  = .5f;
-	private static final float ALPHA_SURFACE_MUR      = .8f;
-	
-	private static final Color COULEUR_ZONE_DEPART 	= Color.GREEN;
-	private static final Color COULEUR_ZONE_ARRIVEE = Color.RED;
-	private static final Color COULEUR_MAILLAGE 	= Color.WHITE;
-	private static final Color COULEUR_SANTE 		= Color.GREEN;
-	private static final Color COULEUR_CHEMIN 		= Color.BLUE;
+	private static final float ALPHA_PERIMETRE_PORTEE  = .6f;
+	private static final float ALPHA_SURFACE_PORTEE    = .3f;
+	private static final float ALPHA_MAILLAGE   	   = .4f;
+	private static final float ALPHA_SURFACE_ZONE_DA   = .5f;
+	private static final float ALPHA_TOUR_A_AJOUTER    = .7f;
+	private static final float ALPHA_CHEMIN_CREATURE   = .5f;
+	private static final float ALPHA_SURFACE_MUR       = .8f;
+	private static final Color COULEUR_ZONE_DEPART 	   = Color.GREEN;
+	private static final Color COULEUR_ZONE_ARRIVEE    = Color.RED;
+	private static final Color COULEUR_MAILLAGE 	   = Color.WHITE;
+	private static final Color COULEUR_SANTE 		   = Color.GREEN;
+	private static final Color COULEUR_CHEMIN 		   = Color.BLUE;
 	private static final Color COULEUR_CREATURE_SANS_IMAGE = Color.YELLOW;
-	private static final Color COULEUR_SELECTION	= Color.WHITE;
+	private static final Color COULEUR_SELECTION	   = Color.WHITE;
 	private static final Color COULEUR_POSE_IMPOSSIBLE = Color.RED;
 	private static final Color COULEUR_CONTENEUR_SANTE = Color.BLACK;
-	private static final Color COULEUR_RAYON_PORTEE = Color.WHITE;
-	private static final Color COULEUR_NIVEAU 		= Color.WHITE;
+	private static final Color COULEUR_RAYON_PORTEE    = Color.WHITE;
+	private static final Color COULEUR_NIVEAU 		   = Color.WHITE;
 	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
-	
 	
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
@@ -144,12 +142,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
     private static final int MARGE_UNIVERS = 2000;
 
+    /**
+     * Décalage lors de déplacement avec le clavier
+     * 
+     * TODO faire avec une acceleration
+     */
+    private static final int DECALAGE_CLAVIER = 8;
+
 	/**
 	 * Position exacte de la souris sur le terrain
 	 */
 	private int sourisX, sourisY;
 		
-	
 	/**
 	 * Permet de stocker l'endroit du debut de l'agrippage
 	 */
@@ -237,6 +241,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
      * Permet de savoir s'il faut centrer la vue sur la creature selectionnee
      */
     private boolean centrerSurCreatureSelectionnee;
+
+    private boolean toucheHautPressee;
+
+    private boolean toucheGauchePressee;
+
+    private boolean toucheBasPressee;
+
+    private boolean toucheDroitePressee;
 	
 	// curseurs
 	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
@@ -375,19 +387,27 @@ public class Panel_Terrain extends JPanel implements Runnable,
     }
     
     /**
-     * TODO
+     * Permet d'activer / désactiver le mode d'affichage des zones des joueurs 
      */
     public boolean basculerAffichageZonesJoueurs()
     {
         return afficherZonesJoueurs = !afficherZonesJoueurs;
     }
-    
-	
+
 	@Override
 	public void paintComponent(Graphics g)
 	{
 	    Graphics2D g2 = (Graphics2D) g;
  
+        if(toucheHautPressee)
+            decaleY -= DECALAGE_CLAVIER;
+        if(toucheGauchePressee)
+            decaleX -= DECALAGE_CLAVIER;
+        if(toucheBasPressee)
+            decaleY += DECALAGE_CLAVIER;
+        if(toucheDroitePressee)
+            decaleX += DECALAGE_CLAVIER;    
+	    
 	    // echelle du rendu et positionnement
 	    g2.scale(coeffTaille, coeffTaille);
 	    g2.translate(decaleX, decaleY);
@@ -481,12 +501,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
                     g2.drawLine(zoneC.x , zoneC.y + zoneC.height, zoneC.x + zoneC.width, zoneC.y);
                 }
                 
-                // TODO
-                //if(joueur != this.joueur){
-                    g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo , zoneC.y+yOffsetPseudo);
-                    g2.setColor(Color.BLACK);
-                    g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo+2 , zoneC.y+yOffsetPseudo+2);
-                //}
+                g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo , zoneC.y+yOffsetPseudo);
+                g2.setColor(Color.BLACK);
+                g2.drawString(joueur.getPseudo(), zoneC.x+xOffsetPseudo+2 , zoneC.y+yOffsetPseudo+2);  
             }
             
             g2.setFont(tmpFont);
@@ -882,83 +899,96 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 	    boutonDragg = me.getButton();
 	    
+	    
+	    
+	    
 	    // clique gauche
 	    if (me.getButton() == MouseEvent.BUTTON1)
 		{    
-	        sourisGrabX = me.getX();
-	        sourisGrabY = me.getY();
+	        if(me.getClickCount() == 1)
+	        {
 	        
-	        decaleGrabX = decaleX;
-	        decaleGrabY = decaleY;
-	        
-	        Point positionSurTerrain = getCoordoneeSurTerrainOriginal(sourisX,sourisY);
-	        
-	        
-	        //--------------------------
-	        //-- selection d'une tour --
-	        //--------------------------
-	        
-	        // la selection se fait lors du clique
-			for(Tour tour : jeu.getTours()) // pour chaque tour... 
-				if (tour.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
-				{	
-					// si le joueur clique sur une tour deja selectionnee
-				    if (tourSelectionnee == tour)
-						tourSelectionnee = null; // deselection
-					else
-					{
-						tourSelectionnee = tour; // la tour est selectionnee
-						// si une tour est selectionnee, il n'y pas d'ajout
-						tourAAjouter = null;
-					}
-					
-				    // informe la fenetre qu'une tour a ete selectionnee
-					edpt.tourSelectionnee(tourSelectionnee,
-											Panel_InfoTour.MODE_SELECTION);
-					return;
-				}
-		
-	        // aucun tour trouvee => clique dans le vide.
-            tourSelectionnee = null;
-            
-            //edpt.tourSelectionnee(tourSelectionnee, Panel_InfoTour.MODE_SELECTION);
-			
-            //------------------------------
-            //-- selection d'une creature --
-            //------------------------------
-
-			Creature creature;
-			Vector<Creature> creatures = jeu.getCreatures();
-			
-			// parcours a l'envers car il faut traiter les creatures les plus
-            // devant en premier (les derniers affiches)
-			for(int i = creatures.size()-1; i >= 0 ;i--)
-			{
-			    creature = creatures.get(i);
-
-			    if (creature.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
-				{	
-			        // on enleve le suivi de la creature
-			        centrerSurCreatureSelectionnee = false;
-			        
-			        // si le joueur clique sur une creature deja selectionnee
-			        if (creatureSelectionnee == creature)
-						creatureSelectionnee = null; // deselection
-			        
-					else
-						creatureSelectionnee = creature; // la creature est selectionnee
-					
-					edpt.creatureSelectionnee(creatureSelectionnee);
-					
-					return;
-				}
-			}
-			
-			creatureSelectionnee = null;
-			
-			// aucune tour et aucune creature trouvee => clique dans le vide.
-			if(tourAAjouter == null)
-    			edpt.deselection();
+    	        sourisGrabX = me.getX();
+    	        sourisGrabY = me.getY();
+    	        
+    	        decaleGrabX = decaleX;
+    	        decaleGrabY = decaleY;
+    	        
+    	        Point positionSurTerrain = getCoordoneeSurTerrainOriginal(sourisX,sourisY);
+    	        
+    	        
+    	        //--------------------------
+    	        //-- selection d'une tour --
+    	        //--------------------------
+    	        
+    	        // la selection se fait lors du clique
+    			for(Tour tour : jeu.getTours()) // pour chaque tour... 
+    				if (tour.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
+    				{	
+    					// si le joueur clique sur une tour deja selectionnee
+    				    if (tourSelectionnee == tour)
+    						tourSelectionnee = null; // deselection
+    					else
+    					{
+    						tourSelectionnee = tour; // la tour est selectionnee
+    						// si une tour est selectionnee, il n'y pas d'ajout
+    						tourAAjouter = null;
+    					}
+    					
+    				    // informe la fenetre qu'une tour a ete selectionnee
+    					edpt.tourSelectionnee(tourSelectionnee,
+    											Panel_InfoTour.MODE_SELECTION);
+    					return;
+    				}
+    		
+    	        // aucun tour trouvee => clique dans le vide.
+                tourSelectionnee = null;
+                
+                //edpt.tourSelectionnee(tourSelectionnee, Panel_InfoTour.MODE_SELECTION);
+    			
+                //------------------------------
+                //-- selection d'une creature --
+                //------------------------------
+    
+    			Creature creature;
+    			Vector<Creature> creatures = jeu.getCreatures();
+    			
+    			// parcours a l'envers car il faut traiter les creatures les plus
+                // devant en premier (les derniers affiches)
+    			for(int i = creatures.size()-1; i >= 0 ;i--)
+    			{
+    			    creature = creatures.get(i);
+    
+    			    if (creature.intersects(positionSurTerrain.x,positionSurTerrain.y,1,1)) // la souris est dedans ?
+    				{	
+    			        // on enleve le suivi de la creature
+    			        centrerSurCreatureSelectionnee = false;
+    			        
+    			        // si le joueur clique sur une creature deja selectionnee
+    			        if (creatureSelectionnee == creature)
+    						creatureSelectionnee = null; // deselection
+    			        
+    					else
+    						creatureSelectionnee = creature; // la creature est selectionnee
+    					
+    					edpt.creatureSelectionnee(creatureSelectionnee);
+    					
+    					return;
+    				}
+    			}
+    			
+    			creatureSelectionnee = null;
+    			
+    			// aucune tour et aucune creature trouvee => clique dans le vide.
+    			if(tourAAjouter == null)
+        			edpt.deselection();
+	        }
+	        else // double click 
+	        {
+	            // remise à l'échelle initiale et recentrage
+	            coeffTaille = 1.0;
+	            centrerSur(LARGEUR / 2, HAUTEUR / 2);
+	        }
 		}
 		else // clique droit ou autre
 		{
@@ -1020,18 +1050,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
         // d'une tour
         if(tourAAjouter != null)
         {
-        
+            int largeurPanel = getWidth();
+            int hauteurPanel = getHeight();
+            
     		if(sourisX > 0 
     		&& sourisX < MARGES_DEPLACEMENT
-    		&& decaleX < 0)
+    		&& (decaleX != 0 || coeffTaille != 1.0))
     		{
                 setCursor(curRedimGauche);
     		    decaleX++;
     		}
     		
-    		if(sourisX > LARGEUR-MARGES_DEPLACEMENT 
-    		&& sourisX < LARGEUR 
-    		&& getCoordoneeSurTerrainOriginal(LARGEUR,0).x < LARGEUR)
+    		if(sourisX > largeurPanel-MARGES_DEPLACEMENT 
+    		&& sourisX < largeurPanel
+    		&& (decaleX != 0 || coeffTaille != 1.0))
     		{
     		    setCursor(curRedimDroite);
     		    decaleX--;
@@ -1039,21 +1071,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
     		
     		if(sourisY > 0 
             && sourisY < MARGES_DEPLACEMENT
-            && decaleY < 0) 
+            && (decaleY != 0 || coeffTaille != 1.0))
     		{
                 setCursor(curRedimBas);
                 decaleY++;
     		}
     		
-    		if(sourisY > HAUTEUR-MARGES_DEPLACEMENT 
-            && sourisY < HAUTEUR 
-            && getCoordoneeSurTerrainOriginal(0,HAUTEUR).y < HAUTEUR)
+    		if(sourisY > hauteurPanel-MARGES_DEPLACEMENT 
+            && sourisY < hauteurPanel 
+            && (decaleY != 0 || coeffTaille != 1.0))
     		{
                 setCursor(curRedimHaut);    
                 decaleY--;
     		}
     
-    		
 		    // mise a jour de la position de la tour à ajoutée   
 		    // pour eviter des pertes de précision,on récupère d'abord 
 		    // la position sur le terrain de taille normal...
@@ -1148,6 +1179,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void mouseExited(MouseEvent me)
 	{
 		sourisSurTerrain = false;
+		
+		// pas de deplacement lorsque la souris a quittée la zone
+		toucheHautPressee     = false;
+		toucheBasPressee      = false;
+		toucheDroitePressee   = false;
+		toucheGauchePressee   = false;
 	}
 	
 	// methodes non redéfinies (voir MouseListener)
@@ -1160,32 +1197,53 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void keyReleased(KeyEvent ke)
 	{
-		if(!jeu.estEnPause())
+		char source = ke.getKeyChar();
+	    
+	    if(!jeu.estEnPause())
 		{
     	    // raccourcis des tours
     	    if(tourSelectionnee != null)
     		{
     	        // raccourci de vente
-    			if(ke.getKeyChar() == 'v' || ke.getKeyChar() == 'V')
+    			if(source == 'v' || source == 'V')
     				edpt.vendreTour(tourSelectionnee);
     			// raccourci d'amelioration
-    			else if(ke.getKeyChar() == 'a' || ke.getKeyChar() == 'A')
+    			else if(source == 'q' || source == 'Q')
     				edpt.ameliorerTour(tourSelectionnee);
     		}
     	    
     	    // focus sur la creature
-    	    if(ke.getKeyChar() == 'f' && creatureSelectionnee != null)
-    	        centrerSurCreatureSelectionnee = true;
+    	    if(source == 'f' && creatureSelectionnee != null)
+    	        centrerSurCreatureSelectionnee = true; 
 		}
+		
+		if(source == 'w' || source == 'W')
+            toucheHautPressee = false;
+        else if(source == 'a' || source == 'A')
+            toucheGauchePressee = false;
+        else if(source == 's' || source == 'S')
+            toucheBasPressee = false;
+        else if(source == 'd' || source == 'D')
+            toucheDroitePressee = false;
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent ke)
-	{}
+	{
+	    char source = ke.getKeyChar();
+	    
+	    if(source == 'w' || source == 'W')
+            toucheHautPressee = true;
+	    else if(source == 'a' || source == 'A')
+            toucheGauchePressee = true;
+	    else if(source == 's' || source == 'S')
+            toucheBasPressee = true;
+	    else if(source == 'd' || source == 'D')
+            toucheDroitePressee = true;
+	}
 	
 	@Override
-	public void keyTyped(KeyEvent ke)
-	{}
+	public void keyTyped(KeyEvent ke){}
 
 	@Override
     public void mouseWheelMoved(MouseWheelEvent e)
@@ -1225,8 +1283,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
      * @param y la position sur le terrain normal
      */
     private void centrerSur(int x, int y)
-    {
-        decaleX = (int) ((getPreferredSize().width/2.0 - x * coeffTaille) / coeffTaille);
-        decaleY = (int) ((getPreferredSize().height/2.0 - y * coeffTaille) / coeffTaille);
+    { 
+        int largeurPanel = getBounds().width;
+        if(largeurPanel == 0)  
+            largeurPanel = getPreferredSize().width;
+        
+        int hauteurPanel = getBounds().height;
+        if(hauteurPanel == 0)  
+            hauteurPanel = getPreferredSize().height;
+
+        decaleX = (int) ((largeurPanel/2.0 - x * coeffTaille) / coeffTaille);
+        decaleY = (int) ((hauteurPanel/2.0 - y * coeffTaille) / coeffTaille);
     }
 }
