@@ -146,7 +146,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		//-------------------------------
 		setTitle(FENETRE_TITRE);
 		setIconImage(I_FENETRE.getImage());
-		setResizable(false);
+		//setResizable(false);
 		//setPreferredSize(new Dimension(1024,768));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
@@ -237,14 +237,14 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		panelTerrain = new Panel_Terrain(jeu, this);
 		panelTerrain.addKeyListener(this);
 		conteneurTerrain.setOpaque(false);
-		conteneurTerrain.add(panelTerrain,BorderLayout.NORTH);
+		conteneurTerrain.add(panelTerrain,BorderLayout.CENTER);
 
 	    // ajout
         JPanel pMargeTerrain = new JPanel(new BorderLayout());
         pMargeTerrain.setBorder(new EmptyBorder(5, 5, 5, 5));
         pMargeTerrain.setOpaque(false);
         pMargeTerrain.add(conteneurTerrain);
-        pGauche.add(pMargeTerrain,BorderLayout.NORTH);
+        pGauche.add(pMargeTerrain,BorderLayout.CENTER);
 		
         // affichage des znoes et joueurs
         if(panelTerrain.basculerAffichageZonesJoueurs())
@@ -253,9 +253,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             itemAfficherZonesJoueurs.setIcon(I_INACTIF);
         
         
-        pFormulaire.add(pGauche,BorderLayout.WEST);
-        
-        
+        pFormulaire.add(pGauche,BorderLayout.CENTER);
         
         //--------------------
         //-- Menu de droite --
