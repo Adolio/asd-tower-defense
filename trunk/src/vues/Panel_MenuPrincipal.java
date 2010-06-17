@@ -35,6 +35,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     private JButton bCreerPartieMulti = new JButton("Créer");
     private JButton bRegles = new JButton("Règles");
     private JButton bAPropos = new JButton("A propos");
+    private JButton bOptions = new JButton("Options");
     private JButton bQuitter = new JButton("Quitter");
 
     private JFrame parent;
@@ -113,6 +114,12 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         GestionnaireDesPolices.setStyle(bAPropos);
         pAbsolu.add(bAPropos);
 
+        // Options
+        bOptions.addActionListener(this);
+        bOptions.setBounds(555, 60, 100, 25);
+        GestionnaireDesPolices.setStyle(bOptions);
+        pAbsolu.add(bOptions);
+        
         // quitter
         bQuitter.addActionListener(this);
         bQuitter.setBounds(555, 100, 100, 50);
@@ -165,6 +172,9 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
        
         else if(source == bAPropos)
             new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"), parent);
+        
+        else if(source == bOptions)
+            new Fenetre_Options();
         
         else if (source == bQuitter)
             System.exit(0); // Fermeture correcte du logiciel

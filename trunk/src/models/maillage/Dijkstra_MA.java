@@ -66,7 +66,7 @@ public class Dijkstra_MA
      * Retour l'indice du noeud le dont la distance est la plus faible. 
      * 
      * @param dist les distances depuis le noeud de départ
-     * @param visited les noeuds visités
+     * @param visite les noeuds visités
      * @return l'indice du noeud le dont la distance est la plus faible.
      *          ou -1 s'il n'y en a pas
      */

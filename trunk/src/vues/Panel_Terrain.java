@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
+
 import javax.swing.*;
 
 import models.animations.Animation;
@@ -12,6 +13,9 @@ import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
+import models.maillage.Noeud;
+import models.maillage.PathNotFoundException;
+import models.outils.Outils;
 import models.tours.Tour;
 
 /**
@@ -140,7 +144,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Marge autour du terrain pour éviter des bugs de déplacements en 
 	 * dehors de la zone de dessin
 	 */
-    private static final int MARGE_UNIVERS = 2000;
+    private static final int MARGE_UNIVERS = 3000;
 
     /**
      * Décalage lors de déplacement avec le clavier
@@ -520,6 +524,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    // modification de la transparence
 		    setTransparence(ALPHA_MAILLAGE, g2);
 			
+		    
 		    // recuperation de la liste des arcs actifs
 			Line2D[] arcsActifs = jeu.getTerrain().getArcsActifs();
 			
@@ -532,6 +537,31 @@ public class Panel_Terrain extends JPanel implements Runnable,
 							    (int)arc.getX2(),(int)arc.getY2());
 			}
 			
+			
+			
+			for(Noeud n : jeu.getTerrain().getNoeuds())
+			{
+			    if(n.isActif())
+			        g2.setColor(Color.GREEN);
+			    else
+			        g2.setColor(Color.RED);
+			    
+			    g2.fillOval(n.x-2, n.y-2, 4, 4);
+			}
+			    
+			
+			try
+            {
+			    //TODO
+			    g2.setColor(Color.BLUE);
+			    for(int i=-5;i<50;i++)
+			        for(int j=-5;j<50;j++)
+			            afficherCheminPourNoeud(i*10, j*10,g2);
+			    
+	            
+            } 
+			catch (IllegalArgumentException e) {}
+
 			// reinitialisation de la transparence
 			setTransparence(1.f, g2);
 		}
@@ -659,6 +689,42 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 100, HAUTEUR / 2 - 50);
 	    }
 	}
+	
+	
+	private void afficherCheminPourNoeud(int x, int y, Graphics2D g2)
+    {  
+        ArrayList<Point> chemin;
+        
+        try 
+        {
+            chemin = jeu.getTerrain().getCheminLePlusCourt(x, y, 0, 0, 0);
+            
+            if(chemin.size() > 0)
+            {
+                Point pPrec = chemin.get(0);
+                for(int i=1;i<chemin.size();i++)
+                {
+                    Point p =  chemin.get(i);
+
+                    g2.drawLine((int) pPrec.x, 
+                            (int) pPrec.y, 
+                            (int) p.x, 
+                            (int) p.y);
+                    
+                    pPrec = p; 
+                }
+            }
+            /*else
+                System.out.println("Pas de chemin");*/
+        } 
+        catch (IllegalArgumentException e){
+            e.printStackTrace();
+        } 
+        catch (PathNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+	
 
 	/**
 	 * Permet de dessiner une zone rectangulaire sur le terrain.

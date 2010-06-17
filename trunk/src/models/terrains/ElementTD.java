@@ -85,6 +85,6 @@ public class ElementTD extends Terrain
         ajouterMur(new Rectangle(340, 120, 20, 260));
         ajouterMur(new Rectangle(120, 360, 220, 20));
         ajouterMur(new Rectangle(20, 240, 220, 20));
-        ajouterMur(new Rectangle(220, 220, 20, 20)); 
+        ajouterMur(new Rectangle(220, 220, 20, 20));
     }
 }

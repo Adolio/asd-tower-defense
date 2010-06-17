@@ -38,7 +38,7 @@ public interface Maillage
      * @throws IllegalArgumentException
      *             Si la zone à activer est hors champs.
      */
-    public abstract void activerZone(Rectangle rectangle)
+    public abstract void activerZone(Rectangle rectangle, boolean miseAJour)
             throws IllegalArgumentException;
 
     /**
@@ -49,7 +49,7 @@ public interface Maillage
      * @throws IllegalArgumentException
      *             Levé si le rectangle est hors champs.
      */
-    public abstract void desactiverZone(Rectangle rectangle)
+    public abstract void desactiverZone(Rectangle rectangle, boolean miseAJour)
             throws IllegalArgumentException;
 
     /**
@@ -92,4 +92,11 @@ public interface Maillage
     
     // TODO
     public abstract int getNbNoeuds();
+    
+    // TODO
+    public void ajouterPointdeSortie(int x, int y);
+    
+    // TODO
+    public void miseAJourTDA();
+    
 }

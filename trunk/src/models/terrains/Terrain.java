@@ -213,17 +213,29 @@ public abstract class Terrain implements Serializable
     public void initialiser()
     {
         // creation des deux maillages
-        MAILLAGE_TERRESTRE = new Maillage_v1(largeurMaillage, hauteurMaillage,
+        // TODO Choix du maillage
+        MAILLAGE_TERRESTRE = new Maillage_v2(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
         
-        MAILLAGE_AERIEN = new Maillage_v1(largeurMaillage, hauteurMaillage,
+        MAILLAGE_AERIEN = new Maillage_v2(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);  
         
-        // activation des murs
+        
+        // activation des murs for(Rectangle mur : murs)
         for(Rectangle mur : murs)
         {
-            MAILLAGE_TERRESTRE.desactiverZone(mur);
-            MAILLAGE_AERIEN.desactiverZone(mur);
+            MAILLAGE_TERRESTRE.desactiverZone(mur,false);
+            MAILLAGE_AERIEN.desactiverZone(mur,false);
+        }
+        
+        // ajout des points des sorties
+        Rectangle zoneArrivee;
+        for(Equipe equipe : equipes)
+        {
+            zoneArrivee = equipe.getZoneArriveeCreatures();
+
+            MAILLAGE_TERRESTRE.ajouterPointdeSortie((int) zoneArrivee.getCenterX(), (int) zoneArrivee.getCenterY());
+            MAILLAGE_AERIEN.ajouterPointdeSortie((int) zoneArrivee.getCenterX(), (int) zoneArrivee.getCenterY());
         }
     }
     
@@ -331,10 +343,10 @@ public abstract class Terrain implements Serializable
 
         // desactive la zone dans le maillage qui correspond au mur
         if(MAILLAGE_TERRESTRE != null)
-            MAILLAGE_TERRESTRE.desactiverZone(mur);
+            MAILLAGE_TERRESTRE.desactiverZone(mur,false);
         
         if(MAILLAGE_AERIEN != null)
-            MAILLAGE_AERIEN.desactiverZone(mur);
+            MAILLAGE_AERIEN.desactiverZone(mur,false);
 
         // ajout du mur
         murs.add(mur);
@@ -559,7 +571,7 @@ public abstract class Terrain implements Serializable
         {
             try
             {
-                MAILLAGE_TERRESTRE.activerZone(zone);
+                MAILLAGE_TERRESTRE.activerZone(zone, true);
             }
             catch(IllegalArgumentException e)
             {}
@@ -582,7 +594,7 @@ public abstract class Terrain implements Serializable
     {
         // desactivation de la zone
         if(MAILLAGE_TERRESTRE != null)
-            MAILLAGE_TERRESTRE.desactiverZone(zone);
+            MAILLAGE_TERRESTRE.desactiverZone(zone, true);
         
         // mise a jour des chemins si necessaire
         if (miseAJourDesCheminsDesCreatures)

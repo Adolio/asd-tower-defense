@@ -655,19 +655,19 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
-    /*
+    
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
         
         miseAJourInfoJeu();
     }
-    */
+    
 
     @Override
     public void keyPressed(KeyEvent ke)
     {
-        /*
+        
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
@@ -681,7 +681,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
-        */
+        
     }
 
     @Override
