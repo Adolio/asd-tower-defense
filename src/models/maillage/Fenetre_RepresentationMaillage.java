@@ -40,7 +40,7 @@ public class Fenetre_RepresentationMaillage extends JFrame
             
             // background
             g2.setColor(Color.WHITE);
-            g2.fillRect(0, 0, 1000, 1000);
+            g2.fillRect(0, 0, 2000, 2000);
             
             // affichage des arcs
             g2.setColor(Color.yellow);
@@ -70,7 +70,9 @@ public class Fenetre_RepresentationMaillage extends JFrame
             {
                 //m.activerZone(new Rectangle()); //TODO
                 m.desactiverZone(new Rectangle(Outils.tirerNombrePseudoAleatoire(0, m.getLargeurPixels()),
-                        Outils.tirerNombrePseudoAleatoire(0, m.getHauteurPixels()),50,50)); //TODO
+                        Outils.tirerNombrePseudoAleatoire(0, m.getHauteurPixels()),
+                        Outils.tirerNombrePseudoAleatoire(20, 200),
+                        Outils.tirerNombrePseudoAleatoire(20, 200)),true); //TODO
             }
 
             repaint();
@@ -90,7 +92,7 @@ public class Fenetre_RepresentationMaillage extends JFrame
                     for(int i=1;i<chemin.size();i++)
                     {
                         Point p =  chemin.get(i);
-                        
+ 
                         g2.drawLine((int) pPrec.x, 
                                 (int) pPrec.y, 
                                 (int) p.x, 
@@ -133,12 +135,23 @@ public class Fenetre_RepresentationMaillage extends JFrame
     
     public static void main(String[] args) 
     {
-        int largeur = 600;
-        int hauteur = 600;
+        int largeur = 1000;
+        int hauteur = 800;
         
         //Maillage maillage_v1 = new Maillage_v1(largeur, hauteur, 10);
-        Maillage maillage_v2 = new Maillage_v2(largeur, hauteur, 10, largeur/2, hauteur/2);
+        Maillage m = new Maillage_v2(largeur, hauteur, 10, 0, 0);
         
-        new Fenetre_RepresentationMaillage(maillage_v2);
+        // desactivation de zone
+        m.desactiverZone(new Rectangle(largeur / 2 - 20,0,20,hauteur),false);
+        m.desactiverZone(new Rectangle(0,largeur / 2 - 20,largeur,20),false);
+        //m.desactiverZone(new Rectangle(0,0,10,10),false); // FIXME ???
+        
+        // ajout des points de sorties
+        m.ajouterPointdeSortie(largeur / 4, hauteur / 4);
+        m.ajouterPointdeSortie(largeur / 4 * 3, hauteur / 4);
+        m.ajouterPointdeSortie(largeur / 4, hauteur / 4 * 3);
+        m.ajouterPointdeSortie(largeur / 4 * 3, hauteur / 4 * 3);
+
+        new Fenetre_RepresentationMaillage(m);
     }
 }

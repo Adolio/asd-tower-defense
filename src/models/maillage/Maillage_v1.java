@@ -200,7 +200,7 @@ public class Maillage_v1 implements Maillage
 	/* (non-Javadoc)
      * @see models.maillage.MaillageI#activerZone(java.awt.Rectangle)
      */
-	synchronized public void activerZone(Rectangle rectangle)
+	synchronized public void activerZone(Rectangle rectangle, boolean miseAJour)
 			throws IllegalArgumentException
 	{
 		zoneActive(rectangle, true);
@@ -209,7 +209,7 @@ public class Maillage_v1 implements Maillage
 	/* (non-Javadoc)
      * @see models.maillage.MaillageI#desactiverZone(java.awt.Rectangle)
      */
-	synchronized public void desactiverZone(Rectangle rectangle)
+	synchronized public void desactiverZone(Rectangle rectangle, boolean miseAJour)
 			throws IllegalArgumentException
 	{
 		zoneActive(rectangle, false);
@@ -514,5 +514,17 @@ public class Maillage_v1 implements Maillage
     public int getNbNoeuds()
     {
         return NB_NOEUDS;
+    }
+
+    @Override
+    public void ajouterPointdeSortie(int x, int y)
+    {
+        // pas utilisé
+    }
+
+    @Override
+    public void miseAJourTDA()
+    {
+        // pas utilisé
     }
 }

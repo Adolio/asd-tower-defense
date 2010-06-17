@@ -45,11 +45,10 @@ public class Maillage_v2 implements Maillage
 	/*
 	 * Attributs
 	 */
-	
-	private int VOISINS_MAX_PAS_NOEUDS = 8;
+	// 8 voisins + 1 car tous les noeuds peuvent être une sortie
+	private static int NB_VOISINS_MAX_PAR_NOEUD = 9;
 	
 	private int NB_NOEUDS;
-	private int nbArcsActifs;
 	
 	/**
      * Tableau des noeuds
@@ -83,11 +82,6 @@ public class Maillage_v2 implements Maillage
 	 * Le decalage de base.
 	 */
 	private int xOffset, yOffset;
-	
-	/**
-	 * Noeud d'arrivee
-	 */
-    private int iNoeudArrivee;
    
 
 	/**
@@ -108,7 +102,7 @@ public class Maillage_v2 implements Maillage
 	 *             Levé si les dimensions ne correspondent pas.
 	 */
 	public Maillage_v2(final int largeurPixels, final int hauteurPixels,
-			final int largeurDuNoeud, int arriveX, int arriveY, int xOffset, int yOffset)
+			final int largeurDuNoeud, int xOffset, int yOffset)
 			throws IllegalArgumentException
 	{
 
@@ -117,7 +111,7 @@ public class Maillage_v2 implements Maillage
 
 		// Calcule une fois pour toute la distance diagonale
 		POIDS_DIAGO = (int) Math.sqrt(2 * LARGEUR_NOEUD * LARGEUR_NOEUD);
-
+		
 		// Assignation de la dimension en pixel unitaire du maillage
 		LARGEUR_EN_PIXELS = largeurPixels;
 		HAUTEUR_EN_PIXELS = hauteurPixels;
@@ -127,7 +121,7 @@ public class Maillage_v2 implements Maillage
 		NB_NOEUDS_HAUTEUR = (hauteurPixels / LARGEUR_NOEUD);
 
 		
-		NB_NOEUDS = NB_NOEUDS_LARGEUR * NB_NOEUDS_HAUTEUR;
+		NB_NOEUDS = NB_NOEUDS_LARGEUR * NB_NOEUDS_HAUTEUR + 1;
 		
 		
 		// Les offsets du décalage
@@ -137,10 +131,18 @@ public class Maillage_v2 implements Maillage
 		// Construction du graphe
 		construireGraphe();
 		
-	    iNoeudArrivee = getIndiceNoeud(arriveX, arriveY);
-		
-		
-        contruireArbreDijkstra(iNoeudArrivee);
+        contruireArbreDijkstra();
+	}
+
+    // TODO
+	synchronized public void ajouterPointdeSortie(int x, int y)
+	{
+	    int tmp = getIndiceNoeud(x, y);
+	   
+        ajouterArc(tmp,0,0);
+        ajouterArc(0,tmp,0);
+        
+        contruireArbreDijkstra();
 	}
 
 	/**
@@ -150,62 +152,58 @@ public class Maillage_v2 implements Maillage
 	 * @param y
 	 * @return
 	 */
-    private int getIndiceNoeud(int x, int y)
+	synchronized private int getIndiceNoeud(int x, int y)
     { 
         if(noeuds.length == 0)
             throw new IllegalArgumentException("Pas de noeud");
         
         Noeud n;
         int iNoeudLePlusProche = -1;
+        double distance;
         double distMax = Integer.MAX_VALUE;
         Point cible = new Point(x,y);
-        for(int i=0;i<noeuds.length;i++)
+        
+        for(int i=1;i<NB_NOEUDS;i++)
         {
             n = noeuds[i];
             
-            if(cible.distance(n) < distMax)
+            distance = cible.distance(n);
+            
+            // TODO CHECK
+            if(distance < distMax /*&& n.isActif()*/)
             {
                 iNoeudLePlusProche = i;
-                distMax = cible.distance(n);
+                distMax = distance;
             }
         }
              
         return iNoeudLePlusProche;
     }
 
-    /**
-     * 
-     * @param largeurPixels
-     * @param hauteurPixels
-     * @param largeurDuNoeud
-     * @throws IllegalArgumentException
-     */
-    public Maillage_v2(final int largeurPixels, final int hauteurPixels,
-            final int largeurDuNoeud, int arriveX, int arriveY) throws IllegalArgumentException
-    {
-        this(largeurPixels, hauteurPixels, largeurDuNoeud, arriveX, arriveY,  0, 0);
-    }
-	
-	private void construireGraphe()
+    synchronized private void construireGraphe()
     {
 	    // allocation mémoire
 	    noeuds = new Noeud[NB_NOEUDS];   
 	    nbVoisins = new int[NB_NOEUDS];
-        voisins = new int[NB_NOEUDS][VOISINS_MAX_PAS_NOEUDS];
-        poids = new int[NB_NOEUDS][VOISINS_MAX_PAS_NOEUDS];
+        voisins = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
+        poids = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
         
         // par defaut, pas de voisins
         for(int i=0;i<NB_NOEUDS;i++)
         {
             nbVoisins[i] = 0;
         
-            for(int j=0;j<VOISINS_MAX_PAS_NOEUDS;j++)
+            for(int j=0;j<NB_VOISINS_MAX_PAR_NOEUD;j++)
                 poids[i][j] = Integer.MAX_VALUE;
         }
  
+        // noeud de sortie
+        noeuds[0] = new Noeud(0,0,1);
+        noeuds[0].setActif(true);
+        
         // construction du graphe
         Noeud n;
-        int iNoeud = 0;
+        int iNoeud = 1; // on saute le noeud de sortie
         for(int i=0;i<NB_NOEUDS_LARGEUR;i++)
         {
             for(int j=0;j<NB_NOEUDS_HAUTEUR;j++)
@@ -213,7 +211,7 @@ public class Maillage_v2 implements Maillage
                 //--------------------------
                 //-- mise a jour du noeud --
                 //--------------------------
-                n = new Noeud(i*LARGEUR_NOEUD,j*LARGEUR_NOEUD,LARGEUR_NOEUD);
+                n = new Noeud(i*LARGEUR_NOEUD+xOffset,j*LARGEUR_NOEUD+yOffset,LARGEUR_NOEUD);
                 n.setActif(true);
                 noeuds[iNoeud] = n;
                 
@@ -221,59 +219,60 @@ public class Maillage_v2 implements Maillage
                 //-- ajout des arcs --
                 //--------------------
                 // pas la derniere colonne
-                if(i != NB_NOEUDS_LARGEUR-1 && boolAlea())
+                if(i != NB_NOEUDS_LARGEUR-1 /*&& boolAlea()*/)
                 {
                     ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR, LARGEUR_NOEUD);
                     ajouterArc(iNoeud+NB_NOEUDS_HAUTEUR, iNoeud, LARGEUR_NOEUD);
                 }
                 
                 // pas la derniere ligne
-                if(j != NB_NOEUDS_HAUTEUR-1 && boolAlea())
+                if(j != NB_NOEUDS_HAUTEUR-1 /*&& boolAlea()*/)
                 {
                     ajouterArc(iNoeud, iNoeud+1, LARGEUR_NOEUD);
                     ajouterArc(iNoeud+1, iNoeud, LARGEUR_NOEUD);
                 }
                     
                 // pas la derniere ligne et la derniere colonne
-                if(i != NB_NOEUDS_LARGEUR-1 && j != NB_NOEUDS_HAUTEUR-1 && boolAlea())
+                if(i != NB_NOEUDS_LARGEUR-1 && j != NB_NOEUDS_HAUTEUR-1 /*&& boolAlea()*/)
                 {
                     ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR+1, POIDS_DIAGO);
                     ajouterArc(iNoeud+NB_NOEUDS_HAUTEUR+1, iNoeud, POIDS_DIAGO);
                 }
                 
                 // pas la première ligne et la derniere colonne
-                if(j != 0 && i != NB_NOEUDS_LARGEUR-1 && boolAlea())   
+                if(j != 0 && i != NB_NOEUDS_LARGEUR-1 /*&& boolAlea()*/)   
                 {
                     ajouterArc(iNoeud, iNoeud+NB_NOEUDS_HAUTEUR-1, POIDS_DIAGO);
                     ajouterArc(iNoeud+NB_NOEUDS_HAUTEUR-1, iNoeud, POIDS_DIAGO);
                 }
+                
                 iNoeud++;
             } 
         }
     }  
 	
-	private void ajouterArc(int iNoeud, int voisin, int poidsArc)
+	synchronized private void ajouterArc(int iNoeud, int voisin, int poidsArc)
     {
-	    if(nbVoisins[iNoeud] == VOISINS_MAX_PAS_NOEUDS)
+	    if(nbVoisins[iNoeud] == NB_VOISINS_MAX_PAR_NOEUD)
 	        throw new IllegalArgumentException("Nombre de voisins max atteint");
 	    
 	    if(poidsArc == Integer.MAX_VALUE)
 	        throw new IllegalArgumentException("Poids impossible");
 	    
-	    nbArcsActifs++;
-	    nbVoisins[iNoeud]++;
+	    voisins[iNoeud][nbVoisins[iNoeud]] = voisin;
+	    poids[iNoeud][nbVoisins[iNoeud]] = poidsArc;
 	    
-	    voisins[iNoeud][nbVoisins[iNoeud]-1] = voisin;
-	    poids[iNoeud][nbVoisins[iNoeud]-1] = poidsArc;
+	    nbVoisins[iNoeud]++;
     }
 
+    @SuppressWarnings("unused")
     private boolean boolAlea()
     {
         return Outils.tirerNombrePseudoAleatoire(0, 2) >= 1;
     }
 
 	@Override
-	public synchronized ArrayList<Point> plusCourtChemin(int xDepart,
+    public synchronized ArrayList<Point> plusCourtChemin(int xDepart,
 			int yDepart, int xArrivee, int yArrivee)
 			throws PathNotFoundException, IllegalArgumentException
 	{
@@ -293,44 +292,78 @@ public class Maillage_v2 implements Maillage
             
             ps.add(new Point(noeuds[pred]));
 
-            System.out.println(in+" -> "+pred);
-            
             in = pred;
         }  
-	    
+        
+        // efface le point de sortie commun
+        ps.remove(ps.size()-1);
+        
 	    return ps;
 	}
 
 	@Override
-	synchronized public void activerZone(Rectangle rectangle)
+	synchronized public void activerZone(Rectangle rectangle, boolean miseAJour)
 			throws IllegalArgumentException
 	{
-	    // TODO
-        contruireArbreDijkstra(iNoeudArrivee);
+	    Noeud n;
+        // on touche pas au noeud de sorti
+        for(int i=1;i<NB_NOEUDS;i++)
+        {
+            n = noeuds[i];
+            
+            if(rectangle.contains(n))
+            {
+                n.setActif(true);
+                
+                //System.out.println("noeud ["+n.x+","+n.y+"] activé");
+                
+                // pour tous les arcs
+                /*
+                for(int j=0;j<nbVoisins[i];j++)
+                {
+                    poids[i][j] = Integer.MAX_VALUE;
+                    nbArcsActifs-=2; // bidirection
+                }*/           
+            }
+        }
+        
+        if(miseAJour)
+            contruireArbreDijkstra();
 	}
-
+	
+	synchronized public void miseAJourTDA()
+	{
+	    contruireArbreDijkstra();
+	}
+	
 	@Override
-	synchronized public void desactiverZone(Rectangle rectangle)
+	synchronized public void desactiverZone(Rectangle rectangle, boolean miseAJour)
 			throws IllegalArgumentException
 	{ 
 	    Noeud n;
-	    for(int i=0;i<NB_NOEUDS;i++)
+	    // on touche pas au noeud de sorti
+	    for(int i=1;i<NB_NOEUDS;i++)
 	    {
 	        n = noeuds[i];
-	        
+
 	        if(rectangle.contains(n))
 	        {
+	            n.setActif(false);
+	            
+	            //System.out.println("noeud ["+n.x+","+n.y+"] désactivé");
+	            
 	            // pour tous les arcs
+	            /*
 	            for(int j=0;j<nbVoisins[i];j++)
 	            {
-	                n.setActif(false);
-	                //poids[i][j] = Integer.MAX_VALUE;
+	                poids[i][j] = Integer.MAX_VALUE;
 	                //nbArcsActifs-=2; // bidirection
-	            }	            
+	            }*/          
 	        }
 	    }
 	    
-        contruireArbreDijkstra(iNoeudArrivee);
+	    if(miseAJour)
+	        contruireArbreDijkstra();
 	}
 
 	@Override
@@ -346,32 +379,31 @@ public class Maillage_v2 implements Maillage
 	}
 
 	@Override
-	public Noeud[] getNoeuds()
+	synchronized public Noeud[] getNoeuds()
 	{
 		return noeuds;
 	}
 
 	@Override
-	public Line2D[] getArcs()
-	{
-	    
+	synchronized public Line2D[] getArcs()
+	{    
 	    ArrayList<Line2D> arcs = new ArrayList<Line2D>();
 
-	    int iArc = 0;
 	    Arc arc;
 	    for(int i=0;i<NB_NOEUDS;i++)
 	        if(noeuds[i].isActif())
     	        for(int j=0;j<nbVoisins[i];j++)
     	        {      
     	            // les arcs de poids infinis sont inexistants.
-    	            if(poids[i][j] != Integer.MAX_VALUE && noeuds[voisins[i][j]].isActif())
+    	            if(poids[i][j] != Integer.MAX_VALUE 
+    	            && noeuds[voisins[i][j]].isActif()
+    	            && voisins[i][j] != 0) // prends pas les arc du point de sorti commun
     	            {
     	                arc = new Arc(noeuds[i], noeuds[voisins[i][j]]);
     	                arcs.add(arc.toLine2D()); 
     	            }
     	        }
 	    
-
 	    Line2D[]tabArcs = new Line2D[arcs.size()];
 	    arcs.toArray(tabArcs);
 	    
@@ -401,16 +433,22 @@ public class Maillage_v2 implements Maillage
      * 
      * @param iNoeudArrive
      */
-    private void contruireArbreDijkstra(int iNoeudArrive)
+    synchronized private void contruireArbreDijkstra()
     {
-        final InfoNoeud[] infoNoeuds = new InfoNoeud[NB_NOEUDS];
-
-        // creation des noeuds d'information
-        for(int i=0;i<NB_NOEUDS;i++)
-            infoNoeuds[i] = new InfoNoeud(i,noeuds[i]);
-
+        if(infoNoeuds == null)
+        {
+            infoNoeuds = new InfoNoeud[NB_NOEUDS];
+            
+            // creation des noeuds d'information
+            for(int i=0;i<NB_NOEUDS;i++)
+                infoNoeuds[i] = new InfoNoeud(i,noeuds[i]);
+        }
+        else
+            for(int i=0;i<NB_NOEUDS;i++)
+                infoNoeuds[i].reset();
+                
         // Sommet de départ à zéro
-        infoNoeuds[iNoeudArrive].distArrivee = 0;
+        infoNoeuds[0].distArrivee = 0;
         
         // Pour chaque noeuds
         for (int i = 0; i < NB_NOEUDS; i++)
@@ -423,13 +461,13 @@ public class Maillage_v2 implements Maillage
                 if(next != -1)
                 {
                     // Traitement du noeud
-                    infoNoeuds[next].visited = true;
-        
+                    infoNoeuds[next].visite = true;
+
                     // Pour tous les voisins du noeud
                     for (int j = 0; j < nbVoisins[next]; j++)
                     {
-                        if(noeuds[j].isActif())
-                        { 
+                        if(noeuds[voisins[next][j]].isActif())
+                        {
                             final int iVoisin = voisins[next][j];
                             final int distArrivee = infoNoeuds[next].distArrivee + poids[next][j];
                             if (infoNoeuds[iVoisin].distArrivee > distArrivee)
@@ -443,14 +481,15 @@ public class Maillage_v2 implements Maillage
             }
         }
 
-        this.infoNoeuds = infoNoeuds; // (ignore pred[s]==0!)
+        //this.infoNoeuds = infoNoeuds; // (ignore pred[s]==0!)
     }
    
     /**
-     * Retour l'indice du noeud le dont la distance est la plus faible. 
+     * Retour l'indice du noeud non visité dont la distance est la plus faible avec
+     * l'arrivée. 
      * 
      * @param dist les distances depuis le noeud de départ
-     * @param visited les noeuds visités
+     * @param visite les noeuds visités
      * @return l'indice du noeud le dont la distance est la plus faible.
      *          ou -1 s'il n'y en a pas
      */
@@ -460,19 +499,19 @@ public class Maillage_v2 implements Maillage
         int y = -1; // graph not connected, or no unvisited vertices
         
         // Pour chaque noeuds
-        for (int i = 0; i < infoNoeuds.length; i++)
+        for (int i = 0; i < NB_NOEUDS; i++)
         {
             if(noeuds[i].isActif())
             {
                 // Si pas visité et la distance est plus faible 
-                if (!infoNoeuds[i].visited && infoNoeuds[i].distArrivee < x)
+                if (!infoNoeuds[i].visite && infoNoeuds[i].distArrivee < x)
                 {
                     y = i;
                     x = infoNoeuds[i].distArrivee;
                 }
             }
         }
-        
+ 
         return y;
     }
 
@@ -489,13 +528,20 @@ public class Maillage_v2 implements Maillage
         Noeud noeud;
         int distArrivee = Integer.MAX_VALUE;
         int pred = -1;
-        boolean visited = false;
-        int[] voisins;
+        boolean visite = false;
         
         public InfoNoeud(int id,Noeud noeud)
         {
             this.id     = id;
             this.noeud  = noeud;
         }
+        
+        public void reset()
+        {
+            distArrivee = Integer.MAX_VALUE;
+            pred = -1;
+            visite = false;
+        }
+        
     }
 }
