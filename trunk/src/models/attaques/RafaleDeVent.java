@@ -101,6 +101,9 @@ public class RafaleDeVent extends Attaque
                 // pourcentage de transparence
                 alpha = (float) (1.f - distanceDeLaSource / MAX_DISTANCE);
                 
+                if(alpha < 0.0)
+                    alpha = 0.0f;
+                
                 // calcul
                 x = (int) (Math.cos(ANGLE) * distanceDeLaSource + attaquant.getCenterX()); // x
                 y = (int) (Math.sin(ANGLE) * distanceDeLaSource + attaquant.getCenterY()); // y

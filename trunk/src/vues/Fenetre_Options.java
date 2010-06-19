@@ -121,6 +121,10 @@ public class Fenetre_Options extends JFrame implements ActionListener
         
         JPanel pBoutons = new JPanel();
         pBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        
+        //GestionnaireDesPolices.setStyle(bValider);
+        //GestionnaireDesPolices.setStyle(bFermer);
+        
         pBoutons.add(bValider);
         pBoutons.add(bFermer);
         add(pBoutons,BorderLayout.SOUTH);

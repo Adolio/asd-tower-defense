@@ -239,6 +239,12 @@ public abstract class Terrain implements Serializable
         }
     }
     
+    public void reinitialiser()
+    {
+        initialiser();
+    }
+    
+    
     // ------------------------------
     // -- GETTER / SETTER BASIQUES --
     // ------------------------------
@@ -743,28 +749,6 @@ public abstract class Terrain implements Serializable
             GestionnaireSons.arreterTousLesSons(fichierMusiqueDAmbiance);
     }
 
-    // -----------
-    // -- PAUSE --
-    // -----------
-    
-    /**
-     * Permet de mettre les créatures en pause.
-     */
-    public void mettreEnPause()
-    {
-        if(vagueCourante != null)
-            vagueCourante.mettreEnPause();
-    }
-    
-    /**
-     * Permet de sortir les créatures de la pause.
-     */
-    public void sortirDeLaPause()
-    { 
-        if(vagueCourante != null)
-            vagueCourante.sortirDeLaPause();
-    }
-    
     /**
      * Permet de sérialisé un Terrain
      * 

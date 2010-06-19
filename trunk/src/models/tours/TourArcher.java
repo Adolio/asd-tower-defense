@@ -32,7 +32,7 @@ public class TourArcher extends Tour
     
     static
     {
-		COULEUR = new Color(128,64,32);
+		COULEUR = new Color(128,0,0);
 		IMAGE 	= Toolkit.getDefaultToolkit().getImage("img/tours/tourArcher.png");
 		ICONE   = Toolkit.getDefaultToolkit().getImage("img/tours/icone_tourArcher.png");
 	}

@@ -39,7 +39,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	// constantes statiques
     private final int MARGES_PANEL = 20;
     private static final long serialVersionUID = 1L;
-    private static final ImageIcon I_RETOUR = new ImageIcon("img/icones/arrow_undo.png");
+    private static final ImageIcon I_REDEMARRER = new ImageIcon("img/icones/arrow_rotate_clockwise.png");
+    private static final ImageIcon I_RETOUR = new ImageIcon("img/icones/application_home.png");
 	private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_REGLES = new ImageIcon("img/icones/script.png");
@@ -56,7 +57,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	//---------------------------
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
 	private final JMenu 	menuFichier 	= new JMenu("Fichier");
-	private final JMenu 	menuEdition 	= new JMenu("Edition");
+	private final JMenu 	menuAffichage 	= new JMenu("Affichage");
 	private final JMenu     menuJeu         = new JMenu("Jeu");
 	private final JMenu     menuSon         = new JMenu("Son");
 	private final JMenu 	menuAide 		= new JMenu("Aide");
@@ -68,14 +69,17 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private final JMenuItem itemActiverDesactiverSon 
 	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem("Activer / Désactiver le mode debug");
+		= new JMenuItem("Maillage");
+	private final JMenuItem itemModeDebug       
+        = new JMenuItem("Mode debug");
 	private final JMenuItem itemAfficherRayonsPortee	    
-		= new JMenuItem("Activer / Désactiver l'affichage des rayons de portée");
+		= new JMenuItem("Rayons de portée");
 	private final JMenuItem itemQuitter	    
 	    = new JMenuItem("Quitter",I_QUITTER);
 	private final JMenuItem itemRetourMenu  
 	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
-	
+	private final JMenuItem itemRedemarrer  
+    = new JMenuItem("Redémarrer la partie",I_REDEMARRER);
 	//----------------------------
 	//-- declaration des panels --
 	//----------------------------
@@ -153,15 +157,17 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		//-- menu principal --
 		//--------------------
 		// menu Fichier
+		menuFichier.add(itemRedemarrer);
 		menuFichier.add(itemRetourMenu);
 		menuFichier.add(itemQuitter);
 		menuPrincipal.add(menuFichier);
 		
 		// menu Edition
 		itemPause.setAccelerator(KeyStroke.getKeyStroke('P'));
-		menuEdition.add(itemAfficherMaillage);
-		menuEdition.add(itemAfficherRayonsPortee);
-		menuPrincipal.add(menuEdition);
+		menuAffichage.add(itemModeDebug);
+		menuAffichage.add(itemAfficherMaillage);
+		menuAffichage.add(itemAfficherRayonsPortee);
+		menuPrincipal.add(menuAffichage);
 		
 		// menu Jeu
 		menuJeu.add(itemPause);
@@ -177,9 +183,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		menuPrincipal.add(menuAide);
 		
 		// ajout des ecouteurs
+		itemRedemarrer.addActionListener(this);
 		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
 		itemPause.addActionListener(this);
+		itemModeDebug.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
 		itemAfficherRayonsPortee.addActionListener(this);
 		itemActiverDesactiverSon.addActionListener(this);
@@ -294,6 +302,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		else if(source == itemQuitter)
 			demanderQuitter();
 		
+		else if(source == itemRedemarrer)
+            demanderRedemarrerPartie();
+		
 		// retour au menu principal
 		else if(source == itemRetourMenu)
 		    demanderRetourAuMenuPrincipal();  
@@ -313,6 +324,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 			else
 			    itemAfficherMaillage.setIcon(I_INACTIF);
 		
+		// basculer affichage du maillage
+        else if(source == itemModeDebug)
+            if(panelTerrain.basculerModeDebug())
+                itemModeDebug.setIcon(I_ACTIF);
+            else
+                itemModeDebug.setIcon(I_INACTIF);
+
 		else if(source == itemPause) 
 		    activerDesactiverLaPause();
 
@@ -335,7 +353,26 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		}
 	}
 
-	/**
+	private void demanderRedemarrerPartie()
+    {
+	    if(JOptionPane.showConfirmDialog(this, 
+                "Etes-vous sûr de vouloir arrêter cette partie ?", 
+                "Vraiment redémarrer ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+        {
+            demanderEnregistrementDuScore();
+            
+            //jeu.terminer();
+            //jeu.detruire();
+            
+            jeu.reinitialiser();
+
+            new Fenetre_JeuSolo(jeu);
+            
+            dispose();
+        }
+    }
+
+    /**
 	 * Permet de proposer au joueur s'il veut quitter le programme
 	 */
 	private void demanderQuitter()
