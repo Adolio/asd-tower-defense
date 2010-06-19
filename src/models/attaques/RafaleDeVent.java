@@ -36,7 +36,7 @@ public class RafaleDeVent extends Attaque
     /**
      * distance de la source
      */
-    private int distanceDeLaSource = 0;
+    private double distanceDeLaSource = 0;
     private final double ANGLE;
     private float alpha;
     
@@ -96,7 +96,7 @@ public class RafaleDeVent extends Attaque
             else
             {
                 // la fleche avance
-                distanceDeLaSource += 5;
+                distanceDeLaSource += tempsPasse / 10.0;
  
                 // pourcentage de transparence
                 alpha = (float) (1.f - distanceDeLaSource / MAX_DISTANCE);

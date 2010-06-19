@@ -255,7 +255,7 @@ public class VagueDeCreatures implements Runnable
             // temps d'attente entre chaque creature
             try
             {
-                Thread.sleep(TEMPS_LANCER_ENTRE_CREATURE);
+                Thread.sleep((long)(TEMPS_LANCER_ENTRE_CREATURE / jeu.getCoeffVitesse()));
             } catch (InterruptedException e)
             {
                 e.printStackTrace();

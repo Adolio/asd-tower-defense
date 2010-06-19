@@ -681,7 +681,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
-        
+        else if(ke.getKeyChar() == '+')
+        {
+            jeu.augmenterCoeffVitesse();
+        }
+        else if(ke.getKeyChar() == '-')
+        {
+            jeu.diminuerCoeffVitesse();
+        }
     }
 
     @Override

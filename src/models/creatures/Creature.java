@@ -9,29 +9,27 @@ import models.tours.Tour;
  * Classe de gestion d'une creature.
  * <p>
  * Les creatures sont des bestioles qui attaque le joueur. L'objectif de celles-ci
- * est simple : ce rendre le plus vite possible (chemin le plus court) d'une zone
+ * est simple : se rendre le plus vite possible (chemin le plus court) d'une zone
  * A a un zone B. Si la creature arrive a survivre jusqu'a la zone B, le joueur 
  * perdra une de ses precieuses vies.
  * <p>
  * Il existe deux types de creatures, les volantes et les terriennes. Les volantes
- * ne sont pas affecter par les murs et l'emplacement des tours. Elle volent 
- * simplement de la zone A a la zone B sans suivre un chemin particulier.
+ * ne sont pas affecter par les emplacements des tours. Elle volent 
+ * simplement de la zone A a la zone B en évitant tout de même les murs du terrain.
  * 
  * @author Aurélien Da Campo
- * @version 1.2 | mai 2010
+ * @version 1.3 | juin 2010
  * @since jdk1.6.0_16
  */
 public abstract class Creature extends Rectangle
 {
 	private static final long serialVersionUID = 1L;
 	
-	
 	/**
      * Identificateur unique de la créature
      */
     private int id;
     private static int idCourant = 0;
-	
 	
 	/**
 	 * Permet de stocker sous la forme reelle la position de la creature pour rendre 
@@ -47,7 +45,6 @@ public abstract class Creature extends Rectangle
 	 */
 	public static final int TYPE_TERRIENNE 	= 0;
 	public static final int TYPE_AERIENNE 	= 1;
-
 
 	/**
 	 * Temps avant la suppression de la créature si aucune nouvelle n'est recue.
@@ -144,6 +141,9 @@ public abstract class Creature extends Rectangle
      */
     private boolean invincible = false;
 
+    private final double LARGEUR_MOITIE;
+    private final double HAUTEUR_MOITIE;
+
     
 	/**
 	 * Constructeur de la creature.
@@ -164,6 +164,9 @@ public abstract class Creature extends Rectangle
 					int type, Image image, String nom)
 	{
 		super(x,y,largeur,hauteur);
+		
+		LARGEUR_MOITIE = largeur / 2.0;
+		HAUTEUR_MOITIE = hauteur / 2.0;
 		
 		xReel = x;
 		yReel = y;
@@ -303,7 +306,6 @@ public abstract class Creature extends Rectangle
             this.coeffRalentissement = coeffRalentissement;
     }
     
-	
 	/**
 	 * Permet de recuperer l'image actuelle de la creature
 	 * 
@@ -355,6 +357,7 @@ public abstract class Creature extends Rectangle
 	public void setX(int x)
 	{
 		this.x = x;
+		this.xReel = x;
 	}
 	
 	/**
@@ -365,6 +368,7 @@ public abstract class Creature extends Rectangle
 	public void setY(int y)
 	{
 		this.y = y;
+		this.yReel = y;
 	}
 
 	/**
@@ -394,12 +398,11 @@ public abstract class Creature extends Rectangle
 	/**
 	 * Cette methode est appelee pour dire a la creature d'effectuee des actions
 	 * 
-	 * TODO j'ai du adapter les temps passe lors de l'implémentation des pauses
+	 * @param tempsPasse le temps passé à prendre en considération pour les calculs
 	 */
 	public void action(long tempsPasse)
 	{
 	    // avance la creature
-	    //avancerSurChemin(getTempsAppel());
 	    avancerSurChemin(tempsPasse);
 	    
 	    // la creature est arrivee a destination !
@@ -416,74 +419,72 @@ public abstract class Creature extends Rectangle
 	}
 	
 	/**
-     * Permet de faire avancer le creature sur son chemin.
+     * Permet de faire avancer la creature sur son chemin.
      * 
-     * Celle-ci avance d'un pixel jusqu'au point suivant du chemin puis 
-     * increment alors l'indice courant du chemin.
+     * Celle-ci avance sur le chemin en fonction du temps écoulé.
      * 
      * @param tempsEcoule le temps ecoule depuis le dernier appel
      */
     protected void avancerSurChemin(long tempsEcoule)
     {
-        ArrayList<Point> chemin = getChemin();
-        
         // si la creature a un chemin et que le chemin n'est pas terminee, 
         // elle avance...
         if(chemin != null && indiceCourantChemin < chemin.size())
-        {
-            // recuperation des noeuds
-            Point pPrecedent = chemin.get(indiceCourantChemin-1);
-            Point pSuivant   = chemin.get(indiceCourantChemin);
+        {   
+            // calcul de la distance a parcourir sur le chemin
+            double distanceAParcourir = getVitesseReelle() * ((double) tempsEcoule / 1000.0);
             
-            // TODO [OPTIMISATION] faire des constantes LARGEUR_MOITIE et HAUTEUR_MOITIE
-            // calcul du centre de la creature
-            double centreX = xReel + width / 2.0 ;
-            double centreY = yReel + height / 2.0;
-  
             //---------------------------------------------
             //-- calcul de la position apres deplacement --
             //---------------------------------------------
-            
-            // calcul de l'angle entre la creature et le noeud suivant
-            // /!\ Math.atan2(y,x) /!\
-            angle = Math.atan2(centreY - pSuivant.y,centreX - pSuivant.x);
-
-            // calcul de la distance effectuee
-            double distance = getVitesseReelle() * ((double) tempsEcoule / 1000.0);
-            
-            // calcul la position apres mouvement de la creature
-            xReel -= Math.cos(angle)*distance; // x
-            yReel -= Math.sin(angle)*distance; // y
-
-            // calcul du nouveau centre de la creature
-            centreX = xReel + width / 2.0;
-            centreY = yReel + height / 2.0;
-            
-            //--------------------------
-            //-- calcul des distances --
-            //--------------------------
-            // pour savoir si la creature a depasser le point suivant du chemin
-            
-            // calcul de la distance entre le noeud precedent et suivant
-            double distanceEntre2Noeuds = Point.distance(pSuivant.x, pSuivant.y,
-                                                   pPrecedent.x, pPrecedent.y);
-            
-            // calcul de la distance entre la creature et le noeud precedent
-            double distanceDuNoeudPrecedent = Point.distance(pPrecedent.x, pPrecedent.y,
-                                                             centreX, centreY);
-              
-            //---------------------
-            //-- noeud atteint ? --
-            //---------------------
-            // si la creature a depassee le noeud suivant
-            if(distanceDuNoeudPrecedent >= distanceEntre2Noeuds)
-            { 
-                // il prend la position du noeud suivant
-                xReel = pSuivant.x - width / 2.0;
-                yReel = pSuivant.y - height / 2.0;
+            // tant que la créature n'a pas parcourue toute la distance
+            // qu'elle doit parcourir et que le chemin n'est pas terminé
+            while(distanceAParcourir > 0 && indiceCourantChemin < chemin.size())
+            {
+                // calcul du centre de la creature
+                double centreX = xReel + LARGEUR_MOITIE;
+                double centreY = yReel + HAUTEUR_MOITIE;
                 
-                // on change de noeud suivant
-                indiceCourantChemin++;
+                // recuperation des noeuds
+                Point pSuivant   = chemin.get(indiceCourantChemin);
+            
+                // calcul de l'angle entre la creature et le noeud suivant
+                // /!\ Math.atan2(y,x) /!\
+                angle = Math.atan2(centreY - pSuivant.y,centreX - pSuivant.x);
+     
+                //--------------------------
+                //-- calcul des distances --
+                //--------------------------
+                // pour savoir si la creature a depassée le point suivant du chemin
+                
+                // calcul de la distance entre le noeud precedent et suivant
+                double distanceCreatureNoeudSuivant = Point.distance(
+                        centreX, centreY,
+                        pSuivant.x, pSuivant.y);
+
+                // noeud suivant atteint
+                if(distanceAParcourir >= distanceCreatureNoeudSuivant)
+                {
+                    // il prend la position du noeud suivant
+                    xReel = pSuivant.x - LARGEUR_MOITIE;
+                    yReel = pSuivant.y - HAUTEUR_MOITIE;
+                    
+                    // le prochain noeud devient le noeud suivant
+                    indiceCourantChemin++;
+                    
+                    // diminution de la distance parcouru jusqu'au point
+                    distanceAParcourir -= distanceCreatureNoeudSuivant;
+                }
+                // la créature n'arrive pas jusqu'au noeud suivant
+                else
+                {
+                    // calcul la position apres mouvement de la creature
+                    xReel -= Math.cos(angle)*distanceAParcourir; // x
+                    yReel -= Math.sin(angle)*distanceAParcourir; // y
+                    
+                    // toute la distance a été parcourue
+                    distanceAParcourir = 0;
+                }
             }
             
             // mise a jour des coordonnees entieres
@@ -637,7 +638,6 @@ public abstract class Creature extends Rectangle
         this.angle = angle;
     }
     
-    
     /**
      * Permet de savoir si une creature peut etre blessee.
      * 
@@ -659,29 +659,32 @@ public abstract class Creature extends Rectangle
             || (typeTour == Tour.TYPE_AIR && TYPE == Creature.TYPE_AERIENNE);
     }
 
+    // TODO commenter
     public void setSanteMax(long santeMax)
     {
         this.santeMax = santeMax;
     }
 
+    // TODO commenter
     public void setNbPiecesDOr(int nbPiecesDOr)
     {
         this.nbPiecesDOr = nbPiecesDOr;
     }
 
+    // TODO commenter
     public void setVitesse(double vitesse)
     {
         this.vitesseNormale = vitesse;
     }
 
-    
-    
+    // TODO commenter
     long tempsDerniereMAJ = 0;
     public void misAJour()
     {
         tempsDerniereMAJ = new Date().getTime();   
     }
 
+    // TODO commenter
     public void effacerSiPasMisAJour()
     {
         long maintenant = new Date().getTime(); 
