@@ -90,7 +90,7 @@ public class GestionnaireTours implements Runnable
   
                 // anime l'animation
                 if(tour.estEnJeu())
-                    tour.action(TEMPS_ATTENTE); 
+                    tour.action((long)(TEMPS_ATTENTE*jeu.getCoeffVitesse())); 
             }
           
             // gestion de la pause

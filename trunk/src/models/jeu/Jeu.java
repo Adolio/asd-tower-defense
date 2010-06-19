@@ -17,7 +17,6 @@ import models.tours.*;
  * 
  * Elle utilise des gestionnaires pour gérer ces éléments
  * 
- * 
  * @author Aurelien Da Campo
  * @version 2.1 | mai 2010
  * @since jdk1.6.0_16
@@ -122,17 +121,17 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     protected myTimer timer = new myTimer(1000,null);
 
+    private double coeffVitesse = 0.5;
 
-    
-    
+
     /**
      * Constructeur
      */
     public Jeu()
     {
         gestionnaireTours      = new GestionnaireTours(this);
-        gestionnaireCreatures  = new GestionnaireCreatures();
-        gestionnaireAnimations = new GestionnaireAnimations();
+        gestionnaireCreatures  = new GestionnaireCreatures(this);
+        gestionnaireAnimations = new GestionnaireAnimations(this);
     }
     
     /**
@@ -695,12 +694,14 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return gestionnaireTours.getTours();
     }
 
+    // TODO commenter
     public Vector<Creature> getCreaturesQuiIntersectent(int x, int y,
             int rayon)
     {
         return gestionnaireCreatures.getCreaturesQuiIntersectent(x, y, rayon);
     }
 
+    // TODO commenter
     public void ajouterCreature(Creature creature)
     {
         gestionnaireCreatures.ajouterCreature(creature);
@@ -709,6 +710,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
             edj.creatureAjoutee(creature);
     }
 
+    // TODO commenter
     public void ajouterAnimation(Animation animation)
     {
         gestionnaireAnimations.ajouterAnimation(animation);
@@ -834,12 +836,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return equipes.get(i);
     }
 
-
+    // TODO commenter
     public boolean estInitialise()
     {
         return estInitialise;
     }
     
+    // TODO commenter
     public boolean estDemarre()
     {
         return estDemarre;
@@ -863,7 +866,6 @@ public abstract class Jeu implements EcouteurDeJoueur,
         ++indiceVagueCourante;
     }
 
-
     /**
      * Permet de recuperer le timer
      * 
@@ -874,7 +876,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return timer;
     }
 
-    
+    // TODO commenter
     public void detruire()
     {
         estDetruit = true;
@@ -884,9 +886,36 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireAnimations.detruire();
     }
     
+    // TODO commenter
     public boolean estDetruit()
     {
         return estDetruit;
     }
-    
+
+    // TODO commenter
+    public double getCoeffVitesse()
+    {
+        return coeffVitesse;
+    }
+
+    // TODO commenter
+    private final double ETAPE_COEFF_VITESSE = 0.5;
+    synchronized public void augmenterCoeffVitesse()
+    {
+        // TODO LIMITER
+        coeffVitesse += ETAPE_COEFF_VITESSE;
+        
+        // TODO A EFFACER
+        System.out.println("Coefficient de vitesse : "+coeffVitesse);
+    }
+
+    // TODO commenter
+    synchronized public void diminuerCoeffVitesse()
+    {
+        if(coeffVitesse-ETAPE_COEFF_VITESSE > 0)
+            coeffVitesse -= ETAPE_COEFF_VITESSE;
+        
+        // TODO A EFFACER
+        System.out.println("Coefficient de vitesse : "+coeffVitesse);
+    }
 }

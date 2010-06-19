@@ -26,7 +26,7 @@ public class BouleDeFeu extends Attaque
     /**
      * distance entre la tete de la fleche et la tour
      */
-    private int distanceCentreBoule = 0;
+    private double distanceCentreBoule = 0;
     
     /**
      * position de la tete de la fleche
@@ -86,7 +86,7 @@ public class BouleDeFeu extends Attaque
         if(!estTerminee)
         {      
             // la fleche avance
-            distanceCentreBoule += 5;
+            distanceCentreBoule += tempsPasse / 10.0;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();

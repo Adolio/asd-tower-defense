@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import models.jeu.Jeu;
+
 /**
  * Classe d'encapsulation des tours.
  * 
@@ -27,11 +29,16 @@ public class GestionnaireCreatures implements Runnable
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();
+    private Jeu jeu;
 
+    
     /**
      * Constructeur du gestionnaire des creatures
      */
-    public GestionnaireCreatures(){}
+    public GestionnaireCreatures(Jeu jeu)
+    {
+        this.jeu = jeu;
+    }
     
     /**
      * Permet de demarrer la gestion
@@ -90,7 +97,7 @@ public class GestionnaireCreatures implements Runnable
                         creaturesASupprimer.add(creature);
                     else
                         // anime la creature
-                        creature.action(TEMPS_ATTENTE);
+                        creature.action((long)(TEMPS_ATTENTE*jeu.getCoeffVitesse()));
                 }
             }
             catch(NoSuchElementException nse)

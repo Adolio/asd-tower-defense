@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import models.jeu.Jeu;
+
 /**
  * Classe d'encapsulation des animations.
  * 
@@ -26,11 +28,15 @@ public class GestionnaireAnimations implements Runnable
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();
+    private Jeu jeu;
     
     /**
      * Constructeur du gestionnaire des animations
      */
-    public GestionnaireAnimations(){}
+    public GestionnaireAnimations(Jeu jeu)
+    {
+        this.jeu = jeu;
+    }
     
     /**
      * Permet de demarrer la gestion
@@ -130,7 +136,7 @@ public class GestionnaireAnimations implements Runnable
                        animationsASupprimer.add(animation);
                    else
                        // anime l'animation
-                       animation.animer(TEMPS_ATTENTE);
+                       animation.animer((long)(TEMPS_ATTENTE*jeu.getCoeffVitesse()));
                }
            }
            catch(NoSuchElementException nse)

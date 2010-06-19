@@ -27,6 +27,8 @@ public class Fleche extends Attaque
     private static final int LONGUEUR_FLECHE   = 10;
     private static final Color COULEUR_FLECHE  = new Color(128,0,0);
     public static final File FICHIER_SON_ARC   = new File("snd/fleche.mp3");
+    
+    
     //private static final int MAX_SONS_ARC      = 3;
     
     // attributs membres
@@ -136,7 +138,8 @@ public class Fleche extends Attaque
         if(!estTerminee)
         {    
             // la fleche avance
-            distanceTeteTour += 5;
+            // TODO vitesse
+            distanceTeteTour += tempsPasse / 10.0;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();

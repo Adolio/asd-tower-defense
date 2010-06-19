@@ -29,7 +29,7 @@ public class BouletDeCanon extends Attaque
     /**
      * distance entre la tete de la fleche et la tour
      */
-    private int distanceCentreBoulet = 0;
+    private double distanceCentreBoulet = 0;
     
     /**
      * position de la tete de la fleche
@@ -97,7 +97,7 @@ public class BouletDeCanon extends Attaque
         if(!estTerminee)
         {
             // la fleche avance
-            distanceCentreBoulet += 5;
+            distanceCentreBoulet += tempsPasse / 10.0;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();
