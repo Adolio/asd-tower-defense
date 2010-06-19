@@ -35,6 +35,11 @@ public abstract class Jeu implements EcouteurDeJoueur,
     private static final String VERSION 
         = "ASD - Tower Defense v2.0 (beta) | juin 2010 | heig-vd";
 
+    // TODO commenter
+    public static final int MODE_POSITIONNNEMENT_CENTRE = 0;
+    public static final int MODE_POSITIONNNEMENT_ALETOIRE = 1;
+    private static final int MODE_DE_POSITIONNEMENT = MODE_POSITIONNNEMENT_ALETOIRE;
+
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
 	 * - Les tours
@@ -121,8 +126,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     protected myTimer timer = new myTimer(1000,null);
 
-    private double coeffVitesse = 0.5;
-
+    // TODO commenter
+    private double coeffVitesse = 1.0;
 
     /**
      * Constructeur
@@ -151,6 +156,15 @@ public abstract class Jeu implements EcouteurDeJoueur,
         //if(joueur != null)
         //    setJoueurPrincipal(joueur);
         
+        // attributs
+        indiceVagueCourante = 1;
+        enPause             = false;
+        estDemarre          = false;
+        estTermine          = false;
+        estDetruit          = false;
+        vagueCourante       = null;
+        coeffVitesse        = 1.0;
+        
         // initialisation des valeurs par defaut
         for(Equipe equipe : equipes)
         {
@@ -159,13 +173,57 @@ public abstract class Jeu implements EcouteurDeJoueur,
             
             // initialisation des pieces d'or des joueurs
             for(Joueur j : equipe.getJoueurs())
+            {
+                j.setScore(0);
                 j.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
+            }
         }  
         
         estInitialise = true;
         
         if(edj != null)
             edj.partieInitialisee();
+    }
+    
+    public void reinitialiser()
+    {
+        terrain.arreterMusiqueDAmbiance();
+        
+        // réinitialisation du terrain
+        terrain.reinitialiser();
+        
+        estInitialise = false;
+        estDemarre = false;
+        
+        initialiser();
+        
+        
+        // arret des gestionnaires
+        gestionnaireTours.arreterTours();
+        gestionnaireCreatures.arreterCreatures();
+        gestionnaireAnimations.arreterAnimations();
+        
+        gestionnaireTours = new GestionnaireTours(this);
+        gestionnaireCreatures = new GestionnaireCreatures(this);
+        gestionnaireAnimations = new GestionnaireAnimations(this);
+        
+        
+        
+        // ajout de tous les joueurs
+        for(Equipe e : equipes)
+        {
+            e.setNbViesRestantes(terrain.getNbViesInitiales());
+            
+            for(Joueur j : e.getJoueurs())    
+            {
+                j.setNbPiecesDOr(terrain.getNbPiecesOrInitiales());
+                j.setScore(0);
+            }
+        }
+        
+        // arret du timer
+        timer.stop();
+        timer = new myTimer(1000,null);
     }
 
     /**
@@ -204,7 +262,16 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void lancerVague(Joueur joueur, Equipe cible, VagueDeCreatures vague) throws ArgentInsuffisantException
     { 
-        vague.lancerVague(this, joueur, cible, this, this);
+        // FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        gestionnaireCreatures.lancerVague(vague, joueur, cible, this, this);
+        
+        
+        
+        
+        
+        
+        
+        //vague.lancerVague(this, joueur, cible, this, this);
     }
     
     /**
@@ -325,7 +392,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
         
 	    passerALaProchaineVague();
 	    
-        vagueCourante.lancerVague(this, joueur, cible, this, this);
+	    gestionnaireCreatures.lancerVague(vagueCourante, joueur, cible, this, this);
 	}
 	
 	/**
@@ -446,7 +513,6 @@ public abstract class Jeu implements EcouteurDeJoueur,
             gestionnaireTours.sortirDeLaPause();
             gestionnaireCreatures.sortirDeLaPause();
             gestionnaireAnimations.sortirDeLaPause();
-            terrain.sortirDeLaPause();
             timer.play();
         }
         else
@@ -454,7 +520,6 @@ public abstract class Jeu implements EcouteurDeJoueur,
             gestionnaireTours.mettreEnPause();
             gestionnaireCreatures.mettreEnPause();
             gestionnaireAnimations.mettreEnPause();
-            terrain.mettreEnPause();
             timer.pause();
         }
         
@@ -702,10 +767,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
     }
 
     // TODO commenter
-    public void ajouterCreature(Creature creature)
+    public void creatureAjoutee(Creature creature)
     {
-        gestionnaireCreatures.ajouterCreature(creature);
-        
         if(edj != null)
             edj.creatureAjoutee(creature);
     }
@@ -917,5 +980,15 @@ public abstract class Jeu implements EcouteurDeJoueur,
         
         // TODO A EFFACER
         System.out.println("Coefficient de vitesse : "+coeffVitesse);
+    }
+    
+    public void lancerVagueDeCreatures(VagueDeCreatures vagueDeCreatures)
+    {
+        
+    }
+
+    public int getModeDePositionnnementDesCreatures()
+    {
+        return MODE_DE_POSITIONNEMENT;
     }
 }

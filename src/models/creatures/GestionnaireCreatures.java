@@ -8,6 +8,10 @@ import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import models.jeu.Jeu;
+import models.joueurs.Equipe;
+import models.joueurs.GestionnaireDeRevenu;
+import models.joueurs.Joueur;
+import models.maillage.PathNotFoundException;
 
 /**
  * Classe d'encapsulation des tours.
@@ -160,7 +164,7 @@ public class GestionnaireCreatures implements Runnable
         synchronized (pause)
         {
             enPause = false;
-            pause.notify(); 
+            pause.notifyAll();
         }
     }
 
@@ -263,4 +267,111 @@ public class GestionnaireCreatures implements Runnable
         
         creatures.clear();
     }
+    
+    
+    /**
+     * Permet de lancer la vague de creature sur le terrain
+     * 
+     * @param terrain le terrain en question
+     * @param edc l'ecouteur de creature fourni a chaque creature creee
+     */
+    public void lancerVague(final VagueDeCreatures vague,
+                            final Joueur lanceur,
+                            final Equipe equipeCiblee, 
+                            final EcouteurDeVague edv,
+                            final EcouteurDeCreature edc)
+    {
+
+        new Thread(
+        new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // recuperation des zones
+                // TODO pour chaque zone de depart, lancer la vague...
+                final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
+                final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
+
+                int xDepart = (int) ZONE_DEPART.getCenterX();
+                int yDepart = (int) ZONE_DEPART.getCenterY();
+
+                // creation des creatures de la vague
+                for (int i = 0; i < vague.getNbCreatures() && jeu.estDemarre(); i++)
+                {
+                    // gestion de la pause
+                    try
+                    {
+                        synchronized (pause)
+                        {
+                            if(enPause)
+                                pause.wait();
+                        } 
+                    } 
+                    catch (InterruptedException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                      
+                    if(jeu.estDemarre())
+                    {
+                    
+                        // calcul d'une position aleatoire de la creature dans la zone de
+                        // depart
+                       
+                        if (jeu.getModeDePositionnnementDesCreatures() == Jeu.MODE_POSITIONNNEMENT_ALETOIRE)
+                        {
+                            xDepart = (int) (Math.random() * (ZONE_DEPART.getWidth() + 1) + ZONE_DEPART
+                                    .getX());
+                            yDepart = (int) (Math.random() * (ZONE_DEPART.getHeight() + 1) + ZONE_DEPART
+                                    .getY());
+                        }
+            
+                        // creation d'une nouvelle instance de la creature
+                        // et affectation de diverses proprietes
+                        Creature creature = vague.getNouvelleCreature();
+                        creature.setX(xDepart);
+                        creature.setY(yDepart);
+                        creature.setEquipeCiblee(equipeCiblee);
+                        creature.ajouterEcouteurDeCreature(edc);
+            
+                        try
+                        {    
+                            creature.setChemin(jeu.getTerrain().getCheminLePlusCourt(xDepart,
+                                    yDepart, (int) ZONE_ARRIVEE.getCenterX(),
+                                    (int) ZONE_ARRIVEE.getCenterY(), creature.getType()));
+                            
+                        }
+                        catch (PathNotFoundException e1) 
+                        {
+                            // le chemin reste nul.
+                        }
+            
+                        lanceur.ajouterRevenu(creature.getNbPiecesDOr()
+                                *GestionnaireDeRevenu.POURCENTAGE_NB_PIECES_OR_CREATURE);
+                        
+                        ajouterCreature(creature);
+                        jeu.creatureAjoutee(creature);
+            
+                        // temps d'attente entre chaque creature
+                        try
+                        {
+                            Thread.sleep((long)(VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()) / jeu.getCoeffVitesse()));
+                        } catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if (edv != null)
+                    edv.vagueEntierementLancee(vague); 
+            }
+        }).start();
+  
+        
+    }
+
+
+    
 }

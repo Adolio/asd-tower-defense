@@ -354,7 +354,7 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
 		    
 		    if( (int) argentApresAchat >= 0)
 		    {
-		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()), true);
+		        VagueDeCreatures vague = new VagueDeCreatures(nbCreatures, creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()));
 
 		        joueur.setNbPiecesDOr(argentApresAchat);
 	            try

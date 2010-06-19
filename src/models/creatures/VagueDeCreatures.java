@@ -1,12 +1,5 @@
 package models.creatures;
 
-import java.awt.Rectangle;
-import models.jeu.Jeu;
-import models.joueurs.Equipe;
-import models.joueurs.GestionnaireDeRevenu;
-import models.joueurs.Joueur;
-import models.maillage.PathNotFoundException;
-
 /**
  * Structure permettant de stoquer des informations et lancer une vague de
  * creatures.
@@ -18,26 +11,12 @@ import models.maillage.PathNotFoundException;
  * @since jdk1.6.0_16
  * @see Creature
  */
-public class VagueDeCreatures implements Runnable
+public class VagueDeCreatures
 {
     /**
      * le nombre de creatures de la vague
      */
     private final int NB_CREATURES;
-
-    /**
-     * le temps d'attente entre chaque apparition de creature lors du lancement
-     * de la vague.
-     */
-    private final long TEMPS_LANCER_ENTRE_CREATURE;
-
-    /**
-     * position de la creature dans la zone de depart lors du lancement de la
-     * vague.
-     * 
-     * true = aleatoire dans la zone false = au centre de la zone
-     */
-    private final boolean POSITION_DEPART_ALEATOIRE;
 
     /**
      * le type de la creature a envoyer
@@ -48,42 +27,6 @@ public class VagueDeCreatures implements Runnable
      * la description de la vague
      */
     private final String DESCRIPTION;
-
-    /**
-     * thread de gestion du lancement des creature
-     */
-    private Thread thread;
-
-    /**
-     * le terrain su lequel lancer les creatures
-     */
-    private Jeu jeu;
-
-    /**
-     * l'ecouteur de creature a fournir a chaque creature lors du lancement
-     */
-    private EcouteurDeCreature edc;
-
-    /**
-     * l'ecouteur de vague pour informer des evenements de la vague
-     */
-    private EcouteurDeVague edv;
-
-    /**
-     * gestion de la pause lors du lancement d'une vague
-     */
-    private boolean enPause = false;
-    private Object pause = new Object();
-
-    /**
-     * Cible de la vague
-     */
-    private Equipe equipeCiblee;
-
-    /**
-     * Lanceur de la vague
-     */
-    private Joueur lanceur;
     
     /**
      * Constructeur de la vague de creatures
@@ -98,12 +41,9 @@ public class VagueDeCreatures implements Runnable
      * @param description description de la vague
      */
     public VagueDeCreatures(int nbCreatures, Creature creatureAEnvoyer,
-            long tempsLancerEntreCreature, boolean positionDepartAleatoire,
-            String description)
+            long tempsLancerEntreCreature, String description)
     {
         NB_CREATURES = nbCreatures;
-        TEMPS_LANCER_ENTRE_CREATURE = tempsLancerEntreCreature;
-        POSITION_DEPART_ALEATOIRE = positionDepartAleatoire;
         CREATURE_A_ENVOYER = creatureAEnvoyer;
         DESCRIPTION = description;
     }
@@ -120,10 +60,9 @@ public class VagueDeCreatures implements Runnable
      *            aleatoirement dans la zone de depart ou au centre ?
      */
     public VagueDeCreatures(int nbCreatures, Creature creatureAEnvoyer,
-            long tempsLancerEntreCreature, boolean positionDepartAleatoire)
+            long tempsLancerEntreCreature)
     {
-        this(nbCreatures, creatureAEnvoyer, tempsLancerEntreCreature,
-                positionDepartAleatoire, "");
+        this(nbCreatures, creatureAEnvoyer, tempsLancerEntreCreature, "");
     }
 
     /**
@@ -170,123 +109,14 @@ public class VagueDeCreatures implements Runnable
                 + "vitesse : " + CREATURE_A_ENVOYER.getVitesseNormale() + " ]";
     }
 
-    /**
-     * Permet de lancer la vague de creature sur le terrain
-     * 
-     * @param terrain le terrain en question
-     * @param edc l'ecouteur de creature fourni a chaque creature creee
-     */
-    public void lancerVague(Jeu jeu,
-                            Joueur lanceur,
-                            Equipe equipeCiblee, 
-                            EcouteurDeVague edv,
-                            EcouteurDeCreature edc)
-    {
-        this.jeu = jeu;
-        this.edc = edc;
-        this.edv = edv;
-        this.equipeCiblee = equipeCiblee;
-        this.lanceur = lanceur;
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    public void run()
-    {
-        // recuperation des zones
-        // TODO pour chaque zone de depart, lancer la vague...
-        final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
-        final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
-
-        int xDepart = (int) ZONE_DEPART.getCenterX();
-        int yDepart = (int) ZONE_DEPART.getCenterY();
-
-        // creation des creatures de la vague
-        for (int i = 0; i < NB_CREATURES; i++)
-        {
-            // gestion de la pause
-            try
-            {
-                synchronized (pause)
-                {
-                    if(enPause)
-                        pause.wait();
-                } 
-            } 
-            catch (InterruptedException e1)
-            {
-                e1.printStackTrace();
-            }
-              
-            // calcul d'une position aleatoire de la creature dans la zone de
-            // depart
-            if (POSITION_DEPART_ALEATOIRE)
-            {
-                xDepart = (int) (Math.random() * (ZONE_DEPART.getWidth() + 1) + ZONE_DEPART
-                        .getX());
-                yDepart = (int) (Math.random() * (ZONE_DEPART.getHeight() + 1) + ZONE_DEPART
-                        .getY());
-            }
-
-            // creation d'une nouvelle instance de la creature
-            // et affectation de diverses proprietes
-            Creature creature = getNouvelleCreature();
-            creature.setX(xDepart);
-            creature.setY(yDepart);
-            creature.setEquipeCiblee(equipeCiblee);
-            creature.ajouterEcouteurDeCreature(edc);
-
-            try
-            {    
-                creature.setChemin(jeu.getTerrain().getCheminLePlusCourt(xDepart,
-                        yDepart, (int) ZONE_ARRIVEE.getCenterX(),
-                        (int) ZONE_ARRIVEE.getCenterY(), creature.getType()));
-                
-            }
-            catch (PathNotFoundException e1) 
-            {
-                // le chemin reste nul.
-            }
-
-            lanceur.ajouterRevenu(creature.getNbPiecesDOr()
-                    *GestionnaireDeRevenu.POURCENTAGE_NB_PIECES_OR_CREATURE);
-            jeu.ajouterCreature(creature);
-
-            // temps d'attente entre chaque creature
-            try
-            {
-                Thread.sleep((long)(TEMPS_LANCER_ENTRE_CREATURE / jeu.getCoeffVitesse()));
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        if (edv != null)
-            edv.vagueEntierementLancee(this);
-    }
-
-    /**
-     * Permet de modifier l'ecouteur de vague
-     * 
-     * @param edv le nouvel ecouteur de vague
-     */
-    public void setEcouteurDeVague(EcouteurDeVague edv)
-    {
-        this.edv = edv;
-    }
-
     public static final double VITESSE_CREATURE_LENTE = 20.0;
     public static final double VITESSE_CREATURE_RAPIDE = 50.0;
     public static final double VITESSE_CREATURE_NORMALE = 40.0;
-
     public static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
     public static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
     public static final double COEF_SANTE_CREATURE_AERIENNE = 0.8;
     public static final double COEF_SANTE_PRE_BOSS = 4.0;
     public static final double COEF_SANTE_BOSS = 8.0;
-
-    private static final boolean DEPART_ALEATOIRE_CREATURES = true;
 
     /**
      * Permet de generer une vague en fonction de son indice de vague courante
@@ -311,14 +141,12 @@ public class VagueDeCreatures implements Runnable
         case 1: // 5 normales
             return new VagueDeCreatures(5, new Mouton(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
-                    getTempsLancement(VITESSE_CREATURE_NORMALE),
-                    DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 2: // 10 normales
             return new VagueDeCreatures(10, new Araignee(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
-                    getTempsLancement(VITESSE_CREATURE_NORMALE),
-                    DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 3: // 10 volantes
             return new VagueDeCreatures(
@@ -326,8 +154,7 @@ public class VagueDeCreatures implements Runnable
                     new Aigle(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
-                    getTempsLancement(VITESSE_CREATURE_NORMALE),
-                    DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 4: // 10 resistantes
             return new VagueDeCreatures(
@@ -335,8 +162,7 @@ public class VagueDeCreatures implements Runnable
                     new Rhinoceros(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_LENTE),
-                            getTempsLancement(VITESSE_CREATURE_LENTE), 
-                            DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_LENTE));
 
         case 5: // 10 rapides
             return new VagueDeCreatures(
@@ -344,14 +170,12 @@ public class VagueDeCreatures implements Runnable
                     new Mouton(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
                             (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_RAPIDE),
-                            getTempsLancement(VITESSE_CREATURE_RAPIDE),
-                    DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_RAPIDE));
 
         case 6: // 15 normales
             return new VagueDeCreatures(15, new Mouton(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
-                    getTempsLancement(VITESSE_CREATURE_NORMALE),
-                    DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 7: // 15 resistantes
             return new VagueDeCreatures(
@@ -359,8 +183,7 @@ public class VagueDeCreatures implements Runnable
                     new Elephant(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
                             (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_LENTE),
-                            getTempsLancement(VITESSE_CREATURE_LENTE), 
-                            DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_LENTE));
 
         case 8: // 30 volantes
             return new VagueDeCreatures(
@@ -368,20 +191,19 @@ public class VagueDeCreatures implements Runnable
                     new Pigeon(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
                             (int) (GAIN_VAGUE_COURANTE / 30), VITESSE_CREATURE_NORMALE),
-                            getTempsLancement(VITESSE_CREATURE_NORMALE),
-                    DEPART_ALEATOIRE_CREATURES);
+                            getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 9: // 3 pre-boss
             return new VagueDeCreatures(3, new Araignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_PRE_BOSS),
                     (int) (GAIN_VAGUE_COURANTE / 3), VITESSE_CREATURE_LENTE),
-                    getTempsLancement(VITESSE_CREATURE_LENTE), DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_LENTE));
 
         default: // boss
             return new VagueDeCreatures(1, new GrandeAraignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_BOSS),
                     (int) GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
-                    getTempsLancement(VITESSE_CREATURE_LENTE), DEPART_ALEATOIRE_CREATURES);
+                    getTempsLancement(VITESSE_CREATURE_LENTE));
         }
     }
 
@@ -423,25 +245,5 @@ public class VagueDeCreatures implements Runnable
     private static long fGainVague(long santeCreature)
     {
         return (long) (0.08 * santeCreature) + 30;
-    }
-    
-    /**
-     * Permet de mettre le lancement des créatures en pause.
-     */
-    public void mettreEnPause()
-    {
-        enPause = true;
-    }
-    
-    /**
-     * Permet de sortir le lancement des créatures de la pause.
-     */
-    public void sortirDeLaPause()
-    { 
-        synchronized (pause)
-        {
-            enPause = false;
-            pause.notify(); 
-        }
     }
 }

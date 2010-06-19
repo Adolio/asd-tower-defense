@@ -295,6 +295,9 @@ public class Maillage_v2 implements Maillage
             in = pred;
         }  
         
+        if(ps.size() == 1)
+            throw new PathNotFoundException("Le chemin n'existe pas!");
+        
         // efface le point de sortie commun
         ps.remove(ps.size()-1);
         
@@ -341,6 +344,7 @@ public class Maillage_v2 implements Maillage
 			throws IllegalArgumentException
 	{ 
 	    Noeud n;
+	    int min = Integer.MAX_VALUE;
 	    // on touche pas au noeud de sorti
 	    for(int i=1;i<NB_NOEUDS;i++)
 	    {
@@ -349,6 +353,12 @@ public class Maillage_v2 implements Maillage
 	        if(rectangle.contains(n))
 	        {
 	            n.setActif(false);
+	            
+	            
+	            // TODO test
+	            //if(infoNoeuds[i].distArrivee < min)
+	            //    min = infoNoeuds[i].distArrivee;
+	            
 	            
 	            //System.out.println("noeud ["+n.x+","+n.y+"] désactivé");
 	            
@@ -364,6 +374,12 @@ public class Maillage_v2 implements Maillage
 	    
 	    if(miseAJour)
 	        contruireArbreDijkstra();
+	        
+	    
+	    // TODO test
+	    //if(miseAJour)
+	    //    contruireArbreDijkstraOptimise(min);
+	    
 	}
 
 	@Override
@@ -483,6 +499,84 @@ public class Maillage_v2 implements Maillage
 
         //this.infoNoeuds = infoNoeuds; // (ignore pred[s]==0!)
     }
+    
+    
+    
+    
+    
+    /**
+     * Dijkstra's algorithm to find shortest path from iNoeudArrive 
+     * to all other nodes
+     * 
+     * @param iNoeudArrive
+     */
+    synchronized private void contruireArbreDijkstraOptimise(int poidsMin)
+    {
+        if(infoNoeuds == null)
+        {
+            infoNoeuds = new InfoNoeud[NB_NOEUDS];
+            
+            // creation des noeuds d'information
+            for(int i=0;i<NB_NOEUDS;i++)
+                infoNoeuds[i] = new InfoNoeud(i,noeuds[i]);
+        }
+        else
+            for(int i=0;i<NB_NOEUDS;i++)
+            {
+                if(infoNoeuds[i].distArrivee < poidsMin)
+                {
+                    // Les noeuds avant gardent les mêmes prédécésseurs
+                    // et sont déjà traités
+                    infoNoeuds[i].visite = true;
+                }
+                else
+                {
+                    infoNoeuds[i].distArrivee = Integer.MAX_VALUE;
+                    //infoNoeuds[i].pred = -1;
+                    infoNoeuds[i].visite = false;
+                }
+            }
+                
+                
+        // Sommet de départ à zéro
+        infoNoeuds[0].distArrivee = 0;
+        
+        // Pour chaque noeuds
+        for (int i = 0; i < NB_NOEUDS; i++)
+        {
+            if(noeuds[i].isActif())
+            {
+                // Cherche le noeud suivant à traiter
+                final int next = minVertex(infoNoeuds);
+                
+                if(next != -1)
+                {
+                    // Traitement du noeud
+                    infoNoeuds[next].visite = true;
+
+                    // Pour tous les voisins du noeud
+                    for (int j = 0; j < nbVoisins[next]; j++)
+                    {
+                        if(noeuds[voisins[next][j]].isActif())
+                        {
+                            final int iVoisin = voisins[next][j];
+                            final int distArrivee = infoNoeuds[next].distArrivee + poids[next][j];
+                            if (infoNoeuds[iVoisin].distArrivee > distArrivee)
+                            {
+                                infoNoeuds[iVoisin].distArrivee = distArrivee;
+                                infoNoeuds[iVoisin].pred = next;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //this.infoNoeuds = infoNoeuds; // (ignore pred[s]==0!)
+    }
+    
+    
+    
    
     /**
      * Retour l'indice du noeud non visité dont la distance est la plus faible avec

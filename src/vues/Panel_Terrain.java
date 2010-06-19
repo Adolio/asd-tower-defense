@@ -5,9 +5,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
-
 import javax.swing.*;
-
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -15,7 +13,6 @@ import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.maillage.Noeud;
 import models.maillage.PathNotFoundException;
-import models.outils.Outils;
 import models.tours.Tour;
 
 /**
@@ -210,6 +207,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Reference vers la fenetre parent
 	 */
 	private EcouteurDePanelTerrain edpt;
+
+	
+	// TODO commenter
+	private boolean modeDebug;
 	
 	/**
 	 * Permet d'afficher ou non les elements invisible (maillage, chemins, etc.)
@@ -253,6 +254,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
     private boolean toucheBasPressee;
 
     private boolean toucheDroitePressee;
+
+   
 	
 	// curseurs
 	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
@@ -390,6 +393,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
         return afficherRayonsDePortee = !afficherRayonsDePortee;
     }
     
+    // TODO commenter
+    public boolean basculerModeDebug()
+    {
+        return modeDebug = !modeDebug;
+    }
+    
     /**
      * Permet d'activer / désactiver le mode d'affichage des zones des joueurs 
      */
@@ -402,7 +411,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	public void paintComponent(Graphics g)
 	{
 	    Graphics2D g2 = (Graphics2D) g;
- 
+
+	    /** Désactivation de l'anti-aliasing */
+	    /*
+	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+	    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+	    */
+	    /** Demande de rendu rapide */
+	    /*
+	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+	    g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
+	    g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+	    g2.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
+	    */
+	    
         if(toucheHautPressee)
             decaleY += DECALAGE_CLAVIER;
         if(toucheGauchePressee)
@@ -449,7 +471,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
-		if(afficherMaillage)
+		if(modeDebug)
 		{
 		    // couleur de fond
             g2.setColor(jeu.getTerrain().getCouleurDeFond());
@@ -476,6 +498,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			for(Rectangle mur : murs)
 			    dessinerZone(mur,g2);
 			
+			setTransparence(1.f, g2);
 		}
 		
 		//-------------------------------------------------
@@ -524,7 +547,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		    // modification de la transparence
 		    setTransparence(ALPHA_MAILLAGE, g2);
 			
-		    
 		    // recuperation de la liste des arcs actifs
 			Line2D[] arcsActifs = jeu.getTerrain().getArcsActifs();
 			
@@ -536,9 +558,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 					g2.drawLine((int)arc.getX1(),(int)arc.getY1(),
 							    (int)arc.getX2(),(int)arc.getY2());
 			}
-			
-			
-			
+	
 			for(Noeud n : jeu.getTerrain().getNoeuds())
 			{
 			    if(n.isActif())
@@ -546,9 +566,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			    else
 			        g2.setColor(Color.RED);
 			    
-			    g2.fillOval(n.x-2, n.y-2, 4, 4);
+			    g2.fillOval(n.x-1, n.y-1, 2, 2);
 			}
-			    
+			  
+			
 			
 			try
             {
@@ -561,10 +582,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	            
             } 
 			catch (IllegalArgumentException e) {}
-
+			
 			// reinitialisation de la transparence
-			setTransparence(1.f, g2);
+	        setTransparence(1.f, g2);
 		}
+		
+		
 		
 		//----------------------------------------
 		//-- affichage des creatures terrestres --
@@ -699,30 +722,21 @@ public class Panel_Terrain extends JPanel implements Runnable,
         {
             chemin = jeu.getTerrain().getCheminLePlusCourt(x, y, 0, 0, 0);
             
-            if(chemin.size() > 0)
+            Point pPrec = chemin.get(0);
+            for(int i=1;i<chemin.size();i++)
             {
-                Point pPrec = chemin.get(0);
-                for(int i=1;i<chemin.size();i++)
-                {
-                    Point p =  chemin.get(i);
+                Point p =  chemin.get(i);
 
-                    g2.drawLine((int) pPrec.x, 
-                            (int) pPrec.y, 
-                            (int) p.x, 
-                            (int) p.y);
-                    
-                    pPrec = p; 
-                }
+                g2.drawLine((int) pPrec.x, 
+                        (int) pPrec.y, 
+                        (int) p.x, 
+                        (int) p.y);
+                
+                pPrec = p; 
             }
-            /*else
-                System.out.println("Pas de chemin");*/
         } 
-        catch (IllegalArgumentException e){
-            e.printStackTrace();
-        } 
-        catch (PathNotFoundException e){
-            e.printStackTrace();
-        }
+        catch (IllegalArgumentException e){} 
+        catch (PathNotFoundException e){}
     }
 	
 
@@ -855,7 +869,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 							  final boolean avecPortee)
 	{
 		// dessin de l'image
-		if(tour.getImage() != null)
+		if(!modeDebug && tour.getImage() != null)
 		{
 		    AffineTransform tx = new AffineTransform();
 	        tx.translate(tour.getCenterX(), tour.getCenterY());
@@ -868,7 +882,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		else
 		{	 
 			g2.setColor(tour.getCouleurDeFond());
-			g2.fillRect(tour.getXi(), tour.getYi(), 
+			g2.fillOval(tour.getXi(), tour.getYi(), 
 				(int)tour.getWidth(), 
 				(int)tour.getHeight());
 		}

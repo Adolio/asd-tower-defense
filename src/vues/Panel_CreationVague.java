@@ -107,7 +107,7 @@ public class Panel_CreationVague extends JPanel
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    VagueDeCreatures vague = new VagueDeCreatures(Integer.parseInt((String) cbNbCreatures.getSelectedItem()), creature, 500, true);
+                    VagueDeCreatures vague = new VagueDeCreatures(Integer.parseInt((String) cbNbCreatures.getSelectedItem()), creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()));
                     
                     try
                     {
