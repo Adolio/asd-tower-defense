@@ -2,6 +2,6 @@
 
 = Nouvelles fonctionnalités =
 
-- bla bla bla 
-- bla bla bla 
-- bla bla bla 
+- bla bla bla <br/>
+- bla bla bla <br/>
+- bla bla bla <br/>
