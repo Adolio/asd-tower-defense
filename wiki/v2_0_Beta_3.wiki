@@ -1,4 +1,4 @@
-#summary Nouvelles fonctionnalités de la version.
+#summary Nouvelles fonctionnalités de la version. [Bientôt disponible]
 
 = Les nouvelles fonctionnalités [Bientôt disponible] =
 
