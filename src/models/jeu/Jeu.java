@@ -33,7 +33,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	 * version du jeu
 	 */
     private static final String VERSION 
-        = "ASD - Tower Defense v2.0 (beta) | juin 2010 | heig-vd";
+        = "ASD - Tower Defense v2.0 (beta 3) | juin 2010 | heig-vd";
 
     // TODO commenter
     public static final int MODE_POSITIONNNEMENT_CENTRE = 0;
@@ -968,8 +968,8 @@ public abstract class Jeu implements EcouteurDeJoueur,
         // TODO LIMITER
         coeffVitesse += ETAPE_COEFF_VITESSE;
         
-        // TODO A EFFACER
-        System.out.println("Coefficient de vitesse : "+coeffVitesse);
+        if(edj != null)
+            edj.coeffVitesseModifie(coeffVitesse);
     }
 
     // TODO commenter
@@ -978,17 +978,25 @@ public abstract class Jeu implements EcouteurDeJoueur,
         if(coeffVitesse-ETAPE_COEFF_VITESSE > 0)
             coeffVitesse -= ETAPE_COEFF_VITESSE;
         
-        // TODO A EFFACER
-        System.out.println("Coefficient de vitesse : "+coeffVitesse);
+        if(edj != null)
+            edj.coeffVitesseModifie(coeffVitesse);
+    }
+    
+    public void setCoeffVitesse(double value)
+    {
+        // TODO LIMITER
+        coeffVitesse = value;
+        
+        if(edj != null)
+            edj.coeffVitesseModifie(coeffVitesse);
     }
     
     public void lancerVagueDeCreatures(VagueDeCreatures vagueDeCreatures)
-    {
-        
-    }
+    {}
 
     public int getModeDePositionnnementDesCreatures()
     {
         return MODE_DE_POSITIONNEMENT;
     }
+
 }

@@ -706,4 +706,10 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
     {
         envoyerATous(Protocole.construireMsgEquipeAPerdue(equipe.getId()));
     }
+
+    @Override
+    public void coeffVitesseModifie(double coeffVitesse)
+    {
+        // NOP
+    }
 }
