@@ -1,7 +1,13 @@
 #summary Nouvelles fonctionnalités de la version.
 
+Bientot disponible...
+
+
 = Les nouvelles fonctionnalités =
 
-- bla bla bla <br/>
-- bla bla bla <br/>
-- bla bla bla <br/>
+- Mode plein écran (gestion de la maximisation de la fenêtre) <br/>
+- Gestion de la vitesse du jeu (le jeu peut être accéléré) <br/>
+- Ajout de quelques fonctionnalités disponibles depuis l'interface <br/>
+- Maillage v2.0 basé sur un arbre des plus courts chemins (en test car moins efficace dans certains cas, pas encore assez optimisé) <br/>
+- Fenêtre d'options <br/>
+- Mode de déplacement du terrain avec W-A-S-D <br/>
