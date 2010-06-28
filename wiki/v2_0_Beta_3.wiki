@@ -1,0 +1,7 @@
+#summary Nouvelles fonctionnalités de la version.
+
+= Les nouvelles fonctionnalités =
+
+- bla bla bla <br/>
+- bla bla bla <br/>
+- bla bla bla <br/>
