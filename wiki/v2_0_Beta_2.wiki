@@ -2,6 +2,5 @@
 
 = Les nouvelles fonctionnalités =
 
-- bla bla bla <br/>
-- bla bla bla <br/>
-- bla bla bla <br/>
+- Correction de quelques petits bugs <br/>
+- Meilleure présentation dans l'archive <br/>
