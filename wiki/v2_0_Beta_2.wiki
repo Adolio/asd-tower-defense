@@ -1,6 +1,6 @@
 #summary Nouvelles fonctionnalités de la version.
 
-= Nouvelles fonctionnalités =
+= Les nouvelles fonctionnalités =
 
 - bla bla bla <br/>
 - bla bla bla <br/>
