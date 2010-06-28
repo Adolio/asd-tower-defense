@@ -169,8 +169,7 @@ public class Maillage_v2 implements Maillage
             
             distance = cible.distance(n);
             
-            // TODO CHECK
-            if(distance < distMax /*&& n.isActif()*/)
+            if(distance < distMax)
             {
                 iNoeudLePlusProche = i;
                 distMax = distance;
@@ -183,10 +182,18 @@ public class Maillage_v2 implements Maillage
     synchronized private void construireGraphe()
     {
 	    // allocation mémoire
-	    noeuds = new Noeud[NB_NOEUDS];   
-	    nbVoisins = new int[NB_NOEUDS];
-        voisins = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
-        poids = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
+	    noeuds     = new Noeud[NB_NOEUDS];   
+	    nbVoisins  = new int[NB_NOEUDS];
+        voisins    = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
+        poids      = new int[NB_NOEUDS][NB_VOISINS_MAX_PAR_NOEUD];
+        
+        // FIXME creer des tableaux plutot que des noeuds
+        //x          = new int[NB_NOEUDS];
+        //y          = new int[NB_NOEUDS];
+        //pred       = new int[NB_NOEUDS];
+        //dist       = new int[NB_NOEUDS];
+        //actif      = new int[NB_NOEUDS];
+        //visite     = new int[NB_NOEUDS];
         
         // par defaut, pas de voisins
         for(int i=0;i<NB_NOEUDS;i++)
@@ -355,7 +362,7 @@ public class Maillage_v2 implements Maillage
 	            n.setActif(false);
 	            
 	            
-	            // TODO test
+	            // TODO test optimisation
 	            //if(infoNoeuds[i].distArrivee < min)
 	            //    min = infoNoeuds[i].distArrivee;
 	            
@@ -376,7 +383,7 @@ public class Maillage_v2 implements Maillage
 	        contruireArbreDijkstra();
 	        
 	    
-	    // TODO test
+	    // TODO test optimisation
 	    //if(miseAJour)
 	    //    contruireArbreDijkstraOptimise(min);
 	    
@@ -523,7 +530,7 @@ public class Maillage_v2 implements Maillage
         else
             for(int i=0;i<NB_NOEUDS;i++)
             {
-                if(infoNoeuds[i].distArrivee < poidsMin)
+                if(infoNoeuds[i].distArrivee < poidsMin-15)
                 {
                     // Les noeuds avant gardent les mêmes prédécésseurs
                     // et sont déjà traités
@@ -531,7 +538,9 @@ public class Maillage_v2 implements Maillage
                 }
                 else
                 {
-                    infoNoeuds[i].distArrivee = Integer.MAX_VALUE;
+                    if(infoNoeuds[i].distArrivee >= poidsMin)
+                        infoNoeuds[i].distArrivee = Integer.MAX_VALUE;
+                    
                     //infoNoeuds[i].pred = -1;
                     infoNoeuds[i].visite = false;
                 }

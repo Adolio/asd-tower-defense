@@ -725,6 +725,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
             Point pPrec = chemin.get(0);
             for(int i=1;i<chemin.size();i++)
             {
+                if(i == 2)
+                    break;
+                
                 Point p =  chemin.get(i);
 
                 g2.drawLine((int) pPrec.x, 
@@ -1066,8 +1069,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        else // double click 
 	        {
 	            // remise à l'échelle initiale et recentrage
-	            coeffTaille = 1.0;
-	            centrerSur(LARGEUR / 2, HAUTEUR / 2);
+	            reinitialiserVue();
 	        }
 		}
 		else // clique droit ou autre
@@ -1328,31 +1330,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        // recupère le point avant le changement d'echelle
-        Point pAvant = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
-        
-        // adaptation de l'echelle
-        coeffTaille -= e.getWheelRotation()*ETAPE_ZOOM;
-        
-   
-        // pas de dézoom
-        if(coeffTaille < ZOOM_MIN)
-        {
-            coeffTaille = ZOOM_MIN;
-            
-            // centrer sur le milieu du terrain
-            //centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
-        }
-        else
-        {
-            // recupère le point après le changement d'echelle
-            Point pApres = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
-            
-            // adapte le décalage pour que le point ciblé reste au même
-            // endroit en proportion du panel
-            decaleX +=  pApres.x - pAvant.x;
-            decaleY +=  pApres.y - pAvant.y;
-        }
+        zoomer(e.getWheelRotation()); 
     }
     
     /**
@@ -1368,11 +1346,72 @@ public class Panel_Terrain extends JPanel implements Runnable,
         if(largeurPanel == 0)  
             largeurPanel = getPreferredSize().width;
         
+        if(largeurPanel == 0)  
+            largeurPanel = getWidth();
+        
+        
         int hauteurPanel = getBounds().height;
         if(hauteurPanel == 0)  
             hauteurPanel = getPreferredSize().height;
-
+        if(hauteurPanel == 0)  
+            hauteurPanel = getHeight();
+        
         decaleX = (int) ((largeurPanel/2.0 - x * coeffTaille) / coeffTaille);
         decaleY = (int) ((hauteurPanel/2.0 - y * coeffTaille) / coeffTaille);
+    }
+
+    public void reinitialiserVue()
+    {
+        // remise à l'échelle initiale et recentrage
+        coeffTaille = 1.0;
+        centrerSur(LARGEUR/2, HAUTEUR/2);
+    }
+
+    public void zoomer(int i)
+    {
+        // recupère le point avant le changement d'echelle
+        Point pAvant;
+        
+        if(sourisSurTerrain)      
+            pAvant = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+        else
+            pAvant = new Point(
+                    (int)getPreferredSize().getWidth()/2, 
+                    (int)getPreferredSize().getHeight()/2
+                    );
+        
+        // adaptation de l'echelle
+        coeffTaille -= i*ETAPE_ZOOM;
+
+        // pas de dézoom
+        if(coeffTaille < ZOOM_MIN)
+        {
+            coeffTaille = ZOOM_MIN;
+        }
+        else
+        {
+            if(sourisSurTerrain)
+            {
+                // recupère le point après le changement d'echelle
+                Point pApres = getCoordoneeSurTerrainOriginal(sourisX, sourisY);
+                
+                // adapte le décalage pour que le point ciblé reste au même
+                // endroit en proportion du panel
+                decaleX +=  pApres.x - pAvant.x;
+                decaleY +=  pApres.y - pAvant.y;
+            }
+            else
+                centrerSur(pAvant.x, pAvant.y);
+        }
+        
+        /*if(!sourisSurTerrain)
+            // centrer sur le milieu du terrain
+            centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
+        */
+    }
+    
+    public void dezoomer()
+    {
+        
     }
 }

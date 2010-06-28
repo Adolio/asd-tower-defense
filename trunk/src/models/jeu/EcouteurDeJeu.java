@@ -41,6 +41,10 @@ public interface EcouteurDeJeu
      */
     public void etoileGagnee();
     
+    /**
+     * Permet d'informer l'écouteur que la vitesse du jeu à été modifiée
+     */
+    public void coeffVitesseModifie(double coeffVitesse);
     
     // JOUEURS
     
@@ -121,4 +125,5 @@ public interface EcouteurDeJeu
      * Permet d'informer l'écouteur qu'une animation à été terminée
      */
     public void animationTerminee(Animation animation);
+
 }

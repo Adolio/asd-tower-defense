@@ -840,4 +840,10 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         // ca vient du jeu... on s'en fou, c'est les infos du serveur qui comptent.
     }
+
+    @Override
+    public void coeffVitesseModifie(double coeffVitesse)
+    {
+        // pas utilisé en mode multi
+    }
 }

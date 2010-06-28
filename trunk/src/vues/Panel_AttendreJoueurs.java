@@ -608,4 +608,10 @@ public class Panel_AttendreJoueurs extends JPanel implements
     public void equipeAPerdue(Equipe equipe)
     {
     }
+
+    @Override
+    public void coeffVitesseModifie(double coeffVitesse)
+    {
+        // NOP
+    }
 }

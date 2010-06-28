@@ -1,22 +1,17 @@
 package vues;
 
 import models.animations.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import exceptions.ActionNonAutoriseeException;
+import javax.swing.border.*;
+import exceptions.*;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
 import models.creatures.*;
-import models.jeu.EcouteurDeJeu;
-import models.jeu.Jeu;
-import models.jeu.ResultatJeu;
-import models.joueurs.Equipe;
-import models.joueurs.Joueur;
+import models.jeu.*;
+import models.joueurs.*;
 
 /**
  * Fenetre princiale du jeu 1 joueur. 
@@ -37,7 +32,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                                                     KeyListener
 {
 	// constantes statiques
-    private final int MARGES_PANEL = 20;
+    private final int MARGES_PANEL = 10;
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_REDEMARRER = new ImageIcon("img/icones/arrow_rotate_clockwise.png");
     private static final ImageIcon I_RETOUR = new ImageIcon("img/icones/application_home.png");
@@ -48,10 +43,23 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
+	private static final ImageIcon I_VITESSE_JEU   = new ImageIcon("img/icones/clock_play.png");
+	private static final ImageIcon I_PLEIN_ECRAN = new ImageIcon("img/icones/arrow_out.png");
+	private static final ImageIcon I_RETRECIR = new ImageIcon("img/icones/arrow_in.png");
+	private static final ImageIcon I_CENTRE = new ImageIcon("img/icones/target.png");
+	private static final ImageIcon I_ZOOM = new ImageIcon("img/icones/magnifier_zoom_in.png");
+	private static final ImageIcon I_DEZOOM = new ImageIcon("img/icones/magnifier_zoom_out.png");
+	
+	
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
     private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
 	private static final int VOLUME_PAR_DEFAUT = 20;
-	
+    private static final double VITESSE_JEU_MAX = 3.0;
+    private static final double VITESSE_JEU_MIN = 1.0;
+    
+    
+    
+    
 	//---------------------------
 	//-- declaration des menus --
 	//---------------------------
@@ -78,6 +86,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    = new JMenuItem("Quitter",I_QUITTER);
 	private final JMenuItem itemRetourMenu  
 	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
+	
 	private final JMenuItem itemRedemarrer  
     = new JMenuItem("Redémarrer la partie",I_REDEMARRER);
 	//----------------------------
@@ -130,6 +139,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     private boolean vaguePeutEtreLancee = true;
     private boolean demandeDEnregistrementDuScoreEffectuee;
 
+    
+    // TODO
+    private JButton bVitesseJeu = new JButton("x"+VITESSE_JEU_MIN);
+    private JButton bPleinEcran = new JButton(I_PLEIN_ECRAN);
+    private JButton bCentrer = new JButton(I_CENTRE);
+    private JButton bZoomAvant = new JButton(I_ZOOM);
+    private JButton bZoomArriere = new JButton(I_DEZOOM);
+    
 	/**
 	 * Constructeur de la fenetre. Creer et affiche la fenetre.
 	 * 
@@ -202,6 +219,54 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		JPanel pGauche = new JPanel(new BorderLayout());
 		pGauche.setOpaque(false);
 		
+		
+		
+		JPanel boutonsHaut = new JPanel(new FlowLayout());
+        boutonsHaut.setBorder(new EmptyBorder(new Insets(0,0,0,0)));
+        //boutonsHaut.setPreferredSize(new Dimension(400, 25));
+        boutonsHaut.setOpaque(false);
+        
+        //Dimension dimBouton = new Dimension(51, 32);
+        
+        // zoom
+        bZoomAvant.setToolTipText("Zoom Avant [Roulette de la souris]");
+        bZoomArriere.setToolTipText("Zoom Arrière [Roulette de la souris]");
+        GestionnaireDesPolices.setStyle(bZoomAvant);
+        GestionnaireDesPolices.setStyle(bZoomArriere);
+        //bZoomAvant.setPreferredSize(dimBouton);
+        //bZoomArriere.setPreferredSize(dimBouton);
+        boutonsHaut.add(bZoomAvant);
+        boutonsHaut.add(bZoomArriere);
+        bZoomAvant.addActionListener(this);
+        bZoomArriere.addActionListener(this);
+        
+        // centrer
+        bCentrer.setToolTipText("Centrer [Double-clique]");
+        GestionnaireDesPolices.setStyle(bCentrer);
+        //bCentrer.setPreferredSize(dimBouton);
+        boutonsHaut.add(bCentrer);
+        bCentrer.addActionListener(this);
+        
+        // maximisation / minimisation
+        bPleinEcran.setToolTipText("Maximiser / Minimiser la fenêtre");
+        GestionnaireDesPolices.setStyle(bPleinEcran);
+        //bPleinEcran.setPreferredSize(dimBouton);
+        boutonsHaut.add(bPleinEcran);
+        bPleinEcran.addActionListener(this);
+        
+        
+        // vitesse de jeu
+        //boutonsHaut.add(new JLabel(I_VITESSE_JEU));
+        bVitesseJeu.setIcon(I_VITESSE_JEU);
+        bVitesseJeu.setToolTipText("Vitesse du jeu");
+        GestionnaireDesPolices.setStyle(bVitesseJeu);
+        //bVitesseJeu.setPreferredSize(dimBouton);
+        boutonsHaut.add(bVitesseJeu);
+        bVitesseJeu.addActionListener(this);
+        
+        //boutonsHaut.add(sVitesseJeu);
+        pGauche.add(boutonsHaut,BorderLayout.NORTH);
+		
 		//----------------------
 		//-- panel du terrain --
 		//----------------------
@@ -216,7 +281,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		pConteneurTerrain.add(panelTerrain,BorderLayout.CENTER);
 		
         JPanel pMarge = new JPanel(new BorderLayout());
-        pMarge.setBorder(new EmptyBorder(10, 10, 10, 10));
+        pMarge.setBorder(new EmptyBorder(MARGES_PANEL / 2, 0, MARGES_PANEL / 2, MARGES_PANEL / 2));
         pMarge.setOpaque(false);
         pMarge.add(pConteneurTerrain);
 		
@@ -351,6 +416,47 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		    else
 		        retourAuMenuPrincipal();
 		}
+		
+		else if(source == bVitesseJeu)
+        {
+		    if(jeu.getCoeffVitesse() >= VITESSE_JEU_MAX)
+		        jeu.setCoeffVitesse(VITESSE_JEU_MIN);
+		    else    
+		        jeu.augmenterCoeffVitesse();
+        }
+		else if(source == bPleinEcran)
+        {
+
+		      if(getExtendedState() == JFrame.MAXIMIZED_BOTH) 
+		      {
+		          pack();
+		          setLocationRelativeTo(null);
+		          bPleinEcran.setIcon(I_PLEIN_ECRAN);
+		      }
+		      else
+		      {
+		          setExtendedState(JFrame.MAXIMIZED_BOTH);
+		          bPleinEcran.setIcon(I_RETRECIR);
+		      }
+		      
+		      panelTerrain.reinitialiserVue();
+        }
+		
+		else if(source == bCentrer)
+        {
+		    panelTerrain.reinitialiserVue();
+        }
+		
+		
+		else if(source == bZoomAvant)
+        {
+            panelTerrain.zoomer(-1);
+        }
+		    
+		else if(source == bZoomArriere)
+        {
+		    panelTerrain.zoomer(1);
+        }
 	}
 
 	private void demanderRedemarrerPartie()
@@ -829,4 +935,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
     @Override
     public void equipeAPerdue(Equipe equipe){}
+
+    @Override
+    public void coeffVitesseModifie(double coeffVitesse)
+    {
+        bVitesseJeu.setText("x"+coeffVitesse);
+    }
 }
