@@ -2,6 +2,8 @@
 
 = Les nouvelles fonctionnalités =
 
-- bla bla bla <br/>
-- bla bla bla <br/>
-- bla bla bla <br/>
+- Nouvelle interface graphique <br/>
+- Design des créatures entièrement refait<br/>
+- Le jeu est maintenant entièrement libre ; toutes les ressources sont libres<br/>
+- Intégration d'un système de progression (système des étoiles) <br/>
+- Mode de jeu réseau (Versus) <br/>
