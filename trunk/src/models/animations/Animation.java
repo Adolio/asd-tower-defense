@@ -20,7 +20,6 @@ public abstract class Animation extends Point
     
     private static final long serialVersionUID = 1L;
 	protected boolean estTerminee;
-    protected boolean enJeu;
     protected int hauteur = HAUTEUR_AIR;
     
 	/**
@@ -58,15 +57,7 @@ public abstract class Animation extends Point
     {
         return estTerminee;
     }
-    
-    /**
-     * Permet d'arreter l'animation
-     */
-    public void arreter()
-    {
-        enJeu = false;
-    }
-    
+     
     /**
      * Permet de recuperer la hauteur de l'animation
      * 

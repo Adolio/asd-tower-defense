@@ -1,8 +1,6 @@
 package models.attaques;
 
 import java.awt.*;
-
-import models.animations.GainDePiecesOr;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.tours.Tour;
@@ -24,7 +22,6 @@ public class BouleDeGlace extends Attaque
     private static final int DIAMETRE_BOULE     = 10;
     private static final Image IMAGE_BOULE;
     private static final long DUREE_RALENTISSEMENT = 5000;
-    
     
     // attributs membres
     /**
@@ -100,8 +97,6 @@ public class BouleDeGlace extends Attaque
             // si cette distance est atteinte ou depassee, l'attaque est terminee
             if (distanceCentreBoule >= distanceMax)
             {
-                estTerminee = true;
-                
                 informerEcouteurAttaqueTerminee();
                 
                 attaquerCibles();
@@ -109,9 +104,12 @@ public class BouleDeGlace extends Attaque
                 // ajout du ralentissement
                 if(cible.getCoeffRalentissement() == 0.0)
                 {
-                    cible.setCoeffRalentissement(coeffRalentissement);
-                    jeu.ajouterAnimation(new Glacon(jeu,attaquant,cible,DUREE_RALENTISSEMENT));
+                    jeu.ajouterAnimation(new Glacon(jeu,attaquant,cible,
+                            coeffRalentissement,DUREE_RALENTISSEMENT));
+                    
                 }
+  
+                estTerminee = true;
             }
         }
     }
