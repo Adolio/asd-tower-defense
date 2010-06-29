@@ -25,4 +25,4 @@ Permet de modifier quelques constantes du jeu notamment le pseudo du joueur et l
 Les ralentissements générés par les tours de glace n'étaient fonctionnels (les ralentissements avaient une durée infinie).<br/><br/>
 
 - *Petite réorganisation dans le menu principal*<br/>
-L'onglet "Edition" renommer en "Affichage" et séparation du mode debug avec l'affichage du maillage.<br/><br/>
+L'onglet "Edition" renommé en "Affichage" et distinction du mode debug de l'affichage du maillage.<br/><br/>
