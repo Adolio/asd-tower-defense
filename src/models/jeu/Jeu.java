@@ -34,12 +34,27 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	 */
     private static final String VERSION 
         = "ASD - Tower Defense v2.0 (beta 3) | juin 2010 | heig-vd";
-
-    // TODO commenter
+    
+    /**
+     * Mode de positionnement centré des créatures dans la zone de départ
+     */
     public static final int MODE_POSITIONNNEMENT_CENTRE = 0;
+    
+    /**
+     * Mode de positionnement aléatoire des créatures dans la zone de départ.
+     */
     public static final int MODE_POSITIONNNEMENT_ALETOIRE = 1;
+    
+    /**
+     * Mode de positionnement courant des créatures dans la zone de départ
+     */
     private static final int MODE_DE_POSITIONNEMENT = MODE_POSITIONNNEMENT_ALETOIRE;
 
+    /**
+     * Etape d'incrémentation du coefficient de vitesse du jeu.
+     */
+    private static final double ETAPE_COEFF_VITESSE = 0.5;
+    
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
 	 * - Les tours
@@ -126,8 +141,12 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     protected myTimer timer = new myTimer(1000,null);
 
-    // TODO commenter
-    private double coeffVitesse = 1.0;
+    /**
+     * Coefficient de vitesse de déroulement de la partie.
+     * 
+     * Permet de résoudre les problèmes de lenteur du jeu.
+     */
+    private double coeffVitesse;
 
     /**
      * Constructeur
@@ -262,16 +281,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void lancerVague(Joueur joueur, Equipe cible, VagueDeCreatures vague) throws ArgentInsuffisantException
     { 
-        // FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         gestionnaireCreatures.lancerVague(vague, joueur, cible, this, this);
-        
-        
-        
-        
-        
-        
-        
-        //vague.lancerVague(this, joueur, cible, this, this);
     }
     
     /**
@@ -417,7 +427,6 @@ public abstract class Jeu implements EcouteurDeJoueur,
             
             arreterTout();
               
-            
             Equipe equipeGagnante = null;
             int maxScore = -1;
             
@@ -439,7 +448,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
                 }
             
             if(edj != null)
-                edj.partieTerminee(new ResultatJeu(equipeGagnante)); // TODO
+                edj.partieTerminee(new ResultatJeu(equipeGagnante)); // TODO check
         }
     }
 
@@ -759,21 +768,35 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return gestionnaireTours.getTours();
     }
 
-    // TODO commenter
-    public Vector<Creature> getCreaturesQuiIntersectent(int x, int y,
+    /**
+     * Permet de récupérer les créatures qui intersectent un cercle
+     *  
+     * @param centerX centre x du cercle
+     * @param centreY centre y du cercle
+     * @param rayon rayon du cercle
+     * @return Une collection de créatures
+     */
+    public Vector<Creature> getCreaturesQuiIntersectent(int centerX, int centreY,
             int rayon)
     {
-        return gestionnaireCreatures.getCreaturesQuiIntersectent(x, y, rayon);
+        return gestionnaireCreatures.getCreaturesQuiIntersectent(centerX, centreY, rayon);
     }
 
-    // TODO commenter
+    /**
+     * Permet de nofifier le jeu qu'un créature à été ajoutée
+     * @param creature
+     */
     public void creatureAjoutee(Creature creature)
     {
         if(edj != null)
             edj.creatureAjoutee(creature);
     }
 
-    // TODO commenter
+    /**
+     * Permet d'ajouter une animation
+     * 
+     * @param animation l'animation à ajouter
+     */
     public void ajouterAnimation(Animation animation)
     {
         gestionnaireAnimations.ajouterAnimation(animation);
@@ -899,13 +922,21 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return equipes.get(i);
     }
 
-    // TODO commenter
+    /**
+     * Permet de savoir si le jeu a été initialisé
+     * 
+     * @return true s'il l'est false sinon
+     */
     public boolean estInitialise()
     {
         return estInitialise;
     }
     
-    // TODO commenter
+    /**
+     * Permet de savoir si le jeu a été démarré
+     * 
+     * @return true s'il l'est false sinon
+     */
     public boolean estDemarre()
     {
         return estDemarre;
@@ -939,7 +970,11 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return timer;
     }
 
-    // TODO commenter
+    /**
+     * Permet de détruire le jeu.
+     * 
+     * Détruit tous les objets du jeu.
+     */
     public void detruire()
     {
         estDetruit = true;
@@ -949,54 +984,84 @@ public abstract class Jeu implements EcouteurDeJoueur,
         gestionnaireAnimations.detruire();
     }
     
-    // TODO commenter
+    /**
+     * Permet de savoir si le jeu a été détruit
+     * 
+     * @return true s'il l'est false sinon
+     */
     public boolean estDetruit()
     {
         return estDetruit;
     }
 
-    // TODO commenter
+    /**
+     * Permet de récupérer le coefficient de vitesse du jeu
+     * 
+     * @return le coefficient de vitesse du jeu
+     */
     public double getCoeffVitesse()
     {
         return coeffVitesse;
     }
 
-    // TODO commenter
-    private final double ETAPE_COEFF_VITESSE = 0.5;
-    synchronized public void augmenterCoeffVitesse()
+    /**
+     * Permet d'augmenter le coefficient de vitesse du jeu.
+     * 
+     * @return retour la nouvelle valeur du coefficient
+     */
+    public synchronized double augmenterCoeffVitesse()
     {
         // TODO LIMITER
         coeffVitesse += ETAPE_COEFF_VITESSE;
         
         if(edj != null)
             edj.coeffVitesseModifie(coeffVitesse);
+        
+        return coeffVitesse;
     }
 
-    // TODO commenter
-    synchronized public void diminuerCoeffVitesse()
+    /**
+     * Permet de diminuer le coefficient de vitesse du jeu.
+     * 
+     * @return retour la nouvelle valeur du coefficient
+     */
+    synchronized public double diminuerCoeffVitesse()
     {
+        // TODO LIMITER
         if(coeffVitesse-ETAPE_COEFF_VITESSE > 0)
             coeffVitesse -= ETAPE_COEFF_VITESSE;
-        
+         
         if(edj != null)
             edj.coeffVitesseModifie(coeffVitesse);
+                
+        return coeffVitesse;
     }
     
+    /**
+     * Permet de modifier directement coefficient de vitesse du jeu.
+     * @param value le nouveau coefficient de vitesse du jeu.
+     */
     public void setCoeffVitesse(double value)
     {
         // TODO LIMITER
+        if(value < 0.0)
+            throw new IllegalArgumentException(
+                    "Le coefficient de vitesse du jeu doit être > 0");
+            
         coeffVitesse = value;
         
         if(edj != null)
             edj.coeffVitesseModifie(coeffVitesse);
     }
     
-    public void lancerVagueDeCreatures(VagueDeCreatures vagueDeCreatures)
-    {}
-
+    /**
+     * Permet de récupérer le type de positionnement des créatures dans 
+     * la zone de départ
+     * 
+     * @return le type de positionnement des créatures dans la zone de départ
+     */
     public int getModeDePositionnnementDesCreatures()
     {
         return MODE_DE_POSITIONNEMENT;
     }
-
 }

@@ -258,6 +258,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // vitesse de jeu
         //boutonsHaut.add(new JLabel(I_VITESSE_JEU));
         bVitesseJeu.setIcon(I_VITESSE_JEU);
+        bVitesseJeu.setText("x"+jeu.getCoeffVitesse());
         bVitesseJeu.setToolTipText("Vitesse du jeu");
         GestionnaireDesPolices.setStyle(bVitesseJeu);
         //bVitesseJeu.setPreferredSize(dimBouton);

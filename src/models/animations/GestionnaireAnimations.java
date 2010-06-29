@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
-
 import models.jeu.Jeu;
 
 /**
@@ -98,26 +97,30 @@ public class GestionnaireAnimations implements Runnable
        // Poutant Iterator doit normalement gérer cela ?!?
        // Une erreur de concurrence est levée 
        // j'utilise alors un tableau temporaire de suppression
-       
-       synchronized(animations.iterator)
+       while(gestionEnCours)
        {
-           Animation animation;
            Iterator<Animation> iAnimations = animations.iterator();
-           while(iAnimations.hasNext())
+           synchronized(animations)
            {
-               animation = iAnimations.next();
-               
-               // detruit l'animation si elle est terminee
-               if(animation.estTerminee())
-                   iAnimations.remove();
-               else
+               Animation animation;
+              
+               while(iAnimations.hasNext())
                {
-                   // anime l'animation
-                   animation.animer(TEMPS_ATTENTE);
+                   animation = iAnimations.next();
+                   
+                   // detruit l'animation si elle est terminee
+                   if(animation.estTerminee())
+                       iAnimations.remove();
+                   else
+                   {
+                       // anime l'animation
+                       animation.animer(TEMPS_ATTENTE);
+                   }
                }
            }
-       }
+           
        */
+       
 
        ArrayList<Animation> animationsASupprimer = new ArrayList<Animation>();
        Animation animation;
@@ -126,11 +129,13 @@ public class GestionnaireAnimations implements Runnable
        {
            try
            {
+               //System.out.println(animations.size());
+               
                Enumeration<Animation> eAnimations = animations.elements();
                while(eAnimations.hasMoreElements())
                {
                    animation = eAnimations.nextElement();
-                     
+
                    // detruit l'animation si elle est terminee
                    if(animation.estTerminee())
                        animationsASupprimer.add(animation);
@@ -148,8 +153,7 @@ public class GestionnaireAnimations implements Runnable
            for(Animation animationASupprimer : animationsASupprimer)
                animations.remove(animationASupprimer);
            animationsASupprimer.clear();
-           
-
+         
            // gestion de la pause
            try
            {
@@ -197,7 +201,7 @@ public class GestionnaireAnimations implements Runnable
         synchronized (pause)
         {
             enPause = false;
-            pause.notify(); 
+            pause.notify();
         }
     }
 

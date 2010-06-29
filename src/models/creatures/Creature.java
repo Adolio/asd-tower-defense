@@ -108,7 +108,7 @@ public abstract class Creature extends Rectangle
 	/**
      * ralentissement de deplacement de la creature sur le terrain
      */
-    protected double coeffRalentissement; // 1.0 = 100%
+    protected double coeffRalentissement; // 0.0 = vitesse normal, 1.0 = 100%
 
 	/**
 	 * permet d'informer d'autres entites du programme lorsque la creature
@@ -659,32 +659,53 @@ public abstract class Creature extends Rectangle
             || (typeTour == Tour.TYPE_AIR && TYPE == Creature.TYPE_AERIENNE);
     }
 
-    // TODO commenter
+    /**
+     * Permet de modifier la santé maximale.
+     * 
+     * @param santeMax la nouvelle santé maximale
+     */
     public void setSanteMax(long santeMax)
     {
         this.santeMax = santeMax;
     }
 
-    // TODO commenter
+    /**
+     * Permet de modifier le nombre de pièces d'or
+     * 
+     * @param nbPiecesDOr le nouveau nombre de pièces d'or
+     */
     public void setNbPiecesDOr(int nbPiecesDOr)
     {
         this.nbPiecesDOr = nbPiecesDOr;
     }
 
-    // TODO commenter
+    /**
+     * Permet de modifier la vitesse
+     * 
+     * @param vitesse le nouvelle vitesse
+     */
     public void setVitesse(double vitesse)
     {
         this.vitesseNormale = vitesse;
     }
 
-    // TODO commenter
     long tempsDerniereMAJ = 0;
+    /**
+     * Permet d'indiquer une mise à jour de la créature
+     */
     public void misAJour()
     {
         tempsDerniereMAJ = new Date().getTime();   
     }
 
-    // TODO commenter
+    /**
+     * Permet d'effacer la créature si elle n'a pas été mise a jour depuis 
+     * un certain temps.
+     * <br><br>
+     * Cette méthode résout un bug réseau lorsque le message de mort n'arrive pas
+     * au client. Pour le client la créature existe toujours mais elle n'exite plus 
+     * sur le serveur. 
+     */
     public void effacerSiPasMisAJour()
     {
         long maintenant = new Date().getTime(); 

@@ -51,7 +51,7 @@ public class TourDeGlace extends Tour
               PRIX_ACHAT,       // prix achat
               20,               // degats
               50,               // rayon de portee
-              2,                // cadence de tir (tirs / sec.)
+              2.0,                // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE_ET_AIR, // type
               IMAGE,            // image sur terrain
               ICONE);           // icone pour bouton      
