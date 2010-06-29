@@ -6,6 +6,9 @@
 - *Mode plein écran*<br/>
 Gestion de la maximisation et de la minimisation de la fenêtre. La taille du terrain s'agrandit en fonction de la taille de la fenêtre.<br/><br/>
 
+- *Fonction de redémarrage de la partie*<br/>
+Une fonction pour redémarrer la partie est maintenant disponible dans le menu sous l'onglet "Fichier"<br/><br/>
+
 - *Gestion de la vitesse du jeu*<br/>
 Le jeu était trop lent, afin de palier à ce problème, nous avons intégré une fréquence de déroulement du jeu. Le jeu peut dorénavant être accéléré et nous pourrions imaginer la mise en place d'un slow-motion en mettant la fréquence à faible valeur (< 1.0).<br/><br/>
 
