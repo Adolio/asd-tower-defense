@@ -3,15 +3,21 @@
 
 = Les nouvelles fonctionnalités [Bientôt disponible] =
 
+- *Mode plein écran*<br/>
+Gestion de la maximisation et de la minimisation de la fenêtre. La taille du terrain s'agrandit en fonction de la taille de la fenêtre. <br/><br/>
 
-- Mode plein écran (gestion de la maximisation de la fenêtre) <br/><br/>
+- *Gestion de la vitesse du jeu* <br/>
+Le jeu était trop lent, afin de palier à ce problème, nous avons intégré une fréquence de déroulement du jeu. Le jeu peut dorénavant être accéléré et nous pourrions imaginer faire du slow-motion en mettant la fréquence à faible valeur (< 1.0) <br/><br/>
 
-- Gestion de la vitesse du jeu (le jeu peut être accéléré) <br/><br/>
+- *Ajout de quelques fonctionnalités disponibles depuis l'interface* <br/>
+Quelques boutons ont fait leurs apparition au dessus du terrain, ceux-ci permettent notamment de zoomer, dézoomer, recentrer la caméra du terrain, augmenter (de façon cyclique [1.0 - 3.0]) la vitesse du jeu. Un mode de déplacement du terrain avec W-A-S-D à été également été intégré <br/><br/>
 
-- Ajout de quelques fonctionnalités disponibles depuis l'interface <br/><br/>
+- *Maillage v2.0 basé sur un arbre des plus courts chemins* <br/>
+ Actuellement en test car moins efficace dans certains cas que la version 1.0, pas encore assez optimisé.
+<br/><br/>
 
-- Maillage v2.0 basé sur un arbre des plus courts chemins (en test car moins efficace dans certains cas, pas encore assez optimisé) <br/><br/>
+- *Fenêtre d'options* <br/>
+Permet de modifier quelques constantes du jeu notemmment le pseudo du joueur et l'adresse IP du serveur d'enregistrement. Les commandes de jeu feront leur appartition très bientôt. <br/><br/>
 
-- Fenêtre d'options <br/><br/>
-
-- Mode de déplacement du terrain avec W-A-S-D <br/><br/>
+- *Correction du bug des glacons* <br/>
+Les ralentissements générer par les tours de glaces n'étaient correctement fonctionnels <br/><br/>
