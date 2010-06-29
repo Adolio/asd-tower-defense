@@ -18,5 +18,5 @@ Actuellement en test car moins efficace dans certains cas que la version 1.0, pa
 - *Fenêtre d'options*<br/>
 Permet de modifier quelques constantes du jeu notamment le pseudo du joueur et l'adresse IP du serveur d'enregistrement. Les commandes de jeu feront leur apparition très bientôt. <br/><br/>
 
-- *Correction du bug des glacons*<br/>
-Les ralentissements générés par les tours de glace n'étaient correctement fonctionnels (les ralentissements avaient une durée infinis).<br/><br/>
+- *Correction du bug des glaçons*<br/>
+Les ralentissements générés par les tours de glace n'étaient fonctionnels (les ralentissements avaient une durée infinie).<br/><br/>
