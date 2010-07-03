@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import models.creatures.*;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.joueurs.Equipe;
 import models.maillage.*;
 import models.outils.GestionnaireSons;
@@ -48,7 +49,9 @@ import models.tours.Tour;
  * @see Creature
  * @see Maillage
  */
-public abstract class Terrain implements Serializable
+
+// TODO abstract or not ?
+public class Terrain implements Serializable
 {
     /**
      * 
@@ -122,8 +125,8 @@ public abstract class Terrain implements Serializable
     /**
      * Pour le mode debug
      */
-    private final Color COULEUR_MURS;
-    private final Color COULEUR_DE_FOND;
+    private Color couleurMurs;
+    private Color couleurDeFond = new Color(200,200,0);
     
     /**
      * Les murs sont utilises pour empecher le joueur de construire des tours
@@ -145,11 +148,6 @@ public abstract class Terrain implements Serializable
     transient private Jeu jeu;
     
     /**
-     * Stockage de la vague courante
-     */
-    transient private VagueDeCreatures vagueCourante;
-    
-    /**
      * Liste des equipes, utilisé pour la définition du terrain.
      * <br>
      * C'est le terrain qui fourni les équipes, on doit pouvoir
@@ -161,12 +159,14 @@ public abstract class Terrain implements Serializable
      * Mode de jeu du terrain, utilisé pour construire les bons formulaires 
      * et affichages
      */
-    private final int MODE;
+    private final int MODE_DE_JEU;
     
     /**
      * Permet de definit la taille du panel du terrain
      */
     protected Dimension taillePanelTerrain = null;
+
+    protected String nomFichier;
     
     /**
      * Constructeur du terrain.
@@ -183,7 +183,7 @@ public abstract class Terrain implements Serializable
      */
     public Terrain(Jeu jeu, int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
-            int largeurMaillage, int hauteurMaillage, int mode, Color couleurDeFond, 
+            int largeurMaillage, int hauteurMaillage, int modeDeJeu, Color couleurDeFond, 
             Color couleurMurs, Image imageDeFond, String nom)
     {
         this.jeu = jeu; 
@@ -199,12 +199,26 @@ public abstract class Terrain implements Serializable
         this.positionMaillageX = positionMaillageX;
         this.positionMaillageY = positionMaillageY;
         
-        NOM             = nom;
-        COULEUR_DE_FOND = couleurDeFond;
-        COULEUR_MURS    = couleurMurs;
-        MODE            = mode;   
+        NOM                  = nom;
+        this.couleurDeFond   = couleurDeFond;
+        this.couleurMurs         = couleurMurs;
+        MODE_DE_JEU          = modeDeJeu;   
     }
-   
+    
+    // TODO
+    public Terrain(Jeu jeu)
+    {
+        this.jeu = jeu;
+        
+        LARGEUR                 = 500;
+        HAUTEUR                 = 500;
+        NB_PIECES_OR_INITIALES  = 100;
+        NB_VIES_INITIALES       = 20;
+        NOM                     = "Test";
+        couleurMurs            = Color.BLACK;
+        MODE_DE_JEU             = ModeDeJeu.MODE_SOLO;   
+    }
+
     /**
      * Permet d'initialiser le terrain.
      * 
@@ -214,10 +228,10 @@ public abstract class Terrain implements Serializable
     {
         // creation des deux maillages
         // TODO Choix du maillage
-        MAILLAGE_TERRESTRE = new Maillage_v2(largeurMaillage, hauteurMaillage,
+        MAILLAGE_TERRESTRE = new Maillage_v1(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);
         
-        MAILLAGE_AERIEN = new Maillage_v2(largeurMaillage, hauteurMaillage,
+        MAILLAGE_AERIEN = new Maillage_v1(largeurMaillage, hauteurMaillage,
                 PRECISION_MAILLAGE, positionMaillageX, positionMaillageY);  
         
         
@@ -278,7 +292,13 @@ public abstract class Terrain implements Serializable
     {      
         return imageDeFond;
     }
-
+    
+    // TODO commenter
+    public void setImageDeFond(Image imageDeFond)
+    {      
+        this.imageDeFond = imageDeFond;
+    }
+    
     /**
      * Permet de recuperer le nombre de pieces initial
      * 
@@ -316,7 +336,7 @@ public abstract class Terrain implements Serializable
      */
     public int getMode()
     {
-        return MODE;
+        return MODE_DE_JEU;
     }
 
     /**
@@ -392,7 +412,7 @@ public abstract class Terrain implements Serializable
      */
     public Color getCouleurDeFond()
     {
-        return COULEUR_DE_FOND;
+        return couleurDeFond;
     }
 
     /**
@@ -401,7 +421,7 @@ public abstract class Terrain implements Serializable
      */
     public Color getCouleurMurs()
     {
-        return COULEUR_MURS;
+        return couleurMurs;
     }
     
     /**
@@ -755,9 +775,9 @@ public abstract class Terrain implements Serializable
      * @param terrain le terrain à sérialiser
      * @param fichier le fichier de destination
      */
-    public static void serialiser(Terrain terrain)
+    public static void serialiser(Terrain terrain, File fichier)
     {
-       File fichier = new File("maps/"+terrain.getClass().getSimpleName()+".map");
+       //File fichier = new File("maps/"+terrain.getNom()+".map");
 
        try
        {
@@ -814,9 +834,13 @@ public abstract class Terrain implements Serializable
           
          Terrain terrain = (Terrain) fluxEntreeObjet.readObject();
          
+         terrain.setNomFichier(fichier.getName());
+         
          // seule les ImageIcon peuvent etre serialisée 
          // donc la on met a jour l'image de font avec une ImageIcon
-         terrain.imageDeFond = terrain.iconImageDeFond.getImage();
+         
+         if(terrain.iconImageDeFond != null)
+             terrain.imageDeFond = terrain.iconImageDeFond.getImage();
         
          return terrain ;
       }
@@ -836,5 +860,42 @@ public abstract class Terrain implements Serializable
     public void setJeu(Jeu jeu)
     {
         this.jeu = jeu;
+    }
+
+    public void setCouleurDeFond(Color couleurDeFond)
+    {
+        this.couleurDeFond = couleurDeFond;
+    }
+
+    public void setLargeurMaillage(int largeurMaillage)
+    {
+        // TODO SAFE IT!
+        this.largeurMaillage = largeurMaillage;
+    }
+
+    public void setHauteurMaillage(int hauteurMaillage)
+    {
+        // TODO SAFE IT!
+        this.hauteurMaillage = hauteurMaillage;
+    }
+
+    public void supprimerMur(Rectangle recEnTraitement)
+    {
+        murs.remove(recEnTraitement);
+    }
+
+    public String getNomFichier()
+    {
+        return nomFichier;
+    }
+    
+    public void setNomFichier(String nomFichier)
+    {
+        this.nomFichier = nomFichier;
+    }
+
+    public void setCouleurMurs(Color couleur)
+    {
+        couleurMurs = couleur;
     }
 }

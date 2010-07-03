@@ -536,6 +536,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
             case ModeDeJeu.MODE_VERSUS :
                 new Fenetre_JeuVersus(jeuClient);
                 break;
+                 
             /*
             TODO implémenter le mode de jeu coopératif
             case ModeDeJeu.MODE_COOP :

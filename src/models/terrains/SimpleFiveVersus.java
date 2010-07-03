@@ -60,6 +60,8 @@ public class SimpleFiveVersus extends Terrain
                 NOM  // nom
           );
  
+        nomFichier = getClass().getSimpleName()+".map";
+        
         
         // Création des équipes
         Equipe e1 = new Equipe(1,"Les Rouges",Color.RED);

@@ -460,8 +460,9 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void setTerrain(Terrain terrain) throws IllegalArgumentException
     {
-        if(this.terrain != null) 
-            throw new TerrainDejaInitialise("Terrain déjà initialisé");
+        // TODO j'ai mis en commentaire! pour le chargement dans l'editeur de niveau
+        //if(this.terrain != null) 
+        //    throw new TerrainDejaInitialise("Terrain déjà initialisé");
 
         equipes = terrain.getEquipesInitiales();
         
@@ -1063,5 +1064,18 @@ public abstract class Jeu implements EcouteurDeJoueur,
     public int getModeDePositionnnementDesCreatures()
     {
         return MODE_DE_POSITIONNEMENT;
+    }
+    
+    // TODO 
+    public void ajouterEquipe(Equipe equipe)
+    {
+        equipes.add(equipe);
+    }
+ 
+    // TODO 
+    public void supprimerEquipe(Equipe equipe)
+    {
+        // FIXME CHECK
+        equipes.remove(equipe);
     }
 }
