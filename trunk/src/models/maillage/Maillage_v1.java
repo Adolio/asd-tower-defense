@@ -458,10 +458,10 @@ public class Maillage_v1 implements Maillage
 	{
 		if (rectangle == null)
 			throw new IllegalArgumentException("Argument null");
-		if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
+		/*if (rectangle.getX() + rectangle.getWidth() > LARGEUR_EN_PIXELS)
 			throw new IllegalArgumentException("Largeur hors cadre");
 		if (rectangle.getY() + rectangle.getHeight() > HAUTEUR_EN_PIXELS)
-			throw new IllegalArgumentException("Hauteur hors cadre");
+			throw new IllegalArgumentException("Hauteur hors cadre");*/
 	}
 
 	/**

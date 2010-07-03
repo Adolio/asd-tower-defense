@@ -407,4 +407,27 @@ public class Equipe implements Serializable
         // vide la liste des joueurs
         joueurs.clear();
     }
+    
+    // TODO commenter
+    public void setCouleur(Color couleur2)
+    {
+        couleur = couleur2;
+    }
+
+    // TODO commenter
+    public void setZoneDepart(Rectangle rectangle)
+    {
+        zonesDepartCreatures.add(rectangle);
+    }
+
+    // TODO commenter
+    public int getNbZonesDepart()
+    {
+        return zonesDepartCreatures.size();
+    }
+
+    public void supprimerEmplacement(EmplacementJoueur ej)
+    {
+        emplacementsJoueur.remove(ej);
+    }
 }

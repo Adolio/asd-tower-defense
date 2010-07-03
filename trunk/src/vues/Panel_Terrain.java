@@ -42,7 +42,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	//-------------------------
 	//-- proprietes du panel --
 	//-------------------------
-	private static final Color COULEUR_FOND = new Color(50,200,50);
 	private final int LARGEUR;
 	private final int HAUTEUR;
 	
@@ -78,7 +77,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
      * Décalages du rendu par rapport à la position 0 du panel (scale)
      */
-	private int decaleX = 0,
+	protected int decaleX = 0,
 	            decaleY = 0;
 	
 	//---------------------------
@@ -114,6 +113,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final float ALPHA_TOUR_A_AJOUTER    = .7f;
 	private static final float ALPHA_CHEMIN_CREATURE   = .5f;
 	private static final float ALPHA_SURFACE_MUR       = .8f;
+	private static final float ALPHA_QUADRILLAGE     = .2f;
+	
 	private static final Color COULEUR_ZONE_DEPART 	   = Color.GREEN;
 	private static final Color COULEUR_ZONE_ARRIVEE    = Color.RED;
 	private static final Color COULEUR_MAILLAGE 	   = Color.WHITE;
@@ -126,6 +127,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_RAYON_PORTEE    = Color.WHITE;
 	private static final Color COULEUR_NIVEAU 		   = Color.WHITE;
 	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
+    private static final Color COULEUR_QUADRILLAGE      = Color.BLACK;
 	
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
@@ -153,28 +155,28 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Position exacte de la souris sur le terrain
 	 */
-	private int sourisX, sourisY;
+    protected int sourisX, sourisY;
 		
 	/**
 	 * Permet de stocker l'endroit du debut de l'agrippage
 	 */
-	private int sourisGrabX, sourisGrabY;
+	protected int sourisGrabX, sourisGrabY;
 	
 	/**
 	 * Permet de savoir le decalage effectuer depuis le position
 	 * du debut de l'agrippage
 	 */
-	private int decaleGrabX, decaleGrabY;
+	protected int decaleGrabX, decaleGrabY;
 	
 	/**
 	 * Position de la souris sur le cadriallage virtuel
 	 */
-	private int sourisCaseX, sourisCaseY;
+	protected int sourisCaseX, sourisCaseY;
 	
 	/**
 	 * Permet de savoir si la souris est actuellement sur le panel
 	 */
-	private boolean sourisSurTerrain;
+	protected boolean sourisSurTerrain;
 	
 	/**
 	 * Le terrain permet de choisir la tour a poser sur le terrain.
@@ -201,7 +203,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Reference vers le jeu a gerer
 	 */
-	private Jeu jeu;
+	protected Jeu jeu;
 	
 	/**
 	 * Reference vers la fenetre parent
@@ -211,6 +213,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
 	// TODO commenter
 	private boolean modeDebug;
+	
+	protected boolean afficherMurs;
 	
 	/**
 	 * Permet d'afficher ou non les elements invisible (maillage, chemins, etc.)
@@ -240,7 +244,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Stockage du bouton lors d'un aggripement
 	 */
-    private int boutonDragg;
+    protected int boutonGrab;
 
     /**
      * Permet de savoir s'il faut centrer la vue sur la creature selectionnee
@@ -254,6 +258,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
     private boolean toucheBasPressee;
 
     private boolean toucheDroitePressee;
+
+    protected boolean quadrillage;
 
    
 	
@@ -300,9 +306,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
         setFocusable(true);
         
         // Centrage sur la zone de construction du joueur
-        Rectangle zoneConstruction = jeu.getJoueurPrincipal().getEmplacement().getZoneDeConstruction();
-        centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
-
+        if(jeu.getJoueurPrincipal() != null)
+        {
+            if(jeu.getJoueurPrincipal().getEmplacement() != null)
+            {
+                Rectangle zoneConstruction = jeu.getJoueurPrincipal().getEmplacement().getZoneDeConstruction();
+                centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
+            }
+        }
+        
         // ajout des ecouteurs
         addKeyListener(this);
         addMouseListener(this);
@@ -458,8 +470,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		else
 		{
 			// couleur de fond
-			g2.setColor(COULEUR_FOND);
+			g2.setColor(jeu.getTerrain().getCouleurDeFond());
 			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
+			
+			afficherMurs = true;
 		}
 
 		//-------------------------------------
@@ -477,29 +491,52 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.setColor(jeu.getTerrain().getCouleurDeFond());
             g2.fillRect(0, 0, LARGEUR, HAUTEUR);
 		    
-		    // modification de la transparence
-		    setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
-			
 			// affichages des zones de départ et arrivée
 		    for(Equipe equipe : jeu.getEquipes())
 		    {
 		        // dessin de la zone de depart
-	            g2.setColor(COULEUR_ZONE_DEPART);
-	            dessinerZone(equipe.getZoneDepartCreatures(0),g2);
-	            
-	            // dessin de la zone d'arrivee
-	            g2.setColor(COULEUR_ZONE_ARRIVEE);
-	            dessinerZone(equipe.getZoneArriveeCreatures(),g2);
-		    }
+		        Rectangle r;
+		        for(int i=0;i<equipe.getNbZonesDepart();i++)    
+		        {
+		            r = equipe.getZoneDepartCreatures(i);
+		            
+		            setTransparence(ALPHA_SURFACE_ZONE_DA, g2);
+		            g2.setColor(COULEUR_ZONE_DEPART);
+                    dessinerZone(r,g2);
+                    
+                    // tour de couleur
+                    setTransparence(1.f, g2);
+                    g2.setColor(equipe.getCouleur());
+                    g2.drawRect(r.x, r.y, r.width, r.height);  
+		        }
 
-			ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
-			setTransparence(ALPHA_SURFACE_MUR, g2);
-			g2.setColor(jeu.getTerrain().getCouleurMurs());
-			for(Rectangle mur : murs)
-			    dessinerZone(mur,g2);
-			
-			setTransparence(1.f, g2);
+	            // dessin de la zone d'arrivee
+	            if(equipe.getZoneArriveeCreatures() != null)
+	            {
+	                g2.setColor(COULEUR_ZONE_ARRIVEE);
+	                
+	                r = equipe.getZoneArriveeCreatures();
+	                dessinerZone(r,g2);
+	                
+	                // tour de couleur
+                    setTransparence(1.f, g2);
+                    g2.setColor(equipe.getCouleur());
+                    g2.drawRect(r.x, r.y, r.width, r.height); 
+	            }
+		    }
 		}
+		
+		if(modeDebug || afficherMurs)
+		{
+		    ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
+            setTransparence(ALPHA_SURFACE_MUR, g2);
+            g2.setColor(jeu.getTerrain().getCouleurMurs());
+            for(Rectangle mur : murs)
+                dessinerZone(mur,g2);
+            
+            setTransparence(1.f, g2);
+		}
+		
 		
 		//-------------------------------------------------
         //-- Affichage de la zone de depart et d'arrivee --
@@ -677,6 +714,25 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-- affichage des animations au-dessus de tout --
 		//------------------------------------------------
 		jeu.dessinerAnimations(g2, Animation.HAUTEUR_AIR);
+		
+		
+		
+		// quadrillage
+		if(quadrillage)
+		{
+            setTransparence(ALPHA_QUADRILLAGE, g2);
+            g2.setColor(COULEUR_QUADRILLAGE);
+            for(int i=0;i <= jeu.getTerrain().getLargeur();i+=CADRILLAGE)
+                g2.drawLine(i, 0, i, jeu.getTerrain().getHauteur());
+            
+            for(int i=0;i <= jeu.getTerrain().getHauteur();i+=CADRILLAGE)
+                g2.drawLine(0, i, jeu.getTerrain().getLargeur(), i);
+		}
+		
+		
+		
+		
+		
 		
 		//------------------------------------
 		//-- affichage de la tour a ajouter --
@@ -939,7 +995,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param tauxTransparence le taux (1.f = 100% opaque et 0.f = 100% transparent)
 	 * @param g2 le Graphics2D a configurer
 	 */
-	private void setTransparence(float tauxTransparence, Graphics2D g2)
+	protected void setTransparence(float tauxTransparence, Graphics2D g2)
     {
 	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, tauxTransparence));
     }
@@ -980,11 +1036,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void mousePressed(MouseEvent me)
 	{
-	    boutonDragg = me.getButton();
-	    
-	    
-	    
-	    
+	    boutonGrab = me.getButton();
+
 	    // clique gauche
 	    if (me.getButton() == MouseEvent.BUTTON1)
 		{    
@@ -1200,11 +1253,24 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * @param y la position y du point
 	 * @return le point correspondant sur le terrain de taille normal
 	 */
-	private Point getCoordoneeSurTerrainOriginal(int x, int y)
+	protected Point getCoordoneeSurTerrainOriginal(int x, int y)
 	{
 	    return new Point((int)(x / coeffTaille - decaleX), 
 	                     (int)(y / coeffTaille - decaleY));
 	}
+	
+	/**
+     * Permet de faire correspondre une coordonnée donnée sur la position normale
+     * du terrain (sans zoom et décalage)
+     * 
+     * @param p la coordonnnée donnée
+     * @return le point correspondant sur le terrain de taille normal
+     */
+    protected Point getCoordoneeSurTerrainOriginal(Point p)
+    {
+        return new Point((int)(p.x / coeffTaille - decaleX), 
+                         (int)(p.y / coeffTaille - decaleY));
+    }
 	
 	/**
      * Methode de gestion du clique enfoncé de la souris lorsque qu'elle bouge.
@@ -1215,7 +1281,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
     public void mouseDragged(MouseEvent me)
     {
-	    if(boutonDragg == MouseEvent.BUTTON1)
+	    if(boutonGrab == MouseEvent.BUTTON1)
 	    {
 	        // si il n'y a pas de tour a ajouter, c'est comme si elle bougeait normalement 
 	        if(tourAAjouter != null)

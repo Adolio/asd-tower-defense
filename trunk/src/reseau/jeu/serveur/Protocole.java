@@ -35,7 +35,7 @@ public class Protocole implements ConstantesServeurJeu
             msg.put("ID_JOUEUR", joueur.getId());
             msg.put("ID_EMPLACEMENT", joueur.getEmplacement().getId());
             msg.put("ID_EQUIPE", joueur.getEquipe().getId());
-            msg.put("NOM_FICHIER_TERRAIN", terrain.getClass().getSimpleName()+".map");
+            msg.put("NOM_FICHIER_TERRAIN", terrain.getNomFichier());
         }
         catch (JSONException e)
         {

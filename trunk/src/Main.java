@@ -48,15 +48,15 @@ public class Main
       /*
       // a reserializer pour le son
       Terrain t1 = new ElementTD_Coop(new Jeu_Solo());      
-      Terrain.serialiser(t1); 
+      Terrain.serialiser(t1,new File("maps/"+t1.getNomFichier())); 
                
       Terrain t2 = new SimpleFiveVersus(new Jeu_Solo());      
-      Terrain.serialiser(t2);
+      Terrain.serialiser(t2,new File("maps/"+t2.getNomFichier()));
       
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
-      Terrain.serialiser(t3);
+      Terrain.serialiser(t3,new File("maps/"+t3.getNomFichier()));
       */
-                                 
+                              
       // creation du menu principal
       new Fenetre_MenuPrincipal();
    }

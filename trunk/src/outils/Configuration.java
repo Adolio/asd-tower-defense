@@ -18,7 +18,7 @@ public class Configuration
   
     // l'utilisateur
     private static String PSEUDO_JOUEUR;
-    //private static final static String LANGUE;
+    //private final static String LANGUE = "FR";
     
     private static fichierDeConfiguration config = new fichierDeConfiguration(CFG);
     

@@ -13,8 +13,11 @@ public class TableCellRenderer_Image implements TableCellRenderer
     public Component getTableCellRendererComponent(JTable table, Object image,
             boolean isSelected, boolean hasFocus, int row, int column)
     {
+        
+        if(image == null)
+            return new JLabel();
+        
         Image img = (Image) image;
- 
         return new JLabel(new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
     }
 }
