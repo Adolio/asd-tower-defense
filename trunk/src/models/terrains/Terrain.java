@@ -58,12 +58,12 @@ public class Terrain implements Serializable
      */
     private static final long serialVersionUID = 1L;
 
-    public static final String EXTENSION_FICHIER = "map";
+    transient public static final String EXTENSION_FICHIER = "map";
 
     /**
-     * nom de la zone de jeu
+     * bref description
      */
-    private final String NOM;
+    private String brefDescription;
 
     /**
      * nombre de vies au debut de la partie
@@ -78,8 +78,8 @@ public class Terrain implements Serializable
     /**
      * Taille du terrain
      */
-    private final int LARGEUR, // en pixels
-            HAUTEUR; // en pixels
+    private int largeur, // en pixels
+                hauteur; // en pixels
 
     /**
      * precision du maillage, espace entre deux noeuds
@@ -99,12 +99,12 @@ public class Terrain implements Serializable
     /**
      * Dimention du maillage
      */
-    int largeurMaillage, hauteurMaillage;
+    private int largeurMaillage, hauteurMaillage;
     
     /**
      * Offset du maillage
      */
-    int positionMaillageX, positionMaillageY;
+    private int positionMaillageX, positionMaillageY;
     
     /**
      * Les creatures volantes n'ont pas besoins d'une maillage mais uniquement
@@ -179,30 +179,30 @@ public class Terrain implements Serializable
      * @param largeurMaillage largeur du maillage en pixel
      * @param hauteurMaillage hauteur du maillage en pixel
      * @param imageDeFond le chemin jusqu'a l'image de fond
-     * @param nom nom de la zone de jeu
+     * @param description nom de la zone de jeu
      */
     public Terrain(Jeu jeu, int largeur, int hauteur, int nbPiecesOrInitiales,
             int nbViesInitiales, int positionMaillageX, int positionMaillageY,
             int largeurMaillage, int hauteurMaillage, int modeDeJeu, Color couleurDeFond, 
-            Color couleurMurs, Image imageDeFond, String nom)
+            Color couleurMurs, Image imageDeFond, String description)
     {
         this.jeu = jeu; 
-        LARGEUR = largeur;
-        HAUTEUR = hauteur;
-        NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
-        NB_VIES_INITIALES      = nbViesInitiales;
-        this.imageDeFond       = imageDeFond;
-        this.iconImageDeFond   = new ImageIcon(imageDeFond);
+        this.largeur = largeur;
+        this.hauteur = hauteur;
+        this.NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
+        this.NB_VIES_INITIALES      = nbViesInitiales;
+        this.imageDeFond        = imageDeFond;
+        this.iconImageDeFond    = new ImageIcon(imageDeFond);
         
-        this.largeurMaillage = largeurMaillage;
-        this.hauteurMaillage = hauteurMaillage;
-        this.positionMaillageX = positionMaillageX;
-        this.positionMaillageY = positionMaillageY;
+        this.largeurMaillage    = largeurMaillage;
+        this.hauteurMaillage    = hauteurMaillage;
+        this.positionMaillageX  = positionMaillageX;
+        this.positionMaillageY  = positionMaillageY;
         
-        NOM                  = nom;
-        this.couleurDeFond   = couleurDeFond;
-        this.couleurMurs         = couleurMurs;
-        MODE_DE_JEU          = modeDeJeu;   
+        this.brefDescription    = description;
+        this.couleurDeFond      = couleurDeFond;
+        this.couleurMurs        = couleurMurs;
+        this.MODE_DE_JEU        = modeDeJeu;   
     }
     
     // TODO
@@ -210,11 +210,11 @@ public class Terrain implements Serializable
     {
         this.jeu = jeu;
         
-        LARGEUR                 = 500;
-        HAUTEUR                 = 500;
+        largeur                 = 500;
+        hauteur                 = 500;
         NB_PIECES_OR_INITIALES  = 100;
         NB_VIES_INITIALES       = 20;
-        NOM                     = "Test";
+        brefDescription                     = "Test";
         couleurMurs            = Color.BLACK;
         MODE_DE_JEU             = ModeDeJeu.MODE_SOLO;   
     }
@@ -270,7 +270,7 @@ public class Terrain implements Serializable
      */
     public int getLargeur()
     {
-        return LARGEUR;
+        return largeur;
     }
 
     /**
@@ -280,7 +280,7 @@ public class Terrain implements Serializable
      */
     public int getHauteur()
     {
-        return HAUTEUR;
+        return hauteur;
     }
 
     /**
@@ -324,9 +324,9 @@ public class Terrain implements Serializable
      * 
      * @return le nom du terrain
      */
-    public String getNom()
+    public String getBrefDescription()
     {
-        return NOM;
+        return brefDescription;
     }
     
     /**
@@ -349,7 +349,7 @@ public class Terrain implements Serializable
         if(taillePanelTerrain != null)
             return taillePanelTerrain;
         else  
-            return new Dimension(LARGEUR,HAUTEUR);
+            return new Dimension(largeur,hauteur);
     }
     
     // ----------------------
@@ -467,8 +467,8 @@ public class Terrain implements Serializable
             return false;
 
         // elle est bien dans le terrain
-        if (tour.getX() < 0 || tour.getX() > LARGEUR-tour.width
-         || tour.getY() < 0 || tour.getY() > HAUTEUR-tour.height)
+        if (tour.getX() < 0 || tour.getX() > largeur-tour.width
+         || tour.getY() < 0 || tour.getY() > hauteur-tour.height)
             return false;
             
         // il n'y a pas un mur
@@ -897,5 +897,23 @@ public class Terrain implements Serializable
     public void setCouleurMurs(Color couleur)
     {
         couleurMurs = couleur;
+    }
+
+    public void setBrefDescription(String brefDescription)
+    {
+       this.brefDescription = brefDescription;   
+    }
+    
+    
+    public void setLargeur(int largeur)
+    {
+        // FIXME SECURITE
+        this.largeur = largeur;
+    }
+
+    public void setHauteur(int hauteur)
+    {
+        // FIXME SECURITE
+        this.hauteur = hauteur;
     }
 }

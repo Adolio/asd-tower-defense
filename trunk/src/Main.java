@@ -1,5 +1,13 @@
 
+import java.io.File;
+
 import javax.swing.UIManager;
+
+import models.jeu.Jeu_Solo;
+import models.terrains.ElementTD_Coop;
+import models.terrains.ElementTD_Versus_4;
+import models.terrains.SimpleFiveVersus;
+import models.terrains.Terrain;
 /*
 import models.jeu.Jeu_Solo;
 import models.terrains.ElementTD_Versus_4;

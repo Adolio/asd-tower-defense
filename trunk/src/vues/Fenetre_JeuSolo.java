@@ -529,7 +529,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
                     "Voulez vous sauver votre score ?", 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getNom()); 
+	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getBrefDescription()); 
             }
         }
 	}

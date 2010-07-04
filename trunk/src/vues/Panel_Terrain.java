@@ -42,9 +42,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	//-------------------------
 	//-- proprietes du panel --
 	//-------------------------
-	private final int LARGEUR;
-	private final int HAUTEUR;
-	
 	private static final int xOffsetPseudo = 10, 
                              yOffsetPseudo = 30;
 	
@@ -298,10 +295,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
         this.jeu      = jeu;
         this.edpt     = edpt;
         
-        // proprietes du panel
-        LARGEUR = jeu.getTerrain().getLargeur();
-        HAUTEUR = jeu.getTerrain().getHauteur();
-        
         setPreferredSize(jeu.getTerrain().getTaillePanelTerrain());
         setFocusable(true);
         
@@ -424,6 +417,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	{
 	    Graphics2D g2 = (Graphics2D) g;
 
+	    // proprietes du panel
+        final int LARGEUR = jeu.getTerrain().getLargeur();
+        final int HAUTEUR = jeu.getTerrain().getHauteur();
+	    
+	    
 	    /** Désactivation de l'anti-aliasing */
 	    /*
 	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -1430,7 +1428,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
     {
         // remise à l'échelle initiale et recentrage
         coeffTaille = 1.0;
-        centrerSur(LARGEUR/2, HAUTEUR/2);
+        centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
     }
 
     public void zoomer(int i)

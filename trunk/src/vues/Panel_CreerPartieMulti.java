@@ -10,8 +10,11 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import exceptions.AucunEmplacementDisponibleException;
+import exceptions.AucunePlaceDisponibleException;
+import exceptions.JeuEnCoursException;
 import models.jeu.*;
 import models.joueurs.Joueur;
+import models.outils.GestionnaireSons;
 import models.terrains.*;
 import outils.*;
 import reseau.CanalException;
@@ -225,7 +228,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
                     terrains.add(t);
                     
-                    Object[] obj = new Object[] { t.getNom(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
+                    Object[] obj = new Object[] { t.getBrefDescription(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
                             t.getEquipesInitiales().size()+"", t.getImageDeFond() };
                     
                     model.addRow(obj);
@@ -365,88 +368,128 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
             terrain.initialiser();
             
-            Jeu_Serveur jeuServeur = new Jeu_Serveur();
-            jeuServeur.setTerrain(terrain);
-            
-            terrain.setJeu(jeuServeur);
-           
-            Joueur joueur = new Joueur(tfPseudo.getText());
-            
-            
-            // --------------------------------
-            // -- Création du serveur de jeu --
-            // --------------------------------
-            try
+            if(terrain.getMode() == ModeDeJeu.MODE_SOLO)
             {
-                jeuServeur.etablissementDuServeur();
+                Jeu_Solo jeu = new Jeu_Solo();
 
-                // ---------------------------------
-                // -- Connexion au serveur de jeu --
-                // ---------------------------------
+                jeu.setTerrain(terrain);
+                terrain.setJeu(jeu);
                 
-                Jeu_Client jeuClient = new Jeu_Client(joueur);
+                Joueur j = new Joueur("sans nom");
+                jeu.setJoueurPrincipal(j);
                 
                 try
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
-                    lblEtat.setText("Tentative de connexion au serveur local...");
+                    jeu.ajouterJoueur(j);
                     
-                    // TODO port dynamique
+                    jeu.getTerrain().setLargeurMaillage(jeu.getTerrain().getLargeur());
+                    jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
+                    
+                    jeu.getTerrain().initialiser();
+                    jeu.initialiser();
+                    
+                    GestionnaireSons.arreterTousLesSons();
+                    
+                    new Fenetre_JeuSolo(jeu);
+                    
+                    parent.dispose();
+                } 
+                catch (JeuEnCoursException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } 
+                catch (AucunePlaceDisponibleException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } 
+            }
+            else
+            {
+                Jeu_Serveur jeuServeur = new Jeu_Serveur();
+                jeuServeur.setTerrain(terrain);
+                
+                terrain.setJeu(jeuServeur);
+               
+                Joueur joueur = new Joueur(tfPseudo.getText());
+                
+                
+                // --------------------------------
+                // -- Création du serveur de jeu --
+                // --------------------------------
+                try
+                {
+                    jeuServeur.etablissementDuServeur();
+    
+                    // ---------------------------------
+                    // -- Connexion au serveur de jeu --
+                    // ---------------------------------
+                    
+                    Jeu_Client jeuClient = new Jeu_Client(joueur);
+                    
                     try
                     {
-                        jeuClient.connexionAvecLeServeur("127.0.0.1", Configuration.getPortSJ());
-                    
-                        // ---------------------------------------------------------------
-                        // -- Enregistrement du serveur sur le serveur d'enregistrement --
-                        // ---------------------------------------------------------------
-                    
-                        // Information
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
-                        lblEtat.setText("Enregistrement au serveur central...");
-
-                        if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
-                                terrain.getNbJoueursMax(),
-                                (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
-                                terrain.getMode()))
+                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+                        lblEtat.setText("Tentative de connexion au serveur local...");
+                        
+                        // TODO port dynamique
+                        try
                         {
-                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
-                            lblEtat.setText("Enregistrement au serveur central réussi!");
+                            jeuClient.connexionAvecLeServeur("127.0.0.1", Configuration.getPortSJ());
+                        
+                            // ---------------------------------------------------------------
+                            // -- Enregistrement du serveur sur le serveur d'enregistrement --
+                            // ---------------------------------------------------------------
+                        
+                            // Information
+                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
+                            lblEtat.setText("Enregistrement au serveur central...");
+    
+                            if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
+                                    terrain.getNbJoueursMax(),
+                                    (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
+                                    terrain.getMode()))
+                            {
+                                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                                lblEtat.setText("Enregistrement au serveur central réussi!");
+                            } 
+                            else
+                            {
+                                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                                lblEtat.setText("Enregistrement au serveur central échoué!");
+                            }
+                            
+                            // connexion réussie
+                            parent.getContentPane().removeAll();
+                            parent.getContentPane().add(
+                                    new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient),
+                                    BorderLayout.CENTER);
+                            parent.getContentPane().validate();
                         } 
-                        else
+                        catch (AucunEmplacementDisponibleException e1)
                         {
                             lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                            lblEtat.setText("Enregistrement au serveur central échoué!");
+                            lblEtat.setText("Pas de place pour rejoindre!");
                         }
-                        
-                        // connexion réussie
-                        parent.getContentPane().removeAll();
-                        parent.getContentPane().add(
-                                new Panel_AttendreJoueurs(parent, jeuServeur, jeuClient),
-                                BorderLayout.CENTER);
-                        parent.getContentPane().validate();
-                    } 
-                    catch (AucunEmplacementDisponibleException e1)
+                    }
+                    catch (ConnectException e2)
                     {
                         lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                        lblEtat.setText("Pas de place pour rejoindre!");
-                    }
+                        lblEtat.setText("Connection au serveur de jeu impossible");
+                    } 
+                    catch (CanalException e3)
+                    {
+                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lblEtat.setText("Connection au serveur de jeu impossible");
+                    } 
+                } 
+                catch (IOException e1)
+                {
+                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setText("Création du serveur de jeu impossible " +
+                    		        "- un serveur possible par machine (pour le moment)");
                 }
-                catch (ConnectException e2)
-                {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                    lblEtat.setText("Connection au serveur de jeu impossible");
-                } 
-                catch (CanalException e3)
-                {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                    lblEtat.setText("Connection au serveur de jeu impossible");
-                } 
-            } 
-            catch (IOException e1)
-            {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-                lblEtat.setText("Création du serveur de jeu impossible " +
-                		        "- un serveur possible par machine (pour le moment)");
             }
         } 
         else if (src == bAnnuler)

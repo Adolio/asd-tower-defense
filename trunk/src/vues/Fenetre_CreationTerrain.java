@@ -4,12 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.*;
-
-import exceptions.AucunePlaceDisponibleException;
-import exceptions.JeuEnCoursException;
-
+import javax.swing.filechooser.FileFilter;
+import exceptions.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.jeu.Jeu_Solo;
@@ -22,7 +19,7 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
     private static final ImageIcon I_MAIN = new ImageIcon("img/icones/hand.png");
-    private static final ImageIcon I_MURS = new ImageIcon("img/icones/square.png");
+    private static final ImageIcon I_MURS = new ImageIcon("img/icones/shape_square_edit.png");
     private static final ImageIcon I_TESTER = new ImageIcon("img/icones/cog.png");
     private static final ImageIcon I_ENREGISTRER = new ImageIcon("img/icones/disk.png");
     private static final ImageIcon I_OUVRIR = new ImageIcon("img/icones/folder_explore.png");
@@ -37,23 +34,43 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     
     
     private Panel_CreationTerrain panelCreationTerrain;
+    private Panel_OptionsTerrain panelOptionsTerrain;
+    private Panel_CreationEquipes panelCreationEquipes;
     
     private final JMenuBar  menuPrincipal   = new JMenuBar();
     private final JMenu     menuFichier     = new JMenu("Fichier");
     private final JMenu     menuEdition     = new JMenu("Edition");
     private final JMenu     menuAide        = new JMenu("Aide");
     
-    
-    
     private final JMenuItem itemOuvrir      = new JMenuItem("Ouvrir...",I_OUVRIR);
     private final JMenuItem itemEnregistrer = new JMenuItem("Enregistrer",I_ENREGISTRER);
     private final JMenuItem itemTester      = new JMenuItem("Tester",I_TESTER);
     
-    private JFileChooser fc = new JFileChooser();
-    
+    private JFileChooser fcOuvrir = new JFileChooser("./maps");
+    private JFileChooser fcSauver = new JFileChooser("./maps");
     
     
     private Jeu jeu;
+    
+    private File fichierCourant;
+    
+    
+    private static FileFilter filtreFichier = new FileFilter()
+    {
+        public String getDescription()
+        {
+            return "Terrain ."+Terrain.EXTENSION_FICHIER;
+        }
+        
+        public boolean accept(File file)
+        {
+            if(file.isDirectory()) 
+                 return true; 
+
+            return file.getName().toLowerCase().endsWith("."+Terrain.EXTENSION_FICHIER);
+        }
+    };
+    
     
     public Fenetre_CreationTerrain()
     {
@@ -65,27 +82,32 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         jeu = new Jeu_Solo();
         jeu.setTerrain(new Terrain(jeu));
         
+        
+        // selectionneur de fichiers
+        fcSauver.addChoosableFileFilter(filtreFichier);   
+        fcSauver.setDialogType(JFileChooser.SAVE_DIALOG);
+        fcSauver.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fcOuvrir.addChoosableFileFilter(filtreFichier);   
+        fcOuvrir.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        
+        
         // menu
         itemOuvrir.addActionListener(this);
         itemEnregistrer.addActionListener(this);
         itemTester.addActionListener(this);
  
-        
-        
         menuFichier.add(itemOuvrir);
         menuFichier.add(itemEnregistrer);
-        menuFichier.add(itemTester);
         
+        menuEdition.add(itemTester);
         
         menuPrincipal.add(menuFichier);
         menuPrincipal.add(menuEdition);
         menuPrincipal.add(menuAide);
         
-        
         setJMenuBar(menuPrincipal);
         
-        
-        
+
         // barre d'outils
         JToolBar jToolBar = new JToolBar();
         
@@ -118,8 +140,12 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         //panelOnglets.setPreferredSize(new Dimension(300,420));
         panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND);
         
-        panelOnglets.add("Options", new Panel_OptionsTerrain(jeu));
-        panelOnglets.add("Equipes", new Panel_CreationEquipes(jeu));
+        
+        panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
+        panelCreationEquipes = new Panel_CreationEquipes(jeu);
+        
+        panelOnglets.add("Options",panelOptionsTerrain );
+        panelOnglets.add("Equipes",panelCreationEquipes);
         
         JPanel p = new JPanel(new BorderLayout());
         p.add(panelOnglets,BorderLayout.CENTER);
@@ -216,15 +242,14 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         else if(src == bTester || src == itemTester)
         {
             Joueur j = new Joueur("Test");
-            
             jeu.setJoueurPrincipal(j);
             
             try
             {
                 jeu.ajouterJoueur(j);
                 
-                jeu.getTerrain().setLargeurMaillage(500);
-                jeu.getTerrain().setHauteurMaillage(500);
+                jeu.getTerrain().setLargeurMaillage(jeu.getTerrain().getLargeur());
+                jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
                 
                 jeu.getTerrain().initialiser();
                 jeu.initialiser();
@@ -240,23 +265,37 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-            }
-            
-            
+            } 
         }
     }
 
     private void enregistrerTerrain()
     {
-        Terrain.serialiser(jeu.getTerrain(),new File("maps/"+jeu.getTerrain().getNom()+".map"));
+        if(fichierCourant == null)
+        {
+            // Save as...
+            if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) 
+            {
+                fichierCourant = fcSauver.getSelectedFile();
+                
+                // rename if extension not wrote
+                if(!fichierCourant.getName().toLowerCase().endsWith("."+Terrain.EXTENSION_FICHIER))
+                    fichierCourant = new File(fichierCourant.getAbsolutePath()+"."+Terrain.EXTENSION_FICHIER);
+            }
+        }
+        
+        if(fichierCourant != null)
+        {
+            Terrain.serialiser(jeu.getTerrain(),fichierCourant/*new File("maps/"+jeu.getTerrain().getNom()+"."+Terrain.EXTENSION_FICHIER)*/); 
+        }
     }
 
     private void ouvrirTerrain()
     {
-        int returnVal = fc.showOpenDialog(this);
+        int returnVal = fcOuvrir.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File fichier = fc.getSelectedFile();
+            File fichier = fcOuvrir.getSelectedFile();
             
             try
             {
@@ -264,16 +303,24 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
                 
                 jeu.setTerrain(t);
                 t.setJeu(jeu);
+                
+                fichierCourant = fichier;
+                
+                panelOptionsTerrain.miseAJour();
+                panelCreationEquipes.miseAJour();
+                
             } 
             catch (ClassCastException e1)
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-            } catch (IOException e1)
+            } 
+            catch (IOException e1)
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-            } catch (ClassNotFoundException e1)
+            } 
+            catch (ClassNotFoundException e1)
             {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
