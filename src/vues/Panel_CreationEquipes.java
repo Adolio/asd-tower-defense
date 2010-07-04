@@ -215,4 +215,9 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         }
         
     }
+
+    public void miseAJour()
+    {
+        construirePanelEquipes();
+    }
 }

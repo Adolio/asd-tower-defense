@@ -4,14 +4,17 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import models.jeu.Jeu;
+import models.terrains.Terrain;
 
-public class Panel_OptionsTerrain extends JPanel implements ActionListener
+public class Panel_OptionsTerrain extends JPanel implements ActionListener, DocumentListener
 {
     private static final long serialVersionUID = 1L;
     
-    private JTextField tfNomTerrain = new JTextField();
+    private JTextField tfDescription = new JTextField();
     
     private JTextField tfLargeurM = new JTextField();
     private JTextField tfHauteurM = new JTextField();
@@ -19,13 +22,11 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
     private JTextField tfLargeurT = new JTextField();
     private JTextField tfHauteurT = new JTextField();
     
-    
-    
-    private JButton openButton = new JButton("Parcourir...");
-    private JButton bCouleurDeFond = new JButton();
+    private JButton bImageDeFond    = new JButton("Parcourir...");
+    private JButton bCouleurDeFond  = new JButton();
     private JButton bCouleurDesMurs = new JButton();
     
-    private final JFileChooser fc = new JFileChooser();
+    private final JFileChooser fcImageDeFond = new JFileChooser();
     private Jeu jeu;
     
     private Panel_Table pForm = new Panel_Table(); 
@@ -41,10 +42,13 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
         int ligne = 0;
         
         // Nom du terrain
-        pForm.add(new JLabel("Nom du terrain"),0,ligne);
-        tfNomTerrain.setPreferredSize(dim);
-        tfNomTerrain.setText(jeu.getTerrain().getNom());
-        pForm.add(tfNomTerrain,1,ligne);
+        pForm.add(new JLabel("Description"),0,ligne);
+        tfDescription.setPreferredSize(dim);
+        tfDescription.setText(jeu.getTerrain().getBrefDescription());
+        
+        tfDescription.addActionListener(this);
+        tfDescription.getDocument().addDocumentListener(this);
+        pForm.add(tfDescription,1,ligne);
         ligne++;
         
         // Couleur de fond
@@ -66,9 +70,9 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
         
         // Image de fond
         pForm.add(new JLabel("Image de fond"),0,ligne);
-        openButton.setPreferredSize(dim);
-        openButton.addActionListener(this);
-        pForm.add(openButton,1,ligne);
+        bImageDeFond.setPreferredSize(dim);
+        bImageDeFond.addActionListener(this);
+        pForm.add(bImageDeFond,1,ligne);
         ligne++;
         
         // Taille Terrain
@@ -77,6 +81,10 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
         tfHauteurT.setText(Integer.toString(jeu.getTerrain().getHauteur()));
         tfLargeurT.setPreferredSize(new Dimension(40,25));
         tfHauteurT.setPreferredSize(new Dimension(40,25));
+        
+        tfLargeurT.getDocument().addDocumentListener(this);
+        tfHauteurT.getDocument().addDocumentListener(this);
+        
         JPanel pTailleT = new JPanel();
         pTailleT.add(new JLabel("l:"));
         pTailleT.add(tfLargeurT);
@@ -107,11 +115,11 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
     
     public void actionPerformed(ActionEvent e) {
         //Handle open button action.
-        if (e.getSource() == openButton) 
+        if (e.getSource() == bImageDeFond) 
         {
-            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fcImageDeFond.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                
-                File file = fc.getSelectedFile();
+                File file = fcImageDeFond.getSelectedFile();
                 
                 jeu.getTerrain().setImageDeFond(Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath()));
                 
@@ -143,9 +151,88 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener
                jeu.getTerrain().setCouleurMurs(couleur);
                bCouleurDesMurs.setBackground(couleur);
            } 
-       }
-        
+       } 
     }
 
+    public void miseAJour()
+    {
+        Terrain t = jeu.getTerrain();
+         
+        tfDescription.setText(t.getBrefDescription());
+        
+        bCouleurDeFond.setBackground(t.getCouleurDeFond());
+        bCouleurDesMurs.setBackground(t.getCouleurMurs());
+        
+        tfLargeurT.setText(t.getLargeur()+"");
+        tfHauteurT.setText(t.getHauteur()+"");
+        
+        // FIXME Maillage !
+        tfLargeurM.setText(t.getLargeur()+"");
+        tfHauteurM.setText(t.getHauteur()+""); 
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e)
+    {}
+
+    @Override
+    public void insertUpdate(DocumentEvent e)
+    {
+        changementChamp(e);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e)
+    {
+        changementChamp(e);
+    }
+    
+    public void changementChamp(DocumentEvent e)
+    {
+        if(e.getDocument() == tfDescription.getDocument())
+        {
+            jeu.getTerrain().setBrefDescription(tfDescription.getText());
+        }
+        else if(e.getDocument() == tfLargeurT.getDocument())
+        {
+            try
+            {
+                int largeur = Integer.parseInt(tfLargeurT.getText());
+                
+                if(largeur > 0)             
+                    jeu.getTerrain().setLargeur(largeur);
+                else
+                    throw new Exception();
+            }
+            catch(Exception e1)
+            {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        tfLargeurT.setText(jeu.getTerrain().getLargeur()+"");
+                    }
+                });
+            }
+        }
+        else if(e.getDocument() == tfHauteurT.getDocument())
+        {
+            try
+            {
+                int hauteur = Integer.parseInt(tfHauteurT.getText());
+                
+                if(hauteur > 0)             
+                    jeu.getTerrain().setHauteur(hauteur);
+                else
+                    throw new Exception();
+            }
+            catch(Exception e1)
+            {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        tfHauteurT.setText(jeu.getTerrain().getHauteur()+"");
+                    }
+                });
+            }
+        }
+    }
     
 }

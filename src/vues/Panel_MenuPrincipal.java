@@ -13,6 +13,7 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
+import models.outils.GestionnaireSons;
 
 /**
  * Panel du menu principal de l'application.
@@ -37,7 +38,8 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     private JButton bAPropos = new JButton("A propos");
     private JButton bOptions = new JButton("Options");
     private JButton bQuitter = new JButton("Quitter");
-
+    private JButton bEditeurDeTerrain = new JButton("Editeur de Terrain");
+    
     private JFrame parent;
 
     /**
@@ -90,6 +92,15 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         parent.getRootPane().setDefaultButton(bPartieSolo); // def button
         GestionnaireDesPolices.setStyle(bPartieSolo);  
         pAbsolu.add(bPartieSolo);
+        
+        
+        bEditeurDeTerrain.addActionListener(this);
+        bEditeurDeTerrain.setBounds(160, 0, 150, 50); 
+        GestionnaireDesPolices.setStyle(bEditeurDeTerrain);  
+        pAbsolu.add(bEditeurDeTerrain);
+        
+        
+        
         
         // partie multijoueurs
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
@@ -153,6 +164,14 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
         } 
+        else if (source == bEditeurDeTerrain)
+        {
+            new Fenetre_CreationTerrain();
+            
+            GestionnaireSons.arreterTousLesSons();
+            
+            parent.dispose();
+        }   
         else if (source == bRejoindrePartieMulti)
         {
             parent.getContentPane().removeAll();
