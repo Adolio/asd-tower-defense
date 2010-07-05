@@ -8,6 +8,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.terrains.Terrain;
 
 /**
@@ -29,6 +30,8 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     private JTextField tfNbPiecesOrInit = new JTextField();
     private JTextField tfNbViesInit = new JTextField();
 
+    private JComboBox cbModeDeJeu = new JComboBox();
+    
     private JTextField tfLargeurM = new JTextField();
     private JTextField tfHauteurM = new JTextField();
     
@@ -56,6 +59,16 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         
         int ligne = 0;
         
+        // mode de jeu
+        cbModeDeJeu.addItem("Solo");
+        cbModeDeJeu.addItem("Versus");
+        //cbModeDeJeu.addItem(ModeDeJeu.MODE_COOP); // TODO
+        pForm.add(new JLabel("Mode de jeu"),0,ligne);
+        cbModeDeJeu.setPreferredSize(dim);
+        cbModeDeJeu.addActionListener(this);
+        pForm.add(cbModeDeJeu,1,ligne);
+        ligne++;
+             
         // Taille Terrain
         pForm.add(new JLabel("Taille du terrain"),0,ligne);
         tfLargeurT.setText(Integer.toString(jeu.getTerrain().getLargeur()));
@@ -158,8 +171,13 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     
     public void actionPerformed(ActionEvent e) {
         
-        //Handle open button action.
-        if (e.getSource() == bImageDeFond) 
+        
+
+        if (e.getSource() == cbModeDeJeu) 
+        {
+            jeu.getTerrain().setModeDeJeu(cbModeDeJeu.getSelectedIndex());
+        }
+        else if (e.getSource() == bImageDeFond) 
         {
             if (fcImageDeFond.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                
@@ -206,6 +224,8 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     {
         Terrain t = jeu.getTerrain();
          
+        cbModeDeJeu.setSelectedIndex(t.getMode());
+        
         tfDescription.setText(t.getBrefDescription());
         tfNbPiecesOrInit.setText(t.getNbPiecesOrInitiales()+"");
         tfNbViesInit.setText(t.getNbViesInitiales()+"");
@@ -245,7 +265,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         {
             jeu.getTerrain().setBrefDescription(tfDescription.getText());
         }
-        if(e.getDocument() == tfNbViesInit.getDocument())
+        else if(e.getDocument() == tfNbViesInit.getDocument())
         {
             try
             {
@@ -265,11 +285,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
                 tfNbViesInit.setBorder(new LineBorder(Color.RED));
             }
         }
-        
-        
-            
-        
-        if(e.getDocument() == tfNbPiecesOrInit.getDocument())
+        else if(e.getDocument() == tfNbPiecesOrInit.getDocument())
         {
             try
             {

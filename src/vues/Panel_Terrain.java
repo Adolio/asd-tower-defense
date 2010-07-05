@@ -896,7 +896,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
         int positionYBarre  = (int)(creature.getY()+creature.getHeight());
         
         // affichage du conteneur
-        g2.setColor(COULEUR_CONTENEUR_SANTE);
+        //g2.setColor(COULEUR_CONTENEUR_SANTE);
+        g2.setColor(creature.getEquipeCiblee().getCouleur());
+        
         g2.fillRect(positionXBarre,positionYBarre, 
                     largeurBarre, HAUTEUR_BARRE_VIE);
         
@@ -965,6 +967,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        tx.rotate(tour.getAngle());
 	        tx.translate((int) -tour.getWidth()/2.0, (int) -tour.getHeight()/2.0);
 
+	        g2.setColor(tour.getPrioprietaire().getEquipe().getCouleur());
+	        g2.fillOval(tour.x-1, tour.y-1, (int) tour.getWidth()+2, (int) tour.getHeight()+2);
+	        
+	        
 		    g2.drawImage(tour.getImage(), tx ,null);
 		}
 		// dessin d'un forme de couleur

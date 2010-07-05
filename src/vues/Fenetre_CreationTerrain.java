@@ -147,9 +147,9 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         //panelOnglets.setPreferredSize(new Dimension(300,420));
         panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND);
         
-        
+        panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
-        panelCreationEquipes = new Panel_CreationEquipes(jeu);
+        panelCreationEquipes = new Panel_CreationEquipes(jeu, panelCreationTerrain);
         
         panelOnglets.add("Propriétés",panelOptionsTerrain );
         panelOnglets.add("Equipes",panelCreationEquipes);
@@ -158,7 +158,7 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         p.add(panelOnglets,BorderLayout.CENTER);
         add(p,BorderLayout.EAST);
         
-        panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
+        
         panelCreationTerrain.basculeraffichageZonesDepartArrivee();
         add(panelCreationTerrain,BorderLayout.CENTER);
         
