@@ -205,6 +205,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 
                 
                 // si il y une zone de construction
+                /*
                 for(Equipe e : jeu.getEquipes())
                 {
                     for(EmplacementJoueur ej : e.getEmplacementsJoueur())
@@ -216,6 +217,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
                         }
                     }
                 }
+                */
 
                 break;
         }
@@ -336,7 +338,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
         }
     }
     
-    private void setRecEnTraitement(Rectangle r)
+    void setRecEnTraitement(Rectangle r)
     {
         recEnTraitement = r;
         deplGrab = true;

@@ -24,4 +24,19 @@ public class ModeDeJeu
         
         return "Inconnu";
     }
+    
+    public static int getMode(String mode)
+    {
+        if(mode.equals("Solo"))
+            return MODE_SOLO;
+        else if(mode.equals("Versus"))
+            return MODE_VERSUS;
+        else if(mode.equals("Coop"))
+            return MODE_COOP;
+        else
+            return -1;
+    }
+    
+    
+    
 }

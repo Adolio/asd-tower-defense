@@ -162,7 +162,7 @@ public class Terrain implements Serializable
      * Mode de jeu du terrain, utilisé pour construire les bons formulaires 
      * et affichages
      */
-    private final int MODE_DE_JEU;
+    private int modeDeJeu;
     
     /**
      * Permet de definit la taille du panel du terrain
@@ -205,7 +205,7 @@ public class Terrain implements Serializable
         this.brefDescription    = description;
         this.couleurDeFond      = couleurDeFond;
         this.couleurMurs        = couleurMurs;
-        this.MODE_DE_JEU        = modeDeJeu;   
+        this.modeDeJeu          = modeDeJeu;   
     }
     
     // TODO
@@ -219,7 +219,7 @@ public class Terrain implements Serializable
         nbViesInitiales       = 20;
         brefDescription         = "<sans description>";
         couleurMurs             = Color.BLACK;
-        MODE_DE_JEU             = ModeDeJeu.MODE_SOLO;   
+        modeDeJeu             = ModeDeJeu.MODE_SOLO;   
     }
 
     /**
@@ -343,7 +343,7 @@ public class Terrain implements Serializable
      */
     public int getMode()
     {
-        return MODE_DE_JEU;
+        return modeDeJeu;
     }
 
     /**
@@ -938,5 +938,10 @@ public class Terrain implements Serializable
     public void setAfficherMurs(boolean afficherMurs)
     {
         this.afficherMurs = afficherMurs;
+    }
+
+    public void setModeDeJeu(int modeDeJeu)
+    {
+        this.modeDeJeu = modeDeJeu;
     }
 }

@@ -22,11 +22,15 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private int idCourant = 1;
     private Panel_Table pTabEquipes = new Panel_Table();   
     
-    public Panel_CreationEquipes(Jeu jeu)
+    private int idEJ = 1;
+    private Panel_CreationTerrain panelCreationTerrain;
+    
+    public Panel_CreationEquipes(Jeu jeu,Panel_CreationTerrain panelCreationTerrain)
     {
         super(new BorderLayout());
         
         this.jeu = jeu;
+        this.panelCreationTerrain = panelCreationTerrain;
         
         //add(new JLabel("Equipes!"));
         bCreerEquipe.addActionListener(this);
@@ -47,13 +51,15 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         int ligne=0;
         
+        idEJ = 1;
+        
         for(final Equipe equipe : jeu.getEquipes())
         {
-            
             // nom de l'équipe
             final JTextField lNomEquipe = new JTextField(equipe.getNom());
             lNomEquipe.setForeground(equipe.getCouleur());
-            lNomEquipe.setPreferredSize(new Dimension(120,30));
+            lNomEquipe.setMinimumSize(new Dimension(100,30));
+            
             pTabEquipes.add(lNomEquipe,0,ligne);
             
             // Couleur
@@ -90,8 +96,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    // TODO panelCreationTerrain.setRecEnTraitement(equipe.getZoneDepart(0));
-                    
+                    panelCreationTerrain.setRecEnTraitement(equipe.getZoneDepartCreatures(0));
                 }
             });
             
@@ -108,14 +113,13 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    // TODO panelCreationTerrain.setRecEnTraitement(equipe.getZoneArrivee());
+                    panelCreationTerrain.setRecEnTraitement(equipe.getZoneArriveeCreatures());
                 }
             });
             
             
-            // Zone d'arrivé
-            
-            final JButton bNouvelEmplacement = new JButton("+E");
+            // Zone d'arrivée
+            final JButton bNouvelEmplacement = new JButton("E++");
             pTabEquipes.add(bNouvelEmplacement,4,ligne);
             
             bNouvelEmplacement.addActionListener(new ActionListener()
@@ -124,16 +128,12 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 public void actionPerformed(ActionEvent e)
                 {
                     // FIXME id
-                    equipe.ajouterEmplacementJoueur(new EmplacementJoueur(1, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
+                    equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
                 
                     construirePanelEquipes();
                 }
             });
              
-            
-            
-            
-            
             // Suppression
             final JButton bSupprimerEquipe = new JButton(I_SUPPRIMER);
             pTabEquipes.add(bSupprimerEquipe,5,ligne);
@@ -151,12 +151,27 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             
             ligne++;
-            
-            
+
             
             for(final EmplacementJoueur ej : equipe.getEmplacementsJoueur())
             {
                 pTabEquipes.add(new JLabel("Emplacement "+ej.getId()),1,ligne);
+                
+                if(ej.getId() >= idEJ)
+                    idEJ = ej.getId() + 1;
+                
+                // Selection
+                final JButton bSelectionnerEmplacement = new JButton("Select.");
+                pTabEquipes.add(bSelectionnerEmplacement,2,ligne);
+                bSelectionnerEmplacement.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        panelCreationTerrain.setRecEnTraitement(ej.getZoneDeConstruction());
+                    } 
+                });
+                
                 
                 
                 // Suppression
@@ -164,7 +179,6 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 pTabEquipes.add(bSupprimerEmplacement,5,ligne);
                 bSupprimerEmplacement.addActionListener(new ActionListener()
                 {
-                    
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
@@ -182,17 +196,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         pTabEquipes.repaint();
         pTabEquipes.revalidate();
         pTabEquipes.validate();
