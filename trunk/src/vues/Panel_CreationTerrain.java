@@ -8,13 +8,23 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
-
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
+import models.terrains.Terrain;
 
+/**
+ * Panel de conception graphique du terrain.
+ * 
+ * Ce panel hérite du panel d'affichage du terrain de jeu durant la partie.
+ * 
+ * TODO compléter
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juillet 2010
+ * @since jdk1.6.0_16
+ * @see Terrain
+ */
 public class Panel_CreationTerrain extends Panel_Terrain
 {
     private static final long serialVersionUID      = 1L;
@@ -365,6 +375,8 @@ public class Panel_CreationTerrain extends Panel_Terrain
 
     public void activerModeDeplacement()
     {
-        mode = MODE_DEPLACEMENT;
+        recEnTraitement = null;
+        
+        mode = MODE_DEPLACEMENT; 
     }
 }

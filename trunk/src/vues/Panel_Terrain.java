@@ -12,7 +12,7 @@ import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.maillage.Noeud;
-import models.maillage.PathNotFoundException;
+import models.outils.Timer;
 import models.tours.Tour;
 
 /**
@@ -97,9 +97,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             4.0f,BasicStroke.CAP_ROUND, 
             BasicStroke.JOIN_ROUND, 
             10.0F, DASHES_EPAIS, 0.F);
-	
-	
-	
+
 	Stroke traitTmp;
 	
 	// 0.0f = 100% transparent et 1.0f vaut 100% opaque.
@@ -134,7 +132,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Temps de repose dans la boucle d'affichage
 	 */
-	private static final int TEMPS_REPOS_THREAD = 40;
+	private static final int TEMPS_REPOS_THREAD = 20;
 
 	/**
 	 * Marge autour du terrain pour éviter des bugs de déplacements en 
@@ -229,6 +227,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private boolean afficherRayonsDePortee;
 	
 	/**
+     * TODO
+     */
+    private boolean afficherZonesDepartArrivee;
+	
+	/**
 	 * Etape d'une echelle de zoom
 	 */
 	private final double ETAPE_ZOOM = 0.2;
@@ -258,8 +261,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 
     protected boolean quadrillage;
 
-   
-	
+    // TODO
+    private boolean repeterImageDeFond = true;
+
+    // TODO
+    private Timer timer;
+    private int fps;
+    private boolean afficherFps = true;
+
 	// curseurs
 	private static Cursor curRedimDroite   = new Cursor(Cursor.E_RESIZE_CURSOR);
 	private static Cursor curRedimGauche   = new Cursor(Cursor.W_RESIZE_CURSOR);
@@ -307,6 +316,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
                 centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
             }
         }
+        
+        afficherMurs = jeu.getTerrain().getAfficherMurs();
         
         // ajout des ecouteurs
         addKeyListener(this);
@@ -398,6 +409,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
         return afficherRayonsDePortee = !afficherRayonsDePortee;
     }
     
+    /**
+     * TODO commenter
+     */
+    public boolean basculeraffichageZonesDepartArrivee()
+    {
+        return afficherZonesDepartArrivee = !afficherZonesDepartArrivee;
+    }
+
     // TODO commenter
     public boolean basculerModeDebug()
     {
@@ -459,19 +478,25 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	            jeu.getTerrain().getLargeur()+2*MARGE_UNIVERS, 
 	            jeu.getTerrain().getHauteur()+2*MARGE_UNIVERS);
 
-		//--------------------------
-		//-- affichage du terrain --
-		//--------------------------
-		if(jeu.getTerrain().getImageDeFond() != null)
-			// image de fond
-			g2.drawImage(jeu.getTerrain().getImageDeFond(), 0, 0, null);
+		//---------------------------------------------
+		//-- affichage de l'image ou couleur de fond --
+		//---------------------------------------------
+	    if(jeu.getTerrain().getImageDeFond() != null && !modeDebug)
+		{	
+	        Image image = jeu.getTerrain().getImageDeFond();
+	        
+			if(repeterImageDeFond)
+			    for(int l=0;l<jeu.getTerrain().getLargeur();l+=image.getWidth(null))
+			        for(int h=0;h<jeu.getTerrain().getHauteur();h+=image.getHeight(null))
+			            g2.drawImage(image, l, h, null);
+			else
+			    g2.drawImage(image, 0, 0, null);
+		}
 		else
 		{
 			// couleur de fond
 			g2.setColor(jeu.getTerrain().getCouleurDeFond());
 			g2.fillRect(0, 0, LARGEUR, HAUTEUR);
-			
-			afficherMurs = true;
 		}
 
 		//-------------------------------------
@@ -483,12 +508,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
-		if(modeDebug)
+		if(modeDebug || afficherZonesDepartArrivee)
 		{
-		    // couleur de fond
-            g2.setColor(jeu.getTerrain().getCouleurDeFond());
-            g2.fillRect(0, 0, LARGEUR, HAUTEUR);
-		    
 			// affichages des zones de départ et arrivée
 		    for(Equipe equipe : jeu.getEquipes())
 		    {
@@ -603,12 +624,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			    
 			    g2.fillOval(n.x-1, n.y-1, 2, 2);
 			}
-			  
 			
-			
+			/*
 			try
             {
 			    //TODO
+			    
 			    g2.setColor(Color.BLUE);
 			    for(int i=-5;i<50;i++)
 			        for(int j=-5;j<50;j++)
@@ -617,6 +638,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	            
             } 
 			catch (IllegalArgumentException e) {}
+			*/
 			
 			// reinitialisation de la transparence
 	        setTransparence(1.f, g2);
@@ -765,9 +787,19 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
             g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 100, HAUTEUR / 2 - 50);
 	    }
+		
+		
+		if(afficherFps)
+        {
+		    g2.setColor(Color.BLACK);
+		    g2.drawString("fps : "+fps, 0, 12);
+		    g2.setColor(Color.WHITE);
+		    g2.drawString("fps : "+fps, 1, 12+1);
+        }
+		
 	}
 	
-	
+	/*
 	private void afficherCheminPourNoeud(int x, int y, Graphics2D g2)
     {  
         ArrayList<Point> chemin;
@@ -795,7 +827,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         catch (IllegalArgumentException e){} 
         catch (PathNotFoundException e){}
     }
-	
+	*/
 
 	/**
 	 * Permet de dessiner une zone rectangulaire sur le terrain.
@@ -1009,11 +1041,34 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void run()
 	{
-		// Tant que la partie est en cours...
+	    timer = new Timer();
+        timer.start();
+        
+        long lastFPSlog = 0;
+        int frames      = 0;
+	    
+	    // Tant que la partie est en cours...
 		while(!jeu.estDetruit())
 		{
 			// Raffraichissement du panel
 			repaint(); // -> appel paintComponent
+			
+			//-------------------------------
+            //-- compute frames per second --
+            //-------------------------------
+            if(afficherFps)
+            {
+                ++frames;
+    
+                long time = timer.getTime();
+                
+                if (time > lastFPSlog+1000) 
+                {
+                    fps         = frames;
+                    frames      = 0;
+                    lastFPSlog  = time;
+                }
+            }
 			
 			// Endore le thread
 			try {
@@ -1472,10 +1527,5 @@ public class Panel_Terrain extends JPanel implements Runnable,
             // centrer sur le milieu du terrain
             centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
         */
-    }
-    
-    public void dezoomer()
-    {
-        
     }
 }
