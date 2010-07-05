@@ -5,15 +5,28 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
 import exceptions.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.jeu.Jeu_Solo;
 import models.joueurs.Joueur;
+import models.outils.GestionnaireSons;
 import models.terrains.Terrain;
 import models.tours.Tour;
 
+/**
+ * Fenêtre de création et d'édition de terrain de jeu.
+ * 
+ * TODO compléter
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juillet 2010
+ * @since jdk1.6.0_16
+ * @see Terrain
+ */
 public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTerrain, ActionListener
 {
     private static final long serialVersionUID = 1L;
@@ -24,13 +37,14 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     private static final ImageIcon I_ENREGISTRER = new ImageIcon("img/icones/disk.png");
     private static final ImageIcon I_OUVRIR = new ImageIcon("img/icones/folder_explore.png");
     
-    
-    
     private JButton bMain = new JButton(I_MAIN);
     private JButton bMurs = new JButton(I_MURS);
     private JButton bOuvrir = new JButton(I_OUVRIR);
     private JButton bEnregistrer = new JButton(I_ENREGISTRER);
     private JButton bTester = new JButton(I_TESTER);
+    
+    private final Insets INSETS = new Insets(5, 5, 5, 5);
+    private final Color C_BTN_SEL = Color.BLUE;
     
     
     private Panel_CreationTerrain panelCreationTerrain;
@@ -49,11 +63,11 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     private JFileChooser fcOuvrir = new JFileChooser("./maps");
     private JFileChooser fcSauver = new JFileChooser("./maps");
     
-    
     private Jeu jeu;
-    
     private File fichierCourant;
+    //private boolean sauve = false;
     
+    private JLabel lblEtat = new JLabel("Prêt.");
     
     private static FileFilter filtreFichier = new FileFilter()
     {
@@ -74,14 +88,13 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     
     public Fenetre_CreationTerrain()
     {
-        super("Création de terrain");
+        super("Editeur de terrain");
         setIconImage(I_FENETRE.getImage());
         getContentPane().setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         jeu = new Jeu_Solo();
         jeu.setTerrain(new Terrain(jeu));
-        
         
         // selectionneur de fichiers
         fcSauver.addChoosableFileFilter(filtreFichier);   
@@ -90,7 +103,6 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         fcOuvrir.addChoosableFileFilter(filtreFichier);   
         fcOuvrir.setFileSelectionMode(JFileChooser.FILES_ONLY);
         
-        
         // menu
         itemOuvrir.addActionListener(this);
         itemEnregistrer.addActionListener(this);
@@ -98,36 +110,31 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
  
         menuFichier.add(itemOuvrir);
         menuFichier.add(itemEnregistrer);
-        
         menuEdition.add(itemTester);
-        
         menuPrincipal.add(menuFichier);
         menuPrincipal.add(menuEdition);
         menuPrincipal.add(menuAide);
         
         setJMenuBar(menuPrincipal);
         
-
         // barre d'outils
-        JToolBar jToolBar = new JToolBar();
+        JToolBar tbPrincipale = new JToolBar();
         
-        jToolBar.add(bOuvrir);
-        jToolBar.add(bEnregistrer);
-        jToolBar.addSeparator();
-        jToolBar.add(bMain);
-        jToolBar.add(bMurs);
-        jToolBar.addSeparator();
-        jToolBar.add(bTester);
-        
+        tbPrincipale.add(bOuvrir);
+        tbPrincipale.add(bEnregistrer);
+        tbPrincipale.addSeparator();
+        tbPrincipale.add(bMain);
+        tbPrincipale.add(bMurs);
+        tbPrincipale.addSeparator();
+        tbPrincipale.add(bTester);
         
         bOuvrir.addActionListener(this);
         bEnregistrer.addActionListener(this);
         bMain.addActionListener(this);
         bMurs.addActionListener(this);
         bTester.addActionListener(this);
-        
-        add(jToolBar,BorderLayout.NORTH);
-        
+ 
+        add(tbPrincipale,BorderLayout.NORTH);
         
         // Onglets de droits
         JTabbedPane panelOnglets = new JTabbedPane();
@@ -144,7 +151,7 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
         panelCreationEquipes = new Panel_CreationEquipes(jeu);
         
-        panelOnglets.add("Options",panelOptionsTerrain );
+        panelOnglets.add("Propriétés",panelOptionsTerrain );
         panelOnglets.add("Equipes",panelCreationEquipes);
         
         JPanel p = new JPanel(new BorderLayout());
@@ -152,10 +159,10 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         add(p,BorderLayout.EAST);
         
         panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
-   
-        panelCreationTerrain.basculerModeDebug();
+        panelCreationTerrain.basculeraffichageZonesDepartArrivee();
         add(panelCreationTerrain,BorderLayout.CENTER);
         
+        add(lblEtat,BorderLayout.SOUTH);
         
         pack();
         setLocationRelativeTo(null);
@@ -216,7 +223,6 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     @Override
     public void vendreTour(Tour tour){}
 
-    
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -227,48 +233,111 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         {
             ouvrirTerrain();
         }
-        if(src == bEnregistrer || src == itemEnregistrer)
+        else if(src == bEnregistrer || src == itemEnregistrer)
         {
             enregistrerTerrain();
         }
         else if(src == bMain)
         {
+            bMain.setBorder(new LineBorder(C_BTN_SEL,2));
+            bMurs.setBorder(new EmptyBorder(INSETS));
+            
             panelCreationTerrain.activerModeDeplacement();
         }
         else if(src == bMurs)
         {
+            bMurs.setBorder(new LineBorder(C_BTN_SEL,2));
+            bMain.setBorder(new EmptyBorder(INSETS));
+            
             panelCreationTerrain.activerModeCreationMurs();
         }
         else if(src == bTester || src == itemTester)
         {
-            Joueur j = new Joueur("Test");
-            jeu.setJoueurPrincipal(j);
-            
-            try
-            {
-                jeu.ajouterJoueur(j);
-                
-                jeu.getTerrain().setLargeurMaillage(jeu.getTerrain().getLargeur());
-                jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
-                
-                jeu.getTerrain().initialiser();
-                jeu.initialiser();
-                
-                new Fenetre_JeuSolo(jeu);
-            } 
-            catch (JeuEnCoursException e1)
-            {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } 
-            catch (AucunePlaceDisponibleException e1)
-            {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } 
+            tester();
         }
     }
 
+    /**
+     * Permet de tester le terrain courant
+     */
+    private void tester()
+    {
+        try
+        {
+            // sauvegarde et chargement du terrain
+            enregistrerTerrain();
+            
+            // si la sauvegarde a joué (si première sauvegarde)
+            if(fichierCourant != null)
+            {
+                Terrain t = Terrain.charger(fichierCourant);
+                
+                Jeu j = new Jeu_Solo();
+                j.setTerrain(t);
+                t.setJeu(j);
+                
+                Joueur joueur = new Joueur("Joueur Test");
+                j.setJoueurPrincipal(joueur);
+                j.ajouterJoueur(joueur);
+     
+                t.initialiser();
+                j.initialiser();
+                
+                new Fenetre_JeuSolo(j)
+                {
+                    private static final long serialVersionUID = 35425L;
+
+                    /**
+                     * Permet de retourner au menu principal
+                     */
+                    protected void retourAuMenuPrincipal()
+                    {
+                        GestionnaireSons.arreterTousLesSons();
+                         
+                        dispose(); // destruction de la fenetre
+                        System.gc(); // passage du remasse miette
+                    }
+                    
+                    protected void quitter()
+                    {
+                        // FIXME fait planter l'éditeur après fermeture
+                        //jeu.terminer();
+                        //jeu.detruire();
+                        dispose();
+                    } 
+                };
+            }
+        }
+        catch (ClassCastException e1)
+        {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText("Fichier invalide");
+        } 
+        catch (IOException e1)
+        {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText("Fichier invalide");
+        } 
+        catch (ClassNotFoundException e1)
+        {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText("Fichier invalide");
+        }
+        catch (JeuEnCoursException e1)
+        {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText("Le jeu est en cours!");
+        } 
+        catch (AucunePlaceDisponibleException e1)
+        {
+            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setText("Il n'y a aucun emplacement de joueur!");
+        }
+    }
+    
+    /**
+     * Permet de sauvegarder le Terrain en traitement
+     */
     private void enregistrerTerrain()
     {
         if(fichierCourant == null)
@@ -286,10 +355,24 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         
         if(fichierCourant != null)
         {
-            Terrain.serialiser(jeu.getTerrain(),fichierCourant/*new File("maps/"+jeu.getTerrain().getNom()+"."+Terrain.EXTENSION_FICHIER)*/); 
+            try
+            {
+                jeu.getTerrain().setLargeurMaillage(jeu.getTerrain().getLargeur());
+                jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
+                
+                Terrain.serialiser(jeu.getTerrain(),fichierCourant/*new File("maps/"+jeu.getTerrain().getNom()+"."+Terrain.EXTENSION_FICHIER)*/);
+            } 
+            catch (IOException e)
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Erreur lors de la sauvegarde!");
+            } 
         }
     }
 
+    /**
+     * Permet d'ouvir un Terrain sérialisé
+     */
     private void ouvrirTerrain()
     {
         int returnVal = fcOuvrir.showOpenDialog(this);
@@ -309,23 +392,25 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
                 panelOptionsTerrain.miseAJour();
                 panelCreationEquipes.miseAJour();
                 
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setText("Fichier chargé");
+                
             } 
             catch (ClassCastException e1)
             {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Fichier invalide");
             } 
             catch (IOException e1)
             {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Fichier invalide");
             } 
             catch (ClassNotFoundException e1)
             {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Fichier invalide");
             }
         }
-        
     }
 }

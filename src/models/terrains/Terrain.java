@@ -68,12 +68,12 @@ public class Terrain implements Serializable
     /**
      * nombre de vies au debut de la partie
      */
-    private final int NB_VIES_INITIALES;
+    private int nbViesInitiales;
 
     /**
      * nombre de pieces d'or au debut de la partie
      */
-    private final int NB_PIECES_OR_INITIALES;
+    private int nbPiecesOrInitiales;
 
     /**
      * Taille du terrain
@@ -137,6 +137,9 @@ public class Terrain implements Serializable
      */
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
   
+    // TODO
+    protected boolean afficherMurs;
+    
     /**
      * musique d'ambiance du terrain
      */
@@ -189,8 +192,8 @@ public class Terrain implements Serializable
         this.jeu = jeu; 
         this.largeur = largeur;
         this.hauteur = hauteur;
-        this.NB_PIECES_OR_INITIALES = nbPiecesOrInitiales;
-        this.NB_VIES_INITIALES      = nbViesInitiales;
+        this.nbPiecesOrInitiales = nbPiecesOrInitiales;
+        this.nbViesInitiales    = nbViesInitiales;
         this.imageDeFond        = imageDeFond;
         this.iconImageDeFond    = new ImageIcon(imageDeFond);
         
@@ -212,10 +215,10 @@ public class Terrain implements Serializable
         
         largeur                 = 500;
         hauteur                 = 500;
-        NB_PIECES_OR_INITIALES  = 100;
-        NB_VIES_INITIALES       = 20;
-        brefDescription                     = "Test";
-        couleurMurs            = Color.BLACK;
+        nbPiecesOrInitiales     = 100;
+        nbViesInitiales       = 20;
+        brefDescription         = "<sans description>";
+        couleurMurs             = Color.BLACK;
         MODE_DE_JEU             = ModeDeJeu.MODE_SOLO;   
     }
 
@@ -296,7 +299,11 @@ public class Terrain implements Serializable
     // TODO commenter
     public void setImageDeFond(Image imageDeFond)
     {      
+        if(imageDeFond == null)
+             throw new IllegalArgumentException("Image nulle");
+        
         this.imageDeFond = imageDeFond;
+        iconImageDeFond = new ImageIcon(imageDeFond); 
     }
     
     /**
@@ -306,7 +313,7 @@ public class Terrain implements Serializable
      */
     public int getNbPiecesOrInitiales()
     {
-        return NB_PIECES_OR_INITIALES;
+        return nbPiecesOrInitiales;
     }
 
     /**
@@ -316,7 +323,7 @@ public class Terrain implements Serializable
      */
     public int getNbViesInitiales()
     {
-        return NB_VIES_INITIALES;
+        return nbViesInitiales;
     }
 
     /**
@@ -774,43 +781,37 @@ public class Terrain implements Serializable
      * 
      * @param terrain le terrain à sérialiser
      * @param fichier le fichier de destination
+     * @throws IOException
      */
     public static void serialiser(Terrain terrain, File fichier)
+            throws IOException
     {
-       //File fichier = new File("maps/"+terrain.getNom()+".map");
+        // File fichier = new File("maps/"+terrain.getNom()+".map");
 
-       try
-       {
-          // Ouverture d'un flux de sortie vers le fichier FICHIER.
-          FileOutputStream fluxSortieFichier = new FileOutputStream(fichier);
-          
-          // Creation d'un "flux objet" avec le flux fichier.
-          ObjectOutputStream fluxSortieObjet = new ObjectOutputStream(fluxSortieFichier);
-          try
-          {
-             // Serialisation : ecriture de l'objet dans le flux de sortie.
-             fluxSortieObjet.writeObject(terrain);
-             
-             // On vide le tampon.
-             fluxSortieObjet.flush();
-          }
-          finally
-          {
-             // Fermeture des flux (important!).
-             try
-             {
+        // Ouverture d'un flux de sortie vers le fichier FICHIER.
+        FileOutputStream fluxSortieFichier = new FileOutputStream(fichier);
+
+        // Creation d'un "flux objet" avec le flux fichier.
+        ObjectOutputStream fluxSortieObjet = new ObjectOutputStream(
+                fluxSortieFichier);
+        try
+        {
+            // Serialisation : ecriture de l'objet dans le flux de sortie.
+            fluxSortieObjet.writeObject(terrain);
+
+            // On vide le tampon.
+            fluxSortieObjet.flush();
+        } finally
+        {
+            // Fermeture des flux (important!).
+            try
+            {
                 fluxSortieObjet.close();
-             }
-             finally
-             {
+            } finally
+            {
                 fluxSortieFichier.close();
-             }
-          }
-       }
-       catch (IOException erreur) // Erreur sur l'ObjectOutputStream.
-       {
-          erreur.printStackTrace();
-       }
+            }
+        }
     }
     
     /**
@@ -915,5 +916,27 @@ public class Terrain implements Serializable
     {
         // FIXME SECURITE
         this.hauteur = hauteur;
+    }
+
+    public void setNbPiecesOrInitiales(int nbPiecesOrInitiales)
+    {
+        // FIXME SECURITE
+        this.nbPiecesOrInitiales = nbPiecesOrInitiales;
+    }
+
+    public void setNbViesInitiales(int nbViesInitiales)
+    {
+        // FIXME SECURITE
+        this.nbViesInitiales = nbViesInitiales;
+    }
+    
+    public boolean getAfficherMurs()
+    {
+        return afficherMurs;
+    }
+    
+    public void setAfficherMurs(boolean afficherMurs)
+    {
+        this.afficherMurs = afficherMurs;
     }
 }

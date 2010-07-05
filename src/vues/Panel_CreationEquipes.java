@@ -20,7 +20,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private JButton bCreerEquipe = new JButton("Créer une équipe",I_AJOUTER_EQUIPE);
     private Jeu jeu;
     private int idCourant = 1;
-    private Panel_Table pEquipes = new Panel_Table();   
+    private Panel_Table pTabEquipes = new Panel_Table();   
     
     public Panel_CreationEquipes(Jeu jeu)
     {
@@ -32,7 +32,10 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         bCreerEquipe.addActionListener(this);
         add(bCreerEquipe,BorderLayout.NORTH);
         
-        add(pEquipes,BorderLayout.CENTER);
+        JPanel pEquipe = new JPanel(new BorderLayout());
+        pEquipe.add(pTabEquipes,BorderLayout.NORTH);
+        add(pEquipe,BorderLayout.CENTER);
+       
         construirePanelEquipes();
         
         setPreferredSize(new Dimension(400,200));
@@ -40,7 +43,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
 
     private void construirePanelEquipes()
     {
-        pEquipes.removeAll();
+        pTabEquipes.removeAll();
         
         int ligne=0;
         
@@ -51,11 +54,11 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             final JTextField lNomEquipe = new JTextField(equipe.getNom());
             lNomEquipe.setForeground(equipe.getCouleur());
             lNomEquipe.setPreferredSize(new Dimension(120,30));
-            pEquipes.add(lNomEquipe,0,ligne);
+            pTabEquipes.add(lNomEquipe,0,ligne);
             
             // Couleur
             final JButton bCouleur = new JButton(I_COULEURS);
-            pEquipes.add(bCouleur,1,ligne);
+            pTabEquipes.add(bCouleur,1,ligne);
             bCouleur.addActionListener(new ActionListener()
             {
                 
@@ -80,7 +83,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             // Zone de départ
             final JButton bZoneDepart = new JButton("ZD");
-            pEquipes.add(bZoneDepart,2,ligne);
+            pTabEquipes.add(bZoneDepart,2,ligne);
             
             bZoneDepart.addActionListener(new ActionListener()
             {
@@ -98,7 +101,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             // Zone d'arrivé
             
             final JButton bZoneArrive = new JButton("ZA");
-            pEquipes.add(bZoneArrive,3,ligne);
+            pTabEquipes.add(bZoneArrive,3,ligne);
             
             bZoneArrive.addActionListener(new ActionListener()
             {
@@ -113,7 +116,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             // Zone d'arrivé
             
             final JButton bNouvelEmplacement = new JButton("+E");
-            pEquipes.add(bNouvelEmplacement,4,ligne);
+            pTabEquipes.add(bNouvelEmplacement,4,ligne);
             
             bNouvelEmplacement.addActionListener(new ActionListener()
             {
@@ -133,7 +136,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             // Suppression
             final JButton bSupprimerEquipe = new JButton(I_SUPPRIMER);
-            pEquipes.add(bSupprimerEquipe,5,ligne);
+            pTabEquipes.add(bSupprimerEquipe,5,ligne);
             bSupprimerEquipe.addActionListener(new ActionListener()
             {
                 
@@ -153,12 +156,12 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             for(final EmplacementJoueur ej : equipe.getEmplacementsJoueur())
             {
-                pEquipes.add(new JLabel("Emplacement "+ej.getId()),1,ligne);
+                pTabEquipes.add(new JLabel("Emplacement "+ej.getId()),1,ligne);
                 
                 
                 // Suppression
                 final JButton bSupprimerEmplacement = new JButton(I_SUPPRIMER);
-                pEquipes.add(bSupprimerEmplacement,5,ligne);
+                pTabEquipes.add(bSupprimerEmplacement,5,ligne);
                 bSupprimerEmplacement.addActionListener(new ActionListener()
                 {
                     
@@ -190,9 +193,9 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         
         
-        pEquipes.repaint();
-        pEquipes.revalidate();
-        pEquipes.validate();
+        pTabEquipes.repaint();
+        pTabEquipes.revalidate();
+        pTabEquipes.validate();
     }
 
     @Override

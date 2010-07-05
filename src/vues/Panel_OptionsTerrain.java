@@ -4,23 +4,38 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import models.jeu.Jeu;
 import models.terrains.Terrain;
 
+/**
+ * Formlaire de choix des préférences du Terrain.
+ * 
+ * TODO compléter
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juillet 2010
+ * @since jdk1.6.0_16
+ * @see Terrain
+ */
 public class Panel_OptionsTerrain extends JPanel implements ActionListener, DocumentListener
 {
     private static final long serialVersionUID = 1L;
     
     private JTextField tfDescription = new JTextField();
     
+    private JTextField tfNbPiecesOrInit = new JTextField();
+    private JTextField tfNbViesInit = new JTextField();
+
     private JTextField tfLargeurM = new JTextField();
     private JTextField tfHauteurM = new JTextField();
     
     private JTextField tfLargeurT = new JTextField();
     private JTextField tfHauteurT = new JTextField();
+    
+    private JCheckBox cbAfficherMurs = new JCheckBox();
     
     private JButton bImageDeFond    = new JButton("Parcourir...");
     private JButton bCouleurDeFond  = new JButton();
@@ -41,7 +56,25 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         
         int ligne = 0;
         
-        // Nom du terrain
+        // Taille Terrain
+        pForm.add(new JLabel("Taille du terrain"),0,ligne);
+        tfLargeurT.setText(Integer.toString(jeu.getTerrain().getLargeur()));
+        tfHauteurT.setText(Integer.toString(jeu.getTerrain().getHauteur()));
+        tfLargeurT.setPreferredSize(new Dimension(40,25));
+        tfHauteurT.setPreferredSize(new Dimension(40,25));
+        
+        tfLargeurT.getDocument().addDocumentListener(this);
+        tfHauteurT.getDocument().addDocumentListener(this);
+        
+        JPanel pTailleT = new JPanel();
+        pTailleT.add(new JLabel("l:"));
+        pTailleT.add(tfLargeurT);
+        pTailleT.add(new JLabel("h:"));
+        pTailleT.add(tfHauteurT);
+        pForm.add(pTailleT,1,ligne);
+        ligne++;
+        
+        // Description du terrain
         pForm.add(new JLabel("Description"),0,ligne);
         tfDescription.setPreferredSize(dim);
         tfDescription.setText(jeu.getTerrain().getBrefDescription());
@@ -49,6 +82,26 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         tfDescription.addActionListener(this);
         tfDescription.getDocument().addDocumentListener(this);
         pForm.add(tfDescription,1,ligne);
+        ligne++;
+        
+        // Nombre de pieces d'or initiales
+        pForm.add(new JLabel("Nb pièces d'or init."),0,ligne);
+        tfNbPiecesOrInit.setPreferredSize(dim);
+        tfNbPiecesOrInit.setText(jeu.getTerrain().getNbPiecesOrInitiales()+"");
+        
+        tfNbPiecesOrInit.addActionListener(this);
+        tfNbPiecesOrInit.getDocument().addDocumentListener(this);
+        pForm.add(tfNbPiecesOrInit,1,ligne);
+        ligne++;
+
+        // Nombre de vies initiales
+        pForm.add(new JLabel("Nb vies init."),0,ligne);
+        tfNbViesInit.setPreferredSize(dim);
+        tfNbViesInit.setText(jeu.getTerrain().getNbViesInitiales()+"");
+        
+        tfNbViesInit.addActionListener(this);
+        tfNbViesInit.getDocument().addDocumentListener(this);
+        pForm.add(tfNbViesInit,1,ligne);
         ligne++;
         
         // Couleur de fond
@@ -74,26 +127,15 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         bImageDeFond.addActionListener(this);
         pForm.add(bImageDeFond,1,ligne);
         ligne++;
-        
-        // Taille Terrain
-        pForm.add(new JLabel("Taille du terrain"),0,ligne);
-        tfLargeurT.setText(Integer.toString(jeu.getTerrain().getLargeur()));
-        tfHauteurT.setText(Integer.toString(jeu.getTerrain().getHauteur()));
-        tfLargeurT.setPreferredSize(new Dimension(40,25));
-        tfHauteurT.setPreferredSize(new Dimension(40,25));
-        
-        tfLargeurT.getDocument().addDocumentListener(this);
-        tfHauteurT.getDocument().addDocumentListener(this);
-        
-        JPanel pTailleT = new JPanel();
-        pTailleT.add(new JLabel("l:"));
-        pTailleT.add(tfLargeurT);
-        pTailleT.add(new JLabel("h:"));
-        pTailleT.add(tfHauteurT);
-        pForm.add(pTailleT,1,ligne);
+          
+        // Afficher les murs
+        pForm.add(new JLabel("Murs visiblent par default"),0,ligne);
+        cbAfficherMurs.addActionListener(this);
+        pForm.add(cbAfficherMurs,1,ligne);
         ligne++;
         
         // Taille Maillage
+        /*
         pForm.add(new JLabel("Taille maillage"),0,ligne);
         tfLargeurM.setText(Integer.toString(jeu.getTerrain().getLargeur()));
         tfHauteurM.setText(Integer.toString(jeu.getTerrain().getHauteur()));
@@ -106,6 +148,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pTailleM.add(tfHauteurM);
         pForm.add(pTailleM,1,ligne);
         ligne++;
+        */
         
 
         
@@ -114,6 +157,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     }
     
     public void actionPerformed(ActionEvent e) {
+        
         //Handle open button action.
         if (e.getSource() == bImageDeFond) 
         {
@@ -130,6 +174,10 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
                 System.out.println("Open command cancelled by user.\n");
             }
        } 
+       else if (e.getSource() == cbAfficherMurs) 
+       {
+           jeu.getTerrain().setAfficherMurs(cbAfficherMurs.isSelected());
+       }   
        else if (e.getSource() == bCouleurDeFond)
        {
            Color couleur = JColorChooser.showDialog(null,
@@ -159,9 +207,13 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         Terrain t = jeu.getTerrain();
          
         tfDescription.setText(t.getBrefDescription());
+        tfNbPiecesOrInit.setText(t.getNbPiecesOrInitiales()+"");
+        tfNbViesInit.setText(t.getNbViesInitiales()+"");
         
         bCouleurDeFond.setBackground(t.getCouleurDeFond());
         bCouleurDesMurs.setBackground(t.getCouleurMurs());
+        
+        cbAfficherMurs.setSelected(t.getAfficherMurs());
         
         tfLargeurT.setText(t.getLargeur()+"");
         tfHauteurT.setText(t.getHauteur()+"");
@@ -193,24 +245,72 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         {
             jeu.getTerrain().setBrefDescription(tfDescription.getText());
         }
+        if(e.getDocument() == tfNbViesInit.getDocument())
+        {
+            try
+            {
+                int nbViesInitiales = Integer.parseInt(tfNbViesInit.getText());
+                
+                if(nbViesInitiales > 0)
+                {
+                    jeu.getTerrain().setNbViesInitiales(nbViesInitiales);
+                    tfNbViesInit.setBorder(new LineBorder(Color.BLACK));
+                }
+                else
+                    throw new Exception();
+                
+            }
+            catch(Exception e1)
+            {
+                tfNbViesInit.setBorder(new LineBorder(Color.RED));
+            }
+        }
+        
+        
+            
+        
+        if(e.getDocument() == tfNbPiecesOrInit.getDocument())
+        {
+            try
+            {
+                int piecesOr = Integer.parseInt(tfNbPiecesOrInit.getText());
+                
+                if(piecesOr > 0)
+                {
+                    jeu.getTerrain().setNbPiecesOrInitiales(piecesOr);
+                    tfNbPiecesOrInit.setBorder(new LineBorder(Color.BLACK));
+                }
+                else
+                    throw new Exception();
+                
+            }
+            catch(Exception e1)
+            {
+                tfNbPiecesOrInit.setBorder(new LineBorder(Color.RED));
+            }
+        }
         else if(e.getDocument() == tfLargeurT.getDocument())
         {
             try
             {
                 int largeur = Integer.parseInt(tfLargeurT.getText());
                 
-                if(largeur > 0)             
+                if(largeur > 0)   
+                {
                     jeu.getTerrain().setLargeur(largeur);
+                    tfLargeurT.setBorder(new LineBorder(Color.BLACK));
+                }
                 else
                     throw new Exception();
             }
             catch(Exception e1)
             {
-                SwingUtilities.invokeLater(new Runnable() {
+                tfLargeurT.setBorder(new LineBorder(Color.RED));
+                /*SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         tfLargeurT.setText(jeu.getTerrain().getLargeur()+"");
                     }
-                });
+                });*/
             }
         }
         else if(e.getDocument() == tfHauteurT.getDocument())
@@ -219,18 +319,24 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
             {
                 int hauteur = Integer.parseInt(tfHauteurT.getText());
                 
-                if(hauteur > 0)             
+                if(hauteur > 0)  
+                {
                     jeu.getTerrain().setHauteur(hauteur);
+                    tfHauteurT.setBorder(new LineBorder(Color.BLACK));
+                }
                 else
                     throw new Exception();
             }
             catch(Exception e1)
             {
+                tfHauteurT.setBorder(new LineBorder(Color.RED));
+                /*
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         tfHauteurT.setText(jeu.getTerrain().getHauteur()+"");
                     }
                 });
+                */
             }
         }
     }

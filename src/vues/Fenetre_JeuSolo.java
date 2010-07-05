@@ -487,17 +487,21 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    if(JOptionPane.showConfirmDialog(this, 
 	            "Etes-vous sûr de vouloir quitter le jeu ?", 
 	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
-	    {
-	        //demanderEnregistrementDuScore();
-	        
-	        jeu.terminer();
-            jeu.detruire();
-	        
-	        System.exit(0); // Fermeture correcte du logiciel
+	    {  
+            quitter();
 	    }
     }
 
-	/**
+	protected void quitter()
+    {
+	    //demanderEnregistrementDuScore();
+        
+        jeu.terminer();
+        jeu.detruire();
+        System.exit(0); // Fermeture correcte du logiciel
+    }
+
+    /**
      * Permet de demander pour retourner au menu principal
      */
 	private void demanderRetourAuMenuPrincipal()
@@ -537,7 +541,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     /**
 	 * Permet de retourner au menu principal
 	 */
-	private void retourAuMenuPrincipal()
+	protected void retourAuMenuPrincipal()
     {
 	    GestionnaireSons.arreterTousLesSons();
          
