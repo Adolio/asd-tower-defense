@@ -3,36 +3,36 @@
 
 = Les nouvelles fonctionnalités [Bientôt disponible] =
 
-- *Editeur de terrains*<br/>
+- *Editeur de terrains* (80%)<br/>
 Un éditeur de maps qui vous permet de créer vos propres terrains de jeu :). Plutard, nous mettrons en place un site d'échange de terrains afin que vous puissiez partager vos créations avec la communauté de joueurs.<br/><br/>
 
-- *Mode plein écran*<br/>
+- *Mode plein écran* (100%)<br/>
 Gestion de la maximisation et de la minimisation de la fenêtre. La taille du terrain s'agrandit en fonction de la taille de la fenêtre.<br/><br/>
 
-- *Choix de la stratégie d'attaque des tours*<br/>
+- *Choix de la stratégie d'attaque des tours* (100%)<br/>
 Nous offrons maintenant la possibilité aux joueurs de choisir sur quelle créature les tours privilégieront leurs attaques. <br/>Les choix disponibles sont les suivants :<br/><br/>
 1. Attaque de la créature la plus proche<br/>
 2. Attaque de la créature la plus éloignée<br/>
 3. Attaque de la créature la plus faible (pv)<br/>
 4. Attaque de la créature la plus forte (pv)<br/><br/>
 
-- *Fonction de redémarrage de la partie*<br/>
+- *Fonction de redémarrage de la partie* (100%)<br/>
 Une fonction pour redémarrer la partie est maintenant disponible dans le menu sous l'onglet "Fichier"<br/><br/>
 
-- *Gestion de la vitesse du jeu*<br/>
+- *Gestion de la vitesse du jeu* (100%)<br/>
 Le jeu était trop lent, afin de palier à ce problème, nous avons intégré une fréquence de déroulement du jeu. Le jeu peut dorénavant être accéléré et nous pourrions imaginer la mise en place d'un slow-motion en mettant la fréquence à faible valeur (< 1.0).<br/><br/>
 
-- *Ajout de quelques fonctionnalités disponibles depuis l'interface*<br/>
+- *Ajout de quelques fonctionnalités disponibles depuis l'interface* (90%)<br/>
 Quelques boutons ont fait leurs apparition au dessus du terrain, ceux-ci permettent notamment de zoomer, dézoomer, recentrer la caméra du terrain, augmenter (de façon cyclique) la vitesse du jeu, maximisation et minimisation la fenêtre. Un mode de déplacement du terrain avec W-A-S-D à été également intégré.<br/><br/>
 
-- *Maillage v2.0 basé sur un arbre des plus courts chemins*<br/>
+- *Maillage v2.0 basé sur un arbre des plus courts chemins* (50%)<br/>
 Actuellement en test car moins efficace dans certains cas que la version 1.0, pas encore assez optimisé.<br/><br/>
 
-- *Fenêtre d'options*<br/>
+- *Fenêtre d'options* (50%)<br/>
 Permet de modifier quelques constantes du jeu notamment le pseudo du joueur et l'adresse IP du serveur d'enregistrement. Les commandes de jeu feront leur apparition très bientôt. <br/><br/>
 
-- *Correction du bug des glaçons*<br/>
+- *Correction du bug des glaçons* (100%)<br/>
 Les ralentissements générés par les tours de glace n'étaient fonctionnels (les ralentissements avaient une durée infinie).<br/><br/>
 
-- *Petite réorganisation dans le menu principal*<br/>
+- *Petite réorganisation dans le menu principal* (100%)<br/>
 L'onglet "Edition" renommé en "Affichage" et distinction du mode debug de l'affichage du maillage.<br/><br/>
