@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -56,19 +59,32 @@ public class Panel_EmplacementsTerrain extends JPanel
         if(terrain != null)
         { 
             g2.scale(scaleX, scaleX);
-            
-            
-            //g2.fillRect(0,0,500,500);
-            
-            
-            
-            //--------------------------
-            //-- affichage du terrain --
-            //--------------------------
+
+            // image ou couleur de fond
             if(terrain.getImageDeFond() != null)
-                // image de fond
-                g2.drawImage(terrain.getImageDeFond(), 0, 0, terrain.getLargeur(),terrain.getHauteur(),  null);
-        
+            {   
+                Image image1 = terrain.getImageDeFond();
+                
+                for(int l=0;l<terrain.getLargeur();l+=image1.getWidth(null))
+                    for(int h=0;h<terrain.getHauteur();h+=image1.getHeight(null))
+                        g2.drawImage(image1, l, h, null);
+            }
+            else
+            {
+                // couleur de fond
+                g2.setColor(terrain.getCouleurDeFond());
+                g2.fillRect(0, 0, terrain.getLargeur(), terrain.getHauteur());
+            }
+            
+            // murs
+            if(terrain.getAfficherMurs())
+            {
+                g2.setColor(terrain.getCouleurMurs());
+                ArrayList<Rectangle> murs = terrain.getMurs();
+                g2.setColor(terrain.getCouleurMurs());
+                for(Rectangle mur : murs)
+                    dessinerZone(mur,g2);
+            }
             
             //---------------------------------------
             //-- affichage des zone de contruction --
@@ -128,7 +144,24 @@ public class Panel_EmplacementsTerrain extends JPanel
          
         scaleX = 1.0 / terrain.getLargeur() * largeur;
         setPreferredSize(new Dimension((int)(terrain.getLargeur()*scaleX),(int)(terrain.getHauteur()*scaleX)));
-
+        validate();
+        revalidate();
+        
+        
         repaint();
+    }
+    
+    /**
+     * Permet de dessiner une zone rectangulaire sur le terrain.
+     * 
+     * @param zone la zone rectangulaire
+     * @param g2 le Graphics2D pour dessiner
+     */
+    private void dessinerZone(final Rectangle zone, final Graphics2D g2)
+    {
+        g2.fillRect((int) zone.getX(), 
+                    (int) zone.getY(), 
+                    (int) zone.getWidth(), 
+                    (int) zone.getHeight());
     }
 }

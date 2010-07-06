@@ -43,19 +43,15 @@ import models.tours.Tour;
  * que telle mais doit etre heritee.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | 27 novemenbre 2009
+ * @version 1.2 | juillet 2010
  * @since jdk1.6.0_16
  * @see Tour
  * @see Creature
  * @see Maillage
  */
 
-// TODO abstract or not ?
 public class Terrain implements Serializable
 {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     transient public static final String EXTENSION_FICHIER = "map";
@@ -125,8 +121,8 @@ public class Terrain implements Serializable
     /**
      * Pour le mode debug
      */
-    private Color couleurMurs;
-    private Color couleurDeFond = new Color(200,200,0);
+    private Color couleurMurs = Color.BLACK;
+    private Color couleurDeFond = Color.WHITE;
     
     /**
      * Les murs sont utilises pour empecher le joueur de construire des tours
@@ -137,7 +133,9 @@ public class Terrain implements Serializable
      */
     protected ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
   
-    // TODO
+    /**
+     * Permet de spécifier l'affichage des murs par défaut
+     */
     protected boolean afficherMurs;
     
     /**
@@ -208,7 +206,13 @@ public class Terrain implements Serializable
         this.modeDeJeu          = modeDeJeu;   
     }
     
-    // TODO
+    /**
+     * Constructeur de Terrain de base
+     * 
+     * -> principalement utilisé pour l'éditeur de terrain
+     * 
+     * @param jeu le jeu
+     */
     public Terrain(Jeu jeu)
     {
         this.jeu = jeu;
@@ -216,10 +220,9 @@ public class Terrain implements Serializable
         largeur                 = 500;
         hauteur                 = 500;
         nbPiecesOrInitiales     = 100;
-        nbViesInitiales       = 20;
+        nbViesInitiales         = 20;
         brefDescription         = "<sans description>";
-        couleurMurs             = Color.BLACK;
-        modeDeJeu             = ModeDeJeu.MODE_SOLO;   
+        modeDeJeu               = ModeDeJeu.MODE_SOLO;   
     }
 
     /**
@@ -296,7 +299,11 @@ public class Terrain implements Serializable
         return imageDeFond;
     }
     
-    // TODO commenter
+    /**
+     * Permet de modifier l'image de fond du terrain
+     * 
+     * @param imageDeFond l'image de fond
+     */
     public void setImageDeFond(Image imageDeFond)
     {      
         if(imageDeFond == null)
@@ -488,9 +495,16 @@ public class Terrain implements Serializable
 
         // il n'y a pas les zones de depart ou d'arrivee
         for(Equipe e : jeu.getEquipes())
-            // TODO gérer plusieurs zone de depart
-            if (tour.intersects(e.getZoneDepartCreatures(0)) || tour.intersects(e.getZoneArriveeCreatures()))
+        {
+            // zones de départ
+            for(int i=0;i<e.getNbZonesDepart();i++)
+                if(tour.intersects(e.getZoneDepartCreatures(i)))
+                    return false;
+            
+            // zone d'arrivee
+            if (tour.intersects(e.getZoneArriveeCreatures()))
                 return false;
+        }
 
         // rien empeche la tour d'etre posee
         return true;
@@ -516,8 +530,8 @@ public class Terrain implements Serializable
             
             Equipe equipe = tour.getPrioprietaire().getEquipe();
 
-            // on part du principe que le joueur ne peu blocker que son chemin
-            // car il contruit sur son troncon... A VOIR!
+            // FIXME on part du principe que le joueur ne peu blocker que son chemin
+            // car il construit sur son troncon... A VOIR!
             
             // TODO gérer plusieurs zone de depart
             Rectangle zoneDepart = equipe.getZoneDepartCreatures(0);
@@ -870,19 +884,23 @@ public class Terrain implements Serializable
 
     public void setLargeurMaillage(int largeurMaillage)
     {
-        // TODO SAFE IT!
+        if(largeurMaillage <= 0)
+            throw new IllegalArgumentException("la largeur doit être > 0");
+        
         this.largeurMaillage = largeurMaillage;
     }
 
     public void setHauteurMaillage(int hauteurMaillage)
     {
-        // TODO SAFE IT!
+        if(hauteurMaillage <= 0)
+            throw new IllegalArgumentException("la hauteur doit être > 0");
+        
         this.hauteurMaillage = hauteurMaillage;
     }
 
-    public void supprimerMur(Rectangle recEnTraitement)
+    public void supprimerMur(Rectangle mur)
     {
-        murs.remove(recEnTraitement);
+        murs.remove(mur);
     }
 
     public String getNomFichier()
@@ -908,25 +926,33 @@ public class Terrain implements Serializable
     
     public void setLargeur(int largeur)
     {
-        // FIXME SECURITE
+        if(largeur <= 0)
+            throw new IllegalArgumentException("la largeur doit être > 0");
+
         this.largeur = largeur;
     }
 
     public void setHauteur(int hauteur)
     {
-        // FIXME SECURITE
+        if(hauteur <= 0)
+            throw new IllegalArgumentException("la hauteur doit être > 0");
+        
         this.hauteur = hauteur;
     }
 
     public void setNbPiecesOrInitiales(int nbPiecesOrInitiales)
     {
-        // FIXME SECURITE
+        if(nbPiecesOrInitiales < 0)
+            throw new IllegalArgumentException("la nombre de pieces d'or doit être >= 0");
+        
         this.nbPiecesOrInitiales = nbPiecesOrInitiales;
     }
 
     public void setNbViesInitiales(int nbViesInitiales)
     {
-        // FIXME SECURITE
+        if(nbViesInitiales <= 0)
+            throw new IllegalArgumentException("la nombre de vies doit être > 0");
+ 
         this.nbViesInitiales = nbViesInitiales;
     }
     

@@ -62,9 +62,9 @@ public class ElementTD extends Terrain
  
         
         // Création des équipes
-        Equipe e = new Equipe(1,"Les rouges",Color.RED);
+        Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);
         e.ajouterZoneDepartCreatures(new Rectangle(110, -40, 80, 20));
-        e.setZoneArriveeCreatures(new Rectangle(230, 0, 80, 20));
+        e.setZoneArriveeCreatures(new Rectangle(250, 0, 40, 40));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,480,500)));
         equipes.add(e);
         

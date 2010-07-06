@@ -63,9 +63,9 @@ public class Desert extends Terrain
 		
 		
 		// Création des équipes
-		Equipe e = new Equipe(1,"Les rouges",Color.RED);
+		Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);
         e.ajouterZoneDepartCreatures(new Rectangle(510,40,20,60));
-        e.setZoneArriveeCreatures(new Rectangle(0,400,20,60));
+        e.setZoneArriveeCreatures(new Rectangle(0,410,40,40));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,500,500)));
         equipes.add(e);
 

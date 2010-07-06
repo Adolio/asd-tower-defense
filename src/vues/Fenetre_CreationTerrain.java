@@ -27,7 +27,10 @@ import models.tours.Tour;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTerrain, ActionListener
+public class Fenetre_CreationTerrain extends    JFrame 
+                                     implements EcouteurDePanelTerrain, 
+                                                EcouteurDePanelCreationTerrain, 
+                                                ActionListener
 {
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
@@ -36,17 +39,21 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     private static final ImageIcon I_TESTER = new ImageIcon("img/icones/cog.png");
     private static final ImageIcon I_ENREGISTRER = new ImageIcon("img/icones/disk.png");
     private static final ImageIcon I_OUVRIR = new ImageIcon("img/icones/folder_explore.png");
-    
-    private JButton bMain = new JButton(I_MAIN);
-    private JButton bMurs = new JButton(I_MURS);
-    private JButton bOuvrir = new JButton(I_OUVRIR);
-    private JButton bEnregistrer = new JButton(I_ENREGISTRER);
-    private JButton bTester = new JButton(I_TESTER);
-    
-    private final Insets INSETS = new Insets(5, 5, 5, 5);
-    private final Color C_BTN_SEL = Color.BLUE;
+    private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/shape_square_delete.png");
+    private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
     
     
+    private JButton bMain           = new JButton(I_MAIN);
+    private JButton bMurs           = new JButton(I_MURS);
+    private JButton bOuvrir         = new JButton(I_OUVRIR);
+    private JButton bEnregistrer    = new JButton(I_ENREGISTRER);
+    private JButton bSupprimer      = new JButton(I_SUPPRIMER);
+    private JButton bTester         = new JButton(I_TESTER);
+    
+    
+    private final Insets INSETS     = new Insets(5, 5, 5, 5);
+    private final Color C_BTN_SEL   = Color.BLUE;
+     
     private Panel_CreationTerrain panelCreationTerrain;
     private Panel_OptionsTerrain panelOptionsTerrain;
     private Panel_CreationEquipes panelCreationEquipes;
@@ -58,7 +65,9 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     
     private final JMenuItem itemOuvrir      = new JMenuItem("Ouvrir...",I_OUVRIR);
     private final JMenuItem itemEnregistrer = new JMenuItem("Enregistrer",I_ENREGISTRER);
+    private final JMenuItem itemQuitter      = new JMenuItem("Quitter",I_QUITTER);
     private final JMenuItem itemTester      = new JMenuItem("Tester",I_TESTER);
+    
     
     private JFileChooser fcOuvrir = new JFileChooser("./maps");
     private JFileChooser fcSauver = new JFileChooser("./maps");
@@ -85,12 +94,12 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         }
     };
     
-    
     public Fenetre_CreationTerrain()
     {
-        super("Editeur de terrain");
+        super("ASD - Tower Defense - Editeur de terrain");
         setIconImage(I_FENETRE.getImage());
         getContentPane().setLayout(new BorderLayout());
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         jeu = new Jeu_Solo();
@@ -106,10 +115,12 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         // menu
         itemOuvrir.addActionListener(this);
         itemEnregistrer.addActionListener(this);
+        itemQuitter.addActionListener(this);
         itemTester.addActionListener(this);
  
         menuFichier.add(itemOuvrir);
         menuFichier.add(itemEnregistrer);
+        menuFichier.add(itemQuitter);
         menuEdition.add(itemTester);
         menuPrincipal.add(menuFichier);
         menuPrincipal.add(menuEdition);
@@ -126,12 +137,15 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         tbPrincipale.add(bMain);
         tbPrincipale.add(bMurs);
         tbPrincipale.addSeparator();
+        tbPrincipale.add(bSupprimer);
+        tbPrincipale.addSeparator();
         tbPrincipale.add(bTester);
         
         bOuvrir.addActionListener(this);
         bEnregistrer.addActionListener(this);
         bMain.addActionListener(this);
         bMurs.addActionListener(this);
+        bSupprimer.addActionListener(this);
         bTester.addActionListener(this);
  
         add(tbPrincipale,BorderLayout.NORTH);
@@ -145,7 +159,7 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
      
         panelOnglets.setOpaque(true);
         //panelOnglets.setPreferredSize(new Dimension(300,420));
-        panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND);
+        panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND_2);
         
         panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
@@ -158,7 +172,7 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         p.add(panelOnglets,BorderLayout.CENTER);
         add(p,BorderLayout.EAST);
         
-        
+        panelCreationTerrain.setEcouteurDeCreationTerrain(this);
         panelCreationTerrain.basculeraffichageZonesDepartArrivee();
         add(panelCreationTerrain,BorderLayout.CENTER);
         
@@ -188,7 +202,6 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
                      * C'est juste le look and feel qui n'est pas installe.
                      */ 
                 } 
-        
         
         new Fenetre_CreationTerrain();
     }
@@ -228,7 +241,6 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
     {
         Object src = e.getSource();
         
-        
         if(src == bOuvrir || src == itemOuvrir)
         {
             ouvrirTerrain();
@@ -236,6 +248,10 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
         else if(src == bEnregistrer || src == itemEnregistrer)
         {
             enregistrerTerrain();
+        }
+        else if(src == itemQuitter)
+        {
+            System.exit(0);
         }
         else if(src == bMain)
         {
@@ -250,6 +266,11 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
             bMain.setBorder(new EmptyBorder(INSETS));
             
             panelCreationTerrain.activerModeCreationMurs();
+        }
+        else if(src == bSupprimer)
+        {
+            jeu.getTerrain().supprimerMur(panelCreationTerrain.getRecEnTraitement());
+            panelCreationTerrain.deselectionnerRecEnTraitement(); 
         }
         else if(src == bTester || src == itemTester)
         {
@@ -412,5 +433,19 @@ public class Fenetre_CreationTerrain extends JFrame implements EcouteurDePanelTe
                 lblEtat.setText("Fichier invalide");
             }
         }
+    }
+
+    @Override
+    public void zoneModifiee(Rectangle zone)
+    {
+        lblEtat.setForeground(Color.BLACK);
+        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" l:"+zone.width+" h:"+zone.height); 
+    }
+
+    @Override
+    public void zoneSelectionnee(Rectangle zone)
+    {
+        lblEtat.setForeground(Color.BLACK);
+        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" l:"+zone.width+" h:"+zone.height);
     }
 }

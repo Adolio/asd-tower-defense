@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
-
 import exceptions.AucunePlaceDisponibleException;
 import exceptions.EmplacementOccupeException;
 
@@ -14,7 +13,7 @@ import exceptions.EmplacementOccupeException;
  * Classe de gestion d'une equipe.
  * 
  * @author Aurelien Da Campo
- * @version 1.1 | mai 2010
+ * @version 1.2 | juillet 2010
  * @since jdk1.6.0_16
  */
 public class Equipe implements Serializable
@@ -206,6 +205,12 @@ public class Equipe implements Serializable
        joueur.setEquipe(null);
    }
 
+   /**
+    * Permet de savoir si l'équip contient un certain joueur
+    * 
+    * @param joueur le joueur
+    * @return true si elle le contient, false sinon
+    */
    public boolean contient(Joueur joueur)
    {
        return joueurs.contains(joueur);
@@ -372,6 +377,14 @@ public class Equipe implements Serializable
         return nbViesRestantes <= 0 || estHorsJeu();
     }
 
+    /**
+     * Permet de savoir si l'équipe est hors jeu.
+     * 
+     * Si tous les joueurs de l'équipe sont hors jeu, l'équipe est 
+     * considérée comme hors jeu.
+     * 
+     * @return true si elle l'est, false sinon
+     */
     public boolean estHorsJeu()
     {
         Joueur joueur;
@@ -408,26 +421,55 @@ public class Equipe implements Serializable
         joueurs.clear();
     }
     
-    // TODO commenter
-    public void setCouleur(Color couleur2)
+    /**
+     * Permet de modifier la couleur
+     * 
+     * @param couleur la couleur
+     */
+    public void setCouleur(Color couleur)
     {
-        couleur = couleur2;
+        this.couleur = couleur;
     }
 
-    // TODO commenter
-    public void setZoneDepart(Rectangle rectangle)
+    /**
+     * Permet d'ajouter une zone de départ
+     * 
+     * @param rectangle la zone de départ
+     */
+    public void ajouterZoneDepart(Rectangle rectangle)
     {
         zonesDepartCreatures.add(rectangle);
     }
 
-    // TODO commenter
+    /**
+     * Permet de savoir le nombre de zones de départ
+     * 
+     * @return le nombre de zones de départ
+     */
     public int getNbZonesDepart()
     {
         return zonesDepartCreatures.size();
     }
 
+    /**
+     * Permet de supprimer un emplacement de joueur
+     * 
+     * @param ej l'emplacement de joueur à supprimer
+     */
     public void supprimerEmplacement(EmplacementJoueur ej)
     {
         emplacementsJoueur.remove(ej);
+    }
+
+    /**
+     * Permet de récupérer la liste des zones de départ
+     * 
+     * @return une copie de la liste des zones de départ
+     */
+    public Rectangle[] getZonesDepartCreatures()
+    {
+        Rectangle[] tabZD = new Rectangle[zonesDepartCreatures.size()];
+        zonesDepartCreatures.toArray(tabZD);
+        return tabZD;
     }
 }

@@ -210,7 +210,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 new TableCellRenderer_Image());
 
         // Chargement de toutes les maps
-        File repertoireMaps = new File("maps/");
+        File repertoireMaps = new File("maps/multi");
         File[] listFiles = repertoireMaps.listFiles();
         
         Terrain t;
@@ -229,7 +229,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     terrains.add(t);
                     
                     Object[] obj = new Object[] { t.getBrefDescription(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
-                            t.getEquipesInitiales().size()+"", t.getImageDeFond() };
+                            t.getEquipesInitiales().size()+"", t };
                     
                     model.addRow(obj);
                     

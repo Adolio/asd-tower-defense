@@ -60,9 +60,9 @@ public class WaterWorld extends Terrain
         );
 
         // Création des équipes
-        Equipe e = new Equipe(1,"Les rouges",Color.RED);
+        Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);
         e.ajouterZoneDepartCreatures(new Rectangle(-30, 30, 20, 80));
-        e.setZoneArriveeCreatures(new Rectangle(480, 390, 20, 80));
+        e.setZoneArriveeCreatures(new Rectangle(460, 410, 40, 40));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,500,500)));
         equipes.add(e);
         
