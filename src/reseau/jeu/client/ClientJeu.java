@@ -716,10 +716,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
      */
     private void receptionCreatureAjoutee(JSONObject message) throws JSONException
     {
-        log("Réception d'un l'ajout d'une créature.");
+        log("Réception de l'ajout d'une créature.");
         
         int id = message.getInt("ID_CREATURE");
         int typeCreature = message.getInt("TYPE_CREATURE");
+        
+        int idProprio = message.getInt("ID_PROPRIETAIRE");
         int idEquipe = message.getInt("ID_EQUIPE_CIBLEE");
         
         int x = message.getInt("X");
@@ -728,17 +730,21 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         int nbPiecesDOr = message.getInt("NB_PIECES_OR");
         double vitesse = message.getDouble("VITESSE");
         
-        Creature creature = TypeDeCreature.getCreature(typeCreature, 1, true);
+        
+        
+        
+        Creature creature   = TypeDeCreature.getCreature(typeCreature, 1, true);
         Equipe equipeCiblee = jeu.getEquipe(idEquipe);
-            
+        Joueur proprio      = jeu.getJoueur(idProprio);
+        
         if(creature != null)
         {
             creature.setId(id);
             creature.setX(x);
             creature.setY(y);
             creature.setEquipeCiblee(equipeCiblee);
+            creature.setProprietaire(proprio);
             creature.misAJour();
-            
             creature.setSanteMax(santeMax);
             creature.setNbPiecesDOr(nbPiecesDOr);
             creature.setVitesse(vitesse);

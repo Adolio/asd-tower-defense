@@ -235,6 +235,7 @@ public class Protocole implements ConstantesServeurJeu
             msg.put("TYPE", CREATURE_AJOUT);
             msg.put("TYPE_CREATURE", TypeDeCreature.getTypeCreature(creature));
             msg.put("ID_CREATURE", creature.getId());
+            msg.put("ID_PROPRIETAIRE", creature.getProprietaire().getId());
             msg.put("ID_EQUIPE_CIBLEE", creature.getEquipeCiblee().getId());
             msg.put("X", creature.x);
             msg.put("Y", creature.y);

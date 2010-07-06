@@ -12,6 +12,7 @@ import models.joueurs.Equipe;
 import models.joueurs.GestionnaireDeRevenu;
 import models.joueurs.Joueur;
 import models.maillage.PathNotFoundException;
+import models.outils.Outils;
 
 /**
  * Classe d'encapsulation des tours.
@@ -28,14 +29,15 @@ import models.maillage.PathNotFoundException;
  */
 public class GestionnaireCreatures implements Runnable
 {
-    private static final long TEMPS_ATTENTE = 50;
+    private static final long TEMPS_ATTENTE = 50; // ms
+    private static final int MARGES_LANCEMENT_ALEA = 5; // pixel
+    
     private Vector<Creature> creatures = new Vector<Creature>();
     private boolean gestionEnCours;
     private boolean enPause = false;
     private Object pause = new Object();
     private Jeu jeu;
 
-    
     /**
      * Constructeur du gestionnaire des creatures
      */
@@ -321,17 +323,19 @@ public class GestionnaireCreatures implements Runnable
                        
                         if (jeu.getModeDePositionnnementDesCreatures() == Jeu.MODE_POSITIONNNEMENT_ALETOIRE)
                         {
-                            xDepart = (int) (Math.random() * (ZONE_DEPART.getWidth() + 1) + ZONE_DEPART
-                                    .getX());
-                            yDepart = (int) (Math.random() * (ZONE_DEPART.getHeight() + 1) + ZONE_DEPART
-                                    .getY());
+
+                            xDepart = Outils.tirerNombrePseudoAleatoire(0, 
+                                    (int) ZONE_DEPART.width-MARGES_LANCEMENT_ALEA*2) + ZONE_DEPART.x+MARGES_LANCEMENT_ALEA;
+                            yDepart = Outils.tirerNombrePseudoAleatoire(0, 
+                                    (int) ZONE_DEPART.height-MARGES_LANCEMENT_ALEA*2) + ZONE_DEPART.y+MARGES_LANCEMENT_ALEA;
                         }
             
                         // creation d'une nouvelle instance de la creature
                         // et affectation de diverses proprietes
                         Creature creature = vague.getNouvelleCreature();
-                        creature.setX(xDepart);
-                        creature.setY(yDepart);
+                        creature.setX(xDepart-creature.width/2);
+                        creature.setY(yDepart-creature.height/2);
+                        creature.setProprietaire(lanceur);
                         creature.setEquipeCiblee(equipeCiblee);
                         creature.ajouterEcouteurDeCreature(edc);
             
