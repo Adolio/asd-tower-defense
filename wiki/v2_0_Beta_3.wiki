@@ -9,6 +9,13 @@ Un éditeur de maps qui vous permet de créer vos propres terrains de jeu :). Pl
 - *Mode plein écran*<br/>
 Gestion de la maximisation et de la minimisation de la fenêtre. La taille du terrain s'agrandit en fonction de la taille de la fenêtre.<br/><br/>
 
+- *Choix de la stratégie d'attaque des tours*<br/>
+Nous offrons maintenant la possibilité aux joueurs de choisir sur quelle créature les tours privilégieront leurs attaques. <br/>Les choix disponibles sont les suivants :<br/><br/>
+1. Attaque de la créature la plus proche<br/>
+2. Attaque de la créature la plus éloignée<br/>
+3. Attaque de la créature la plus faible (pv)<br/>
+4. Attaque de la créature la plus forte (pv)<br/><br/>
+
 - *Fonction de redémarrage de la partie*<br/>
 Une fonction pour redémarrer la partie est maintenant disponible dans le menu sous l'onglet "Fichier"<br/><br/>
 
