@@ -3,6 +3,9 @@
 
 = Les nouvelles fonctionnalités [Bientôt disponible] =
 
+- *Editeur de terrains*<br/>
+Un éditeur de maps qui vous permet de créer vos propres terrains de jeu :). Plutard, nous mettrons en place un site d'échange de terrains afin que vous puissiez partager vos créations avec la communauté de joueurs.<br/><br/>
+
 - *Mode plein écran*<br/>
 Gestion de la maximisation et de la minimisation de la fenêtre. La taille du terrain s'agrandit en fonction de la taille de la fenêtre.<br/><br/>
 
