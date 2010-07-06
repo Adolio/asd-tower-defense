@@ -2,13 +2,22 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
+import models.terrains.Terrain;
 
+/**
+ * Fenêtre de création d'équipes.
+ * 
+ * TODO commenter tout le fichier
+ * 
+ * @author Aurelien Da Campo
+ * @version 1.0 | juillet 2010
+ * @since jdk1.6.0_16
+ * @see Terrain
+ */
 public class Panel_CreationEquipes extends JPanel implements ActionListener
 {
     private static final long serialVersionUID = 1L;
@@ -16,13 +25,14 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private static final ImageIcon I_AJOUTER_EQUIPE = new ImageIcon("img/icones/flag_add.gif");
     private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/delete.png");
     private static final ImageIcon I_COULEURS = new ImageIcon("img/icones/color_swatch.png");
-    
+    private static final ImageIcon I_ZONE_EDITION = new ImageIcon("img/icones/shape_square_edit.png");
+
     private JButton bCreerEquipe = new JButton("Créer une équipe",I_AJOUTER_EQUIPE);
     private Jeu jeu;
-    private int idCourant = 1;
+    private int idEquipe = 1;
     private Panel_Table pTabEquipes = new Panel_Table();   
     
-    private int idEJ = 1;
+    private int idEJ;
     private Panel_CreationTerrain panelCreationTerrain;
     
     public Panel_CreationEquipes(Jeu jeu,Panel_CreationTerrain panelCreationTerrain)
@@ -32,11 +42,20 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         this.jeu = jeu;
         this.panelCreationTerrain = panelCreationTerrain;
         
+        setOpaque(false);
+        
         //add(new JLabel("Equipes!"));
+        GestionnaireDesPolices.setStyle(bCreerEquipe);
         bCreerEquipe.addActionListener(this);
-        add(bCreerEquipe,BorderLayout.NORTH);
+        
+        JPanel pTmp = new JPanel();
+        pTmp.setOpaque(false);
+        pTmp.add(bCreerEquipe);
+        add(pTmp,BorderLayout.NORTH);
         
         JPanel pEquipe = new JPanel(new BorderLayout());
+        pEquipe.setOpaque(false);
+        pTabEquipes.setOpaque(false);
         pEquipe.add(pTabEquipes,BorderLayout.NORTH);
         add(pEquipe,BorderLayout.CENTER);
        
@@ -48,7 +67,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private void construirePanelEquipes()
     {
         pTabEquipes.removeAll();
-        
+
         int ligne=0;
         
         idEJ = 1;
@@ -64,6 +83,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             // Couleur
             final JButton bCouleur = new JButton(I_COULEURS);
+            GestionnaireDesPolices.setStyle(bCouleur);
             pTabEquipes.add(bCouleur,1,ligne);
             bCouleur.addActionListener(new ActionListener()
             {
@@ -88,7 +108,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             //ligne++;
             
             // Zone de départ
-            final JButton bZoneDepart = new JButton("ZD");
+            final JButton bZoneDepart = new JButton("ZD",I_ZONE_EDITION);
+            GestionnaireDesPolices.setStyle(bZoneDepart);
             pTabEquipes.add(bZoneDepart,2,ligne);
             
             bZoneDepart.addActionListener(new ActionListener()
@@ -105,7 +126,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             // Zone d'arrivé
             
-            final JButton bZoneArrive = new JButton("ZA");
+            final JButton bZoneArrive = new JButton("ZA",I_ZONE_EDITION);
+            GestionnaireDesPolices.setStyle(bZoneArrive);
             pTabEquipes.add(bZoneArrive,3,ligne);
             
             bZoneArrive.addActionListener(new ActionListener()
@@ -116,10 +138,10 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     panelCreationTerrain.setRecEnTraitement(equipe.getZoneArriveeCreatures());
                 }
             });
-            
-            
+
             // Zone d'arrivée
             final JButton bNouvelEmplacement = new JButton("E++");
+            GestionnaireDesPolices.setStyle(bNouvelEmplacement);
             pTabEquipes.add(bNouvelEmplacement,4,ligne);
             
             bNouvelEmplacement.addActionListener(new ActionListener()
@@ -127,7 +149,6 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    // FIXME id
                     equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
                 
                     construirePanelEquipes();
@@ -136,6 +157,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
              
             // Suppression
             final JButton bSupprimerEquipe = new JButton(I_SUPPRIMER);
+            GestionnaireDesPolices.setStyle(bSupprimerEquipe);
             pTabEquipes.add(bSupprimerEquipe,5,ligne);
             bSupprimerEquipe.addActionListener(new ActionListener()
             {
@@ -161,7 +183,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     idEJ = ej.getId() + 1;
                 
                 // Selection
-                final JButton bSelectionnerEmplacement = new JButton("Select.");
+                final JButton bSelectionnerEmplacement = new JButton(I_ZONE_EDITION);
+                GestionnaireDesPolices.setStyle(bSelectionnerEmplacement);
                 pTabEquipes.add(bSelectionnerEmplacement,2,ligne);
                 bSelectionnerEmplacement.addActionListener(new ActionListener()
                 {
@@ -171,11 +194,10 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                         panelCreationTerrain.setRecEnTraitement(ej.getZoneDeConstruction());
                     } 
                 });
-                
-                
-                
+                  
                 // Suppression
                 final JButton bSupprimerEmplacement = new JButton(I_SUPPRIMER);
+                GestionnaireDesPolices.setStyle(bSupprimerEmplacement);
                 pTabEquipes.add(bSupprimerEmplacement,5,ligne);
                 bSupprimerEmplacement.addActionListener(new ActionListener()
                 {
@@ -188,13 +210,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     } 
                 });
                 
-                
                 ligne++;
-            }   
-            
-            
-            
-            
+            }
         }
 
         pTabEquipes.repaint();
@@ -209,18 +226,17 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         if(src == bCreerEquipe)
         {
-            Equipe equipe = new Equipe(idCourant, "Equipe "+idCourant, Color.BLACK);
+            Equipe equipe = new Equipe(idEquipe, "Equipe "+idEquipe, Color.BLACK);
             
             jeu.ajouterEquipe(equipe);
             
-            equipe.setZoneDepart(new Rectangle(40,40,120,40));
-            equipe.setZoneArriveeCreatures(new Rectangle(140,140,120,40));
+            equipe.ajouterZoneDepart(new Rectangle(40,40,40,40));
+            equipe.setZoneArriveeCreatures(new Rectangle(140,140,40,40));
             
-            idCourant++;
+            idEquipe++;
             
             construirePanelEquipes(); 
         }
-        
     }
 
     public void miseAJour()

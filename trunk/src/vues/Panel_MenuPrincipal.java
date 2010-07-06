@@ -1,5 +1,4 @@
 package vues;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,7 +12,6 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import models.jeu.Jeu;
-import models.outils.GestionnaireSons;
 
 /**
  * Panel du menu principal de l'application.
@@ -31,14 +29,14 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     // elements du formulaire
     private JLabel version;
 
-    private JButton bPartieSolo = new JButton("Partie Solo");
+    private JButton bPartieSolo = new JButton("Solo");
     private JButton bRejoindrePartieMulti = new JButton("Rejoindre");
     private JButton bCreerPartieMulti = new JButton("Créer");
     private JButton bRegles = new JButton("Règles");
     private JButton bAPropos = new JButton("A propos");
     private JButton bOptions = new JButton("Options");
     private JButton bQuitter = new JButton("Quitter");
-    private JButton bEditeurDeTerrain = new JButton("Editeur de Terrain");
+    private JButton bPartiePerso = new JButton("Vos parties");
     
     private JFrame parent;
 
@@ -93,14 +91,10 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         GestionnaireDesPolices.setStyle(bPartieSolo);  
         pAbsolu.add(bPartieSolo);
         
-        
-        bEditeurDeTerrain.addActionListener(this);
-        bEditeurDeTerrain.setBounds(160, 0, 150, 50); 
-        GestionnaireDesPolices.setStyle(bEditeurDeTerrain);  
-        pAbsolu.add(bEditeurDeTerrain);
-        
-        
-        
+        bPartiePerso.addActionListener(this);
+        bPartiePerso.setBounds(160, 0, 100, 50); 
+        GestionnaireDesPolices.setStyle(bPartiePerso);  
+        pAbsolu.add(bPartiePerso);
         
         // partie multijoueurs
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
@@ -164,13 +158,12 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
                     BorderLayout.CENTER);
             parent.getContentPane().validate();
         } 
-        else if (source == bEditeurDeTerrain)
+        else if (source == bPartiePerso)
         {
-            new Fenetre_CreationTerrain();
-            
-            GestionnaireSons.arreterTousLesSons();
-            
-            parent.dispose();
+            parent.getContentPane().removeAll();
+            parent.getContentPane().add(new Panel_PartiePersonnalisee(parent),
+                    BorderLayout.CENTER);
+            parent.getContentPane().validate();
         }   
         else if (source == bRejoindrePartieMulti)
         {

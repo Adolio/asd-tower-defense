@@ -62,13 +62,12 @@ public class Spiral extends Terrain
           );
 		
 		// Création des équipes
-		Equipe e = new Equipe(1,"Les rouges",Color.RED);
+		Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);
         e.ajouterZoneDepartCreatures(new Rectangle(500,40,20,80));
-        e.setZoneArriveeCreatures(new Rectangle(320,280,20,60));
+        e.setZoneArriveeCreatures(new Rectangle(300,290,40,40));
         e.ajouterEmplacementJoueur(new EmplacementJoueur(1,new Rectangle(0,0,480,500)));
         equipes.add(e);
 		
-        
         fichierMusiqueDAmbiance = FICHIER_MUSIQUE_DE_FOND;
         
 		/* definition des murs du labyrinthe :

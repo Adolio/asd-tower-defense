@@ -8,13 +8,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.jeu.Jeu;
-import models.jeu.ModeDeJeu;
 import models.terrains.Terrain;
 
 /**
  * Formlaire de choix des préférences du Terrain.
  * 
- * TODO compléter
+ * Utilisé dans la fenêtre d'édition de Terrain
  * 
  * @author Aurelien Da Campo
  * @version 1.0 | juillet 2010
@@ -56,8 +55,14 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     public Panel_OptionsTerrain(Jeu jeu)
     {
         this.jeu = jeu;
-        
+        setOpaque(false);
+
+        //--------------------------------
+        //-- CONSTRUCTION DU FORMULAIRE --
+        //--------------------------------
         int ligne = 0;
+        
+        pForm.setOpaque(false);
         
         // mode de jeu
         cbModeDeJeu.addItem("Solo");
@@ -80,6 +85,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         tfHauteurT.getDocument().addDocumentListener(this);
         
         JPanel pTailleT = new JPanel();
+        pTailleT.setOpaque(false);
         pTailleT.add(new JLabel("l:"));
         pTailleT.add(tfLargeurT);
         pTailleT.add(new JLabel("h:"));
@@ -162,16 +168,12 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(pTailleM,1,ligne);
         ligne++;
         */
-        
 
-        
         add(pForm);
-        setPreferredSize(new Dimension(200,200));
     }
     
-    public void actionPerformed(ActionEvent e) {
-        
-        
+    public void actionPerformed(ActionEvent e) 
+    {
 
         if (e.getSource() == cbModeDeJeu) 
         {

@@ -64,7 +64,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	/**
 	 * Coefficient de taille du rendu final du terrain
 	 */
-	private double coeffTaille = 1.0;
+	protected double coeffTaille = 1.0;
 	
 	/**
 	 * Taille des marges pour le scrolling automatique sur les bords du panel
@@ -76,6 +76,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
      */
 	protected int decaleX = 0,
 	            decaleY = 0;
+	
+	// TODO
+	private static final int MARGES_CHATEAU = 5;
 	
 	//---------------------------
 	//-- preferences de dessin --
@@ -118,12 +121,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final Color COULEUR_CREATURE_SANS_IMAGE = Color.YELLOW;
 	private static final Color COULEUR_SELECTION	   = Color.WHITE;
 	private static final Color COULEUR_POSE_IMPOSSIBLE = Color.RED;
-	private static final Color COULEUR_CONTENEUR_SANTE = Color.BLACK;
 	private static final Color COULEUR_RAYON_PORTEE    = Color.WHITE;
 	private static final Color COULEUR_NIVEAU 		   = Color.WHITE;
 	private static final Color COULEUR_NIVEAU_PERIMETRE = Color.YELLOW;
     private static final Color COULEUR_QUADRILLAGE      = Color.BLACK;
 	
+    private static final Image I_CHATEAU = Toolkit.getDefaultToolkit().getImage("img/tours/chateau.png");
+    
+    
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
 	 */
@@ -508,13 +513,16 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//-------------------------------------------------
 		//-- Affichage de la zone de depart et d'arrivee --
 		//-------------------------------------------------
-		if(modeDebug || afficherZonesDepartArrivee)
-		{
-			// affichages des zones de départ et arrivée
-		    for(Equipe equipe : jeu.getEquipes())
-		    {
+		
+		// affichages des zones de départ et arrivée
+	    for(Equipe equipe : jeu.getEquipes())
+	    {
+	        Rectangle r;
+	        
+	        if(modeDebug || afficherZonesDepartArrivee)
+	        {
 		        // dessin de la zone de depart
-		        Rectangle r;
+		        
 		        for(int i=0;i<equipe.getNbZonesDepart();i++)    
 		        {
 		            r = equipe.getZoneDepartCreatures(i);
@@ -528,22 +536,35 @@ public class Panel_Terrain extends JPanel implements Runnable,
                     g2.setColor(equipe.getCouleur());
                     g2.drawRect(r.x, r.y, r.width, r.height);  
 		        }
-
-	            // dessin de la zone d'arrivee
-	            if(equipe.getZoneArriveeCreatures() != null)
+	        }
+	        
+	        // dessin de la zone d'arrivee
+	        if(equipe.getZoneArriveeCreatures() != null)
+	        {
+	            r = equipe.getZoneArriveeCreatures();
+	           
+	            if(modeDebug)
 	            {
 	                g2.setColor(COULEUR_ZONE_ARRIVEE);
-	                
-	                r = equipe.getZoneArriveeCreatures();
 	                dessinerZone(r,g2);
 	                
 	                // tour de couleur
-                    setTransparence(1.f, g2);
-                    g2.setColor(equipe.getCouleur());
-                    g2.drawRect(r.x, r.y, r.width, r.height); 
+	                setTransparence(1.f, g2);
+	                g2.setColor(equipe.getCouleur());
+	                g2.drawRect(r.x, r.y, r.width, r.height); 
 	            }
-		    }
+	            else
+	            {
+	                // sol de couleur
+                    g2.setColor(equipe.getCouleur());
+                    g2.fillRect(r.x+MARGES_CHATEAU, r.y+MARGES_CHATEAU, r.width-(2*MARGES_CHATEAU), r.height-(2*MARGES_CHATEAU)); 
+	                g2.drawImage(I_CHATEAU, r.x, r.y, r.width, r.height, null);
+	            }
+	        }
 		}
+		
+		
+		
 		
 		if(modeDebug || afficherMurs)
 		{
@@ -967,9 +988,11 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	        tx.rotate(tour.getAngle());
 	        tx.translate((int) -tour.getWidth()/2.0, (int) -tour.getHeight()/2.0);
 
+	        
+	        setTransparence(.5f, g2);
 	        g2.setColor(tour.getPrioprietaire().getEquipe().getCouleur());
 	        g2.fillOval(tour.x-1, tour.y-1, (int) tour.getWidth()+2, (int) tour.getHeight()+2);
-	        
+	        setTransparence(1.f, g2);
 	        
 		    g2.drawImage(tour.getImage(), tx ,null);
 		}

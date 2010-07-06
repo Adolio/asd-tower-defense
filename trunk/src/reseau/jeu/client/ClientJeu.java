@@ -598,7 +598,8 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 
                 try 
                 {
-                    terrain = Terrain.charger(new File("maps/"+nomFichierTerrain));
+                    // TODO maps/multi/ -> constantes
+                    terrain = Terrain.charger(new File("maps/multi/"+nomFichierTerrain));
                     jeu.setTerrain(terrain);
                     terrain.setJeu(jeu);
                     
