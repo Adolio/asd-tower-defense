@@ -53,6 +53,11 @@ public abstract class Creature extends Rectangle
 	 */
     private static final long TEMPS_AVANT_SUPPRESSION_SI_AUCUNE_MAJ = 3000;
 
+    /**
+     * Propriétaire de la créature
+     */
+    private Joueur proprietaire;
+    
 	/**
 	 * nom de la creature
 	 */
@@ -213,6 +218,26 @@ public abstract class Creature extends Rectangle
     }
 	
 	/**
+	 * Permet de modifier le propriétaire
+	 * 
+     * @param proprietaire le proprietaire
+     */
+    public void setProprietaire(Joueur proprietaire)
+    {
+        this.proprietaire = proprietaire;
+    }
+
+    /**
+     * Permet de récupérer le propriétaire
+     * 
+     * @return le proprietaire
+     */
+    public Joueur getProprietaire()
+    {
+        return proprietaire;
+    }
+
+    /**
 	 * Permet de recuperer le type de la creature.
 	 * 
 	 * @return le type de la creature

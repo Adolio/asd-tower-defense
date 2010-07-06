@@ -33,18 +33,24 @@ public class Fenetre_CreationTerrain extends    JFrame
                                                 ActionListener
 {
     private static final long serialVersionUID = 1L;
-    private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
+    private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/map_edit.png");
     private static final ImageIcon I_MAIN = new ImageIcon("img/icones/hand.png");
     private static final ImageIcon I_MURS = new ImageIcon("img/icones/shape_square_edit.png");
     private static final ImageIcon I_TESTER = new ImageIcon("img/icones/cog.png");
     private static final ImageIcon I_ENREGISTRER = new ImageIcon("img/icones/disk.png");
+    private static final ImageIcon I_ENREGISTRER_SOUS = new ImageIcon("img/icones/disk_multiple.png");
+    
+    private static final ImageIcon I_NOUVEAU = new ImageIcon("img/icones/page_white_star.png");
     private static final ImageIcon I_OUVRIR = new ImageIcon("img/icones/folder_explore.png");
     private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/shape_square_delete.png");
     private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
     
     
+    
+    
     private JButton bMain           = new JButton(I_MAIN);
     private JButton bMurs           = new JButton(I_MURS);
+    private JButton bNouveau        = new JButton(I_NOUVEAU);
     private JButton bOuvrir         = new JButton(I_OUVRIR);
     private JButton bEnregistrer    = new JButton(I_ENREGISTRER);
     private JButton bSupprimer      = new JButton(I_SUPPRIMER);
@@ -63,11 +69,12 @@ public class Fenetre_CreationTerrain extends    JFrame
     private final JMenu     menuEdition     = new JMenu("Edition");
     private final JMenu     menuAide        = new JMenu("Aide");
     
+    private final JMenuItem itemNouveau      = new JMenuItem("Nouveau",I_NOUVEAU);
     private final JMenuItem itemOuvrir      = new JMenuItem("Ouvrir...",I_OUVRIR);
     private final JMenuItem itemEnregistrer = new JMenuItem("Enregistrer",I_ENREGISTRER);
+    private final JMenuItem itemEnregistrerSous = new JMenuItem("Enregistrer sous...",I_ENREGISTRER_SOUS);
     private final JMenuItem itemQuitter      = new JMenuItem("Quitter",I_QUITTER);
     private final JMenuItem itemTester      = new JMenuItem("Tester",I_TESTER);
-    
     
     private JFileChooser fcOuvrir = new JFileChooser("./maps");
     private JFileChooser fcSauver = new JFileChooser("./maps");
@@ -113,13 +120,30 @@ public class Fenetre_CreationTerrain extends    JFrame
         fcOuvrir.setFileSelectionMode(JFileChooser.FILES_ONLY);
         
         // menu
+        itemNouveau.addActionListener(this);
         itemOuvrir.addActionListener(this);
         itemEnregistrer.addActionListener(this);
+        itemEnregistrerSous.addActionListener(this);
         itemQuitter.addActionListener(this);
         itemTester.addActionListener(this);
  
+        // Raccourcis clavier
+        itemNouveau.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_N, Event.CTRL_MASK));
+        itemOuvrir.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_O, Event.CTRL_MASK));
+        itemEnregistrer.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_S, Event.CTRL_MASK));
+        itemQuitter.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_W, Event.CTRL_MASK));
+        itemTester.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_E, Event.CTRL_MASK));
+        
+        menuFichier.add(itemNouveau);
         menuFichier.add(itemOuvrir);
         menuFichier.add(itemEnregistrer);
+        menuFichier.add(itemEnregistrerSous);
+        menuFichier.addSeparator();
         menuFichier.add(itemQuitter);
         menuEdition.add(itemTester);
         menuPrincipal.add(menuFichier);
@@ -131,6 +155,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         // barre d'outils
         JToolBar tbPrincipale = new JToolBar();
         
+        tbPrincipale.add(bNouveau);
         tbPrincipale.add(bOuvrir);
         tbPrincipale.add(bEnregistrer);
         tbPrincipale.addSeparator();
@@ -141,6 +166,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         tbPrincipale.addSeparator();
         tbPrincipale.add(bTester);
         
+        bNouveau.addActionListener(this);
         bOuvrir.addActionListener(this);
         bEnregistrer.addActionListener(this);
         bMain.addActionListener(this);
@@ -148,6 +174,14 @@ public class Fenetre_CreationTerrain extends    JFrame
         bSupprimer.addActionListener(this);
         bTester.addActionListener(this);
  
+        bNouveau.setToolTipText("Nouveau");
+        bOuvrir.setToolTipText("Ouvrir...");
+        bEnregistrer.setToolTipText("Enregistrer");
+        bMain.setToolTipText("Déplacements");
+        bMurs.setToolTipText("Edition de zone");
+        bSupprimer.setToolTipText("Supprimer la zone sélectionnée");
+        bTester.setToolTipText("Tester");
+        
         add(tbPrincipale,BorderLayout.NORTH);
         
         // Onglets de droits
@@ -241,7 +275,11 @@ public class Fenetre_CreationTerrain extends    JFrame
     {
         Object src = e.getSource();
         
-        if(src == bOuvrir || src == itemOuvrir)
+        if(src == bNouveau || src == itemNouveau)
+        {
+            nouveauTerrain();
+        }
+        else if(src == bOuvrir || src == itemOuvrir)
         {
             ouvrirTerrain();
         }
@@ -249,6 +287,10 @@ public class Fenetre_CreationTerrain extends    JFrame
         {
             enregistrerTerrain();
         }
+        else if(src == itemEnregistrerSous)
+        {
+            enregistrerTerrainSous();
+        }  
         else if(src == itemQuitter)
         {
             System.exit(0);
@@ -275,6 +317,47 @@ public class Fenetre_CreationTerrain extends    JFrame
         else if(src == bTester || src == itemTester)
         {
             tester();
+        }
+    }
+
+    private void nouveauTerrain()
+    {
+        Terrain t = new Terrain(jeu);
+        jeu.setTerrain(t);
+        
+        fichierCourant = null;
+        
+        panelCreationTerrain.deselectionnerRecEnTraitement();
+        panelOptionsTerrain.miseAJour();
+        panelCreationEquipes.miseAJour();
+        
+        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+        lblEtat.setText("Fichier chargé");
+    }
+
+    private void enregistrerTerrainSous()
+    {
+        // Save as...
+        if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) 
+        {
+            fichierCourant = fcSauver.getSelectedFile();
+            
+            // rename if extension not wrote
+            if(!fichierCourant.getName().toLowerCase().endsWith("."+Terrain.EXTENSION_FICHIER))
+                fichierCourant = new File(fichierCourant.getAbsolutePath()+"."+Terrain.EXTENSION_FICHIER);
+        
+            try
+            {
+                jeu.getTerrain().setLargeurMaillage(jeu.getTerrain().getLargeur());
+                jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
+                
+                Terrain.serialiser(jeu.getTerrain(),fichierCourant/*new File("maps/"+jeu.getTerrain().getNom()+"."+Terrain.EXTENSION_FICHIER)*/);
+            } 
+            catch (IOException e)
+            {
+                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setText("Erreur lors de la sauvegarde!");
+            }
         }
     }
 
@@ -410,12 +493,12 @@ public class Fenetre_CreationTerrain extends    JFrame
                 
                 fichierCourant = fichier;
                 
+                panelCreationTerrain.deselectionnerRecEnTraitement();
                 panelOptionsTerrain.miseAJour();
                 panelCreationEquipes.miseAJour();
                 
                 lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
                 lblEtat.setText("Fichier chargé");
-                
             } 
             catch (ClassCastException e1)
             {

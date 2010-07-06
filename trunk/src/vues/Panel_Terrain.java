@@ -917,8 +917,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
         int positionYBarre  = (int)(creature.getY()+creature.getHeight());
         
         // affichage du conteneur
-        //g2.setColor(COULEUR_CONTENEUR_SANTE);
-        g2.setColor(creature.getEquipeCiblee().getCouleur());
+        g2.setColor(creature.getProprietaire().getEquipe().getCouleur());
         
         g2.fillRect(positionXBarre,positionYBarre, 
                     largeurBarre, HAUTEUR_BARRE_VIE);
