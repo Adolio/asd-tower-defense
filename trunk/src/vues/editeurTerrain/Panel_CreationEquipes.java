@@ -1,8 +1,13 @@
-package vues;
+package vues.editeurTerrain;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import vues.GestionnaireDesPolices;
+import vues.Panel_Table;
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -77,9 +82,33 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             // nom de l'équipe
             final JTextField lNomEquipe = new JTextField(equipe.getNom());
             lNomEquipe.setForeground(equipe.getCouleur());
-            lNomEquipe.setMinimumSize(new Dimension(100,30));
+            lNomEquipe.setMinimumSize(new Dimension(80,25));
+            lNomEquipe.setPreferredSize(new Dimension(80,25));
+            
             
             pTabEquipes.add(lNomEquipe,0,ligne);
+            
+            
+            lNomEquipe.getDocument().addDocumentListener(new DocumentListener()
+            {
+                @Override
+                public void removeUpdate(DocumentEvent e)
+                {
+                    equipe.setNom(lNomEquipe.getText());
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent e)
+                {
+                    equipe.setNom(lNomEquipe.getText());
+                }
+                
+                @Override
+                public void changedUpdate(DocumentEvent e)
+                {
+                    equipe.setNom(lNomEquipe.getText());
+                }
+            });
             
             // Couleur
             final JButton bCouleur = new JButton(I_COULEURS);
@@ -177,7 +206,10 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             for(final EmplacementJoueur ej : equipe.getEmplacementsJoueur())
             {
-                pTabEquipes.add(new JLabel("Emplacement "+ej.getId()),1,ligne);
+                final JLabel lNomEmplacement = new JLabel("Emplacement "+ej.getId());
+                lNomEmplacement.setForeground(ej.getCouleur());
+                
+                pTabEquipes.add(lNomEmplacement,1,ligne);
                 
                 if(ej.getId() >= idEJ)
                     idEJ = ej.getId() + 1;
@@ -185,7 +217,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 // Selection
                 final JButton bSelectionnerEmplacement = new JButton(I_ZONE_EDITION);
                 GestionnaireDesPolices.setStyle(bSelectionnerEmplacement);
-                pTabEquipes.add(bSelectionnerEmplacement,2,ligne);
+                pTabEquipes.add(bSelectionnerEmplacement,3,ligne);
                 bSelectionnerEmplacement.addActionListener(new ActionListener()
                 {
                     @Override
@@ -194,7 +226,28 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                         panelCreationTerrain.setRecEnTraitement(ej.getZoneDeConstruction());
                     } 
                 });
-                  
+                 
+                // Couleur
+                final JButton bCouleurEmplacement = new JButton(I_COULEURS);
+                GestionnaireDesPolices.setStyle(bCouleurEmplacement);
+                pTabEquipes.add(bCouleurEmplacement,2,ligne);
+                bCouleurEmplacement.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        Color couleur = JColorChooser.showDialog(
+                                null,
+                                "Couleur de l'emplacement "+ej.getId(),ej.getCouleur());
+                          
+                        if(couleur != null)
+                        {
+                            ej.setCouleur(couleur);
+                            lNomEmplacement.setForeground(couleur);
+                        } 
+                    } 
+                });
+                
                 // Suppression
                 final JButton bSupprimerEmplacement = new JButton(I_SUPPRIMER);
                 GestionnaireDesPolices.setStyle(bSupprimerEmplacement);

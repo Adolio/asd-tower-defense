@@ -15,6 +15,7 @@ import models.joueurs.Joueur;
 import models.outils.GestionnaireSons;
 import models.terrains.*;
 import outils.*;
+import vues.editeurTerrain.Fenetre_CreationTerrain;
 
 /**
  * Panel de création d'une partie réseau.

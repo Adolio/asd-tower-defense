@@ -472,4 +472,14 @@ public class Equipe implements Serializable
         zonesDepartCreatures.toArray(tabZD);
         return tabZD;
     }
+
+    /**
+     * Permet de modifier le nom de l'équipe
+     * 
+     * @param nom le nom de l'équipe
+     */
+    public void setNom(String nom)
+    {
+        this.nom = nom;
+    }
 }

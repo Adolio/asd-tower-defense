@@ -1,4 +1,4 @@
-package vues;
+package vues.editeurTerrain;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,6 +8,10 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
+import vues.EcouteurDePanelCreationTerrain;
+import vues.EcouteurDePanelTerrain;
+import vues.Panel_Terrain;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.terrains.Terrain;
