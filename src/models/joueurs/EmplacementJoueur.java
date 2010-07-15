@@ -159,4 +159,14 @@ public class EmplacementJoueur implements Serializable
             this.joueur = null;
         }
     }
+
+    /**
+     * Permet de modifier la couleur de la zone
+     * 
+     * @param couleur la nouvelle couleur
+     */
+    public void setCouleur(Color couleur)
+    {
+       this.couleur = couleur;
+    }
 }

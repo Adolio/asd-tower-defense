@@ -1,4 +1,4 @@
-package vues;
+package vues.editeurTerrain;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -8,6 +8,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
+
+import vues.EcouteurDePanelCreationTerrain;
+import vues.EcouteurDePanelTerrain;
+import vues.Fenetre_JeuSolo;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.Panel_OptionsTerrain;
 import exceptions.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;

@@ -9,6 +9,8 @@ package outils;
 public class Configuration
 {
     private static final String CFG = "cfg/config.cfg";
+
+    
     
     // réseau
     private static String IP_SE;
@@ -18,8 +20,18 @@ public class Configuration
   
     // l'utilisateur
     private static String PSEUDO_JOUEUR;
-    //private final static String LANGUE = "FR";
+   //private final static String LANGUE = "FR";
     
+    // Commandes 
+    private static char CMD_DEPL_HAUT   = 'w';
+    private static char CMD_DEPL_BAS    = 's';
+    private static char CMD_DEPL_DROITE = 'a';
+    private static char CMD_DEPL_GAUCHE = 'd';
+    
+    private static char CMD_VENDRE      = 'v';
+    private static char CMD_AMELIORER   = 'q';
+    private static char CMD_PAUSE       = 'p';
+
     private static fichierDeConfiguration config = new fichierDeConfiguration(CFG);
     
     static
@@ -89,5 +101,35 @@ public class Configuration
     public static int getPortSJ_JD()
     {
         return PORT_SJ_JD;
+    }
+
+    public static char getDeplHaut()
+    {
+        return CMD_DEPL_HAUT;
+    }
+
+    public static char getDeplBas()
+    {
+        return CMD_DEPL_BAS;
+    }
+
+    public static char getDeplDroite()
+    {
+        return CMD_DEPL_DROITE;
+    }
+    
+    public static char getDeplGauche()
+    {
+        return CMD_DEPL_GAUCHE;
+    }
+
+    public static char getCmdVendre()
+    {
+        return CMD_VENDRE;
+    }
+    
+    public static char getCmdAmeliorer()
+    {
+        return CMD_AMELIORER;
     }
 }
