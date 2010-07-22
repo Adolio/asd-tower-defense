@@ -54,14 +54,14 @@ public class PortTest
    public void testReserver()
    {
       port = new Port(1234);
-      try
-      {
+      
+      try{
           port.reserver();
-      } catch (IOException e)
-      {
-          // TODO Auto-generated catch block
+      } 
+      catch (IOException e){
           e.printStackTrace();
       }
+      
       assertTrue(port.getServerSocket().isBound());
       assertNotNull(port.getServerSocket());
       port.liberer();
@@ -79,7 +79,6 @@ public class PortTest
         port.reserver();
       } 
       catch (IOException e){
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       port.liberer();

@@ -60,7 +60,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 
         // ---------
         // -- TOP --

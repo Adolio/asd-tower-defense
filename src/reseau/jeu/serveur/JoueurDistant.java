@@ -193,7 +193,7 @@ public class JoueurDistant implements Runnable, ConstantesServeurJeu
         log("Création du canal de synchronisation");
         
         // Création du canal
-        canal_update = new CanalTCP(port, verbeux);
+        canal_update = new CanalTCP(port);
     
         log("Canal crée");
         

@@ -99,7 +99,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         parent.setTitle("Attendre des joueurs");
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 
         // ---------
         // -- TOP --
@@ -472,7 +472,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         int maxJoueurs = jeuClient.getTerrain().getNbJoueursMax();
 
         Panel_GridBag pJoueurs = new Panel_GridBag(new Insets(2, 2, 2, 2));
-        pJoueurs.setBackground(LookInterface.COULEUR_DE_FOND);
+        pJoueurs.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         pJoueurs.setPreferredSize(new Dimension(350, 150));
 
         for (int i = 0; i < maxJoueurs; i++)

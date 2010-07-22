@@ -56,6 +56,10 @@ public class Terrain implements Serializable
 
     transient public static final String EXTENSION_FICHIER = "map";
 
+    
+    transient public static final String EMPLACEMENT_TERRAINS_SOLO = "maps/solo/";
+    transient public static final String EMPLACEMENT_TERRAINS_MULTI = "maps/multi/";
+    
     /**
      * bref description
      */

@@ -2,7 +2,7 @@ package models.jeu;
 
 import java.io.File;
 
-// TODO
+// TODO à implémenter
 public class SauvergardeDeJeu
 {
     /*private Vector<Creature> creatures;
@@ -18,7 +18,7 @@ public class SauvergardeDeJeu
         */ 
     }
     
-    public void sauver( File fichier)
+    public void sauver(File fichier)
     {
   
     }

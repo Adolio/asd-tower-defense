@@ -32,12 +32,7 @@ public class Mouton extends Creature
 	{
 		this(0, 0, santeMax, nbPiecesDOr,vitesse);
 	}
-	
-	
-	// TODO contructeur invincible !
 
-
-	
 	/**
 	 * Constructeur avec position initiale.
 	 * 

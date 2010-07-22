@@ -86,7 +86,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 		
-		setBackground(LookInterface.COULEUR_DE_FOND);
+		setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 		
 		
 		//--------------------
@@ -248,7 +248,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		        JButton bScore = new JButton(txt);
 		    
         	    boutonsScore[i] = bScore;
-        	    bScore.setBackground(LookInterface.COULEUR_BOUTON);
+        	    bScore.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
         	    bScore.addActionListener(this);
         	    
         	    //bScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);

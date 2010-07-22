@@ -150,7 +150,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		//setPreferredSize(new Dimension(1024,768));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
-		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 		
 		pFormulaire.setOpaque(false);
 		//pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND_2);
@@ -272,12 +272,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		panelSelectionEtVague = new JTabbedPane();
 		
 		// Background
-        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
+        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND_PRI);
         //SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
      
         panelSelectionEtVague.setOpaque(true);
 		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,420));
-		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND);
+		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         panelSelectionEtVague.add("Info séléction", panelSelection);
            
         // panel de création de vagues

@@ -4,6 +4,7 @@ import java.io.File;
 import javax.swing.UIManager;
 
 import models.jeu.Jeu_Solo;
+import models.outils.GestionnaireSons;
 import models.terrains.ElementTD_Coop;
 import models.terrains.ElementTD_Versus_4;
 import models.terrains.SimpleFiveVersus;
@@ -64,7 +65,9 @@ public class Main
       Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
       Terrain.serialiser(t3,new File("maps/"+t3.getNomFichier()));
       */
-                              
+         
+      GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);         
+           
       // creation du menu principal
       new Fenetre_MenuPrincipal();
    }

@@ -138,13 +138,13 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         parent.setTitle("Rejoindre une partie multijoueurs");
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
            
         // ---------
         // -- TOP --
         // ---------
         JPanel pTop = new JPanel(new BorderLayout());
-        pTop.setBackground(LookInterface.COULEUR_DE_FOND);
+        pTop.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         JLabel titre = new JLabel("REJOINDRE UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
@@ -153,7 +153,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
 
         // filtre
         JPanel pADroite = new JPanel(new BorderLayout());
-        pADroite.setBackground(LookInterface.COULEUR_DE_FOND);
+        pADroite.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 
         tfFiltre.setPreferredSize(new Dimension(100, 25));
         tfFiltre.addKeyListener(this);
@@ -196,8 +196,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         {
             canalServeurEnregistrement = new CanalTCP(
                     Configuration.getIpSE(),
-                    Configuration.getPortSE(),
-                    true);
+                    Configuration.getPortSE());
             
             mettreAJourListeDesServeurs();
         } 
@@ -217,14 +216,14 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // -- BOTTOM --
         // ------------
         JPanel pBottom = new JPanel(new BorderLayout());
-        pBottom.setBackground(LookInterface.COULEUR_DE_FOND);
+        pBottom.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         bAnnuler.addActionListener(this);
         GestionnaireDesPolices.setStyle(bAnnuler);
         pBottom.add(bAnnuler, BorderLayout.WEST);
 
         JPanel bottomCenter = new JPanel();
-        bottomCenter.setBackground(LookInterface.COULEUR_DE_FOND);
+        bottomCenter.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         // connexion par IP 
         lblConnexionParIP.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);

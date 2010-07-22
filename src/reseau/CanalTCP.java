@@ -40,11 +40,8 @@ public class CanalTCP
     * @throws CanalException
     *            Si un problème de connexion survient
     */
-   public CanalTCP(Port port, boolean afficherMessagesDebug) throws CanalException
+   public CanalTCP(Port port) throws CanalException
    {
-       // TODO
-       //this.afficherMessagesDebug = afficherMessagesDebug;
-      
       try
       {
          if (this.verbeux)
@@ -105,19 +102,14 @@ public class CanalTCP
     *           L'adresse IP vers laquelle on veut créer un canal
     * @param numeroPort
     *           Le numéro de port de l'adresse IP
-    * @param afficherMessagesDebug
-    *           Si on veut afficher les messages de debug
     * @throws ConnectException
     *            Si la connexion est refusée à cette IP + Port
     * @throws CanalException
     *            Si une erreur de connexion survient
     */
-   public CanalTCP(String adresseIp, int numeroPort, boolean afficherMessagesDebug)
+   public CanalTCP(String adresseIp, int numeroPort)
          throws ConnectException, CanalException
    {
-      // TODO
-      //this.afficherMessagesDebug = afficherMessagesDebug;
-      
       try
       {
          
@@ -468,12 +460,7 @@ public class CanalTCP
    {
       return socket.getInetAddress().toString().substring(1);
    }
-   
-   /**
-    * TODO : Ajouter des méthodes pour envoyer des objets sérializés
-    * quelconques.
-    */
-   
+
    /**
     * Cette méthode permet de fermer correctement le canal en fermant les flux
     * d'entrée/ sortie ainsi que les deux sockets de chaque côté du canal.

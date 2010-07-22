@@ -37,6 +37,8 @@ public class GestionnaireSons
     // Pour les ports de sortie audio.
     private static Port lineOut;
     
+    public static final int VOLUME_PAR_DEFAUT = 20;
+    
     static
     {
        /**
@@ -202,8 +204,10 @@ public class GestionnaireSons
        if (lineOut != null) {
           // On recupere le controle de l'intensite du volume.
           ctrlIn = lineOut.getControl(FloatControl.Type.VOLUME);
-          return 100 * (int) (((FloatControl) ctrlIn).getValue() / ((FloatControl) ctrlIn)
-                   .getMaximum());
+          
+          return (int) (100 * 
+                  ((FloatControl) ctrlIn).getValue() / 
+                  ((FloatControl) ctrlIn).getMaximum());
        }
        return 0;
     }

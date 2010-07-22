@@ -113,7 +113,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         super("ASD - Tower Defense - Editeur de terrain");
         setIconImage(I_FENETRE.getImage());
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         jeu = new Jeu_Solo();
@@ -195,12 +195,12 @@ public class Fenetre_CreationTerrain extends    JFrame
         JTabbedPane panelOnglets = new JTabbedPane();
         
         // Background
-        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
+        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND_PRI);
         //SwingUtilities.updateComponentTreeUI(panelSelectionEtVague);
      
         panelOnglets.setOpaque(true);
         //panelOnglets.setPreferredSize(new Dimension(300,420));
-        panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         
         panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);

@@ -103,7 +103,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         taDescrition.setEditable(false);
         taDescrition.setLineWrap(true);
         taDescrition.setWrapStyleWord(true);
-        taDescrition.setBackground(LookInterface.COULEUR_DE_FOND);
+        taDescrition.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         //taDescrition.setBorder(BORDURE_DESCRIPTION);
         taDescrition.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
         spDescription = new JScrollPane(taDescrition);
@@ -184,7 +184,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		
 		JPanel pConteneurCaraEtBoutons = new JPanel(new BorderLayout());
 		pConteneurCaraEtBoutons.setPreferredSize(new Dimension(260,160));
-		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		pConteneurCaraEtBoutons.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
 		pConteneurCaraEtBoutons.add(pConteneurCaract,BorderLayout.NORTH);
 		//pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		

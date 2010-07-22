@@ -2,9 +2,12 @@ package vues;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
+
+import models.outils.GestionnaireSons;
 
 import outils.Configuration;
 
@@ -12,7 +15,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
 {
     private static final long serialVersionUID = 1L;
 
-    private static class Panel_OptionsReseau extends JPanel implements ActionListener
+    private static class Panel_OptionsReseau extends JPanel
     {
         private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
@@ -20,7 +23,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         
         public Panel_OptionsReseau()
         {
-            setBackground(LookInterface.COULEUR_DE_FOND);
+            setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
             pFormulaire.setOpaque(false);
             pFormulaire.add(new JLabel("IP Serveur d'enregistrement :"),0,0);
@@ -28,20 +31,34 @@ public class Fenetre_Options extends JFrame implements ActionListener
             tfIP_SE.setPreferredSize(new Dimension(100,25));
             pFormulaire.add(tfIP_SE,1,0);
            
-            add(pFormulaire); 
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            // TODO controle !!!!
+            // TODO check
+            tfIP_SE.getDocument().addDocumentListener(new DocumentListener()
+            { 
+                @Override
+                public void removeUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setIpSE(tfIP_SE.getText());
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setIpSE(tfIP_SE.getText());
+                }
+                
+                @Override
+                public void changedUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setIpSE(tfIP_SE.getText());
+                }
+            });
             
-            Configuration.setIpSE(tfIP_SE.getText());
+            add(pFormulaire); 
         }
     }
     
     
-    private static class Panel_OptionsJeu extends JPanel implements ActionListener
+    private static class Panel_OptionsJeu extends JPanel
     {
         private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
@@ -49,7 +66,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
        
         public Panel_OptionsJeu()
         {
-            setBackground(LookInterface.COULEUR_DE_FOND);
+            setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
             pFormulaire.setOpaque(false);
             pFormulaire.add(new JLabel("Pseudo"),0,0);
@@ -57,114 +74,354 @@ public class Fenetre_Options extends JFrame implements ActionListener
             tfPseudoJoueur.setPreferredSize(new Dimension(100,25));
             pFormulaire.add(tfPseudoJoueur,1,0);
             
-            add(pFormulaire); 
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            // TODO controle !!!!
+            tfPseudoJoueur.getDocument().addDocumentListener(new DocumentListener()
+            { 
+                @Override
+                public void removeUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setPseudoJoueur(tfPseudoJoueur.getText());
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setPseudoJoueur(tfPseudoJoueur.getText());
+                }
+                
+                @Override
+                public void changedUpdate(DocumentEvent arg0)
+                {
+                    Configuration.setPseudoJoueur(tfPseudoJoueur.getText());
+                }
+            });
             
-            Configuration.setPseudoJoueur(tfPseudoJoueur.getText());
+            
+            add(pFormulaire); 
         }
     }
     
     
-    private static class Panel_OptionsCommandes extends JPanel implements ActionListener
+    private static class Panel_OptionsCommandes extends JPanel 
+                                                implements 
+                                                ActionListener, 
+                                                KeyListener
     {
-        private static final long serialVersionUID = 1L;
-        private static final Dimension TAILLE_TF = new Dimension(30,30);
         
+        private static class BoutonKeyCode extends JButton
+        {
+            private static final long serialVersionUID = 1L;
+            private int keyCode;
+            private final String PROPRIETE;
+            
+            
+            public BoutonKeyCode(String propriete) 
+            {   
+                PROPRIETE = propriete;
+                
+                
+                int keyCode2 = Integer.parseInt(Configuration.getProprety(PROPRIETE));
+                
+                setKeyCode(keyCode2);
+            }
+             
+            public void setKeyCode(int keyCode) 
+            {
+                this.keyCode = keyCode;
+                
+                Configuration.setProperty(PROPRIETE,keyCode+"");
+                
+                super.setText(KeyEvent.getKeyText(keyCode));
+            }
+            
+            public int getKeyCode()
+            {
+                return keyCode;
+            }  
+        }
+        
+        
+        private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
         
-        private JLabel lDeplHaut = new JLabel((Configuration.getDeplHaut()+"").toUpperCase());
-        private JLabel lDeplBas = new JLabel((Configuration.getDeplBas()+"").toUpperCase());
-        private JLabel lDeplDroite = new JLabel((Configuration.getDeplDroite()+"").toUpperCase());
-        private JLabel lDeplGauche = new JLabel((Configuration.getDeplGauche()+"").toUpperCase());
-        private JLabel lVendre = new JLabel((Configuration.getCmdVendre()+"").toUpperCase());
-        private JLabel lAmeliorer = new JLabel((Configuration.getCmdAmeliorer()+"").toUpperCase());
-        private JLabel lPause = new JLabel("P");
-        private JLabel lSuivre = new JLabel("F");
-
+        private BoutonKeyCode lDeplHaut = new BoutonKeyCode(Configuration.DEPL_HAUT);
+        private BoutonKeyCode lDeplBas = new BoutonKeyCode(Configuration.DEPL_BAS);
+        private BoutonKeyCode lDeplDroite = new BoutonKeyCode(Configuration.DEPL_DROITE);
+        private BoutonKeyCode lDeplGauche = new BoutonKeyCode(Configuration.DEPL_GAUCHE);
+        private BoutonKeyCode lLancerVagueSuivante = new BoutonKeyCode(Configuration.LANCER_VAGUE);
+        private BoutonKeyCode lVendre = new BoutonKeyCode(Configuration.VENDRE_TOUR);
+        private BoutonKeyCode lAmeliorer = new BoutonKeyCode(Configuration.AMELIO_TOUR);
+        private BoutonKeyCode lPause = new BoutonKeyCode(Configuration.PAUSE);
+        private BoutonKeyCode lSuivre = new BoutonKeyCode(Configuration.SUIVRE_CREATURE);
+        private BoutonKeyCode lAugmenterVitesseJeu = new BoutonKeyCode(Configuration.AUG_VIT_JEU);
+        private BoutonKeyCode lDiminuerVitesseJeu = new BoutonKeyCode(Configuration.DIM_VIT_JEU);
+        
+        private JLabel lZoom = new JLabel("Roulette");
+        private ArrayList<BoutonKeyCode> boutons = new ArrayList<BoutonKeyCode>();
+        private boolean attenteTouche;
+        private BoutonKeyCode boutonCourant;
+       
         public Panel_OptionsCommandes()
-        {
-            setBackground(LookInterface.COULEUR_DE_FOND);
+        {  
+            setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
-            int i=0;   
+            boutons.add(lDeplHaut);
+            boutons.add(lDeplGauche);
+            boutons.add(lDeplBas);
+            boutons.add(lDeplDroite);
+            boutons.add(lLancerVagueSuivante);
+            boutons.add(lVendre);
+            boutons.add(lAmeliorer);
+            boutons.add(lPause);
+            boutons.add(lSuivre);
+            boutons.add(lAugmenterVitesseJeu);
+            boutons.add(lDiminuerVitesseJeu);
+            
+            for(JButton b : boutons)
+            {
+                b.addActionListener(this);
+                b.addKeyListener(this);
+                // désactive l'autovalidation par la touche ESPACE
+                b.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),
+                "doNothing");
+            }
+            
+            int i=0;  
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel("Depl. haut"),0,i++);
-            pFormulaire.add(new JLabel("Depl. droite"),0,i++);
-            pFormulaire.add(new JLabel("Depl. bas"),0,i++);
-            pFormulaire.add(new JLabel("Depl. gauche"),0,i++);
-            pFormulaire.add(new JLabel("Améliorer Tour"),0,i++);
-            pFormulaire.add(new JLabel("Vendre Tour"),0,i++);
-            pFormulaire.add(new JLabel("Pause"),0,i++);
-            pFormulaire.add(new JLabel("Suivre Créature"),0,i++);
+            pFormulaire.add(new JLabel("Déplacement haut"),0,i++);
+            pFormulaire.add(new JLabel("Déplacement gauche"),0,i++);
+            pFormulaire.add(new JLabel("Déplacement bas"),0,i++);
+            pFormulaire.add(new JLabel("Déplacement droite"),0,i++);
+            pFormulaire.add(new JLabel("Lancer la vague suivante"),0,i++);
+            pFormulaire.add(new JLabel("Améliorer la tour sélectionnée"),0,i++);
+            pFormulaire.add(new JLabel("Vendre la tour sélectionnée"),0,i++);
+            pFormulaire.add(new JLabel("Mettre le jeu en pause"),0,i++);
+            pFormulaire.add(new JLabel("Suivre la créature sélectionnée"),0,i++);
+            pFormulaire.add(new JLabel("Augmenter la vitesse du jeu"),0,i++);
+            pFormulaire.add(new JLabel("Diminuer la vitesse du jeu"),0,i++);
+            pFormulaire.add(new JLabel("Zoom"),0,i++);
+            
             
             i = 0;
             pFormulaire.add(lDeplHaut,1,i++);
-            pFormulaire.add(lDeplDroite,1,i++);
-            pFormulaire.add(lDeplBas,1,i++);
             pFormulaire.add(lDeplGauche,1,i++);
+            pFormulaire.add(lDeplBas,1,i++);
+            pFormulaire.add(lDeplDroite,1,i++);
+            pFormulaire.add(lLancerVagueSuivante,1,i++);
             pFormulaire.add(lAmeliorer,1,i++);
             pFormulaire.add(lVendre,1,i++);
             pFormulaire.add(lPause,1,i++);
             pFormulaire.add(lSuivre,1,i++);
+            pFormulaire.add(lAugmenterVitesseJeu,1,i++);
+            pFormulaire.add(lDiminuerVitesseJeu,1,i++);
+            pFormulaire.add(lZoom,1,i++);
             
-            lDeplHaut.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lDeplBas.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lDeplDroite.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lDeplGauche.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lVendre.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lAmeliorer.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lPause.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
-            lSuivre.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+            // Style
+            for(BoutonKeyCode b : boutons)
+                b.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
             
-            /*
-            tfDeplHaut.setPreferredSize(TAILLE_TF);
-            tfDeplBas.setPreferredSize(TAILLE_TF);
-            tfDeplDroite.setPreferredSize(TAILLE_TF);
-            tfDeplGauche.setPreferredSize(TAILLE_TF);
-            tfVendre.setPreferredSize(TAILLE_TF);
-            tfAmeliorer.setPreferredSize(TAILLE_TF);
-            */
+            lZoom.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+            
             
             add(pFormulaire); 
+            
+            pFormulaire.setFocusable(true);
+            pFormulaire.addKeyListener(this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // TODO controle !!!!
+            attenteTouche = true;
+            boutonCourant = (BoutonKeyCode) e.getSource();
+              
+            // désactivation
+            for(BoutonKeyCode b : boutons)
+                if(b != boutonCourant)
+                    b.setEnabled(false);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e){}
+
+        @Override
+        public void keyReleased(KeyEvent e)
+        {
+            if(attenteTouche)
+            {
+                for(BoutonKeyCode b : boutons)
+                {
+                    b.setEnabled(true);
+                    
+                    if(b.getKeyCode() == e.getKeyCode())
+                        b.setKeyCode(boutonCourant.getKeyCode());
+                }
+                
+                boutonCourant.setKeyCode(e.getKeyCode());
+                
+                attenteTouche = false;
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e){}
+    }
+ 
+    
+    private static class Panel_OptionsSon extends JPanel implements ActionListener, ChangeListener
+    {
+        private static final long serialVersionUID = 1L;
+        private Panel_Table pFormulaire = new Panel_Table();
+        private JButton bSonActif = new JButton("oui");
+        private JSlider sVolumeSon = new JSlider(0,100); // %
+        
+        public Panel_OptionsSon()
+        {
+            setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
-            Configuration.setPseudoJoueur(lDeplHaut.getText());
+            pFormulaire.setOpaque(false);
+            
+            pFormulaire.add(new JLabel("Actif ?"),0,0);
+            pFormulaire.add(bSonActif,1,0);
+            
+            sVolumeSon.setValue(GestionnaireSons.getVolumeSysteme());
+            pFormulaire.add(new JLabel("Volume"),0,1);
+            pFormulaire.add(sVolumeSon,1,1);
+
+            
+            bSonActif.addActionListener(this);
+            sVolumeSon.addChangeListener(this);
+            
+            if(GestionnaireSons.isVolumeMute())
+                bSonActif.setText("non");
+            else
+                bSonActif.setText("oui");
+
+            add(pFormulaire); 
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0)
+        {
+            if(GestionnaireSons.isVolumeMute())
+            {
+                bSonActif.setText("oui");
+                GestionnaireSons.setVolumeMute(false);
+            }
+            else
+            {
+                bSonActif.setText("non");
+                GestionnaireSons.setVolumeMute(true);
+            }
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent arg0)
+        {
+            GestionnaireSons.setVolumeSysteme(sVolumeSon.getValue());
+        }
+    }
+    
+    private static class Panel_OptionsStyle extends JPanel implements ActionListener
+    {
+        private static final long serialVersionUID = 1L;
+        private Panel_Table pFormulaire = new Panel_Table();
+        private JButton bCouleurDeFond = new JButton();
+        private JButton bCouleurDeFond_2 = new JButton();
+        private JButton bCouleurDeFond_Boutons = new JButton();
+        
+        public Panel_OptionsStyle()
+        {
+            setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+            
+            pFormulaire.setOpaque(false);
+            
+            bCouleurDeFond.setPreferredSize(new Dimension(50,50));
+            bCouleurDeFond.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+            pFormulaire.add(new JLabel("Couleur de fond primaire"),0,0);
+            pFormulaire.add(bCouleurDeFond,1,0);
+
+            bCouleurDeFond_2.setPreferredSize(new Dimension(50,50));
+            bCouleurDeFond_2.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+            pFormulaire.add(new JLabel("Couleur de fond secondaire"),0,1);
+            pFormulaire.add(bCouleurDeFond_2,1,1);
+  
+            bCouleurDeFond_Boutons.setPreferredSize(new Dimension(50,50));
+            bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
+            pFormulaire.add(new JLabel("Couleur de fond des boutons"),0,2);
+            pFormulaire.add(bCouleurDeFond_Boutons,1,2);
+
+            bCouleurDeFond.addActionListener(this);
+            bCouleurDeFond_2.addActionListener(this);
+            bCouleurDeFond_Boutons.addActionListener(this);
+            
+            add(pFormulaire); 
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae)
+        {
+            Object src = ae.getSource();
+            
+            if(src == bCouleurDeFond)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur de fond primaire",LookInterface.COULEUR_DE_FOND_PRI);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_DE_FOND_PRI = couleur;
+                    bCouleurDeFond.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_DE_FOND_P, couleur.getRGB()+"");
+                }
+            }
+            else if(src == bCouleurDeFond_2)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur de fond secondaire",LookInterface.COULEUR_DE_FOND_SEC);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_DE_FOND_SEC = couleur;
+                    bCouleurDeFond_2.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_DE_FOND_S, couleur.getRGB()+"");
+                }
+            }
+            else if(src == bCouleurDeFond_Boutons)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur de fond des boutons",LookInterface.COULEUR_DE_FOND_BTN);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_DE_FOND_BTN = couleur;
+                    bCouleurDeFond_Boutons.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_DE_FOND_B, couleur.getRGB()+"");
+                }
+            }  
         }
     }
     
     
+    private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/wrench.png");
+    private static final ImageIcon I_JOUEUR = new ImageIcon("img/icones/user_red.png");
+    private static final ImageIcon I_CMD = new ImageIcon("img/icones/keyboard.png");
+    private static final ImageIcon I_SON = new ImageIcon("img/icones/sound.png");
+    private static final ImageIcon I_RESEAU = new ImageIcon("img/icones/connect.png");
+    private static final ImageIcon I_STYLE = new ImageIcon("img/icones/palette.png");
     
-    
-    private static final ImageIcon I_FENETRE = new ImageIcon(
-    "img/icones/wrench.png");
-    
-    JTabbedPane onglets;
-    
-    private JButton bValider = new JButton("Valider");
+    private JTabbedPane onglets;
     private JButton bFermer = new JButton("Fermer");
-    
-    
-    
+
     public Fenetre_Options()
     {
         super("Options");
         setIconImage(I_FENETRE.getImage());
         setLayout(new BorderLayout());
-        setBackground(LookInterface.COULEUR_DE_FOND);
-        
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         // titre
         JPanel pTop = new JPanel(new BorderLayout());
-        pTop.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        pTop.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         pTop.setBorder(new EmptyBorder(10, 10, 10, 10));
         
         JLabel lblTitre = new JLabel("OPTIONS");
@@ -177,39 +434,39 @@ public class Fenetre_Options extends JFrame implements ActionListener
         
         // Background
         onglets = new JTabbedPane();
-        
-        
-        
-        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND);
+ 
+        UIManager.put("TabbedPane.tabAreaBackground", LookInterface.COULEUR_DE_FOND_PRI);
         //SwingUtilities.updateComponentTreeUI(onglets);
         
+        onglets.setFocusable(false); // pour keylistener dans option commande
         onglets.setOpaque(true);
-        onglets.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        onglets.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         Panel_OptionsJeu panelOptionsJeu = new Panel_OptionsJeu(); 
         Panel_OptionsReseau panelOptionsReseau = new Panel_OptionsReseau();
         Panel_OptionsCommandes panelOptionsCommandes = new Panel_OptionsCommandes();
-        onglets.add("Jeu", panelOptionsJeu);
-        onglets.add("Commandes", new JScrollPane(panelOptionsCommandes));
-        onglets.add("Réseau", panelOptionsReseau);
+        Panel_OptionsSon panelOptionsSon = new Panel_OptionsSon();
+        Panel_OptionsStyle panelOptionsStyle = new Panel_OptionsStyle();
+        
+        onglets.addTab("Joueur  ", I_JOUEUR, panelOptionsJeu);
+        onglets.addTab("Commandes  ", I_CMD, new JScrollPane(panelOptionsCommandes));
+        onglets.addTab("Son  ", I_SON, panelOptionsSon);
+        onglets.addTab("Réseau  ", I_RESEAU, panelOptionsReseau);
+        onglets.addTab("Style  ", I_STYLE, panelOptionsStyle);
+        
+        
         add(onglets,BorderLayout.CENTER);
         
         // boutons
-        bValider.addActionListener(panelOptionsJeu);
-        bValider.addActionListener(panelOptionsReseau);
         bFermer.addActionListener(this);
         
         JPanel pBoutons = new JPanel();
-        pBoutons.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        pBoutons.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         
-        //GestionnaireDesPolices.setStyle(bValider);
-        //GestionnaireDesPolices.setStyle(bFermer);
-        
-        pBoutons.add(bValider);
+        //pBoutons.add(bValider);
         pBoutons.add(bFermer);
         add(pBoutons,BorderLayout.SOUTH);
         
-        
-        setBounds(0, 0, 400, 300);
+        setBounds(0, 0, 400, 500);
         setLocationRelativeTo(null);
         setVisible(true);  
     }

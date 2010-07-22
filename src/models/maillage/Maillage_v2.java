@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import models.outils.Outils;
 
 /**
- * TODO
+ * Maillage dans sa version 2.
+ * 
+ * Utilisation d'un arbre de recouvrement.
+ * 
+ * TODO commenter
  * 
  * @author Dark
  */
@@ -134,7 +138,7 @@ public class Maillage_v2 implements Maillage
         contruireArbreDijkstra();
 	}
 
-    // TODO
+    @Override
 	synchronized public void ajouterPointdeSortie(int x, int y)
 	{
 	    int tmp = getIndiceNoeud(x, y);

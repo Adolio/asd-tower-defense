@@ -49,7 +49,7 @@ public class Panel_Selection extends JPanel
 		
 		JPanel p = new JPanel(new FlowLayout());
 		//p.setOpaque(false);
-		p.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		p.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
 		
 		
 		pInfoTour = new Panel_InfoTour(edpt);

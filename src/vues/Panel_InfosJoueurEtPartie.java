@@ -44,7 +44,7 @@ public class Panel_InfosJoueurEtPartie extends JPanel
     {
         this.jeu = jeu;
               
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         jeu.getTimer().addActionListener(new ActionListener()
         {

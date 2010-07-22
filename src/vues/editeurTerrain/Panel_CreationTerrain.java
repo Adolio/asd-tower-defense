@@ -48,7 +48,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
     {
         super(jeu,edpt);
         
-        quadrillage = true;
+        afficherQuadrillage = true;
         afficherMurs = true;
     }
     
