@@ -90,13 +90,24 @@ public interface Maillage
     public abstract double getLongueurChemin(ArrayList<Point> chemin);
 
     
-    // TODO
+    /**
+     * Permet de recuperer le nombre de noeuds du maillage
+     * 
+     * @return le nombre de noeuds du maillage
+     */
     public abstract int getNbNoeuds();
     
-    // TODO
+    /**
+     * Permet d'ajouter un point de sortie
+     * 
+     * @param x le point en x
+     * @param y le point en y
+     */
     public void ajouterPointdeSortie(int x, int y);
     
-    // TODO
+    /**
+     * Permet de forcer la mise a jour du TDA
+     */
     public void miseAJourTDA();
     
 }

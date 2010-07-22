@@ -59,7 +59,7 @@ public class SEInscription
    {
       try
       {
-         canal = new CanalTCP(port, avecLog);
+         canal = new CanalTCP(port);
       } catch (CanalException ce)
       {
          System.out.println("\tProbleme de connexion : " + ce.getMessage());

@@ -87,7 +87,7 @@ public class fichierDeConfiguration
      * @param cle la clé
      * @return String value
      ************************************************************************/
-    public String getProprety(String cle)
+    public String getProperty(String cle)
     {
         String valeur = config.getProperty(cle);
         

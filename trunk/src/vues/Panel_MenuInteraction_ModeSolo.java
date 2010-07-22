@@ -41,7 +41,7 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
 	public Panel_MenuInteraction_ModeSolo(EcouteurDePanelTerrain edpt,Jeu jeu)
 	{
 		super(new BorderLayout());
-		setBackground(LookInterface.COULEUR_DE_FOND);
+		setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 		
 		//---------------------
 		//-- panels internes --

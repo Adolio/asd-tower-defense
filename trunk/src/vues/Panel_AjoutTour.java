@@ -37,7 +37,7 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
         this.jeu = jeu;
         this.edpt = edpt;
         
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         //---------------------
         //-- panel des tours --

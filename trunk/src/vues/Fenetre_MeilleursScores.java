@@ -70,7 +70,7 @@ public class Fenetre_MeilleursScores extends JDialog
 
         JPanel pFormulaire = new JPanel(new BorderLayout());
         pFormulaire.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
-        pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND);
+        pFormulaire.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         //------------------------------------
         //-- creation de la table de scores --

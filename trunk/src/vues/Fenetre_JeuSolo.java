@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import outils.Configuration;
 import exceptions.*;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -49,16 +51,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private static final ImageIcon I_CENTRE = new ImageIcon("img/icones/target.png");
 	private static final ImageIcon I_ZOOM = new ImageIcon("img/icones/magnifier_zoom_in.png");
 	private static final ImageIcon I_DEZOOM = new ImageIcon("img/icones/magnifier_zoom_out.png");
+	private static final ImageIcon I_OPTIONS = new ImageIcon("img/icones/wrench.png");
+	
 	
 	
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
     private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
-	private static final int VOLUME_PAR_DEFAUT = 20;
     private static final double VITESSE_JEU_MAX = 3.0;
     private static final double VITESSE_JEU_MIN = 1.0;
-    
-    
-    
     
 	//---------------------------
 	//-- declaration des menus --
@@ -86,9 +86,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	    = new JMenuItem("Quitter",I_QUITTER);
 	private final JMenuItem itemRetourMenu  
 	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
-	
 	private final JMenuItem itemRedemarrer  
-    = new JMenuItem("Redémarrer la partie",I_REDEMARRER);
+        = new JMenuItem("Redémarrer la partie",I_REDEMARRER);
+	private final JMenuItem itemOptions  
+    = new JMenuItem("Options...",I_OPTIONS);
+	
 	//----------------------------
 	//-- declaration des panels --
 	//----------------------------
@@ -164,7 +166,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		//setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
-		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+		getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 		
 		pFormulaire.setOpaque(false);
 		pFormulaire.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
@@ -176,6 +178,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		// menu Fichier
 		menuFichier.add(itemRedemarrer);
 		menuFichier.add(itemRetourMenu);
+		menuFichier.addSeparator();
 		menuFichier.add(itemQuitter);
 		menuPrincipal.add(menuFichier);
 		
@@ -187,6 +190,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		menuPrincipal.add(menuAffichage);
 		
 		// menu Jeu
+		menuJeu.add(itemOptions);
 		menuJeu.add(itemPause);
 		menuPrincipal.add(menuJeu);
 		
@@ -203,6 +207,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		itemRedemarrer.addActionListener(this);
 		itemRetourMenu.addActionListener(this);
 		itemQuitter.addActionListener(this);
+		itemOptions.addActionListener(this);
 		itemPause.addActionListener(this);
 		itemModeDebug.addActionListener(this);
 		itemAfficherMaillage.addActionListener(this);
@@ -261,6 +266,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bVitesseJeu.setText("x"+jeu.getCoeffVitesse());
         bVitesseJeu.setToolTipText("Vitesse du jeu");
         GestionnaireDesPolices.setStyle(bVitesseJeu);
+        
         //bVitesseJeu.setPreferredSize(dimBouton);
         boutonsHaut.add(bVitesseJeu);
         bVitesseJeu.addActionListener(this);
@@ -357,7 +363,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		   if (GestionnaireSons.isVolumeMute()) 
 		   {
 		      GestionnaireSons.setVolumeMute(false);
-		      GestionnaireSons.setVolumeSysteme(VOLUME_PAR_DEFAUT);
+		      GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);
 		   }
 		   else
 		   {
@@ -399,6 +405,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
 		else if(source == itemPause) 
 		    activerDesactiverLaPause();
+		
+		else if(source == itemOptions) 
+            new Fenetre_Options();
 
 		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)
@@ -815,25 +824,27 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     @Override
     public void keyPressed(KeyEvent ke)
     {
+        char keyChar = Character.toUpperCase(ke.getKeyChar());
+        int keyCode = ke.getKeyCode();
         
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
-        if(ke.getKeyChar() == 'm' || ke.getKeyChar() == 'M')
+        if(keyChar == 'M')
         {
             ajouterPiecesDOr(1000);
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
-        else if(ke.getKeyChar() == 'l' || ke.getKeyChar() == 'L')
+        else if(keyChar == 'L')
         {
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
         }
-        else if(ke.getKeyChar() == '+')
+        else if(keyCode == Configuration.getKeyCode(Configuration.AUG_VIT_JEU))
         {
             jeu.augmenterCoeffVitesse();
         }
-        else if(ke.getKeyChar() == '-')
+        else if(keyCode == Configuration.getKeyCode(Configuration.DIM_VIT_JEU))
         {
             jeu.diminuerCoeffVitesse();
         }
@@ -842,11 +853,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     @Override
     public void keyReleased(KeyEvent ke)
     {
+        int keyCode = ke.getKeyCode();
+        
         // PAUSE
-        if(ke.getKeyChar() == 'p' || ke.getKeyChar() == 'P')
+        if(keyCode == Configuration.getKeyCode(Configuration.PAUSE))
             activerDesactiverLaPause();  
         // raccourci lancer vague suivante
-        else if(Character.isSpaceChar(ke.getKeyChar())) 
+        else if(keyCode == Configuration.getKeyCode(Configuration.LANCER_VAGUE))
             if(!jeu.estEnPause())
                 lancerVagueSuivante();
     }

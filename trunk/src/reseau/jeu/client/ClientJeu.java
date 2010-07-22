@@ -77,7 +77,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     {
        
 	    // création du canal 1 (Requête / réponse)
-        canalEnvoi = new CanalTCP(IP, port, true);
+        canalEnvoi = new CanalTCP(IP, port);
         
         // demande de connexion au serveur (canal 1)
         canalEnvoi.envoyerString(jeu.getJoueurPrincipal().getPseudo());
@@ -101,7 +101,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
         int portCanal2 = canalEnvoi.recevoirInt();
         
         // création du canal 2 (Reception asynchrone)
-        canalEcoute = new CanalTCP(IP, portCanal2, true);
+        canalEcoute = new CanalTCP(IP, portCanal2);
 
         // lancement de la tache d'écoute du canal 2
         (new Thread(this)).start();
@@ -197,8 +197,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                     throw new ZoneInaccessibleException("Zone non accessible");
 			    case CHEMIN_BLOQUE :
                     throw new ZoneInaccessibleException("La tour bloque le chemin");
-                // TODO
-                //case JOUEUR_HORS_JEU:
+                // TODO case JOUEUR_HORS_JEU:
                 //   throw new JoueurHorsJeu("Tour inconnue");
 			}
 		} 
@@ -278,8 +277,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 case ACTION_NON_AUTORISEE :
                     throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
                     
-                // TODO
-                //case JOUEUR_HORS_JEU:
+                // TODO case JOUEUR_HORS_JEU:
                 //   throw new JoueurHorsJeu("Tour inconnue");
             
             }
@@ -598,8 +596,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
                 
                 try 
                 {
-                    // TODO maps/multi/ -> constantes
-                    terrain = Terrain.charger(new File("maps/multi/"+nomFichierTerrain));
+                    terrain = Terrain.charger(new File(Terrain.EMPLACEMENT_TERRAINS_MULTI+nomFichierTerrain));
                     jeu.setTerrain(terrain);
                     terrain.setJeu(jeu);
                     

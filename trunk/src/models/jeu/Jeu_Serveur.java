@@ -148,8 +148,7 @@ public class Jeu_Serveur extends Jeu
         try
         {
             canalServeurEnregistrement = new CanalTCP(Configuration.getIpSE(), 
-                                                      Configuration.getPortSE(), 
-                                                      true);
+                                                      Configuration.getPortSE());
             
             // Création de la requete d'enregistrement
             String requete = RequeteEnregistrement.getRequeteEnregistrer(

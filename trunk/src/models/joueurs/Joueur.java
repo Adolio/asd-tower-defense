@@ -228,7 +228,7 @@ public class Joueur
         
         this.equipe = equipe;
         
-        // FIXME
+        // FIXME Décommenter et voir les conscéquences !
         //equipe.ajouterJoueur(this);
     }
     

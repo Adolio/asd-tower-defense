@@ -291,7 +291,7 @@ public class GestionnaireCreatures implements Runnable
             public void run()
             {
                 // recuperation des zones
-                // TODO pour chaque zone de depart, lancer la vague...
+                // FIXME pour chaque zone de depart, lancer la vague...
                 final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
                 final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
 

@@ -72,7 +72,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         // -- element du formulaire --
         // ---------------------------
 
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         JPanel p = new JPanel();
         p.setOpaque(false);
         p.setPreferredSize(new Dimension(1,280));
@@ -140,7 +140,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     
     public void paintComponent(Graphics g)
     {
-        g.setColor(LookInterface.COULEUR_DE_FOND);
+        g.setColor(LookInterface.COULEUR_DE_FOND_PRI);
         g.fillRect(0, 0, 800, 600);
         
         g.drawImage(IMAGE_DE_FOND, 0, 0, null);

@@ -102,7 +102,7 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
                     log("Ecoute sur le port " + Configuration.getPortSJ());
                     
                     // Bloquant en attente d'une connexion
-                    canalAttenteConnexion = new CanalTCP(port, verbeux);
+                    canalAttenteConnexion = new CanalTCP(port);
                     
                     String ip = canalAttenteConnexion.getIpClient();
                     
@@ -211,7 +211,6 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
 	@Override
 	public void partieTerminee(ResultatJeu resultatJeu)
 	{
-	    // TODO CHECK Multicast aux clients
 	    envoyerATous(Protocole.construireMsgPartieTerminee(jeuServeur));
 	}
 
@@ -328,7 +327,7 @@ public class ServeurJeu implements ConstantesServeurJeu, EcouteurDeJeu, Runnable
 	/************************** ACTIONS DES JOUEURS ************************/
 
 	/**
-	 * TODO Contrôle de l'argent
+	 * Lance une vague de créatures
 	 * 
 	 * @param typeVague
 	 * @return

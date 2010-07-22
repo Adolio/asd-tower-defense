@@ -65,7 +65,7 @@ public class GestionnaireDesPolices
     {
         //bouton.setFont(POLICE_SOUS_TITRE);
         composant.setForeground(COULEUR_TXT_BOUTON);
-        composant.setBackground(LookInterface.COULEUR_BOUTON);
+        composant.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
     }
     
 }

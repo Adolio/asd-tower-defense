@@ -34,7 +34,7 @@ class Fenetre_HTML extends JFrame implements ActionListener
 
         super(titre);
         setIconImage(parent.getIconImage());
-        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
 
         // contenu HTML
         epHTML = new JEditorPane();
@@ -79,7 +79,7 @@ class Fenetre_HTML extends JFrame implements ActionListener
 
         // bouton fermer
         bFermer.addActionListener(this);
-        bFermer.setBackground(LookInterface.COULEUR_BOUTON);
+        bFermer.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
         bFermer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
         getContentPane().add(bFermer, BorderLayout.SOUTH);
 

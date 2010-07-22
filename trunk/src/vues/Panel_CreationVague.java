@@ -45,14 +45,14 @@ public class Panel_CreationVague extends JPanel
         super(new BorderLayout());
         
         this.jeu = jeu;
-        setBackground(LookInterface.COULEUR_DE_FOND);
+        setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         
         JLabel titre = new JLabel("Lancement des creatures");
         titre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         add(titre,BorderLayout.NORTH);
         
-        tb.setBackground(LookInterface.COULEUR_DE_FOND_2);
+        tb.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         tb.add(new JLabel("Créature"),0,0);
         tb.add(new JLabel("Prix"),1,0);
         tb.add(new JLabel("Revenu"),2,0);
@@ -99,7 +99,7 @@ public class Panel_CreationVague extends JPanel
             JButton bLancer = new JButton("Lancer");
             bLancers[i] = bLancer;
             tb.add(bLancer,3,i+1);
-            bLancer.setBackground(LookInterface.COULEUR_BOUTON);
+            bLancer.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
             bLancer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
             
             bLancer.addActionListener(new ActionListener()

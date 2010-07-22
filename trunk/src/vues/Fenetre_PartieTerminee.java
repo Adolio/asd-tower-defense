@@ -44,7 +44,7 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
         super(fenParent,"Partie Terminée.",true); 
         setLayout(new BorderLayout());
         setResizable(false);
-        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND);
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
         // init attributs membres
         this.score      = score;

@@ -68,11 +68,10 @@ public class Fenetre_RepresentationMaillage extends JFrame
             
             if(source == bCalculerDijsktra)
             {
-                //m.activerZone(new Rectangle()); //TODO
                 m.desactiverZone(new Rectangle(Outils.tirerNombrePseudoAleatoire(0, m.getLargeurPixels()),
                         Outils.tirerNombrePseudoAleatoire(0, m.getHauteurPixels()),
                         Outils.tirerNombrePseudoAleatoire(20, 200),
-                        Outils.tirerNombrePseudoAleatoire(20, 200)),true); //TODO
+                        Outils.tirerNombrePseudoAleatoire(20, 200)),true);
             }
 
             repaint();
@@ -144,7 +143,6 @@ public class Fenetre_RepresentationMaillage extends JFrame
         // desactivation de zone
         m.desactiverZone(new Rectangle(largeur / 2 - 20,0,20,hauteur),false);
         m.desactiverZone(new Rectangle(0,largeur / 2 - 20,largeur,20),false);
-        //m.desactiverZone(new Rectangle(0,0,10,10),false); // FIXME ???
         
         // ajout des points de sorties
         m.ajouterPointdeSortie(largeur / 4, hauteur / 4);

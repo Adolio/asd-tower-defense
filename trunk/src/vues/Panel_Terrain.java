@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
+import outils.Configuration;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -77,7 +78,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	protected int decaleX = 0,
 	            decaleY = 0;
 	
-	// TODO
+	/**
+	 * Marges internes du chateau pour coloration du centre (couleur de l'équipe)
+	 */
 	private static final int MARGES_CHATEAU = 5;
 	
 	//---------------------------
@@ -128,7 +131,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	
     private static final Image I_CHATEAU = Toolkit.getDefaultToolkit().getImage("img/tours/chateau.png");
     
-    
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
 	 */
@@ -150,7 +152,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
      * 
      * TODO faire avec une acceleration
      */
-    private static final int DECALAGE_CLAVIER = 8;
+    private static final int DECALAGE_CLAVIER = 6;
 
 	/**
 	 * Position exacte de la souris sur le terrain
@@ -210,14 +212,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 */
 	private EcouteurDePanelTerrain edpt;
 
-	
-	// TODO commenter
+	/**
+	 * Activation du mode debug (affichage des murs et formes primitives)
+	 */
 	private boolean modeDebug;
 	
+	/**
+	 * Permet d'afficher ou non les murs
+	 */
 	protected boolean afficherMurs;
 	
 	/**
-	 * Permet d'afficher ou non les elements invisible (maillage, chemins, etc.)
+	 * Permet d'afficher ou non le maillage et les chemins
 	 */
 	private boolean afficherMaillage;
 	
@@ -232,10 +238,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private boolean afficherRayonsDePortee;
 	
 	/**
-     * TODO
+     * Permet d'afficher ou non la zone de départ et d'arrivée
      */
     private boolean afficherZonesDepartArrivee;
 	
+    /**
+     * Permet d'afficher ou non le quadrillage du terrain
+     */
+    protected boolean afficherQuadrillage;
+    
 	/**
 	 * Etape d'une echelle de zoom
 	 */
@@ -256,20 +267,19 @@ public class Panel_Terrain extends JPanel implements Runnable,
      */
     private boolean centrerSurCreatureSelectionnee;
 
+    
     private boolean toucheHautPressee;
-
     private boolean toucheGauchePressee;
-
     private boolean toucheBasPressee;
-
     private boolean toucheDroitePressee;
 
-    protected boolean quadrillage;
-
-    // TODO
+    /**
+     * Permet de répéter l'image de fin de tel sorte à recouvrir 
+     * toute la surface du terrain
+     */
     private boolean repeterImageDeFond = true;
 
-    // TODO
+    // FPS
     private Timer timer;
     private int fps;
     private boolean afficherFps = true;
@@ -415,14 +425,20 @@ public class Panel_Terrain extends JPanel implements Runnable,
     }
     
     /**
-     * TODO commenter
+     * Permet de basculer ou non en mode d'affichage des zones 
+     * 
+     * @return true si le mode est activé, false sinon
      */
     public boolean basculeraffichageZonesDepartArrivee()
     {
         return afficherZonesDepartArrivee = !afficherZonesDepartArrivee;
     }
 
-    // TODO commenter
+    /**
+     * Permet de basculer ou non en mode debug
+     * 
+     * @return true si le mode est activé, false sinon
+     */
     public boolean basculerModeDebug()
     {
         return modeDebug = !modeDebug;
@@ -475,7 +491,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    //---------------------------
         //-- affichage de l'espace --
         //---------------------------
-	    g2.setColor(LookInterface.COULEUR_DE_FOND_2);
+	    g2.setColor(LookInterface.COULEUR_DE_FOND_SEC);
 	    
 	    g2.fillRect(
 	            -MARGE_UNIVERS, 
@@ -646,11 +662,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			    g2.fillOval(n.x-1, n.y-1, 2, 2);
 			}
 			
-			/*
+			/* TODO Affichage de tous les chemins (pour maillage v2.0)
 			try
             {
-			    //TODO
-			    
 			    g2.setColor(Color.BLUE);
 			    for(int i=-5;i<50;i++)
 			        for(int j=-5;j<50;j++)
@@ -759,7 +773,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		
 		
 		// quadrillage
-		if(quadrillage)
+		if(afficherQuadrillage)
 		{
             setTransparence(ALPHA_QUADRILLAGE, g2);
             g2.setColor(COULEUR_QUADRILLAGE);
@@ -805,8 +819,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
             setTransparence(1.0f, g2);
             
             g2.setColor(Color.WHITE);
+            Font policeTmp = g2.getFont();
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
             g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 100, HAUTEUR / 2 - 50);
+            g2.setFont(policeTmp);
 	    }
 		
 		
@@ -1426,7 +1442,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
 	public void keyReleased(KeyEvent ke)
 	{
-		char source = ke.getKeyChar();
+		int keyCode = ke.getKeyCode();
 	    
 	    if(!jeu.estEnPause())
 		{
@@ -1434,40 +1450,40 @@ public class Panel_Terrain extends JPanel implements Runnable,
     	    if(tourSelectionnee != null)
     		{
     	        // raccourci de vente
-    			if(source == 'v' || source == 'V')
+    			if(keyCode == Configuration.getKeyCode(Configuration.VENDRE_TOUR))
     				edpt.vendreTour(tourSelectionnee);
     			// raccourci d'amelioration
-    			else if(source == 'q' || source == 'Q')
+    			else if(keyCode == Configuration.getKeyCode(Configuration.AMELIO_TOUR))
     				edpt.ameliorerTour(tourSelectionnee);
     		}
     	    
     	    // focus sur la creature
-    	    if(source == 'f' && creatureSelectionnee != null)
+    	    if(keyCode == Configuration.getKeyCode(Configuration.SUIVRE_CREATURE) && creatureSelectionnee != null)
     	        centrerSurCreatureSelectionnee = true; 
 		}
 		
-		if(source == 'w' || source == 'W')
+		if(keyCode == Configuration.getKeyCode(Configuration.DEPL_HAUT))
             toucheHautPressee = false;
-        else if(source == 'a' || source == 'A')
+        else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_GAUCHE))
             toucheGauchePressee = false;
-        else if(source == 's' || source == 'S')
+        else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_BAS))
             toucheBasPressee = false;
-        else if(source == 'd' || source == 'D')
+        else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_DROITE))
             toucheDroitePressee = false;
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent ke)
 	{
-	    char source = ke.getKeyChar();
+	    int keyCode = ke.getKeyCode();
 	    
-	    if(source == 'w' || source == 'W')
+	    if(keyCode == Configuration.getKeyCode(Configuration.DEPL_HAUT))
             toucheHautPressee = true;
-	    else if(source == 'a' || source == 'A')
+	    else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_GAUCHE))
             toucheGauchePressee = true;
-	    else if(source == 's' || source == 'S')
+	    else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_BAS))
             toucheBasPressee = true;
-	    else if(source == 'd' || source == 'D')
+	    else if(keyCode == Configuration.getKeyCode(Configuration.DEPL_DROITE))
             toucheDroitePressee = true;
 	}
 	

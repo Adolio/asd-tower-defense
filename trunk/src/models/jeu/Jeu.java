@@ -54,7 +54,17 @@ public abstract class Jeu implements EcouteurDeJoueur,
      * Etape d'incrémentation du coefficient de vitesse du jeu.
      */
     private static final double ETAPE_COEFF_VITESSE = 0.5;
+
+    /**
+     * Coefficient maximal de la vitesse du jeu
+     */
+    private static final double MAX_COEFF_VITESSE = 5.0;
     
+    /**
+     * Coefficient minimal de la vitesse du jeu
+     */
+    private static final double MIN_COEFF_VITESSE = 0.1; // /!\ >0 /!\
+      
 	/**
 	 * Le terrain de jeu que contient tous les elements principaux :
 	 * - Les tours
@@ -460,7 +470,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void setTerrain(Terrain terrain) throws IllegalArgumentException
     {
-        // TODO j'ai mis en commentaire! pour le chargement dans l'editeur de niveau
+        // J'ai mis en commentaire! pour le chargement dans l'editeur de niveau
         //if(this.terrain != null) 
         //    throw new TerrainDejaInitialise("Terrain déjà initialisé");
 
@@ -1012,11 +1022,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public synchronized double augmenterCoeffVitesse()
     {
-        // TODO LIMITER
-        coeffVitesse += ETAPE_COEFF_VITESSE;
-        
-        if(edj != null)
-            edj.coeffVitesseModifie(coeffVitesse);
+        if(coeffVitesse + ETAPE_COEFF_VITESSE <= MAX_COEFF_VITESSE)
+        {    
+            coeffVitesse += ETAPE_COEFF_VITESSE;
+            
+            if(edj != null)
+                edj.coeffVitesseModifie(coeffVitesse);
+        }
         
         return coeffVitesse;
     }
@@ -1028,13 +1040,13 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     synchronized public double diminuerCoeffVitesse()
     {
-        // TODO LIMITER
-        if(coeffVitesse-ETAPE_COEFF_VITESSE > 0)
+        if(coeffVitesse - ETAPE_COEFF_VITESSE >= MIN_COEFF_VITESSE)
+        { 
             coeffVitesse -= ETAPE_COEFF_VITESSE;
          
-        if(edj != null)
-            edj.coeffVitesseModifie(coeffVitesse);
-                
+            if(edj != null)
+                edj.coeffVitesseModifie(coeffVitesse);
+        }    
         return coeffVitesse;
     }
     
@@ -1044,10 +1056,10 @@ public abstract class Jeu implements EcouteurDeJoueur,
      */
     public void setCoeffVitesse(double value)
     {
-        // TODO LIMITER
-        if(value < 0.0)
+        if(coeffVitesse - ETAPE_COEFF_VITESSE < MIN_COEFF_VITESSE
+        && coeffVitesse + ETAPE_COEFF_VITESSE > MAX_COEFF_VITESSE)
             throw new IllegalArgumentException(
-                    "Le coefficient de vitesse du jeu doit être > 0");
+                    "Le coefficient de vitesse non authorisé");
             
         coeffVitesse = value;
         
@@ -1066,16 +1078,23 @@ public abstract class Jeu implements EcouteurDeJoueur,
         return MODE_DE_POSITIONNEMENT;
     }
     
-    // TODO 
+    /**
+     * Permet d'ajouter une equipe (utilisé pour l'éditeur de terrain)
+     * 
+     * @param equipe la nouvelle equipe
+     */
     public void ajouterEquipe(Equipe equipe)
     {
         equipes.add(equipe);
     }
  
-    // TODO 
+    /**
+     * Permet de supprimer une equipe (utilisé pour l'éditeur de terrain)
+     * 
+     * @param equipe l'équipe à supprimer
+     */
     public void supprimerEquipe(Equipe equipe)
     {
-        // FIXME CHECK
         equipes.remove(equipe);
     }
 }

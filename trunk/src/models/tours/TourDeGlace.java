@@ -76,7 +76,7 @@ public class TourDeGlace extends Tour
             rayonPortee = getRayonPorteeLvlSuivant();
             
             // raccourcissement du temps de preparation du tire
-            cadenceTir  = getCadenceTirLvlSuivant();
+            setCadenceTir(getCadenceTirLvlSuivant());
         
             niveau++;
         }
@@ -102,7 +102,7 @@ public class TourDeGlace extends Tour
     @Override
     public double getCadenceTirLvlSuivant()
     {
-        return cadenceTir * 1.2;
+        return getCadenceTir() * 1.2;
     }
 
     @Override

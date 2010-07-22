@@ -1,5 +1,7 @@
 package outils;
 
+import java.awt.event.KeyEvent;
+
 /**
  * Classe de gestion de la configuration.
  * 
@@ -8,10 +10,24 @@ package outils;
  */
 public class Configuration
 {
+    public static final String DEPL_HAUT    = "KC_DEPL_HAUT";
+    public static final String DEPL_BAS     = "KC_DEPL_BAS";
+    public static final String DEPL_DROITE  = "KC_DEPL_DROITE";
+    public static final String DEPL_GAUCHE  = "KC_DEPL_GAUCHE"; 
+    public static final String LANCER_VAGUE = "KC_LANCER_VAGUE"; 
+    public static final String VENDRE_TOUR  = "KC_VENDRE_TOUR"; 
+    public static final String AMELIO_TOUR  = "KC_AMELIO_TOUR"; 
+    public static final String PAUSE        = "KC_PAUSE"; 
+    public static final String SUIVRE_CREATURE = "KC_SUIVRE_CREATURE"; 
+    public static final String AUG_VIT_JEU  = "KC_AUG_VIT_JEU"; 
+    public static final String DIM_VIT_JEU  = "KC_DIM_VIT_JEU"; 
+    
+    public static final String COULEUR_DE_FOND_P  = "COULEUR_DE_FOND_P";
+    public static final String COULEUR_DE_FOND_S  = "COULEUR_DE_FOND_S";
+    public static final String COULEUR_DE_FOND_B  = "COULEUR_DE_FOND_B";
+    
     private static final String CFG = "cfg/config.cfg";
 
-    
-    
     // réseau
     private static String IP_SE;
     private static int PORT_SE;
@@ -23,24 +39,24 @@ public class Configuration
    //private final static String LANGUE = "FR";
     
     // Commandes 
-    private static char CMD_DEPL_HAUT   = 'w';
-    private static char CMD_DEPL_BAS    = 's';
-    private static char CMD_DEPL_DROITE = 'a';
-    private static char CMD_DEPL_GAUCHE = 'd';
+    private static int CMD_DEPL_HAUT   = KeyEvent.VK_W;
+    private static int CMD_DEPL_BAS    = KeyEvent.VK_S;
+    private static int CMD_DEPL_DROITE = KeyEvent.VK_A;
+    private static int CMD_DEPL_GAUCHE = KeyEvent.VK_D;
     
-    private static char CMD_VENDRE      = 'v';
-    private static char CMD_AMELIORER   = 'q';
-    private static char CMD_PAUSE       = 'p';
+    private static int CMD_VENDRE      = KeyEvent.VK_V;
+    private static int CMD_AMELIORER   = KeyEvent.VK_Q;
+    private static int CMD_PAUSE       = KeyEvent.VK_P;
 
     private static fichierDeConfiguration config = new fichierDeConfiguration(CFG);
     
     static
     {
-        IP_SE           = config.getProprety("IP_SE");
-        PORT_SE         = Integer.parseInt(config.getProprety("PORT_SE"));
-        PORT_SJ         = Integer.parseInt(config.getProprety("PORT_SJ"));
-        PORT_SJ_JD      = Integer.parseInt(config.getProprety("PORT_SJ_JD"));
-        PSEUDO_JOUEUR   = config.getProprety("PSEUDO_JOUEUR");
+        IP_SE           = config.getProperty("IP_SE");
+        PORT_SE         = Integer.parseInt(config.getProperty("PORT_SE"));
+        PORT_SJ         = Integer.parseInt(config.getProperty("PORT_SJ"));
+        PORT_SJ_JD      = Integer.parseInt(config.getProperty("PORT_SJ_JD"));
+        PSEUDO_JOUEUR   = config.getProperty("PSEUDO_JOUEUR");
     }
 
     public static String getIpSE()
@@ -103,33 +119,48 @@ public class Configuration
         return PORT_SJ_JD;
     }
 
-    public static char getDeplHaut()
+    public static int getDeplHaut()
     {
         return CMD_DEPL_HAUT;
     }
 
-    public static char getDeplBas()
+    public static int getDeplBas()
     {
         return CMD_DEPL_BAS;
     }
 
-    public static char getDeplDroite()
+    public static int getDeplDroite()
     {
         return CMD_DEPL_DROITE;
     }
     
-    public static char getDeplGauche()
+    public static int getDeplGauche()
     {
         return CMD_DEPL_GAUCHE;
     }
 
-    public static char getCmdVendre()
+    public static int getCmdVendre()
     {
         return CMD_VENDRE;
     }
     
-    public static char getCmdAmeliorer()
+    public static int getCmdAmeliorer()
     {
-        return CMD_AMELIORER;
+        return config.getProperty("KC_AMELIO_TOUR").charAt(0);
+    }
+    
+    public static String getProprety(String cle)
+    {
+        return config.getProperty(cle);
+    }
+    
+    public static void setProperty(String cle, String valeur)
+    {
+        config.setProperty(cle,valeur);
+    }
+    
+    public static int getKeyCode(String cle)
+    {
+        return Integer.parseInt(config.getProperty(cle));
     }
 }

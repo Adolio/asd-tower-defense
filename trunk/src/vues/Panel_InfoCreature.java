@@ -71,7 +71,7 @@ public class Panel_InfoCreature extends JPanel
 		lGain.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		
 		JPanel p2 = new JPanel();
-		p2.setBackground(LookInterface.COULEUR_DE_FOND_2);
+		p2.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
 		p2.setPreferredSize(new Dimension(260,100));
 		
 		

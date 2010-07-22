@@ -134,7 +134,7 @@ public abstract class Tour extends Rectangle
 	 * Cadence de tir de la tour. C'est-a-dire le nombre de fois que peut tirer
 	 * la tour pendant 1 seconde.
 	 */
-	protected double cadenceTir; // tir(s) / seconde
+	private double cadenceTir; // tir(s) / seconde
 
 	
 	/**
@@ -144,6 +144,7 @@ public abstract class Tour extends Rectangle
 	
 	// initialisation pour que la tour puisse tirer directement
     private long tempsDepuisDernierTir;
+    private long tempsDAttenteEntreTirs;
 	
 	/**
 	 * Constructeur de la tour.
@@ -183,8 +184,10 @@ public abstract class Tour extends Rectangle
 		this.image 			= image;
 		ICONE               = icone;
 		
+		tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
+		
 		// pour que la tour tire directement après sa création
-		tempsDepuisDernierTir = (long) (1000.0 / cadenceTir);	
+		tempsDepuisDernierTir = tempsDAttenteEntreTirs; 
 	}
 	
 	/**
@@ -439,14 +442,18 @@ public abstract class Tour extends Rectangle
 	    return enJeu;
 	}
 	
-	// TODO [OPTIMISATION] mettre en place pour eviter de recalculer le tempsDAttenteEntreTirs
-	/*
+	/**
+	 * Permet de modifier la cadence de tir de la tour
+	 * 
+	 * En place pour eviter de recalculer le tempsDAttenteEntreTirs
+	 * 
+	 * @param cadenceTir la nouvelle cadence de tir
+	 */
 	public void setCadenceTir(double cadenceTir) 
 	{
 	    this.cadenceTir = cadenceTir;
 	    tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
 	}
-	*/
 
 	/**
 	 * Permet de faire des actions de la tour
@@ -455,18 +462,14 @@ public abstract class Tour extends Rectangle
 	 * tours et permet d'effectuer les actions de la tour, c-a-d tirer.
 	 */
 	public void action(long tempsPasse)
-	{ 
-	    // TODO [OPTIMISATION] a stoquer dans un attribut
-        long tempsDAttenteEntreTirs = (long) (1000.0 / cadenceTir);
-        
+	{  
         // on calcul le temps depuis le dernier tir
         tempsDepuisDernierTir += tempsPasse;
-        //tempsDepuisDernierTir += getTempsAppel();
 
         // on a attendu assez pour pouvoir tirer
         if(tempsDepuisDernierTir >= tempsDAttenteEntreTirs)
         {
-            
+            // Selection de la cible
             Creature creature = null;
 	        switch(typeCiblage)
 	        {
@@ -486,7 +489,7 @@ public abstract class Tour extends Rectangle
 	                System.err.println("Type de ciblage inconnu");
 	        }
              
-            // si elle existe
+            // si la cible existe...
             if (creature != null)
             {
                 // attaque la creature ciblee
@@ -494,13 +497,13 @@ public abstract class Tour extends Rectangle
                 
                 /* 
                  * on soustrait le tempsDAttenteEntreTirs pour
-                 * garder le temps supplementaire
+                 * garder le temps supplémentaire
                  */
                 tempsDepuisDernierTir -= tempsDAttenteEntreTirs;
             }
             else 
                 /* 
-                 * on incremente pas plus le temps car ca se a rien 
+                 * on incrémente pas plus le temps car ca sert a rien 
                  * et ca risquerai d'etre cyclique.
                  */
                 tempsDepuisDernierTir = tempsDAttenteEntreTirs;

@@ -178,29 +178,45 @@ public class Score implements Serializable, Comparable<Score>
         valeur = score;   
     }
     
-    // TODO commenter
-    private int getSeconds()
+    /**
+     * Permet de récupérer le nombre de secondes de la partie
+     * 
+     * @return le nombre de secondes de la partie
+     */
+    private int getSecondes()
     {
         return (int) (dureePartie) % 60;
     }
     
-    // TODO commenter
+    /**
+     * Permet de récupérer le nombre de minutes de la partie
+     * 
+     * @return le nombre de minutes de la partie
+     */
     private int getMinutes()
     {
         return (int) (dureePartie / 60) % 60;
     }
     
-    // TODO commenter
+    /**
+     * Permet de récupérer le nombre d'heures de la partie
+     * 
+     * @return le nombre d'heures de la partie
+     */
     private int getHours()
     {
         return (int) (dureePartie / 3600) % 24;
     }
     
-    // TODO commenter
+    /**
+     * Permet de récupérer la durée de la partie sous la forme H:M:S
+     * 
+     * @return la durée de la partie sous la forme H:M:S
+     */
     public String getHMS()
     {
         return String.format("%02d:%02d:%02d", getHours(), 
                                                getMinutes(), 
-                                               getSeconds());
+                                               getSecondes());
     }
 }
