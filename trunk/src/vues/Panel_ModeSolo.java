@@ -161,7 +161,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		// titre
 		JLabel lblTitre = new JLabel("PARTIE SOLO");
 		lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
-		lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
+		lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
 		pNord.add(lblTitre,BorderLayout.WEST);
 		
 		// étoiles
@@ -170,7 +170,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		JLabel lblNbEtoiles = new JLabel(nbEtoiles+" x");
 		lblNbEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		lblNbEtoiles.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+		lblNbEtoiles.setForeground(LookInterface.COULEUR_TEXTE_PRI);
 		
 		pNbEtoiles.add(lblNbEtoiles);
 		pNbEtoiles.add(new JLabel(I_SCORE));
@@ -248,11 +248,9 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		        JButton bScore = new JButton(txt);
 		    
         	    boutonsScore[i] = bScore;
-        	    bScore.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-        	    bScore.addActionListener(this);
         	    
-        	    //bScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        	    bScore.setForeground(GestionnaireDesPolices.COULEUR_SOUS_TITRE);
+        	    GestionnaireDesPolices.setStyle(bScore);
+        	    bScore.addActionListener(this);
 
         	    pInfoTerrain.add(bScore,BorderLayout.SOUTH);
 		    }
@@ -297,7 +295,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		JLabel lblAstuce = new JLabel("\""+Astuces.getAstuceAleatoirement()+"\"");
 		lblAstuce.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		lblAstuce.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+		lblAstuce.setForeground(LookInterface.COULEUR_TEXTE_PRI);
 		
 		JPanel pPourCentrer = new JPanel();
 		pPourCentrer.setOpaque(false);
@@ -331,7 +329,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 
         lblInfo.setFont(GestionnaireDesPolices.POLICE_INFO);
         //lblInfo.setForeground(GestionnaireDesPolices.COULEUR_INFO);
-        lblInfo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblInfo.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         
         pFond.add(lblInfo,BorderLayout.EAST);
         

@@ -99,8 +99,8 @@ public class Panel_CreationVague extends JPanel
             JButton bLancer = new JButton("Lancer");
             bLancers[i] = bLancer;
             tb.add(bLancer,3,i+1);
-            bLancer.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-            bLancer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
+            
+            GestionnaireDesPolices.setStyle(bLancer);
             
             bLancer.addActionListener(new ActionListener()
             {

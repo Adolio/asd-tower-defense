@@ -36,7 +36,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
     private JLabel lblEtat = new JLabel();
     
     private JButton bLancer = new JButton("Lancer");
-    private JButton bAnnuler = new JButton("Annuler");
+    private JButton bRetour = new JButton("Retour");
     private JButton bEditeurDeTerrain = new JButton("Editeur de Terrain", I_EDITEUR_T);
     
     // terrains
@@ -70,8 +70,9 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         pTop.setOpaque(false);
 
         JLabel lblTitre = new JLabel("PARTIES PERSONNALISEES");
+        
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
-        lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
+        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(lblTitre, BorderLayout.NORTH);
 
         add(pTop, BorderLayout.NORTH);
@@ -80,7 +81,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         // -- CENTER --
         // ------------
         JPanel pCentre = new JPanel(new GridBagLayout());
-        pCentre.setBorder(new LineBorder(Color.BLACK));
+        pCentre.setBorder(new LineBorder(LookInterface.COULEUR_TEXTE_PRI));
         pCentre.setOpaque(false);
 
         int ligne = 0;
@@ -116,7 +117,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         pTerrains.setOpaque(false);
 
         lblTitreTerrains.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblTitreTerrains.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblTitreTerrains.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTerrains.add(lblTitreTerrains,BorderLayout.NORTH);
         
         // création de la table avec boquage des editions
@@ -193,13 +194,13 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
                 } 
                 catch (IOException e)
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                     lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
                 } 
                 catch (ClassNotFoundException e)
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                     lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
                 } 
@@ -246,9 +247,9 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
 
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
-        bAnnuler.addActionListener(this);
-        GestionnaireDesPolices.setStyle(bAnnuler);
-        pBottom.add(bAnnuler, BorderLayout.WEST);
+        bRetour.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bRetour);
+        pBottom.add(bRetour, BorderLayout.WEST);
 
         add(pBottom, BorderLayout.SOUTH);
     }
@@ -266,7 +267,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         if (src == bLancer)
         {
             // Test des champs...
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             
             if(tbTerrains.getSelectedRow() == -1)
             {
@@ -325,7 +326,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
             
             parent.dispose();
         }
-        else if (src == bAnnuler)
+        else if (src == bRetour)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),

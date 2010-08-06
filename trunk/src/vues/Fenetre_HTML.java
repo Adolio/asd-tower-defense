@@ -79,8 +79,10 @@ class Fenetre_HTML extends JFrame implements ActionListener
 
         // bouton fermer
         bFermer.addActionListener(this);
-        bFermer.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-        bFermer.setForeground(GestionnaireDesPolices.COULEUR_TXT_BOUTON);
+        
+        GestionnaireDesPolices.setStyle(bFermer);
+        
+        
         getContentPane().add(bFermer, BorderLayout.SOUTH);
 
         // dernier réglages
