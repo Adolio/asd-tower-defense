@@ -329,6 +329,9 @@ public class Fenetre_Options extends JFrame implements ActionListener
         private JButton bCouleurDeFond_2 = new JButton();
         private JButton bCouleurDeFond_Boutons = new JButton();
         
+        private JButton bReinitialiser = new JButton("Réinitialiser");
+        
+        
         public Panel_OptionsStyle()
         {
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -350,9 +353,12 @@ public class Fenetre_Options extends JFrame implements ActionListener
             pFormulaire.add(new JLabel("Couleur de fond des boutons"),0,2);
             pFormulaire.add(bCouleurDeFond_Boutons,1,2);
 
+            pFormulaire.add(bReinitialiser,1,3);  
+            
             bCouleurDeFond.addActionListener(this);
             bCouleurDeFond_2.addActionListener(this);
             bCouleurDeFond_Boutons.addActionListener(this);
+            bReinitialiser.addActionListener(this);
             
             add(pFormulaire); 
         }
@@ -397,6 +403,23 @@ public class Fenetre_Options extends JFrame implements ActionListener
                     bCouleurDeFond_Boutons.setBackground(couleur);
                     Configuration.setProperty(Configuration.COULEUR_DE_FOND_B, couleur.getRGB()+"");
                 }
+            }  
+            else if(src == bReinitialiser)
+            {
+                // COULEUR_DE_FOND_PRI
+                LookInterface.COULEUR_DE_FOND_PRI = new Color(62,140,28);
+                bCouleurDeFond.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+                Configuration.setProperty(Configuration.COULEUR_DE_FOND_P, LookInterface.COULEUR_DE_FOND_PRI.getRGB()+"");
+                
+                // COULEUR_DE_FOND_SEC
+                LookInterface.COULEUR_DE_FOND_SEC = new Color(90,180,50);
+                bCouleurDeFond_2.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+                Configuration.setProperty(Configuration.COULEUR_DE_FOND_S, LookInterface.COULEUR_DE_FOND_SEC.getRGB()+"");
+                
+                // COULEUR_DE_FOND_BTN
+                LookInterface.COULEUR_DE_FOND_BTN = new Color(20, 20, 20);
+                bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
+                Configuration.setProperty(Configuration.COULEUR_DE_FOND_B, LookInterface.COULEUR_DE_FOND_BTN.getRGB()+"");  
             }  
         }
     }

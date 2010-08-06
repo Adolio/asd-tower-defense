@@ -21,8 +21,6 @@ import models.terrains.Terrain;
  * 
  * Ce panel hérite du panel d'affichage du terrain de jeu durant la partie.
  * 
- * TODO compléter
- * 
  * @author Aurelien Da Campo
  * @version 1.0 | juillet 2010
  * @since jdk1.6.0_16
@@ -30,9 +28,9 @@ import models.terrains.Terrain;
  */
 public class Panel_CreationTerrain extends Panel_Terrain
 {
-    private static final long serialVersionUID  = 1L;
-    private static final int MODE_DEPLACEMENT   = 0;
-    private static final int MODE_MURS          = 1;
+    private static final long serialVersionUID      = 1L;
+    private static final int MODE_DEPLACEMENT       = 0;
+    private static final int MODE_TRAITEMENT_REC    = 1;
     
     //private Terrain terrain;
     private int mode = MODE_DEPLACEMENT;
@@ -43,17 +41,14 @@ public class Panel_CreationTerrain extends Panel_Terrain
      */
     private static final int CADRILLAGE = 10; // unite du cadriallage en pixel
 
-    
     public Panel_CreationTerrain(Jeu jeu, EcouteurDePanelTerrain edpt)
     {
         super(jeu,edpt);
         
         afficherQuadrillage = true;
-        afficherMurs = true;
+        afficherMurs        = true;
     }
-    
-    
-    
+
     private int taillePoignee = 6;
     private int taillePoigneeSur2 = taillePoignee / 2;
     private boolean redimGrab;
@@ -107,7 +102,6 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 return new Rectangle(recEnTraitement.x-taillePoigneeSur2,
                         recEnTraitement.y+H_SUR_2-taillePoigneeSur2,taillePoignee,taillePoignee);
             case 1 : // haut
-                
                 return new Rectangle(recEnTraitement.x+recEnTraitement.width-taillePoigneeSur2,
                         recEnTraitement.y+H_SUR_2-taillePoigneeSur2,taillePoignee,taillePoignee);
             case 2 : // gauche
@@ -132,7 +126,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 super.mousePressed(me);
                 break;
                 
-            case MODE_MURS : 
+            case MODE_TRAITEMENT_REC : 
                 
                 sourisGrabX = me.getX();
                 sourisGrabY = me.getY();
@@ -231,9 +225,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 super.mouseMoved(me);
                 break;
                 
-            case MODE_MURS : 
-                
-                // FIXME correct ? 
+            case MODE_TRAITEMENT_REC : 
                 super.mouseMoved(me);
                 break;
         }
@@ -254,14 +246,12 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 super.mouseDragged(me);
                 break;
                 
-            case MODE_MURS : 
+            case MODE_TRAITEMENT_REC : 
                 
                 Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
                 Point sourisGrab = getCoordoneeSurTerrainOriginal(sourisGrabX,sourisGrabY);
                 //Point reto_CTO = getCoordoneeSurTerrainOriginal(recEnTraitementOriginal.x,recEnTraitementOriginal.y);
-                
-                
-                
+
                 if(boutonGrab == MouseEvent.BUTTON1)
                 {
                     if(recEnTraitement != null)
@@ -273,18 +263,18 @@ public class Panel_CreationTerrain extends Panel_Terrain
                             switch(poigneeGrab)
                             {
                                 case 0: // gauche
-                                    recEnTraitement.width = getLongueurSurGrillage(sourisGrab.x - p.x + recEnTraitementOriginal.width);
-                                    recEnTraitement.x     = getPositionSurQuadrillage(p.x);// FIXME recEnTraitementOriginal.x + (recEnTraitementOriginal.width - recEnTraitement.width);
+                                    recEnTraitement.width   = getLongueurSurGrillage(sourisGrab.x - p.x + recEnTraitementOriginal.width);
+                                    recEnTraitement.x       = recEnTraitementOriginal.x + (recEnTraitementOriginal.width - recEnTraitement.width); 
                                     break;
                                 case 1: // droite
-                                    recEnTraitement.width = getLongueurSurGrillage(p.x - sourisGrab.x + recEnTraitementOriginal.width);
+                                    recEnTraitement.width   = getLongueurSurGrillage(p.x - sourisGrab.x + recEnTraitementOriginal.width);
                                     break;
                                 case 2: // haut
-                                    recEnTraitement.height = getLongueurSurGrillage(sourisGrab.y - p.y + recEnTraitementOriginal.height);
-                                    recEnTraitement.y      = getPositionSurQuadrillage(p.y);   // FIXME recEnTraitementOriginal.y + (recEnTraitementOriginal.height - recEnTraitement.height);
+                                    recEnTraitement.height  = getLongueurSurGrillage(sourisGrab.y - p.y + recEnTraitementOriginal.height);
+                                    recEnTraitement.y       = recEnTraitementOriginal.y + (recEnTraitementOriginal.height - recEnTraitement.height);
                                     break;
                                 case 3: // bas
-                                    recEnTraitement.height = getLongueurSurGrillage(p.y - sourisGrab.y + recEnTraitementOriginal.height);
+                                    recEnTraitement.height  = getLongueurSurGrillage(p.y - sourisGrab.y + recEnTraitementOriginal.height);
                                     break;
                             } 
                             
@@ -305,8 +295,10 @@ public class Panel_CreationTerrain extends Panel_Terrain
                         }
                         else if(deplGrab)
                         {
-                            recEnTraitement.x = getPositionSurQuadrillage(recEnTraitementOriginal.x + me.getX() - sourisGrabX);
-                            recEnTraitement.y = getPositionSurQuadrillage(recEnTraitementOriginal.y + me.getY() - sourisGrabY);
+                            Point pSouris = getCoordoneeSurTerrainOriginal(me.getPoint());
+                            
+                            recEnTraitement.x = getPositionSurQuadrillage(recEnTraitementOriginal.x + pSouris.x - sourisGrabX);
+                            recEnTraitement.y = getPositionSurQuadrillage(recEnTraitementOriginal.y + pSouris.y - sourisGrabY);
                         
                             if(edpct != null)
                                 edpct.zoneModifiee(recEnTraitement);
@@ -325,15 +317,17 @@ public class Panel_CreationTerrain extends Panel_Terrain
 
     @Override
     public void mouseReleased(MouseEvent e)
-    { 
+    {  
         switch(mode)
         {
             case MODE_DEPLACEMENT : 
                 super.mouseReleased(e);
                 break;
                 
-            case MODE_MURS : 
+            case MODE_TRAITEMENT_REC : 
                 
+                // On clique sans opération particulière
+                // -> sélection d'un élément
                 if(!deplGrab && !redimGrab)
                 {  
                     Point p = getCoordoneeSurTerrainOriginal(e.getPoint());
@@ -360,6 +354,24 @@ public class Panel_CreationTerrain extends Panel_Terrain
                         edpct.zoneSelectionnee(recEnTraitement);
                     
                     jeu.getTerrain().ajouterMur(recEnTraitement);
+                } 
+                
+                // MISE A JOUR DU RECTANGLE ORIGINAL
+                else if(deplGrab)
+                {
+                    // Après un déplacement, la position du rectangle original est
+                    // mis à jour
+                    recEnTraitementOriginal.x = recEnTraitement.x;
+                    recEnTraitementOriginal.y = recEnTraitement.y;
+                }
+                else if(redimGrab)
+                {
+                    // Après un redimentionnement, la position et la taille
+                    // du rectangle original est mis à jour
+                    recEnTraitementOriginal.x       = recEnTraitement.x;
+                    recEnTraitementOriginal.y       = recEnTraitement.y;
+                    recEnTraitementOriginal.width   = recEnTraitement.width;
+                    recEnTraitementOriginal.height  = recEnTraitement.height;
                 }
                 
                 break;
@@ -371,7 +383,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
         recEnTraitement = r;
         deplGrab = true;
         recEnTraitementOriginal = new Rectangle(recEnTraitement);
-        mode = MODE_MURS;
+        mode = MODE_TRAITEMENT_REC;
     }
     
     void deselectionnerRecEnTraitement()
@@ -388,7 +400,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
                 super.keyReleased(ke);
                 break;
                 
-            case MODE_MURS : 
+            case MODE_TRAITEMENT_REC : 
                 
                 if(ke.getKeyCode() == KeyEvent.VK_DELETE)
                 {
@@ -406,7 +418,7 @@ public class Panel_CreationTerrain extends Panel_Terrain
     
     public void activerModeCreationMurs()
     {
-        mode = MODE_MURS;
+        mode = MODE_TRAITEMENT_REC;
     }
 
     public void activerModeDeplacement()
