@@ -1,0 +1,23 @@
+#summary Nouvelles fonctionnalités en développement
+#labels Featured,Phase-Requirements
+
+= Les fonctionnalités en cours de développement =
+
+- *Fin de l'éditeur de terrains* (0%)<br/>
+Il reste encore quelques petites choses à terminer notamment l'ajout de musique et quelques finitions diverses.
+<br/><br/>
+
+- *Traduction du jeu* (0%)<br/>
+Afin de proposer le jeu à un plus large publique, il serait intéressant de traduire entièrement l'interface du soft en plusieurs langues.
+<br/><br/>
+
+- *Adaptation des valeurs et de la difficulté du jeu* (0%)<br/>
+Pour le moment, le jeu est trop facile au début et devient subitement trop dur. Il faudra adapter les valeurs du jeu pour rendre les sessions de jeu plus agréables.
+<br/><br/>
+
+- *Ajout de contenu* (0%)<br/>
+Il s'agit d'ajouter de nouvelles tours et de nouvelles créatures. Il faudra également pousser un peu plus loin les améliorations des tours, offrir de nouvelles capacités exclusives etc.
+<br/><br/>
+
+- *Refonte graphique* (0%)<br/>
+<br/><br/>
