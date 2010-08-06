@@ -325,9 +325,14 @@ public class Fenetre_Options extends JFrame implements ActionListener
     {
         private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
-        private JButton bCouleurDeFond = new JButton();
-        private JButton bCouleurDeFond_2 = new JButton();
+        private JButton bCouleurDeFond_Pri = new JButton();
+        private JButton bCouleurTexte_Pri = new JButton();
+        
+        private JButton bCouleurDeFond_Sec = new JButton();
+        private JButton bCouleurTexte_Sec = new JButton();
+        
         private JButton bCouleurDeFond_Boutons = new JButton();
+        private JButton bCouleurTexte_Boutons = new JButton();
         
         private JButton bReinitialiser = new JButton("Réinitialiser");
         
@@ -336,28 +341,51 @@ public class Fenetre_Options extends JFrame implements ActionListener
         {
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
+            int ln = 0;
+            
             pFormulaire.setOpaque(false);
             
-            bCouleurDeFond.setPreferredSize(new Dimension(50,50));
-            bCouleurDeFond.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-            pFormulaire.add(new JLabel("Couleur de fond primaire"),0,0);
-            pFormulaire.add(bCouleurDeFond,1,0);
+            bCouleurDeFond_Pri.setPreferredSize(new Dimension(50,50));
+            bCouleurDeFond_Pri.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+            pFormulaire.add(new JLabel("Couleur de fond primaire"),0,ln);
+            pFormulaire.add(bCouleurDeFond_Pri,1,ln++);
 
-            bCouleurDeFond_2.setPreferredSize(new Dimension(50,50));
-            bCouleurDeFond_2.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-            pFormulaire.add(new JLabel("Couleur de fond secondaire"),0,1);
-            pFormulaire.add(bCouleurDeFond_2,1,1);
+            bCouleurTexte_Pri.setPreferredSize(new Dimension(50,50));
+            bCouleurTexte_Pri.setBackground(LookInterface.COULEUR_TEXTE_PRI);
+            pFormulaire.add(new JLabel("Couleur du texte primaire"),0,ln);
+            pFormulaire.add(bCouleurTexte_Pri,1,ln++);
+            
+            bCouleurDeFond_Sec.setPreferredSize(new Dimension(50,50));
+            bCouleurDeFond_Sec.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+            pFormulaire.add(new JLabel("Couleur de fond secondaire"),0,ln);
+            pFormulaire.add(bCouleurDeFond_Sec,1,ln++);
   
+            bCouleurTexte_Sec.setPreferredSize(new Dimension(50,50));
+            bCouleurTexte_Sec.setBackground(LookInterface.COULEUR_TEXTE_SEC);
+            pFormulaire.add(new JLabel("Couleur du texte secondaire"),0,ln);
+            pFormulaire.add(bCouleurTexte_Sec,1,ln++);
+            
             bCouleurDeFond_Boutons.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-            pFormulaire.add(new JLabel("Couleur de fond des boutons"),0,2);
-            pFormulaire.add(bCouleurDeFond_Boutons,1,2);
+            pFormulaire.add(new JLabel("Couleur de fond des boutons"),0,ln);
+            pFormulaire.add(bCouleurDeFond_Boutons,1,ln++);
 
-            pFormulaire.add(bReinitialiser,1,3);  
+            bCouleurTexte_Boutons.setPreferredSize(new Dimension(50,50));
+            bCouleurTexte_Boutons.setBackground(LookInterface.COULEUR_TEXTE_BTN);
+            pFormulaire.add(new JLabel("Couleur du texte des boutons"),0,ln);
+            pFormulaire.add(bCouleurTexte_Boutons,1,ln++);
             
-            bCouleurDeFond.addActionListener(this);
-            bCouleurDeFond_2.addActionListener(this);
+            
+            
+            
+            pFormulaire.add(bReinitialiser,1,ln++);
+            
+            bCouleurDeFond_Pri.addActionListener(this);
+            bCouleurTexte_Pri.addActionListener(this);
+            bCouleurDeFond_Sec.addActionListener(this);
+            bCouleurTexte_Sec.addActionListener(this);
             bCouleurDeFond_Boutons.addActionListener(this);
+            bCouleurTexte_Boutons.addActionListener(this);
             bReinitialiser.addActionListener(this);
             
             add(pFormulaire); 
@@ -368,7 +396,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         {
             Object src = ae.getSource();
             
-            if(src == bCouleurDeFond)
+            if(src == bCouleurDeFond_Pri)
             {
                 Color couleur = JColorChooser.showDialog(null,
                         "Couleur de fond primaire",LookInterface.COULEUR_DE_FOND_PRI);
@@ -376,11 +404,23 @@ public class Fenetre_Options extends JFrame implements ActionListener
                 if(couleur != null)
                 {
                     LookInterface.COULEUR_DE_FOND_PRI = couleur;
-                    bCouleurDeFond.setBackground(couleur);
+                    bCouleurDeFond_Pri.setBackground(couleur);
                     Configuration.setProperty(Configuration.COULEUR_DE_FOND_P, couleur.getRGB()+"");
                 }
             }
-            else if(src == bCouleurDeFond_2)
+            else if(src == bCouleurTexte_Pri)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur texte primaire",LookInterface.COULEUR_TEXTE_PRI);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_TEXTE_PRI = couleur;
+                    bCouleurTexte_Pri.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_TEXTE_P, couleur.getRGB()+"");
+                }
+            }   
+            else if(src == bCouleurDeFond_Sec)
             {
                 Color couleur = JColorChooser.showDialog(null,
                         "Couleur de fond secondaire",LookInterface.COULEUR_DE_FOND_SEC);
@@ -388,8 +428,20 @@ public class Fenetre_Options extends JFrame implements ActionListener
                 if(couleur != null)
                 {
                     LookInterface.COULEUR_DE_FOND_SEC = couleur;
-                    bCouleurDeFond_2.setBackground(couleur);
+                    bCouleurDeFond_Sec.setBackground(couleur);
                     Configuration.setProperty(Configuration.COULEUR_DE_FOND_S, couleur.getRGB()+"");
+                }
+            }
+            else if(src == bCouleurTexte_Sec)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur texte secondaire",LookInterface.COULEUR_TEXTE_SEC);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_TEXTE_SEC = couleur;
+                    bCouleurTexte_Sec.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_TEXTE_S, couleur.getRGB()+"");
                 }
             }
             else if(src == bCouleurDeFond_Boutons)
@@ -403,23 +455,50 @@ public class Fenetre_Options extends JFrame implements ActionListener
                     bCouleurDeFond_Boutons.setBackground(couleur);
                     Configuration.setProperty(Configuration.COULEUR_DE_FOND_B, couleur.getRGB()+"");
                 }
-            }  
+            } 
+            else if(src == bCouleurTexte_Boutons)
+            {
+                Color couleur = JColorChooser.showDialog(null,
+                        "Couleur du texte des boutons",LookInterface.COULEUR_TEXTE_BTN);
+                  
+                if(couleur != null)
+                {
+                    LookInterface.COULEUR_TEXTE_BTN = couleur;
+                    bCouleurTexte_Boutons.setBackground(couleur);
+                    Configuration.setProperty(Configuration.COULEUR_TEXTE_B, couleur.getRGB()+"");
+                } 
+            }
             else if(src == bReinitialiser)
             {
                 // COULEUR_DE_FOND_PRI
-                LookInterface.COULEUR_DE_FOND_PRI = new Color(62,140,28);
-                bCouleurDeFond.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+                LookInterface.COULEUR_DE_FOND_PRI = LookInterface.DEF_COULEUR_DE_FOND_PRI;
+                bCouleurDeFond_Pri.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
                 Configuration.setProperty(Configuration.COULEUR_DE_FOND_P, LookInterface.COULEUR_DE_FOND_PRI.getRGB()+"");
                 
+                // COULEUR_TEXTE_PRI
+                LookInterface.COULEUR_TEXTE_PRI = LookInterface.DEF_COULEUR_TEXTE_PRI;
+                bCouleurTexte_Pri.setBackground(LookInterface.COULEUR_TEXTE_PRI);
+                Configuration.setProperty(Configuration.COULEUR_TEXTE_P, LookInterface.COULEUR_TEXTE_PRI.getRGB()+"");   
+             
                 // COULEUR_DE_FOND_SEC
-                LookInterface.COULEUR_DE_FOND_SEC = new Color(90,180,50);
-                bCouleurDeFond_2.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+                LookInterface.COULEUR_DE_FOND_SEC = LookInterface.DEF_COULEUR_DE_FOND_SEC;
+                bCouleurDeFond_Sec.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
                 Configuration.setProperty(Configuration.COULEUR_DE_FOND_S, LookInterface.COULEUR_DE_FOND_SEC.getRGB()+"");
                 
+                // COULEUR_TEXTE_SEC
+                LookInterface.COULEUR_TEXTE_SEC = LookInterface.DEF_COULEUR_TEXTE_SEC;
+                bCouleurTexte_Sec.setBackground(LookInterface.COULEUR_TEXTE_SEC);
+                Configuration.setProperty(Configuration.COULEUR_TEXTE_S, LookInterface.COULEUR_TEXTE_SEC.getRGB()+"");   
+
                 // COULEUR_DE_FOND_BTN
-                LookInterface.COULEUR_DE_FOND_BTN = new Color(20, 20, 20);
+                LookInterface.COULEUR_DE_FOND_BTN = LookInterface.DEF_COULEUR_DE_FOND_BTN;
                 bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
                 Configuration.setProperty(Configuration.COULEUR_DE_FOND_B, LookInterface.COULEUR_DE_FOND_BTN.getRGB()+"");  
+            
+                // COULEUR_TEXTE_BTN
+                LookInterface.COULEUR_TEXTE_BTN = LookInterface.DEF_COULEUR_TEXTE_BTN;
+                bCouleurTexte_Boutons.setBackground(LookInterface.COULEUR_TEXTE_BTN);
+                Configuration.setProperty(Configuration.COULEUR_TEXTE_B, LookInterface.COULEUR_TEXTE_BTN.getRGB()+"");      
             }  
         }
     }
@@ -474,7 +553,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         onglets.addTab("Commandes  ", I_CMD, new JScrollPane(panelOptionsCommandes));
         onglets.addTab("Son  ", I_SON, panelOptionsSon);
         onglets.addTab("Réseau  ", I_RESEAU, panelOptionsReseau);
-        onglets.addTab("Style  ", I_STYLE, panelOptionsStyle);
+        onglets.addTab("Style  ", I_STYLE, new JScrollPane(panelOptionsStyle));
         
         
         add(onglets,BorderLayout.CENTER);

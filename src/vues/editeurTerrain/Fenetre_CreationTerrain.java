@@ -8,11 +8,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
-
 import vues.EcouteurDePanelCreationTerrain;
 import vues.EcouteurDePanelTerrain;
 import vues.Fenetre_JeuSolo;
-import vues.GestionnaireDesPolices;
 import vues.LookInterface;
 import vues.Panel_OptionsTerrain;
 import exceptions.*;
@@ -338,7 +336,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         panelOptionsTerrain.miseAJour();
         panelCreationEquipes.miseAJour();
         
-        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+        lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
         lblEtat.setText("Fichier chargé");
     }
 
@@ -362,7 +360,7 @@ public class Fenetre_CreationTerrain extends    JFrame
             } 
             catch (IOException e)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Erreur lors de la sauvegarde!");
             }
         }
@@ -421,27 +419,27 @@ public class Fenetre_CreationTerrain extends    JFrame
         }
         catch (ClassCastException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         } 
         catch (IOException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         } 
         catch (ClassNotFoundException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         }
         catch (JeuEnCoursException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Le jeu est en cours!");
         } 
         catch (AucunePlaceDisponibleException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Il n'y a aucun emplacement de joueur!");
         }
     }
@@ -475,7 +473,7 @@ public class Fenetre_CreationTerrain extends    JFrame
             } 
             catch (IOException e)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Erreur lors de la sauvegarde!");
             } 
         }
@@ -504,22 +502,22 @@ public class Fenetre_CreationTerrain extends    JFrame
                 panelOptionsTerrain.miseAJour();
                 panelCreationEquipes.miseAJour();
                 
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
                 lblEtat.setText("Fichier chargé");
             } 
             catch (ClassCastException e1)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             } 
             catch (IOException e1)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             } 
             catch (ClassNotFoundException e1)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             }
         }

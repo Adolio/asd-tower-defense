@@ -63,13 +63,15 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         pGlobalInfo.add(lTimer);
         lTimer.setText("00.00.00");
         lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-            
+        lTimer.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+        
         // etoiles gagnées
         if(modeDeJeu == ModeDeJeu.MODE_SOLO)
         {
             pGlobalInfo.add(lTitreEtoiles);
             pGlobalInfo.add(lEtoiles);
             lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            lEtoiles.setForeground(LookInterface.COULEUR_TEXTE_PRI);
             miseAJourNbEtoiles();
         }
         
@@ -79,6 +81,7 @@ public class Panel_InfosJoueurEtPartie extends JPanel
             pGlobalInfo.add(lTitreRevenu);
             pGlobalInfo.add(lRevenu);
             lRevenu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+            lRevenu.setForeground(LookInterface.COULEUR_TEXTE_PRI);
             miseAJourRevenu();
         }
         
@@ -94,18 +97,21 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         pJoueur.add(lScore);
         lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lScore.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         miseAJourScore();
         
         // pieces d'or
         pJoueur.add(lTitrePiecesOr);
         pJoueur.add(lNbPiecesOr);
         lNbPiecesOr.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lNbPiecesOr.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         miseAJourNbPiecesOr();
         
         // vies restantes
         pJoueur.add(lTitreVies);
         pJoueur.add(lVies);
         lVies.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lVies.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         miseAJourNbViesRestantes();
             
         JPanel pToursEtJoueur = new JPanel(new BorderLayout());

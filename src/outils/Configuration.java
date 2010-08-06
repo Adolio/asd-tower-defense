@@ -1,7 +1,5 @@
 package outils;
 
-import java.awt.event.KeyEvent;
-
 /**
  * Classe de gestion de la configuration.
  * 
@@ -10,45 +8,39 @@ import java.awt.event.KeyEvent;
  */
 public class Configuration
 {
-    public static final String DEPL_HAUT    = "KC_DEPL_HAUT";
-    public static final String DEPL_BAS     = "KC_DEPL_BAS";
-    public static final String DEPL_DROITE  = "KC_DEPL_DROITE";
-    public static final String DEPL_GAUCHE  = "KC_DEPL_GAUCHE"; 
-    public static final String LANCER_VAGUE = "KC_LANCER_VAGUE"; 
-    public static final String VENDRE_TOUR  = "KC_VENDRE_TOUR"; 
-    public static final String AMELIO_TOUR  = "KC_AMELIO_TOUR"; 
-    public static final String PAUSE        = "KC_PAUSE"; 
-    public static final String SUIVRE_CREATURE = "KC_SUIVRE_CREATURE"; 
-    public static final String AUG_VIT_JEU  = "KC_AUG_VIT_JEU"; 
-    public static final String DIM_VIT_JEU  = "KC_DIM_VIT_JEU"; 
-    
-    public static final String COULEUR_DE_FOND_P  = "COULEUR_DE_FOND_P";
-    public static final String COULEUR_DE_FOND_S  = "COULEUR_DE_FOND_S";
-    public static final String COULEUR_DE_FOND_B  = "COULEUR_DE_FOND_B";
-    
     private static final String CFG = "cfg/config.cfg";
-
-    // réseau
+    private static fichierDeConfiguration config = new fichierDeConfiguration(CFG);
+    
+    // COMMANDES
+    public static final String DEPL_HAUT            = "KC_DEPL_HAUT";
+    public static final String DEPL_BAS             = "KC_DEPL_BAS";
+    public static final String DEPL_DROITE          = "KC_DEPL_DROITE";
+    public static final String DEPL_GAUCHE          = "KC_DEPL_GAUCHE"; 
+    public static final String LANCER_VAGUE         = "KC_LANCER_VAGUE"; 
+    public static final String VENDRE_TOUR          = "KC_VENDRE_TOUR"; 
+    public static final String AMELIO_TOUR          = "KC_AMELIO_TOUR"; 
+    public static final String PAUSE                = "KC_PAUSE"; 
+    public static final String SUIVRE_CREATURE      = "KC_SUIVRE_CREATURE"; 
+    public static final String AUG_VIT_JEU          = "KC_AUG_VIT_JEU"; 
+    public static final String DIM_VIT_JEU          = "KC_DIM_VIT_JEU"; 
+    
+    // STYLES
+    public static final String COULEUR_DE_FOND_P    = "COULEUR_DE_FOND_P";
+    public static final String COULEUR_DE_FOND_S    = "COULEUR_DE_FOND_S";
+    public static final String COULEUR_DE_FOND_B    = "COULEUR_DE_FOND_B";
+    public static final String COULEUR_TEXTE_P      = "COULEUR_TEXTE_P";
+    public static final String COULEUR_TEXTE_S      = "COULEUR_TEXTE_S";
+    public static final String COULEUR_TEXTE_B      = "COULEUR_TEXTE_B";
+    
+    // RESEAU
     private static String IP_SE;
     private static int PORT_SE;
     private static int PORT_SJ;
     private static int PORT_SJ_JD;
   
-    // l'utilisateur
+    // JOUEUR
     private static String PSEUDO_JOUEUR;
-   //private final static String LANGUE = "FR";
-    
-    // Commandes 
-    private static int CMD_DEPL_HAUT   = KeyEvent.VK_W;
-    private static int CMD_DEPL_BAS    = KeyEvent.VK_S;
-    private static int CMD_DEPL_DROITE = KeyEvent.VK_A;
-    private static int CMD_DEPL_GAUCHE = KeyEvent.VK_D;
-    
-    private static int CMD_VENDRE      = KeyEvent.VK_V;
-    private static int CMD_AMELIORER   = KeyEvent.VK_Q;
-    private static int CMD_PAUSE       = KeyEvent.VK_P;
-
-    private static fichierDeConfiguration config = new fichierDeConfiguration(CFG);
+    //private final static String LANGUE = "FR";
     
     static
     {
@@ -119,31 +111,6 @@ public class Configuration
         return PORT_SJ_JD;
     }
 
-    public static int getDeplHaut()
-    {
-        return CMD_DEPL_HAUT;
-    }
-
-    public static int getDeplBas()
-    {
-        return CMD_DEPL_BAS;
-    }
-
-    public static int getDeplDroite()
-    {
-        return CMD_DEPL_DROITE;
-    }
-    
-    public static int getDeplGauche()
-    {
-        return CMD_DEPL_GAUCHE;
-    }
-
-    public static int getCmdVendre()
-    {
-        return CMD_VENDRE;
-    }
-    
     public static int getCmdAmeliorer()
     {
         return config.getProperty("KC_AMELIO_TOUR").charAt(0);

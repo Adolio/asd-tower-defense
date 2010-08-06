@@ -508,12 +508,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             panelSelectionEtVague.setSelectedIndex(0);
             
             
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+            lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
             lblEtat.setText("Tour posée");
 	    }
 	    catch(Exception e)
 	    {
-	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+	        lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
 	        lblEtat.setText(e.getMessage());
 	    }
 	}
@@ -527,12 +527,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	          
 	        panelSelection.setSelection(tour, Panel_InfoTour.MODE_SELECTION);
 	        
-	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+	        lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
             lblEtat.setText("Tour Améliorée");
         }
 	    catch(Exception e)
         {
-	        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+	        lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
 	        lblEtat.setText(e.getMessage());
         }
 	}
@@ -551,12 +551,12 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                             tour.getPrixDeVente())
                     );
             
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+            lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
             lblEtat.setText("Tour vendue");
         } 
         catch (ActionNonAutoriseeException e)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText(e.getMessage());
         }
     }
@@ -785,7 +785,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     @Override
     public void erreurPasAssezDArgent()
     {
-        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+        lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
         lblEtat.setText("Vague trop chère");
     }
 

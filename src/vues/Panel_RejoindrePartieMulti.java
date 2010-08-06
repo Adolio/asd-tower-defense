@@ -148,6 +148,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         
         JLabel titre = new JLabel("REJOINDRE UNE PARTIE");
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
+        titre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(titre, BorderLayout.NORTH);
         
 
@@ -227,7 +228,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         
         // connexion par IP 
         lblConnexionParIP.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblConnexionParIP.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblConnexionParIP.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         bottomCenter.add(lblConnexionParIP);
         tfConnexionParIP.setPreferredSize(new Dimension(100, 25));
         bottomCenter.add(tfConnexionParIP);
@@ -238,7 +239,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel pTmp = new JPanel();
         
         lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblPseudo.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         bottomCenter.add(lblPseudo);
         
         tfPseudo.setText(Configuration.getPseudoJoueur());
@@ -266,8 +267,8 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         tbServeurs.setEnabled(false);
         bRafraichir.setEnabled(false);
         tfFiltre.setEnabled(false);
-        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-        lblEtat.setText("Connection au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
+        lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
+        lblEtat.setText("Connexion au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
     }
 
     /**
@@ -294,7 +295,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             } 
             catch (CanalException e)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Erreur! La connexion avec le serveur " +
                 "d'enregistrement n'est plus valide. " +
                 "Veuillez retourner au menu principal");
@@ -341,18 +342,18 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 if(i > 0)
                     tbServeurs.setRowSelectionInterval(0, 0);
                 
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
                 lblEtat.setText("Connexion au serveur central établie!");
             }
             else
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
                 lblEtat.setText("Connexion au serveur central établie! [ Aucun serveur disponible pour le moment ]");
             }
         } 
         catch (JSONException e1)
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Format de réponse du serveur incorrect!");
         }
     }
@@ -440,7 +441,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             } 
             catch (Exception exception)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText(exception.getMessage());
             }
         } 
@@ -550,7 +551,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         
         try
         {
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+            lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
             lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
             
             try
@@ -559,7 +560,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             } 
             catch (AucunEmplacementDisponibleException e)
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Pas de place pour rejoindre!");
                 
                 bRejoindre.setText("Rejoindre");
@@ -571,16 +572,16 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             bRejoindre.setText("Rejoindre");
             bRejoindre.setEnabled(true);
             
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-            lblEtat.setText("Connection au serveur de jeu impossible");
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
+            lblEtat.setText("Connexion au serveur de jeu impossible");
         } 
         catch (CanalException e)
         {
             bRejoindre.setText("Rejoindre");
             bRejoindre.setEnabled(true);
             
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
-            lblEtat.setText("Connection au serveur de jeu impossible");
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
+            lblEtat.setText("Connexion au serveur de jeu impossible");
         } 
     }
 

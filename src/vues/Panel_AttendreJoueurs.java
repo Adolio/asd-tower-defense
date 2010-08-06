@@ -248,12 +248,12 @@ public class Panel_AttendreJoueurs extends JPanel implements
         if (ADMIN)
             if (jeuServeur.estEnregisterSurSE())
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
                 lblEtat.setText("La connexion avec le serveur central à réussie"); 
             } 
             else
             {
-                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("La connexion avec le serveur central a échouée, "+
                                 "votre serveur n'apparaîtra pas dans la liste " +
                                	"des serveurs");
@@ -417,7 +417,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
                         // on reselectionne l'ancienne sélection
                         cbEquipes.setSelectedItem(joueur.getEquipe());
 
-                        lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lEtat.setForeground(LookInterface.COULEUR_ERREUR);
                         lEtat.setText(iae.getMessage());
                     }
 
@@ -455,7 +455,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
                             if(joueur.getEmplacement().toString().equals(cbEmplacements.getItemAt(i)))
                                 cbEmplacements.setSelectedIndex(i);
                         
-                        lEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lEtat.setForeground(LookInterface.COULEUR_ERREUR);
                         lEtat.setText(iae.getMessage());
                     }
                 }

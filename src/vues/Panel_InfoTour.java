@@ -3,7 +3,6 @@ package vues;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import models.tours.*;
 
 /**
@@ -77,18 +76,8 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		setOpaque(false);
 		
 		setPreferredSize(DIMENSION_PANEL);
-		//setBorder(BORDURE);
-		//setBackground(LookInterface.COULEUR_DE_FOND);
-		
 		
 		this.edpt = edpt;
-
-		
-		
-		//JLabel lblTitre = new JLabel("Tour selectionnee");
-		//lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		//add(lblTitre,BorderLayout.NORTH);
-
 		JPanel pConteneurCaract = new JPanel();
 		pConteneurCaract.setOpaque(false);
 		int nbChamps = 0;
@@ -104,49 +93,82 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         taDescrition.setLineWrap(true);
         taDescrition.setWrapStyleWord(true);
         taDescrition.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-        //taDescrition.setBorder(BORDURE_DESCRIPTION);
+        //taDescrition.setBorder(new EmptyBorder(1, 1, 1, 1));
+        taDescrition.setFocusable(false);
         taDescrition.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+        taDescrition.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+
         spDescription = new JScrollPane(taDescrition);
         spDescription.setPreferredSize(DIMENSION_DESCRIPTION);
         ajouterChamp(pCaracteristiques, spDescription, 0, nbChamps++, 3);
 		
 		lTitreLvl.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		lTitreLvlS.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		lTitreLvl.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lTitreLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		ajouterChamp(pCaracteristiques, lTitreLvl, 1, nbChamps, 1);
 		ajouterChamp(pCaracteristiques, lTitreLvlS, 2, nbChamps++, 1);
 		
 		// champ prix
+		lTitrePrix.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lTitrePrix.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		ajouterChamp(pCaracteristiques, lTitrePrix, 0, nbChamps, 1);
 		lPrix.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lPrixLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lPrix.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lPrixLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		ajouterChamp(pCaracteristiques, lPrix, 1, nbChamps, 1);
         ajouterChamp(pCaracteristiques, lPrixLvlS, 2, nbChamps++, 1);
 		
 		// champ degats
-		ajouterChamp(pCaracteristiques, new JLabel("Dégâts"), 0, nbChamps, 1);
+        JLabel lTitreDegats = new JLabel("Dégâts");
+        lTitreDegats.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+        lTitreDegats.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+        
+		ajouterChamp(pCaracteristiques, lTitreDegats, 0, nbChamps, 1);
 		lDegats.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lDegatsLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lDegats.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lDegatsLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		ajouterChamp(pCaracteristiques, lDegats, 1, nbChamps, 1);
 		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamps++, 1);
 		
 		// champ rayon de portee
-		ajouterChamp(pCaracteristiques, new JLabel("Portée"), 0, nbChamps, 1);
+		JLabel lTitrePortee = new JLabel("Portée");
+		lTitrePortee.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lTitrePortee.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+		
+		ajouterChamp(pCaracteristiques, lTitrePortee, 0, nbChamps, 1);
 		lRayonPortee.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lRayonPorteeLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lRayonPortee.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lRayonPorteeLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		ajouterChamp(pCaracteristiques, lRayonPortee, 1, nbChamps, 1);
 		ajouterChamp(pCaracteristiques, lRayonPorteeLvlS, 2, nbChamps++, 1);
 		
 		// champ cadence de tir
-		ajouterChamp(pCaracteristiques, new JLabel("Tirs / sec."), 0, nbChamps, 1);
+		JLabel lTitreCadenceTir = new JLabel("Tirs / sec.");
+		lTitreCadenceTir.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lTitreCadenceTir.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+		
+		ajouterChamp(pCaracteristiques, lTitreCadenceTir, 0, nbChamps, 1);
 		lCadenceTir.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lCadenceTirLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lCadenceTir.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lCadenceTirLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		ajouterChamp(pCaracteristiques, lCadenceTir, 1, nbChamps, 1);
 		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamps++, 1);
 		
 		// champ DPS : dégats par seconde
-		ajouterChamp(pCaracteristiques, new JLabel("DPS"), 0, nbChamps, 1);
+		JLabel lTitreDPS = new JLabel("DPS");
+		lTitreDPS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lTitreDPS.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+		
+		ajouterChamp(pCaracteristiques, lTitreDPS, 0, nbChamps, 1);
 		lDPS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
 		lDPSLvlS.setFont(GestionnaireDesPolices.POLICE_VALEUR_CHAMP);
+		lDPS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+		lDPSLvlS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
         ajouterChamp(pCaracteristiques, lDPS, 1, nbChamps, 1);
         ajouterChamp(pCaracteristiques, lDPSLvlS, 2, nbChamps++, 1);
 		
@@ -168,8 +190,9 @@ public class Panel_InfoTour extends JPanel implements ActionListener
        
         JPanel pCiblage = new JPanel();
         pCiblage.setOpaque(false);
-        pCiblage.add(new JLabel("Attaque la créature : "));
-        
+        JLabel lTypeCiblage = new JLabel("Attaque la créature : ");
+        pCiblage.add(lTypeCiblage);
+        lTypeCiblage.setForeground(LookInterface.COULEUR_TEXTE_SEC);
         cbTypeCiblage.addItem("la plus proche");
         cbTypeCiblage.addItem("la plus loin");
         cbTypeCiblage.addItem("la plus faible (pv)");
@@ -189,11 +212,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		//pConteneurCaraEtBoutons.add(pBoutons,BorderLayout.SOUTH);
 		
 		add(pConteneurCaraEtBoutons,BorderLayout.WEST);
-	
-		
-		
-		
-		
+
 		// initialisation a vide
 		effacerTour();
 	}

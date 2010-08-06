@@ -77,7 +77,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         JLabel lblTitre = new JLabel("CREER UNE PARTIE");
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
-        lblTitre.setForeground(GestionnaireDesPolices.COULEUR_TITRE);
+        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(lblTitre, BorderLayout.NORTH);
 
         add(pTop, BorderLayout.NORTH);
@@ -153,7 +153,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         
         
         lblTitreTerrains.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblTitreTerrains.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblTitreTerrains.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTerrains.add(lblTitreTerrains,BorderLayout.NORTH);
         
         // création de la table avec boquage des editions
@@ -237,13 +237,13 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 } 
                 catch (IOException e)
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                     lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
                 } 
                 catch (ClassNotFoundException e)
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                     lblEtat.setText("Erreur lors du chargement des terrains");
                     e.printStackTrace();
                 } 
@@ -282,7 +282,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         
         // nom du serveur
         lblNomServeur.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblNomServeur.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblNomServeur.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pMilieu.add(lblNomServeur);
 
         tfNomServeur.setPreferredSize(DEFAULT_DIMENTION_COMP);
@@ -295,7 +295,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         //pAlignementADroite.setOpaque(false);
 
         lblPseudo.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblPseudo.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        lblPseudo.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pMilieu.add(lblPseudo);
         
         tfPseudo.setText(Configuration.getPseudoJoueur());
@@ -339,7 +339,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         if (src == bCreer)
         {
             // Test des champs...
-            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             
             if(tfNomServeur.getText().isEmpty())
             {
@@ -430,7 +430,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     
                     try
                     {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_INFO);
+                        lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
                         lblEtat.setText("Tentative de connexion au serveur local...");
                         
                         // TODO port dynamique
@@ -443,7 +443,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                             // ---------------------------------------------------------------
                         
                             // Information
-                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_TEXTE);
+                            lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
                             lblEtat.setText("Enregistrement au serveur central...");
     
                             if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
@@ -451,12 +451,12 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                                     (String) model.getValueAt(tbTerrains.getSelectedRow(), 0),
                                     terrain.getMode()))
                             {
-                                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_SUCCES);
+                                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
                                 lblEtat.setText("Enregistrement au serveur central réussi!");
                             } 
                             else
                             {
-                                lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                                lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                                 lblEtat.setText("Enregistrement au serveur central échoué!");
                             }
                             
@@ -469,24 +469,24 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                         } 
                         catch (AucunEmplacementDisponibleException e1)
                         {
-                            lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                            lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                             lblEtat.setText("Pas de place pour rejoindre!");
                         }
                     }
                     catch (ConnectException e2)
                     {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                         lblEtat.setText("Connection au serveur de jeu impossible");
                     } 
                     catch (CanalException e3)
                     {
-                        lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                        lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                         lblEtat.setText("Connection au serveur de jeu impossible");
                     } 
                 } 
                 catch (IOException e1)
                 {
-                    lblEtat.setForeground(GestionnaireDesPolices.COULEUR_ERREUR);
+                    lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                     lblEtat.setText("Création du serveur de jeu impossible " +
                     		        "- un serveur possible par machine (pour le moment)");
                 }

@@ -134,7 +134,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         add(pAbsolu, BorderLayout.CENTER);
 
         version = new JLabel(Jeu.getVersion());
-        version.setForeground(GestionnaireDesPolices.COULEUR_TXT_SUR_COULEUR_DE_FOND);
+        version.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         add(version, BorderLayout.SOUTH);
     }
     

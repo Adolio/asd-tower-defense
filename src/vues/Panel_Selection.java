@@ -43,9 +43,10 @@ public class Panel_Selection extends JPanel
 		setPreferredSize(new Dimension(280,300));
 		//setBackground(LookInterface.COULEUR_DE_FOND_2);
 		
-		JLabel titre = new JLabel("Information sur la selection");
-		titre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-		add(titre,BorderLayout.NORTH);
+		JLabel lTitre = new JLabel("Information sur la selection");
+		lTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+		lTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+		add(lTitre,BorderLayout.NORTH);
 		
 		JPanel p = new JPanel(new FlowLayout());
 		//p.setOpaque(false);

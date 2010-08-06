@@ -181,7 +181,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		menuFichier.addSeparator();
 		menuFichier.add(itemQuitter);
 		menuPrincipal.add(menuFichier);
-		
+
 		// menu Edition
 		itemPause.setAccelerator(KeyStroke.getKeyStroke('P'));
 		menuAffichage.add(itemModeDebug);
@@ -220,12 +220,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		// ajout du menu
 		setJMenuBar(menuPrincipal); 
 		
-		
 		JPanel pGauche = new JPanel(new BorderLayout());
 		pGauche.setOpaque(false);
 		
-		
-		
+
 		JPanel boutonsHaut = new JPanel(new FlowLayout());
         boutonsHaut.setBorder(new EmptyBorder(new Insets(0,0,0,0)));
         //boutonsHaut.setPreferredSize(new Dimension(400, 25));
