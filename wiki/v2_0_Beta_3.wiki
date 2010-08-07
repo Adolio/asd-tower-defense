@@ -1,7 +1,7 @@
 #summary Nouvelles fonctionnalités de la version.
 #labels Featured
 
-= Les nouvelles fonctionnalités [Bientôt disponible] =
+= Les nouvelles fonctionnalités =
 
 - *Editeur de terrains* (80%)<br/>
 Un éditeur de maps qui vous permettra de créer vos propres terrains de jeu :). Plutard, nous mettrons en place un site d'échange de terrains afin que vous puissiez partager vos créations avec la communauté de joueurs.<br/><br/>
