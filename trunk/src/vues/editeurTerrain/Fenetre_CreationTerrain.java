@@ -8,11 +8,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
-import vues.EcouteurDePanelCreationTerrain;
-import vues.EcouteurDePanelTerrain;
-import vues.Fenetre_JeuSolo;
 import vues.LookInterface;
-import vues.Panel_OptionsTerrain;
+import vues.commun.EcouteurDePanelTerrain;
+import vues.solo.Fenetre_JeuSolo;
 import exceptions.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
@@ -201,6 +199,12 @@ public class Fenetre_CreationTerrain extends    JFrame
         panelOnglets.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         
         panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
+        
+        JPanel panelConteneurPCT = new JPanel();
+        panelConteneurPCT.setBorder(new EmptyBorder(10,10,10,10));
+        panelConteneurPCT.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+        panelConteneurPCT.add(panelCreationTerrain);
+        
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
         panelCreationEquipes = new Panel_CreationEquipes(jeu, panelCreationTerrain);
         
@@ -213,7 +217,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         
         panelCreationTerrain.setEcouteurDeCreationTerrain(this);
         panelCreationTerrain.basculeraffichageZonesDepartArrivee();
-        add(panelCreationTerrain,BorderLayout.CENTER);
+        add(panelConteneurPCT,BorderLayout.CENTER);
         
         add(lblEtat,BorderLayout.SOUTH);
         

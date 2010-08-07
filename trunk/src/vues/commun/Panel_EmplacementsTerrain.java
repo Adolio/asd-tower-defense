@@ -1,4 +1,4 @@
-package vues;
+package vues.commun;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -10,6 +10,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+
+import vues.GestionnaireDesPolices;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
 import models.terrains.Terrain;

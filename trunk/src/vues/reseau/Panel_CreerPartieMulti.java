@@ -1,4 +1,4 @@
-package vues;
+package vues.reseau;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +18,12 @@ import models.outils.GestionnaireSons;
 import models.terrains.*;
 import outils.*;
 import reseau.CanalException;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.Panel_MenuPrincipal;
+import vues.commun.Panel_EmplacementsTerrain;
+import vues.commun.TableCellRenderer_Image;
+import vues.solo.Fenetre_JeuSolo;
 
 /**
  * Panel de création d'une partie réseau.

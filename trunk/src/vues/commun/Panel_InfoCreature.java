@@ -1,9 +1,12 @@
-package vues;
+package vues.commun;
 
 import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 
 import models.creatures.*;
 

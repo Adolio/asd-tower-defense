@@ -1,10 +1,12 @@
-package vues;
+package vues.solo;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import outils.Configuration;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import models.outils.MeilleursScores;
 
 /**

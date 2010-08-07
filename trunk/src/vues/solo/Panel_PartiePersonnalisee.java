@@ -1,4 +1,4 @@
-package vues;
+package vues.solo;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,6 +15,11 @@ import models.joueurs.Joueur;
 import models.outils.GestionnaireSons;
 import models.terrains.*;
 import outils.*;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.Panel_MenuPrincipal;
+import vues.commun.Panel_EmplacementsTerrain;
+import vues.commun.TableCellRenderer_Image;
 import vues.editeurTerrain.Fenetre_CreationTerrain;
 
 /**
@@ -89,7 +94,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         GridBagConstraints c = new GridBagConstraints();
         final int margesCellule = 15;
         c.insets = new Insets(margesCellule, margesCellule, margesCellule,
-                margesCellule);
+               margesCellule);
         c.anchor = GridBagConstraints.LINE_START;
 
         // -------------------------

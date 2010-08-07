@@ -7,7 +7,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import vues.GestionnaireDesPolices;
-import vues.Panel_Table;
+import vues.commun.Panel_Table;
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;

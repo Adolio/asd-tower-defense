@@ -11,6 +11,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import vues.commun.Fenetre_HTML;
+import vues.reseau.Panel_CreerPartieMulti;
+import vues.reseau.Panel_RejoindrePartieMulti;
+import vues.solo.Panel_ModeSolo;
+import vues.solo.Panel_PartiePersonnalisee;
 import models.jeu.Jeu;
 
 /**

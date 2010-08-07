@@ -1,4 +1,4 @@
-package vues;
+package vues.reseau;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,4 +1,4 @@
-package vues;
+package vues.editeurTerrain;
 
 import java.awt.Rectangle;
 

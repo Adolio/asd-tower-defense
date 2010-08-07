@@ -1,10 +1,12 @@
-package vues;
+package vues.reseau;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import vues.GestionnaireDesPolices;
 
 /**
  * Classe de gestion d'une console HTML

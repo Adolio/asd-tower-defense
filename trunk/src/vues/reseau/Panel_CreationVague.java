@@ -1,9 +1,13 @@
-package vues;
+package vues.reseau;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.commun.Panel_Table;
 
 import exceptions.ArgentInsuffisantException;
 import models.creatures.*;

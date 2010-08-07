@@ -1,9 +1,13 @@
-package vues;
+package vues.commun;
 
 import java.io.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.*;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+
 import java.net.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -15,7 +19,7 @@ import java.awt.*;
  * @version 1.0 | juin 2010
  * @since jdk1.6.0_16
  */
-class Fenetre_HTML extends JFrame implements ActionListener
+public class Fenetre_HTML extends JFrame implements ActionListener
 {
 
     private JEditorPane epHTML;

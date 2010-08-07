@@ -6,6 +6,8 @@ import java.io.File;
 
 import javax.swing.*;
 
+import vues.commun.Fenetre_HTML;
+
 import models.outils.GestionnaireSons;
 import models.outils.Son;
 

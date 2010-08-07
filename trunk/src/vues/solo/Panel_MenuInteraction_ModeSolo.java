@@ -1,8 +1,16 @@
-package vues;
+package vues.solo;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import vues.LookInterface;
+import vues.commun.EcouteurDePanelTerrain;
+import vues.commun.Panel_AjoutTour;
+import vues.commun.Panel_InfoCreature;
+import vues.commun.Panel_InfoTour;
+import vues.commun.Panel_InfosJoueurEtPartie;
+import vues.commun.Panel_Selection;
 import models.creatures.*;
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;

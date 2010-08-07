@@ -1,10 +1,13 @@
-package vues;
+package vues.commun;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import models.jeu.Jeu;
 import models.tours.*;
 

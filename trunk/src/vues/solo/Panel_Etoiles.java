@@ -1,4 +1,4 @@
-package vues;
+package vues.solo;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
