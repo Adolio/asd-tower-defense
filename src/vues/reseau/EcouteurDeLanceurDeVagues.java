@@ -1,4 +1,4 @@
-package vues;
+package vues.reseau;
 
 import exceptions.ArgentInsuffisantException;
 import models.creatures.VagueDeCreatures;

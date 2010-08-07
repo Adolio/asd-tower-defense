@@ -1,4 +1,4 @@
-package vues;
+package vues.commun;
 
 import models.creatures.Creature;
 import models.tours.Tour;

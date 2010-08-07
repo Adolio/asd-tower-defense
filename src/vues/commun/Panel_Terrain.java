@@ -1,4 +1,4 @@
-package vues;
+package vues.commun;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,6 +7,8 @@ import java.awt.geom.Line2D;
 import java.util.*;
 import javax.swing.*;
 import outils.Configuration;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.jeu.Jeu;

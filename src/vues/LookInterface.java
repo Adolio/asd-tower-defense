@@ -45,5 +45,11 @@ public class LookInterface
         
         COULEUR_DE_FOND_BTN   = new Color(Integer.parseInt(Configuration.getProprety(Configuration.COULEUR_DE_FOND_B)));
         COULEUR_TEXTE_BTN     = new Color(Integer.parseInt(Configuration.getProprety(Configuration.COULEUR_TEXTE_B)));
+    
+        /*
+            System.out.println(Outils.ColorToHexa(COULEUR_DE_FOND_PRI));
+            System.out.println(Outils.ColorToHexa(COULEUR_TEXTE_PRI));
+            System.out.println(Outils.ColorToHexa(COULEUR_DE_FOND_SEC));
+        */ 
     }
 }

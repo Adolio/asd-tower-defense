@@ -1,4 +1,4 @@
-package vues;
+package vues.commun;
 
 import java.awt.Component;
 import java.awt.Graphics2D;

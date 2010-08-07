@@ -1,19 +1,6 @@
 
-import java.io.File;
-
 import javax.swing.UIManager;
-
-import models.jeu.Jeu_Solo;
 import models.outils.GestionnaireSons;
-import models.terrains.ElementTD_Coop;
-import models.terrains.ElementTD_Versus_4;
-import models.terrains.SimpleFiveVersus;
-import models.terrains.Terrain;
-/*
-import models.jeu.Jeu_Solo;
-import models.terrains.ElementTD_Versus_4;
-import models.terrains.Terrain;
-*/
 import vues.Fenetre_MenuPrincipal;
 
 /**
@@ -52,20 +39,7 @@ public class Main
                     * C'est juste le look and feel qui n'est pas installe.
                     */ 
                } 
-                  
-      // TODO [A EFFACER]
-      /*
-      // a reserializer pour le son
-      Terrain t1 = new ElementTD_Coop(new Jeu_Solo());      
-      Terrain.serialiser(t1,new File("maps/"+t1.getNomFichier())); 
-               
-      Terrain t2 = new SimpleFiveVersus(new Jeu_Solo());      
-      Terrain.serialiser(t2,new File("maps/"+t2.getNomFichier()));
-      
-      Terrain t3 = new ElementTD_Versus_4(new Jeu_Solo());      
-      Terrain.serialiser(t3,new File("maps/"+t3.getNomFichier()));
-      */
-         
+ 
       GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);         
            
       // creation du menu principal

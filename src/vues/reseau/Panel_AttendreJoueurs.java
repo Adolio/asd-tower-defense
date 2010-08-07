@@ -1,4 +1,4 @@
-package vues;
+package vues.reseau;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,6 +12,12 @@ import exceptions.MessageChatInvalide;
 import reseau.CanalException;
 import reseau.jeu.client.EcouteurDeClientJeu;
 import reseau.jeu.serveur.ServeurJeu;
+import vues.Fenetre_MenuPrincipal;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.Panel_MenuPrincipal;
+import vues.commun.Panel_EmplacementsTerrain;
+import vues.commun.Panel_GridBag;
 import models.animations.Animation;
 import models.creatures.Creature;
 import models.creatures.VagueDeCreatures;
@@ -108,6 +114,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         pTop.setOpaque(false);
 
         JLabel lblTitre = new JLabel("ATTENTE DE JOUEURS...");
+        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         pTop.add(lblTitre, BorderLayout.NORTH);
 

@@ -1,8 +1,11 @@
-package vues;
+package vues.commun;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import models.tours.*;
 
 /**

@@ -309,12 +309,17 @@ public class Terrain implements Serializable
      * @param imageDeFond l'image de fond
      */
     public void setImageDeFond(Image imageDeFond)
-    {      
-        if(imageDeFond == null)
-             throw new IllegalArgumentException("Image nulle");
+    {     
+        // effacer pour l'editeur
+        //if(imageDeFond == null)
+        //     throw new IllegalArgumentException("Image nulle");
         
         this.imageDeFond = imageDeFond;
-        iconImageDeFond = new ImageIcon(imageDeFond); 
+        
+        if(imageDeFond == null)
+            iconImageDeFond = null;
+        else
+            iconImageDeFond = new ImageIcon(imageDeFond); 
     }
     
     /**

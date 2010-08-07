@@ -9,9 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-import vues.EcouteurDePanelCreationTerrain;
-import vues.EcouteurDePanelTerrain;
-import vues.Panel_Terrain;
+import vues.commun.EcouteurDePanelTerrain;
+import vues.commun.Panel_Terrain;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.terrains.Terrain;

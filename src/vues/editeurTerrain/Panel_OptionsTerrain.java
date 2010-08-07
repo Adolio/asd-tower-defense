@@ -1,4 +1,4 @@
-package vues;
+package vues.editeurTerrain;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import vues.commun.Panel_Table;
 import models.jeu.Jeu;
 import models.terrains.Terrain;
 
@@ -23,6 +25,8 @@ import models.terrains.Terrain;
 public class Panel_OptionsTerrain extends JPanel implements ActionListener, DocumentListener
 {
     private static final long serialVersionUID = 1L;
+    private static final ImageIcon I_DEL = new ImageIcon("img/icones/delete.png");
+    
     
     private JTextField tfDescription = new JTextField();
     
@@ -40,6 +44,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     private JCheckBox cbAfficherMurs = new JCheckBox();
     
     private JButton bImageDeFond    = new JButton("Parcourir...");
+    private  JButton bSupprImageDeFond = new JButton(I_DEL);
     private JButton bCouleurDeFond  = new JButton();
     private JButton bCouleurDesMurs = new JButton();
     
@@ -139,14 +144,15 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(bCouleurDesMurs,1,ligne);
         ligne++;
         
-        
         // Image de fond
         pForm.add(new JLabel("Image de fond"),0,ligne);
         bImageDeFond.setPreferredSize(dim);
         bImageDeFond.addActionListener(this);
+        bSupprImageDeFond.addActionListener(this);
         pForm.add(bImageDeFond,1,ligne);
+        pForm.add(bSupprImageDeFond,2,ligne);
         ligne++;
-          
+
         // Afficher les murs
         pForm.add(new JLabel("Murs visiblent par default"),0,ligne);
         cbAfficherMurs.addActionListener(this);
@@ -181,19 +187,16 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         }
         else if (e.getSource() == bImageDeFond) 
         {
-            if (fcImageDeFond.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-               
+            if (fcImageDeFond.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
+            {
                 File file = fcImageDeFond.getSelectedFile();
-                
                 jeu.getTerrain().setImageDeFond(Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath()));
-                
-                //This is where a real application would open the file.
-                System.out.println("Opening: " + file.getName() + ".\n");
-            } 
-            else {
-                System.out.println("Open command cancelled by user.\n");
             }
        } 
+       else if (e.getSource() == bSupprImageDeFond) 
+       {
+           jeu.getTerrain().setImageDeFond(null);
+       }
        else if (e.getSource() == cbAfficherMurs) 
        {
            jeu.getTerrain().setAfficherMurs(cbAfficherMurs.isSelected());

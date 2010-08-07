@@ -1,4 +1,4 @@
-package vues;
+package vues.solo;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +6,12 @@ import java.io.File;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import vues.Fenetre_MenuPrincipal;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.Panel_MenuPrincipal;
+import vues.commun.Fenetre_HTML;
 
 import exceptions.AucunePlaceDisponibleException;
 import models.jeu.Jeu;

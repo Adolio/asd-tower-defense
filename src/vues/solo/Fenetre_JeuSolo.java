@@ -1,4 +1,4 @@
-package vues;
+package vues.solo;
 
 import models.animations.*;
 import java.awt.*;
@@ -6,8 +6,16 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.*;
-
 import outils.Configuration;
+import vues.Fenetre_MenuPrincipal;
+import vues.Fenetre_Options;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.commun.EcouteurDePanelTerrain;
+import vues.commun.Fenetre_HTML;
+import vues.commun.Panel_InfoCreature;
+import vues.commun.Panel_InfoTour;
+import vues.commun.Panel_Terrain;
 import exceptions.*;
 import models.outils.GestionnaireSons;
 import models.tours.Tour;
@@ -141,8 +149,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     private boolean vaguePeutEtreLancee = true;
     private boolean demandeDEnregistrementDuScoreEffectuee;
 
-    
-    // TODO
+    // TODO commenter
     private JButton bVitesseJeu = new JButton("x"+VITESSE_JEU_MIN);
     private JButton bPleinEcran = new JButton(I_PLEIN_ECRAN);
     private JButton bCentrer = new JButton(I_CENTRE);
@@ -810,12 +817,13 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
-    
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
+        /*
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
         
         miseAJourInfoJeu();
+        */
     }
     
 
@@ -829,14 +837,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         if(keyChar == 'M')
         {
-            ajouterPiecesDOr(1000);
+            //ajouterPiecesDOr(1000);
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         else if(keyChar == 'L')
         {
-            jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
-            ajouterInfoVagueSuivanteDansConsole();
+            //jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
+            //ajouterInfoVagueSuivanteDansConsole();
         }
         else if(keyCode == Configuration.getKeyCode(Configuration.AUG_VIT_JEU))
         {

@@ -1,6 +1,7 @@
-package vues;
+package vues.reseau;
 
 import models.animations.*;
+import vues.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -11,6 +12,16 @@ import outils.myTimer;
 import reseau.CanalException;
 import reseau.jeu.client.EcouteurDeClientJeu;
 import reseau.jeu.serveur.ServeurJeu;
+import vues.Fenetre_MenuPrincipal;
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
+import vues.commun.EcouteurDePanelTerrain;
+import vues.commun.Fenetre_HTML;
+import vues.commun.Panel_AjoutTour;
+import vues.commun.Panel_InfoTour;
+import vues.commun.Panel_InfosJoueurEtPartie;
+import vues.commun.Panel_Selection;
+import vues.commun.Panel_Terrain;
 import models.outils.GestionnaireSons;
 import models.outils.Outils;
 import models.tours.Tour;
@@ -738,7 +749,6 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             String couleurHexa = Outils.ColorToHexa(equipeGagnante.getCouleur());
             ajouterTexteHTMLDansConsole("L'équipe \"<b><font color='#"+couleurHexa+"'>"+equipeGagnante.getNom()+"</font></b>\" remporte la partie!<br/>"); 
         }
-        
     }
 
     @Override

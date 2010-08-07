@@ -1,4 +1,4 @@
-package vues;
+package vues.solo;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +6,9 @@ import java.text.DateFormat;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import models.outils.*;
 
 /**
