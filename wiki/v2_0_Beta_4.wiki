@@ -3,6 +3,10 @@
 
 = Les fonctionnalités en cours de développement =
 
+- *Création d'un siteweb dédié* (0%)<br/>
+Le jeu manque cruellement d'un site dédié ou l'on pourrait présenter le projet sous une forme plus attrayante qu'ici, sur notre hébergeur de code.
+<br/><br/>
+
 - *Fin de l'éditeur de terrains* (0%)<br/>
 Il reste encore quelques petites choses à terminer notamment l'ajout de musique et quelques finitions diverses.
 <br/><br/>
@@ -20,4 +24,8 @@ Il s'agit d'ajouter de nouvelles tours et de nouvelles créatures. Il faudra ég
 <br/><br/>
 
 - *Refonte graphique* (0%)<br/>
+<br/><br/>
+
+- *Campagne publicitaire* (0%)<br/>
+Notre but ici serait de promouvoir ASD-TD via une campagne publicitaire afin de le faire connaitre à davantage de joueurs. Nous pourrions par exemple présenter ce jeu sur des sites de référencement de Tower Defense.
 <br/><br/>
