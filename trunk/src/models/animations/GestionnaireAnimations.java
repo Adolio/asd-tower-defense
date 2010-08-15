@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 import models.jeu.Jeu;
+import models.outils.Outils;
 
 /**
  * Classe d'encapsulation des animations.
@@ -28,6 +29,7 @@ public class GestionnaireAnimations implements Runnable
     private boolean enPause = false;
     private Object pause = new Object();
     private Jeu jeu;
+    private long tempsAvantNuages = 0;
     
     /**
      * Constructeur du gestionnaire des animations
@@ -127,6 +129,16 @@ public class GestionnaireAnimations implements Runnable
        
        while(gestionEnCours)
        {
+           tempsAvantNuages -= TEMPS_ATTENTE;
+           
+           if(tempsAvantNuages < 0)
+           { 
+               for(int i=0;i<5;i++)
+                   jeu.ajouterAnimation(new Nuage(jeu));
+               
+               tempsAvantNuages = Outils.tirerNombrePseudoAleatoire(10000, 20000);
+           }
+
            try
            {
                //System.out.println(animations.size());
