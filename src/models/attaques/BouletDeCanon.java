@@ -2,6 +2,8 @@ package models.attaques;
 
 import java.awt.*;
 import java.io.File;
+
+import models.animations.Fumee;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.tours.Tour;
@@ -26,6 +28,10 @@ public class BouletDeCanon extends Attaque
     //private static final int MAX_SONS_BOULET      = 3;
     
     // attributs membres
+    /**
+     * Vitesse
+     */
+    private double vitesse = 0.2; // px / ms
     /**
      * distance entre la tete de la fleche et la tour
      */
@@ -97,7 +103,7 @@ public class BouletDeCanon extends Attaque
         if(!estTerminee)
         {
             // la fleche avance
-            distanceCentreBoulet += tempsPasse / 10.0;
+            distanceCentreBoulet += tempsPasse * vitesse;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();
@@ -111,6 +117,8 @@ public class BouletDeCanon extends Attaque
                 estTerminee = true;
                 attaquerCibles();
                 
+                jeu.ajouterAnimation(new Fumee((int) xCentreBoulet, (int) yCentreBoulet));
+
                 estTerminee = true;
             }
         }

@@ -819,11 +819,12 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
-        /*
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
         
-        miseAJourInfoJeu();
-        */
+        for(int i=0;i<5;i++)
+            jeu.ajouterAnimation(new Nuage(jeu));
+        
+        miseAJourInfoJeu(); 
     }
     
 
@@ -837,14 +838,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         if(keyChar == 'M')
         {
-            //ajouterPiecesDOr(1000);
+            ajouterPiecesDOr(1000);
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         else if(keyChar == 'L')
         {
-            //jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
-            //ajouterInfoVagueSuivanteDansConsole();
+            jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
+            ajouterInfoVagueSuivanteDansConsole();
         }
         else if(keyCode == Configuration.getKeyCode(Configuration.AUG_VIT_JEU))
         {

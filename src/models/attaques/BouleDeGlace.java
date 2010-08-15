@@ -25,6 +25,10 @@ public class BouleDeGlace extends Attaque
     
     // attributs membres
     /**
+     * Vitesse
+     */
+    private double vitesse = 0.2; // px / ms
+    /**
      * distance entre la tete de la fleche et la tour
      */
     private double distanceCentreBoule = 0;
@@ -85,9 +89,8 @@ public class BouleDeGlace extends Attaque
     {   
         if(!estTerminee)
         {
-        
             // la fleche avance
-            distanceCentreBoule += tempsPasse / 10.0;
+            distanceCentreBoule += tempsPasse * vitesse;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();

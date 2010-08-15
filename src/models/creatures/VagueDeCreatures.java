@@ -102,16 +102,23 @@ public class VagueDeCreatures
      */
     public String toString()
     {
-        return NB_CREATURES + " Creature(s) "
-                + CREATURE_A_ENVOYER.getNomType().toLowerCase() + "(s) [ "
+        String type;
+        
+        if(CREATURE_A_ENVOYER.getType() == Creature.TYPE_AERIENNE)
+            type = "AIR";
+        else
+            type = "TERRE";
+
+        return NB_CREATURES + "x " +CREATURE_A_ENVOYER.getNom() + " (<b>"
+                + type + "</b>) [ "
                 + "sante : " + CREATURE_A_ENVOYER.getSanteMax() + ", "
                 + "gain : " + CREATURE_A_ENVOYER.getNbPiecesDOr() + ", "
                 + "vitesse : " + CREATURE_A_ENVOYER.getVitesseNormale() + " ]";
     }
 
-    public static final double VITESSE_CREATURE_LENTE = 20.0;
-    public static final double VITESSE_CREATURE_RAPIDE = 50.0;
-    public static final double VITESSE_CREATURE_NORMALE = 40.0;
+    public static final double VITESSE_CREATURE_LENTE = 30.0;
+    public static final double VITESSE_CREATURE_RAPIDE = 60.0;
+    public static final double VITESSE_CREATURE_NORMALE = 50.0;
     public static final double COEF_SANTE_CREATURE_RESISTANTE = 1.5;
     public static final double COEF_SANTE_CREATURE_RAPIDE = 0.8;
     public static final double COEF_SANTE_CREATURE_AERIENNE = 0.8;

@@ -30,8 +30,13 @@ public class Fleche extends Attaque
     
     
     //private static final int MAX_SONS_ARC      = 3;
+  
     
     // attributs membres
+    /**
+     * Vitesse
+     */
+    private double vitesse = 0.2; // px / ms
     /**
      * distance entre la tete de la fleche et la tour
      */
@@ -138,8 +143,7 @@ public class Fleche extends Attaque
         if(!estTerminee)
         {    
             // la fleche avance
-            // TODO vitesse
-            distanceTeteTour += tempsPasse / 10.0;
+            distanceTeteTour += tempsPasse * vitesse;
             
             // calcul de la distance max de parcours de la fleche
             double diffX       = cible.getCenterX() - attaquant.getCenterX();

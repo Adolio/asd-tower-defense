@@ -21,9 +21,14 @@ public class BouleDeTerre extends Attaque
     // constantes finales
     private static final long serialVersionUID = 1L;
     private static final int DIAMETRE_BOULE = 10;
+    private static final int DIAMETRE_BOULE_MAX = 20;
     private static final Image IMAGE_BOULE;
 
     // attributs membres
+    /**
+     * Vitesse
+     */
+    private double vitesse = 0.1; // px / ms
     /**
      * distance entre la tete de la fleche et la tour
      */
@@ -34,10 +39,14 @@ public class BouleDeTerre extends Attaque
      */
     private double xCentreBoule, yCentreBoule;
 
+    
+    private double distanceMax;
+    private double distanceMaxInitiale;
+    
     static
     {
         IMAGE_BOULE = Toolkit.getDefaultToolkit().getImage(
-                "img/tours/tourDeTerre.png");
+                "img/animations/attaques/bouleDeTerre.png");
     }
 
     /**
@@ -55,6 +64,8 @@ public class BouleDeTerre extends Attaque
 
         this.degats = degats;
         this.rayonImpact = rayonImpact;
+        
+        this.distanceMaxInitiale = calculerDistance();
     }
 
     @Override
@@ -73,10 +84,31 @@ public class BouleDeTerre extends Attaque
         xCentreBoule = Math.cos(angle) * distanceCentreBoule + xAttaquant; // x
         yCentreBoule = Math.sin(angle) * distanceCentreBoule + yAttaquant; // y
 
+        
+        int diametre = 0;
+        // on ne tire pas en cloche tout le temps
+        // si l'ennemi est trop proche on tire normal
+        if(distanceMaxInitiale > 100.0)
+        {
+            double p = distanceCentreBoule / (distanceMax/2.0);
+            
+            if(distanceCentreBoule > distanceMax / 2.0)
+                p = 1 - (p - 1);
+            
+            diametre = (int) (p * DIAMETRE_BOULE_MAX + DIAMETRE_BOULE);
+        }
+        else
+        {
+            diametre = DIAMETRE_BOULE;
+        }
+       
+
+        
         // dessin de la boule de feu
-        g2.drawImage(IMAGE_BOULE, (int) xCentreBoule - DIAMETRE_BOULE / 2,
-                (int) yCentreBoule - DIAMETRE_BOULE / 2, DIAMETRE_BOULE,
-                DIAMETRE_BOULE, null);
+        g2.drawImage(IMAGE_BOULE, (int) xCentreBoule - diametre / 2,
+                (int) yCentreBoule - diametre / 2, 
+                diametre,
+                diametre, null);
     }
 
     @Override
@@ -85,13 +117,10 @@ public class BouleDeTerre extends Attaque
         if(!estTerminee)
         {
             // la fleche avance
-            distanceCentreBoule += tempsPasse / 10.0;
-    
-            // calcul de la distance max de parcours de la fleche
-            double diffX = cible.getCenterX() - attaquant.getCenterX();
-            double diffY = cible.getCenterY() - attaquant.getCenterY();
-            double distanceMax = Math.sqrt(diffX * diffX + diffY * diffY);
-    
+            distanceCentreBoule += tempsPasse * vitesse;
+           
+            distanceMax = calculerDistance();
+
             // si cette distance est atteinte ou depassee, l'attaque est
             // terminee
             if (distanceCentreBoule >= distanceMax)
@@ -108,5 +137,13 @@ public class BouleDeTerre extends Attaque
                 estTerminee = true;
             }
         }
+    }
+    
+    private double calculerDistance()
+    {
+        // calcul de la distance max de parcours de la fleche
+        double diffX = cible.getCenterX() - attaquant.getCenterX();
+        double diffY = cible.getCenterY() - attaquant.getCenterY();
+        return Math.sqrt(diffX * diffX + diffY * diffY);   
     }
 }

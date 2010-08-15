@@ -28,6 +28,10 @@ public class RafaleDeVent extends Attaque
     private ArrayList<Creature> creaturesTouchees = new ArrayList<Creature>();
     
     /**
+     * Vitesse
+     */
+    private double vitesse = 0.1; // px / ms
+    /**
      * Distance max de la rafale
      */
     private final double MAX_DISTANCE;
@@ -96,7 +100,7 @@ public class RafaleDeVent extends Attaque
             else
             {
                 // la fleche avance
-                distanceDeLaSource += tempsPasse / 10.0;
+                distanceDeLaSource += tempsPasse * vitesse;
  
                 // pourcentage de transparence
                 alpha = (float) (1.f - distanceDeLaSource / MAX_DISTANCE);
