@@ -1,6 +1,8 @@
 package vues.solo;
 
 import models.animations.*;
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -61,10 +63,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private static final ImageIcon I_DEZOOM = new ImageIcon("img/icones/magnifier_zoom_out.png");
 	private static final ImageIcon I_OPTIONS = new ImageIcon("img/icones/wrench.png");
 	
-	
-	
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
-    private static final String TXT_VAGUE_SUIVANTE  = "Lancer la vague";
+    private static final String TXT_VAGUE_SUIVANTE  = Langue.getTexte(Langue.ID_TXT_BTN_LANCER_VAGUE);
     private static final double VITESSE_JEU_MAX = 3.0;
     private static final double VITESSE_JEU_MIN = 1.0;
     
@@ -72,32 +72,32 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	//-- declaration des menus --
 	//---------------------------
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
-	private final JMenu 	menuFichier 	= new JMenu("Fichier");
-	private final JMenu 	menuAffichage 	= new JMenu("Affichage");
-	private final JMenu     menuJeu         = new JMenu("Jeu");
-	private final JMenu     menuSon         = new JMenu("Son");
-	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemRegles      = new JMenuItem("Règles du jeu...",I_REGLES);
-	private final JMenuItem itemAPropos	    = new JMenuItem("A propos...",I_AIDE);
+	private final JMenu 	menuFichier 	= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_FICHIER));
+	private final JMenu 	menuAffichage 	= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_AFFICHAGE));
+	private final JMenu     menuJeu         = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_JEU));
+	private final JMenu     menuSon         = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_SON));
+	private final JMenu 	menuAide 		= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_AIDE));
+	private final JMenuItem itemRegles      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_REGLES)+"...",I_REGLES);
+	private final JMenuItem itemAPropos	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS)+"...",I_AIDE);
 
 	private final JMenuItem itemPause
-        = new JMenuItem("Pause"); 
+        = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_PAUSE)); 
 	private final JMenuItem itemActiverDesactiverSon 
-	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ACTIVE_DESACTIVE),I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem("Maillage");
+		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MAILLAGE));
 	private final JMenuItem itemModeDebug       
-        = new JMenuItem("Mode debug");
+        = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MODE_DEBUG));
 	private final JMenuItem itemAfficherRayonsPortee	    
-		= new JMenuItem("Rayons de portée");
+		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RAYONS_DE_PORTEE));
 	private final JMenuItem itemQuitter	    
-	    = new JMenuItem("Quitter",I_QUITTER);
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
 	private final JMenuItem itemRetourMenu  
-	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR_MENU_P),I_RETOUR);
 	private final JMenuItem itemRedemarrer  
-        = new JMenuItem("Redémarrer la partie",I_REDEMARRER);
+        = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_REDEMARRER_PARTIE),I_REDEMARRER);
 	private final JMenuItem itemOptions  
-    = new JMenuItem("Options...",I_OPTIONS);
+    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_OPTIONS)+"...",I_OPTIONS);
 	
 	//----------------------------
 	//-- declaration des panels --
@@ -127,7 +127,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * bouton pour lancer la vagues suivante
 	 */
     private JButton bLancerVagueSuivante = new JButton(TXT_VAGUE_SUIVANTE 
-                                                       + " [niveau 1]");
+                                                       + " ["+Langue.getTexte(Langue.ID_TXT_NIVEAU)+" 1]");
     /**
      * Console d'affichages des vagues suivantes
      */  
@@ -239,6 +239,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //Dimension dimBouton = new Dimension(51, 32);
         
         // zoom
+        // TODO TRADUCTON
         bZoomAvant.setToolTipText("Zoom Avant [Roulette de la souris]");
         bZoomArriere.setToolTipText("Zoom Arrière [Roulette de la souris]");
         GestionnaireDesPolices.setStyle(bZoomAvant);
@@ -251,6 +252,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bZoomArriere.addActionListener(this);
         
         // centrer
+        // TODO TRADUCTON
         bCentrer.setToolTipText("Centrer [Double-clique]");
         GestionnaireDesPolices.setStyle(bCentrer);
         //bCentrer.setPreferredSize(dimBouton);
@@ -258,6 +260,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bCentrer.addActionListener(this);
         
         // maximisation / minimisation
+        // TODO TRADUCTON
         bPleinEcran.setToolTipText("Maximiser / Minimiser la fenêtre");
         GestionnaireDesPolices.setStyle(bPleinEcran);
         //bPleinEcran.setPreferredSize(dimBouton);
@@ -269,6 +272,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //boutonsHaut.add(new JLabel(I_VITESSE_JEU));
         bVitesseJeu.setIcon(I_VITESSE_JEU);
         bVitesseJeu.setText("x"+jeu.getCoeffVitesse());
+        // TODO TRADUCTON
         bVitesseJeu.setToolTipText("Vitesse du jeu");
         GestionnaireDesPolices.setStyle(bVitesseJeu);
         
@@ -388,11 +392,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		
 		// règles
 		else if(source == itemRegles)
-		    new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), this);
+		    new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_REGLES), new File("donnees/regles/regles.html"), this);
 
 		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
+			new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File("aPropos/aPropos.html"),this);
 		
 		// basculer affichage du maillage
 		else if(source == itemAfficherMaillage)
@@ -476,8 +480,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 
 	private void demanderRedemarrerPartie()
     {
-	    if(JOptionPane.showConfirmDialog(this, 
-                "Etes-vous sûr de vouloir arrêter cette partie ?", 
+	    if(JOptionPane.showConfirmDialog(this,
+	            Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
                 "Vraiment redémarrer ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
             demanderEnregistrementDuScore();
@@ -499,8 +503,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void demanderQuitter()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "Etes-vous sûr de vouloir quitter le jeu ?", 
-	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	            Langue.getTexte(Langue.ID_TXT_DIALOG_QUITTER_JEU), 
+	            "Vraiment quitter ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {  
             quitter();
 	    }
@@ -521,7 +525,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private void demanderRetourAuMenuPrincipal()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "Etes-vous sûr de vouloir arrêter la partie ?", 
+	            Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
 	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
 	        //demanderEnregistrementDuScore();
@@ -544,7 +548,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	        demandeDEnregistrementDuScoreEffectuee = true;
 	        
 	        if(JOptionPane.showConfirmDialog(this, 
-                    "Voulez vous sauver votre score ?", 
+	                Langue.getTexte(Langue.ID_TXT_DIALOG_SAUVER), 
                     "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
 	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getBrefDescription()); 
@@ -727,9 +731,9 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      */
     public void ajouterInfoVagueSuivanteDansConsole()
     {
-        ajouterTexteHTMLDansConsole("["+(jeu.getNumVagueCourante())+"] Vague suivante : "+jeu.getTerrain().getDescriptionVague(jeu.getNumVagueCourante())+"<br />");
+        ajouterTexteHTMLDansConsole("["+(jeu.getNumVagueCourante())+"] "+Langue.getTexte(Langue.ID_TXT_VAGUE_SUIVANTE)+" : "+jeu.getTerrain().getDescriptionVague(jeu.getNumVagueCourante())+"<br />");
         
-        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " [niveau "+(jeu.getNumVagueCourante())+"]");
+        bLancerVagueSuivante.setText(TXT_VAGUE_SUIVANTE + " ["+Langue.getTexte(Langue.ID_TXT_NIVEAU)+" "+(jeu.getNumVagueCourante())+"]");
     }
 	
     @Override
@@ -896,7 +900,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // le bouton lancer vague suivante devient un retour au menu
         bLancerVagueSuivante.setEnabled(true);
         vaguePeutEtreLancee = false;
-        bLancerVagueSuivante.setText("Retour au menu");
+        bLancerVagueSuivante.setText(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR_MENU_P));
         bLancerVagueSuivante.setIcon(I_RETOUR);
 
         

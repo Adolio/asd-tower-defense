@@ -1,5 +1,7 @@
 package vues.commun;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -30,10 +32,14 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 	//private static final ImageIcon I_AMELIORER = new ImageIcon("img/icones/upgrade.png");
     //private static final ImageIcon I_VENDRE    = new ImageIcon("img/icones/sale.png");
-    private static final String TXT_AMELIORER  = "Améliorer";
-    private static final String TXT_VENDRE     = "Vendre";
-    private static final String TXT_PRIX_ACHAT = "Prix d'achat";
-    private static final String TXT_PRIX_TOTAL = "Valeur,Prix";
+	
+	
+	
+	
+    private static final String TXT_AMELIORER  = Langue.getTexte(Langue.ID_TXT_BTN_AMELIORER);
+    private static final String TXT_VENDRE     = Langue.getTexte(Langue.ID_TXT_BTN_VENDRE);
+    private static final String TXT_PRIX_ACHAT = Langue.getTexte(Langue.ID_TXT_PRIX_ACHAT);
+    private static final String TXT_PRIX_TOTAL = Langue.getTexte(Langue.ID_TXT_VALEUR_PRIX);
     private static final Dimension DIMENSION_PANEL = new Dimension(280, 350);
     private static final Dimension DIMENSION_DESCRIPTION = new Dimension(240,120);
     
@@ -124,7 +130,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
         ajouterChamp(pCaracteristiques, lPrixLvlS, 2, nbChamps++, 1);
 		
 		// champ degats
-        JLabel lTitreDegats = new JLabel("Dégâts");
+        JLabel lTitreDegats = new JLabel(Langue.getTexte(Langue.ID_TXT_DEGATS));
         lTitreDegats.setForeground(LookInterface.COULEUR_TEXTE_SEC);
         lTitreDegats.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         
@@ -137,7 +143,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		ajouterChamp(pCaracteristiques, lDegatsLvlS, 2, nbChamps++, 1);
 		
 		// champ rayon de portee
-		JLabel lTitrePortee = new JLabel("Portée");
+		JLabel lTitrePortee = new JLabel(Langue.getTexte(Langue.ID_TXT_PORTEE));
 		lTitrePortee.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		lTitrePortee.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		
@@ -150,7 +156,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		ajouterChamp(pCaracteristiques, lRayonPorteeLvlS, 2, nbChamps++, 1);
 		
 		// champ cadence de tir
-		JLabel lTitreCadenceTir = new JLabel("Tirs / sec.");
+		JLabel lTitreCadenceTir = new JLabel(Langue.getTexte(Langue.ID_TXT_TIRS_SEC));
 		lTitreCadenceTir.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		lTitreCadenceTir.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		
@@ -163,7 +169,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
 		ajouterChamp(pCaracteristiques, lCadenceTirLvlS, 2, nbChamps++, 1);
 		
 		// champ DPS : dégats par seconde
-		JLabel lTitreDPS = new JLabel("DPS");
+		JLabel lTitreDPS = new JLabel(Langue.getTexte(Langue.ID_TXT_DPS));
 		lTitreDPS.setForeground(LookInterface.COULEUR_TEXTE_SEC);
 		lTitreDPS.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
 		
@@ -193,7 +199,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
        
         JPanel pCiblage = new JPanel();
         pCiblage.setOpaque(false);
-        JLabel lTypeCiblage = new JLabel("Attaque la créature : ");
+        JLabel lTypeCiblage = new JLabel(Langue.getTexte(Langue.ID_TXT_ATTAQE_LA_CREATURE));
         pCiblage.add(lTypeCiblage);
         lTypeCiblage.setForeground(LookInterface.COULEUR_TEXTE_SEC);
         cbTypeCiblage.addItem("la plus proche");
@@ -330,7 +336,7 @@ public class Panel_InfoTour extends JPanel implements ActionListener
     				else if(tour.peutEncoreEtreAmelioree())
     				{
     					bAmeliorer.setEnabled(true);
-    					bAmeliorer.setText(TXT_AMELIORER+"["+tour.getPrixAchat()+"]");
+    					bAmeliorer.setText(TXT_AMELIORER+" ["+tour.getPrixAchat()+"]");
     				}
     				else
     				{

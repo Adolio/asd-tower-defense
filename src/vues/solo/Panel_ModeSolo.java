@@ -1,5 +1,7 @@
 package vues.solo;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -48,17 +50,15 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	private static final int IMAGE_MENU_LARGEUR = 120;
 	private static final int IMAGE_MENU_HAUTEUR = 120;
 	private static final ImageIcon icoCADENAS      = new ImageIcon("img/icones/lock.png");
-
-    
+  
 	private final int MARGES_PANEL                 = 40;
     
+
 	// elements du formulaire
-	private final JMenuBar 	menuPrincipal 		= new JMenuBar();
-	private final JMenu 	menuFichier 		= new JMenu("Fichier");
-	private final JMenu     menuMeilleursScore  = new JMenu("Scores");
-	private final JMenu 	menuAide 			= new JMenu("Aide");
-	private final JMenuItem itemAPropos	    	= new JMenuItem("A propos",I_AIDE);
-	private final JMenuItem itemQuitter	   		= new JMenuItem("Quitter",I_QUITTER);
+	JLabel lblTitre = new JLabel(Langue.getTexte(Langue.ID_TITRE_PARTIE_SOLO));
+	
+	private final JMenuItem itemAPropos	    	= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),I_AIDE);
+	private final JMenuItem itemQuitter	   		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
 	
 	private final JMenuItem itemMSElementTD     = new JMenuItem(ElementTD.NOM);
     private final JMenuItem itemMSSpiral        = new JMenuItem(Spiral.NOM);
@@ -67,16 +67,15 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 	
 	private final JButton[] boutonsTerrains     = new JButton[4]; 
 	private final JButton[] boutonsScore        = new JButton[4]; 
-	private final JButton bRetour              = new JButton("Retour");
+	private final JButton bRetour              = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
 	
 	private JProgressBar chargementTerrain;
 	private Thread thread;
     private boolean chargementTermine;
 	private JFrame parent;
 	
-	private JLabel lblInfo = new JLabel("Cliquez sur un terrain débloqué pour commencer une partie.");
-	
-	
+	private JLabel lblInfo = new JLabel(Langue.getTexte(Langue.ID_TXT_CLIQUER_SUR_TERRAIN));
+
 	/**
 	 * Constructeur de la fenetre du menu principal
 	 */
@@ -93,39 +92,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
                 MARGES_PANEL, MARGES_PANEL)));
 		
 		setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-		
-		
-		//--------------------
-		//-- menu principal --
-		//--------------------
-		// menu Fichier
-		menuMeilleursScore.setIcon(I_SCORE);
-		menuFichier.add(menuMeilleursScore);
-		menuMeilleursScore.add(itemMSElementTD);
-		menuMeilleursScore.add(itemMSSpiral);
-		menuMeilleursScore.add(itemMSDesert);
-		menuMeilleursScore.add(itemMSWaterWorld);
-		
-		itemMSElementTD.addActionListener(this);
-		itemMSSpiral.addActionListener(this);
-		itemMSDesert.addActionListener(this);
-		itemMSWaterWorld.addActionListener(this);
-		
-		menuFichier.add(itemQuitter);
-		menuPrincipal.add(menuFichier);
-		
-		// menu A propos
-		menuAide.add(itemAPropos);
-		menuPrincipal.add(menuAide);
-		
-		// ajout des ecouteurs
-		itemQuitter.addActionListener(this);
-		itemAPropos.addActionListener(this);
-		
-		// ajout du menu
-		//parent.setJMenuBar(menuPrincipal);
-		
-		
+
 		//--------------------------------------
         //-- chargement des scores et étoiles --
         //--------------------------------------
@@ -165,7 +132,6 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		pNord.setOpaque(false);
 		
 		// titre
-		JLabel lblTitre = new JLabel("PARTIE SOLO");
 		lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
 		lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
 		pNord.add(lblTitre,BorderLayout.WEST);
