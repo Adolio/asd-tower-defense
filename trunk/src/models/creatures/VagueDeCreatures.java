@@ -1,5 +1,7 @@
 package models.creatures;
 
+import i18n.Langue;
+
 /**
  * Structure permettant de stoquer des informations et lancer une vague de
  * creatures.
@@ -105,15 +107,15 @@ public class VagueDeCreatures
         String type;
         
         if(CREATURE_A_ENVOYER.getType() == Creature.TYPE_AERIENNE)
-            type = "AIR";
+            type = Langue.getTexte(Langue.ID_TXT_AIR).toUpperCase();
         else
-            type = "TERRE";
+            type = Langue.getTexte(Langue.ID_TXT_TERRE).toUpperCase();
 
         return NB_CREATURES + "x " +CREATURE_A_ENVOYER.getNom() + " (<b>"
                 + type + "</b>) [ "
-                + "sante : " + CREATURE_A_ENVOYER.getSanteMax() + ", "
-                + "gain : " + CREATURE_A_ENVOYER.getNbPiecesDOr() + ", "
-                + "vitesse : " + CREATURE_A_ENVOYER.getVitesseNormale() + " ]";
+                + Langue.getTexte(Langue.ID_TXT_SANTE)+" : " + CREATURE_A_ENVOYER.getSanteMax() + ", "
+                + Langue.getTexte(Langue.ID_TXT_GAIN)+" : " + CREATURE_A_ENVOYER.getNbPiecesDOr() + ", "
+                + Langue.getTexte(Langue.ID_TXT_VITESSE)+" : " + CREATURE_A_ENVOYER.getVitesseNormale() + " ]";
     }
 
     public static final double VITESSE_CREATURE_LENTE = 30.0;

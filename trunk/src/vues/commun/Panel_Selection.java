@@ -1,5 +1,7 @@
 package vues.commun;
 
+import i18n.Langue;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -46,7 +48,7 @@ public class Panel_Selection extends JPanel
 		setPreferredSize(new Dimension(280,300));
 		//setBackground(LookInterface.COULEUR_DE_FOND_2);
 		
-		JLabel lTitre = new JLabel("Information sur la selection");
+		JLabel lTitre = new JLabel(Langue.getTexte(Langue.ID_TITRE_INFO_SELECTION));
 		lTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
 		lTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
 		add(lTitre,BorderLayout.NORTH);

@@ -1,5 +1,7 @@
 package vues.commun;
 
+import i18n.Langue;
+
 import java.awt.*;
 
 import javax.swing.*;
@@ -35,9 +37,9 @@ public class Panel_InfoCreature extends JPanel
     
 	// attributs
 	private JLabel lTitreType       = new JLabel("Type");
-	private JLabel lTitreSante      = new JLabel("Santé",I_SANTE,JLabel.LEFT);
-	private JLabel lTitreVitesse    = new JLabel("Vitesse",I_VITESSE,JLabel.LEFT);
-	private JLabel lTitreGain       = new JLabel("Gain pièces",I_GAIN,JLabel.LEFT);
+	private JLabel lTitreSante      = new JLabel(Langue.getTexte(Langue.ID_TXT_SANTE),I_SANTE,JLabel.LEFT);
+	private JLabel lTitreVitesse    = new JLabel(Langue.getTexte(Langue.ID_TXT_VITESSE),I_VITESSE,JLabel.LEFT);
+	private JLabel lTitreGain       = new JLabel(Langue.getTexte(Langue.ID_TXT_GAIN),I_GAIN,JLabel.LEFT);
 	private JLabel lSante           = new JLabel();
 	private JLabel lVitesse         = new JLabel();
 	private JLabel lGain            = new JLabel();

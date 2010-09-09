@@ -1,4 +1,6 @@
 
+import i18n.Langue;
+
 import javax.swing.UIManager;
 import models.outils.GestionnaireSons;
 import vues.Fenetre_MenuPrincipal;
@@ -40,8 +42,13 @@ public class Main
                     */ 
                } 
  
+      Langue.tmp();
+      
       GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);         
            
+      
+      new Fenetre_ChoixLangue();
+      
       // creation du menu principal
       new Fenetre_MenuPrincipal();
    }

@@ -1,4 +1,6 @@
 package vues;
+import i18n.Langue;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -35,14 +37,14 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     // elements du formulaire
     private JLabel version;
 
-    private JButton bPartieSolo = new JButton("Solo");
-    private JButton bRejoindrePartieMulti = new JButton("Rejoindre");
-    private JButton bCreerPartieMulti = new JButton("Créer");
-    private JButton bRegles = new JButton("Règles");
-    private JButton bAPropos = new JButton("A propos");
-    private JButton bOptions = new JButton("Options");
-    private JButton bQuitter = new JButton("Quitter");
-    private JButton bPartiePerso = new JButton("Vos parties");
+    private JButton bPartieSolo = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_SOLO));
+    private JButton bRejoindrePartieMulti = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
+    private JButton bCreerPartieMulti = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER));
+    private JButton bRegles = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_REGLES));
+    private JButton bAPropos = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS));
+    private JButton bOptions = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_OPTIONS));
+    private JButton bQuitter = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER));
+    private JButton bPartiePerso = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_VOS_PARTIES));
     
     private JFrame parent;
 
