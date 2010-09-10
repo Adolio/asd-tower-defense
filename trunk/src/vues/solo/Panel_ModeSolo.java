@@ -86,7 +86,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		//-------------------------------
 	    this.parent = parent;
 	    setLayout(new BorderLayout());
-		parent.setTitle("Mode Solo - ASD Tower Defense");
+		parent.setTitle(Langue.getTexte(Langue.ID_TITRE_PARTIE_SOLO)+" - ASD Tower Defense");
 
 		setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
@@ -326,7 +326,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		// a propos
 		else if(source == itemAPropos)
-		    new Fenetre_HTML("A propos", new File("aPropos/aPropos.html"),parent);
+		    new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS), new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)),parent);
 		
 		// les terrains
 		else if(source == boutonsTerrains[0])

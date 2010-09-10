@@ -2,6 +2,8 @@ package vues.reseau;
 
 import models.animations.*;
 import vues.*;
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -395,11 +397,11 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		
 		// règles
 		else if(source == itemRegles)
-		    new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), this);
+		    new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_REGLES), new File(Langue.getTexte(Langue.ID_ADRESSE_REGLES_DU_JEU)), this);
 
 		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
+			new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)),this);
 
 		// basculer affichage des rayons de portee
 		else if(source == itemAfficherRayonsPortee)

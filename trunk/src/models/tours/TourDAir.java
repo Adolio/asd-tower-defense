@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -24,11 +26,7 @@ public class TourDAir extends Tour
     public static final int NIVEAU_MAX = 5;
     public static final int PRIX_ACHAT = 150;
     
-    private static final String DESCRIPTION = 
-        "Elle souffle des rafales qui blessent toutes les " +
-        "créatures volantes sur son passage. Plus la rafale s'éloigne " +
-        "de la tour moins elle inflige de dégâts. Les dégâts indiqués correspondent" +
-        "aux dégâts qu'inflige une rafale à sa source.";
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_AIR); 
     
     static
     {

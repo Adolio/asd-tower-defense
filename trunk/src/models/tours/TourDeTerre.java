@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -28,12 +30,9 @@ public class TourDeTerre extends Tour
     public static final int NIVEAU_MAX = 5;
     public static final int PRIX_ACHAT = 250;
     private static final double RAYON_IMPACT = 30;
-    
-    private static final String DESCRIPTION = 
-        "La tour de terre est une tour lente qui fait enormement de degats" +
-        " et qui a une très grande portée. Malheureusement, elle n'attaque " +
-        "que les créatures terrestre.";
-    
+   
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_TERRE); 
+
     static
     {
         COULEUR = new Color(128,64,32);

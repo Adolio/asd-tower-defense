@@ -1,5 +1,7 @@
 package vues;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -513,7 +515,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
     private static final ImageIcon I_STYLE = new ImageIcon("img/icones/palette.png");
     
     private JTabbedPane onglets;
-    private JButton bFermer = new JButton("Fermer");
+    private JButton bFermer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_FERMER));
 
     public Fenetre_Options()
     {
@@ -551,11 +553,13 @@ public class Fenetre_Options extends JFrame implements ActionListener
         Panel_OptionsSon panelOptionsSon = new Panel_OptionsSon();
         Panel_OptionsStyle panelOptionsStyle = new Panel_OptionsStyle();
         
-        onglets.addTab("Joueur  ", I_JOUEUR, panelOptionsJeu);
-        onglets.addTab("Commandes  ", I_CMD, new JScrollPane(panelOptionsCommandes));
-        onglets.addTab("Son  ", I_SON, panelOptionsSon);
-        onglets.addTab("Réseau  ", I_RESEAU, panelOptionsReseau);
-        onglets.addTab("Style  ", I_STYLE, new JScrollPane(panelOptionsStyle));
+        
+        
+        onglets.addTab(Langue.getTexte(Langue.ID_TXT_JOUEUR)+"  ", I_JOUEUR, panelOptionsJeu);
+        onglets.addTab(Langue.getTexte(Langue.ID_TXT_COMMANDES)+"  ", I_CMD, new JScrollPane(panelOptionsCommandes));
+        onglets.addTab(Langue.getTexte(Langue.ID_TXT_BTN_SON)+"  ", I_SON, panelOptionsSon);
+        onglets.addTab(Langue.getTexte(Langue.ID_TXT_RESEAU)+"  ", I_RESEAU, panelOptionsReseau);
+        onglets.addTab(Langue.getTexte(Langue.ID_TXT_STYLE)+"  ", I_STYLE, new JScrollPane(panelOptionsStyle));
         
         
         add(onglets,BorderLayout.CENTER);

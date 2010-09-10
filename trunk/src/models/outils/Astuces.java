@@ -1,5 +1,7 @@
 package models.outils;
 
+import i18n.Langue;
+
 /**
  * Classe de gestion des astuces
  * 
@@ -13,14 +15,14 @@ package models.outils;
 public class Astuces
 {
     private static final String[] astuces = new String[] {
-        "Le cercle blanc autour d'une tour indique la portee de la tour.",
-        "Attention a ne pas vous faire surprendre par les vagues volantes",
-        "Toutes les tours sont ameliorables moyennant quelques pieces d'or",
-        "Les tours de glace ralentissent les creatures, placez-les strategiquement",
-        "Les etoiles vous permettent d'acceder a d'autres terrains de jeu",
-        "A chaque fin de partie, vous pourrez sauver votre score",
-        "La vente d'une tour vous fait recuperer 60 pourcent de son prix total",
-        "Ce jeu est libre et gratuit, vous pouvez meme acceder au code source"
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_1),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_2),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_3),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_4),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_5),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_6),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_7),
+        Langue.getTexte(Langue.ID_TXT_ASTUCE_8),
     };
      
     /**

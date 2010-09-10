@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.util.Enumeration;
 import models.creatures.Creature;
@@ -398,11 +400,11 @@ public abstract class Tour extends Rectangle
     public String getTexteType()
     {
         if(type == TYPE_TERRESTRE_ET_AIR)
-            return "Terre + Air";
+            return Langue.getTexte(Langue.ID_TXT_TERRE)+" + "+Langue.getTexte(Langue.ID_TXT_AIR);
         else if(type == TYPE_TERRESTRE)
-            return "Terre";
+            return Langue.getTexte(Langue.ID_TXT_TERRE);
         else
-            return "Air";
+            return Langue.getTexte(Langue.ID_TXT_AIR);
     }
     
     /**

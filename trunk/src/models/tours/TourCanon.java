@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -26,9 +28,7 @@ public class TourCanon extends Tour
 	public static final int NIVEAU_MAX = 5;
     private static final double RAYON_IMPACT = 30.0;
     public static final int PRIX_ACHAT = 15;
-    private static final String DESCRIPTION = 
-        "La tour canon est une tour avec de bons dégâts mais lente. " +
-        "Cette dernière n'attaque que les créatures terrestres";
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_CANON);   
 	
 	static
 	{

@@ -26,7 +26,6 @@ public class Nuage extends Animation
 	private Image IMAGE;
 	private float alpha = 1.0f;
 	private Jeu jeu;
-	private int largeur = 40;
 	
 	static
     { 

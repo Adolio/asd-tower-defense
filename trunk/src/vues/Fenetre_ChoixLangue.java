@@ -1,3 +1,4 @@
+package vues;
 import i18n.Langue;
 
 import java.awt.BorderLayout;
@@ -15,8 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import vues.GestionnaireDesPolices;
-import vues.LookInterface;
 
 import models.outils.Outils;
 
@@ -24,21 +23,25 @@ import models.outils.Outils;
 public class Fenetre_ChoixLangue extends JDialog implements ActionListener
 {
     private static final long serialVersionUID = 1L;
-    private final int MARGES_PANEL                 = 40;
-    
+    private final int MARGES_PANEL = 40;
+    private final int MARGES_DRAPEAUX = 20;
     private static final ImageIcon I_FR     = new ImageIcon("lang/fr_FR.jpg");
     private static final ImageIcon I_EN    = new ImageIcon("lang/en_EN.png");
     
-    private JButton bFR = new JButton("Français",new ImageIcon(Outils.redimentionner(I_FR.getImage(), 150, 100)));
-    private JButton bEN = new JButton("English",new ImageIcon(Outils.redimentionner(I_EN.getImage(), 150, 100)));
+    private JButton bFR = new JButton("Français",new ImageIcon(Outils.redimentionner(I_FR.getImage(), 100, 66)));
+    private JButton bEN = new JButton("English",new ImageIcon(Outils.redimentionner(I_EN.getImage(), 100, 66)));
     private JButton bQuitter = new JButton("Quitter");
     
     private JLabel lblTitre = new JLabel("CHOIX DE LA LANGUE");
-    
+    private static final ImageIcon I_FENETRE = new ImageIcon(
+    "img/icones/icone_pgm.png");
     
     public Fenetre_ChoixLangue()
     {
         super((Frame) null, true);
+        setIconImage(I_FENETRE.getImage());
+        setResizable(false);
+        
         
         JPanel pForm = new JPanel(new BorderLayout());
         
@@ -66,6 +69,11 @@ public class Fenetre_ChoixLangue extends JDialog implements ActionListener
         
         pDrapeaux.add(bFR);
         pDrapeaux.add(bEN);
+        
+        bFR.setBorder(new EmptyBorder(new Insets(MARGES_DRAPEAUX, MARGES_DRAPEAUX,
+                MARGES_DRAPEAUX / 2, MARGES_DRAPEAUX)));
+        bEN.setBorder(new EmptyBorder(new Insets(MARGES_DRAPEAUX, MARGES_DRAPEAUX,
+                MARGES_DRAPEAUX / 2, MARGES_DRAPEAUX)));
         
         bFR.setVerticalTextPosition(SwingConstants.BOTTOM);
         bEN.setVerticalTextPosition(SwingConstants.BOTTOM);

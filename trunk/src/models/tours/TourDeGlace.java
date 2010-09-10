@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -28,11 +30,8 @@ public class TourDeGlace extends Tour
     private static final double COEFF_RALENTISSMENT = 0.4; // perd 40% de sa vitesse
     
     public static final int PRIX_ACHAT = 50;
-    private static final String DESCRIPTION = 
-        "La tour de glace est une tour qui est rapide et " +
-        "qui ralenti les créatures. " +
-        "Cette tour attaque tous types de creatures";
-    
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_GLACE);
+
     static
     {
         COULEUR = new Color(0,200,200);

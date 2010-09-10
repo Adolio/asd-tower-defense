@@ -1,5 +1,7 @@
 package vues.commun;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -50,29 +52,31 @@ public class Panel_AjoutTour extends JPanel implements ActionListener
         pTours.setPreferredSize(new Dimension(largeur,hauteur));
         
         
+        String titrePrixAchat = Langue.getTexte(Langue.ID_TXT_PRIX_ACHAT);
+        
         boutonsTours.add(bTourArcher);
-        bTourArcher.setToolTipText("Prix : "+TourArcher.PRIX_ACHAT);
+        bTourArcher.setToolTipText(titrePrixAchat+" : "+TourArcher.PRIX_ACHAT);
         
         boutonsTours.add(bTourCanon);
-        bTourCanon.setToolTipText("Prix : "+TourCanon.PRIX_ACHAT);
+        bTourCanon.setToolTipText(titrePrixAchat+" : "+TourCanon.PRIX_ACHAT);
         
         boutonsTours.add(bTourAntiAerienne);
-        bTourAntiAerienne.setToolTipText("Prix : "+TourAntiAerienne.PRIX_ACHAT);
+        bTourAntiAerienne.setToolTipText(titrePrixAchat+" : "+TourAntiAerienne.PRIX_ACHAT);
         
         boutonsTours.add(bTourDeGlace);
-        bTourDeGlace.setToolTipText("Prix : "+TourDeGlace.PRIX_ACHAT);
+        bTourDeGlace.setToolTipText(titrePrixAchat+" : "+TourDeGlace.PRIX_ACHAT);
         
         boutonsTours.add(bTourElectrique);
-        bTourElectrique.setToolTipText("Prix : "+TourElectrique.PRIX_ACHAT);
+        bTourElectrique.setToolTipText(titrePrixAchat+" : "+TourElectrique.PRIX_ACHAT);
         
         boutonsTours.add(bTourDeFeu);
-        bTourDeFeu.setToolTipText("Prix : "+TourDeFeu.PRIX_ACHAT);
+        bTourDeFeu.setToolTipText(titrePrixAchat+" : "+TourDeFeu.PRIX_ACHAT);
         
         boutonsTours.add(bTourDAir);
-        bTourDAir.setToolTipText("Prix : "+TourDAir.PRIX_ACHAT);
+        bTourDAir.setToolTipText(titrePrixAchat+" : "+TourDAir.PRIX_ACHAT);
         
         boutonsTours.add(bTourDeTerre);
-        bTourDeTerre.setToolTipText("Prix : "+TourDeTerre.PRIX_ACHAT);
+        bTourDeTerre.setToolTipText(titrePrixAchat+" : "+TourDeTerre.PRIX_ACHAT);
         
         for(JButton bTour : boutonsTours)
         {

@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -26,9 +28,8 @@ public class TourAntiAerienne extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
 	public static final int PRIX_ACHAT = 30;
-	public static final String DESCRIPTION = 
-    	"La tour anti-aérienne est une tour qui est très performante," +
-        " mais elle n'attaque que les créatures volantes. ";
+	public static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_ANTI_AERIENNE);   
+
 	
 	static
 	{

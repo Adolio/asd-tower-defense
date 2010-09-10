@@ -1,4 +1,6 @@
-package vues.solo;
+package vues.editeurTerrain;
+
+import i18n.Langue;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +22,7 @@ import vues.LookInterface;
 import vues.Panel_MenuPrincipal;
 import vues.commun.Panel_EmplacementsTerrain;
 import vues.commun.TableCellRenderer_Image;
-import vues.editeurTerrain.Fenetre_CreationTerrain;
+import vues.solo.Fenetre_JeuSolo;
 
 /**
  * Panel de création d'une partie réseau.
@@ -37,12 +39,12 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
     private JFrame parent;
     
     // form
-    private JLabel lblTitreTerrains = new JLabel("Choisissez votre terrain");
+    private JLabel lblTitreTerrains = new JLabel(Langue.getTexte(Langue.ID_TITRE_CHOIX_TERRAIN));
     private JLabel lblEtat = new JLabel();
     
-    private JButton bLancer = new JButton("Lancer");
-    private JButton bRetour = new JButton("Retour");
-    private JButton bEditeurDeTerrain = new JButton("Editeur de Terrain", I_EDITEUR_T);
+    private JButton bLancer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEMARRER));
+    private JButton bRetour = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
+    private JButton bEditeurDeTerrain = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_EDITEUR_DE_TERRAIN), I_EDITEUR_T);
     
     // terrains
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
@@ -61,7 +63,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         // initialisation
         super(new BorderLayout());
         this.parent = parent;
-        parent.setTitle("Créer une partie personnalisee");
+        parent.setTitle(Langue.getTexte(Langue.ID_TITRE_PARTIE_PERSONNALISEES));
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
@@ -74,7 +76,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
 
         pTop.setOpaque(false);
 
-        JLabel lblTitre = new JLabel("PARTIES PERSONNALISEES");
+        JLabel lblTitre = new JLabel(Langue.getTexte(Langue.ID_TITRE_PARTIE_PERSONNALISEES));
         
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
