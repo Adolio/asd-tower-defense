@@ -392,11 +392,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		
 		// règles
 		else if(source == itemRegles)
-		    new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_REGLES), new File("donnees/regles/regles.html"), this);
+		    new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_REGLES), new File(Langue.getTexte(Langue.ID_ADRESSE_REGLES_DU_JEU)), this);
 
 		// a propos
 		else if(source == itemAPropos)
-			new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File("aPropos/aPropos.html"),this);
+			new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)),this);
 		
 		// basculer affichage du maillage
 		else if(source == itemAfficherMaillage)

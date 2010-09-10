@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -26,10 +28,8 @@ public class TourArcher extends Tour
 	public static final Image ICONE;
 	public static final int NIVEAU_MAX = 5;
 	public static final int PRIX_ACHAT = 10;
-    private static final String DESCRIPTION = 
-        "La tour d'archer est une tour qui est rapide, " +
-        "mais elle fait peu de dégâts. Elle attaque tous types de créatures.";
-    
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_ARCHER);
+
     static
     {
 		COULEUR = new Color(128,0,0);

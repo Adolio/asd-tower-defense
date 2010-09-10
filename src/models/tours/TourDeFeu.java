@@ -1,5 +1,7 @@
 package models.tours;
 
+import i18n.Langue;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -29,10 +31,7 @@ public class TourDeFeu extends Tour
     public static final int NIVEAU_MAX = 5;
     private static final double RAYON_IMPACT = 20.0;
     public static final int PRIX_ACHAT = 120;
-    private static final String DESCRIPTION = 
-        "La tour de feu est une tour qui très rapide " +
-        "mais qui fait de faible dégâts. " +
-        "Cette tour attaque tous types de creatures";
+    private static final String DESCRIPTION = Langue.getTexte(Langue.ID_TXT_DESC_TOUR_FEU);
     
     static
     {

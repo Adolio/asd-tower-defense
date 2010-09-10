@@ -1,5 +1,7 @@
 package vues;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -110,6 +112,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 
         // a propos
         else if (source == itemAPropos)
-            new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"),this);
+            new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)),this);
     }
 }

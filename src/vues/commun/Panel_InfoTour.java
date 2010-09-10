@@ -199,13 +199,13 @@ public class Panel_InfoTour extends JPanel implements ActionListener
        
         JPanel pCiblage = new JPanel();
         pCiblage.setOpaque(false);
-        JLabel lTypeCiblage = new JLabel(Langue.getTexte(Langue.ID_TXT_ATTAQE_LA_CREATURE));
+        JLabel lTypeCiblage = new JLabel(Langue.getTexte(Langue.ID_TXT_ATTAQUE_LA_CREATURE));
         pCiblage.add(lTypeCiblage);
         lTypeCiblage.setForeground(LookInterface.COULEUR_TEXTE_SEC);
-        cbTypeCiblage.addItem("la plus proche");
-        cbTypeCiblage.addItem("la plus loin");
-        cbTypeCiblage.addItem("la plus faible (pv)");
-        cbTypeCiblage.addItem("la plus forte (pv)");
+        cbTypeCiblage.addItem(Langue.getTexte(Langue.ID_TXT_LA_PLUS_PROCHE));
+        cbTypeCiblage.addItem(Langue.getTexte(Langue.ID_TXT_LA_PLUS_LOIN));
+        cbTypeCiblage.addItem(Langue.getTexte(Langue.ID_TXT_LA_PLUS_FAIBLE));
+        cbTypeCiblage.addItem(Langue.getTexte(Langue.ID_TXT_LA_PLUS_FORTE));
         cbTypeCiblage.addActionListener(this);
         GestionnaireDesPolices.setStyle(cbTypeCiblage);
         

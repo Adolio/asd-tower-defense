@@ -15,10 +15,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import vues.commun.Fenetre_HTML;
+import vues.editeurTerrain.Panel_PartiePersonnalisee;
 import vues.reseau.Panel_CreerPartieMulti;
 import vues.reseau.Panel_RejoindrePartieMulti;
 import vues.solo.Panel_ModeSolo;
-import vues.solo.Panel_PartiePersonnalisee;
 import models.jeu.Jeu;
 
 /**
@@ -45,6 +45,9 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
     private JButton bOptions = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_OPTIONS));
     private JButton bQuitter = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER));
     private JButton bPartiePerso = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_VOS_PARTIES));
+    
+    private JLabel lblReseau = new JLabel(Langue.getTexte(Langue.ID_TITRE_RESEAU)+" \"beta\"");
+    
     
     private JFrame parent;
 
@@ -105,6 +108,11 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         pAbsolu.add(bPartiePerso);
         
         // partie multijoueurs
+        lblReseau.setBounds(53, 60, 200, 50);
+        lblReseau.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lblReseau.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+        pAbsolu.add(lblReseau);
+        
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);
         bRejoindrePartieMulti.addActionListener(this);
         GestionnaireDesPolices.setStyle(bRejoindrePartieMulti);
@@ -188,10 +196,10 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
             parent.getContentPane().validate();
         }
         else if(source == bRegles)
-            new Fenetre_HTML("Règles du jeu", new File("donnees/regles/regles.html"), parent);
+            new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_REGLES), new File(Langue.getTexte(Langue.ID_ADRESSE_REGLES_DU_JEU)), parent);
        
         else if(source == bAPropos)
-            new Fenetre_HTML("A propos",new File("aPropos/aPropos.html"), parent);
+            new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)), parent);
         
         else if(source == bOptions)
             new Fenetre_Options();

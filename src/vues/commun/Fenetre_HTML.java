@@ -1,5 +1,7 @@
 package vues.commun;
 
+import i18n.Langue;
+
 import java.io.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
@@ -24,7 +26,7 @@ public class Fenetre_HTML extends JFrame implements ActionListener
 
     private JEditorPane epHTML;
     private static final long serialVersionUID = 1L;
-    private JButton bFermer = new JButton("Fermer");
+    private JButton bFermer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_FERMER));
 
     /**
      * Constructeur

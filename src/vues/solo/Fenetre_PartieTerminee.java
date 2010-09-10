@@ -28,8 +28,8 @@ public class Fenetre_PartieTerminee extends JDialog implements ActionListener
     private static final String TITRE_FORM          = Langue.getTexte(Langue.ID_TITRE_PARTIE_TERMINEE);
     
     // membrea graphiques
-    private JButton bOk             = new JButton(Langue.getTexte(Langue.ID_TXT_OK));
-    private JButton bAnnuler        = new JButton(Langue.getTexte(Langue.ID_TXT_FERMER));
+    private JButton bOk             = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_OK));
+    private JButton bAnnuler        = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_FERMER));
     private JTextField tfPseudo  = new JTextField();
     private JPanel pFormulaire;
     private String nomTerrain;

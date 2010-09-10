@@ -823,7 +823,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
             g2.setColor(Color.WHITE);
             Font policeTmp = g2.getFont();
             g2.setFont(GestionnaireDesPolices.POLICE_TITRE);
-            g2.drawString("[ EN PAUSE ]", LARGEUR / 2 - 100, HAUTEUR / 2 - 50);
+            g2.drawString("[ PAUSE ]", LARGEUR / 2 - 80, HAUTEUR / 2 - 50);
             g2.setFont(policeTmp);
 	    }
 		

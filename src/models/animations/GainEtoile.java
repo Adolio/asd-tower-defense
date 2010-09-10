@@ -1,5 +1,7 @@
 package models.animations;
 
+import i18n.Langue;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -57,7 +59,7 @@ public class GainEtoile extends Animation
 	    g2.setColor(Color.WHITE);
 	    
 	    int xOffset = -100;
-	    g2.drawString("ETOILE GAGNEE", largeur/2+xOffset, hauteur/2);
+	    g2.drawString(Langue.getTexte(Langue.ID_TITRE_ETOILE_GAGNEE), largeur/2+xOffset, hauteur/2);
 		g2.drawImage(ETOILE,largeur/2+xOffset-50,hauteur/2-50,50,50,null);
 		
 		// retabli la transparence
