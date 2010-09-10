@@ -11,7 +11,7 @@ Le jeu manque cruellement d'un site dédié ou l'on pourrait présenter le proje
 Il reste encore quelques petites choses à terminer notamment l'ajout de musique et quelques finitions diverses.
 <br/><br/>
 
-- *Traduction du jeu* (20%)<br/>
+- *Traduction du jeu* (60%)<br/>
 Afin de proposer le jeu à un plus large publique, il serait intéressant de traduire entièrement l'interface du soft en plusieurs langues.
 <br/><br/>
 
