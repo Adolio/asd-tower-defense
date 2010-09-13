@@ -48,7 +48,7 @@ public class TourAntiAerienne extends Tour
 			  20, 				// largeur
 			  20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Anti Aérienne",	// nom
+			  Langue.getTexte(Langue.ID_TXT_NOM_TOUR_ANTI_AERIENNE),	// nom
 			  PRIX_ACHAT,		// prix achat
 			  40,				// degats
 			  50,				// rayon de portee

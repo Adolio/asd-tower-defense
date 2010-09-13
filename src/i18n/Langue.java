@@ -114,7 +114,38 @@ public class Langue
     public static final String ID_TXT_SCORE                 = "TXT_SCORE";
     public static final String ID_TXT_DUREE                 = "TXT_DUREE";
     public static final String ID_TXT_DATE                  = "TXT_DATE";
-    
+    public static final String ID_TITRE_NOM_SERVEUR         = "TITRE_NOM_SERVEUR";
+    public static final String ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN = "TITRE_CHOISISSEZ_VOTRE_TERRAIN";
+    public static final String ID_TITRE_PSEUDO              = "TITRE_PSEUDO";
+    public static final String ID_TITRE_CREER_PARTIE_MULTI  = "TITRE_CREER_PARTIE_MULTI";
+    public static final String ID_TXT_DESCRIPTION           = "TXT_DESCRIPTION";
+    public static final String ID_TXT_MODE                  = "TXT_MODE";
+    public static final String ID_TXT_JOUEURS_MAX           = "TXT_JOUEURS_MAX";
+    public static final String ID_TXT_EQUIPES_MAX           = "TXT_EQUIPES_MAX";
+    public static final String ID_TXT_APERCU                = "TXT_APERCU";
+    public static final String ID_TXT_FILTRE                = "TXT_FILTRE";
+    public static final String ID_TITRE_CONN_PAR_IP         = "TITRE_CONN_PAR_IP";
+    public static final String ID_TXT_BTN_RAFRAICHIR        = "TXT_BTN_RAFRAICHIR";
+    public static final String ID_TXT_NOM                   = "TXT_NOM";
+    public static final String ID_TXT_IP                    = "TXT_IP";
+    public static final String ID_TXT_PORT                  = "TXT_PORT";
+    public static final String ID_TXT_TERRAIN               = "TXT_TERRAIN";
+    public static final String ID_TXT_PLACES_DISPO          = "TXT_PLACES_DISPO";
+    public static final String ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI = "TITLE_REJOINDRE_UNE_PARTIE_MULTI";
+    public static final String ID_TXT_BTN_SE_DECONNECTER    = "TXT_BTN_SE_DECONNECTER";
+    public static final String ID_TITRE_ATTENTE_DE_JOUEURS  = "TITRE_ATTENTE_DE_JOUEURS";
+    public static final String ID_TXT_DESCR_CONSOLE_CHAT    = "TXT_DESCR_CONSOLE_CHAT";
+    public static final String ID_TXT_DECONNEXION           = "TXT_DECONNEXION";
+    public static final String ID_TXT_VOS_ADRESSES_IP       = "TXT_VOS_ADRESSES_IP";
+    public static final String ID_TXT_NOM_TOUR_ARCHER       = "TXT_NOM_TOUR_ARCHER";
+    public static final String ID_TXT_NOM_TOUR_ELECTRIQUE   = "TXT_NOM_TOUR_ELECTRIQUE";
+    public static final String ID_TXT_NOM_TOUR_TERRE        = "TXT_NOM_TOUR_TERRE";
+    public static final String ID_TXT_NOM_TOUR_GLACE        = "TXT_NOM_TOUR_GLACE";
+    public static final String ID_TXT_NOM_TOUR_FEU          = "TXT_NOM_TOUR_FEU";
+    public static final String ID_TXT_NOM_TOUR_AIR          = "TXT_NOM_TOUR_AIR";
+    public static final String ID_TXT_NOM_TOUR_CANON        = "TXT_NOM_TOUR_CANON";
+    public static final String ID_TXT_NOM_TOUR_ANTI_AERIENNE = "TXT_NOM_TOUR_ANTI_AERIENNE";
+
 
     private static boolean initialise = false;
     
@@ -320,9 +351,49 @@ public class Langue
             jo.put(ID_TXT_DUREE,"Duration");
             jo.put(ID_TXT_DATE,"Date");
             
+            jo.put(ID_TITRE_NOM_SERVEUR,"Server name");
+            jo.put(ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN,"Select your field");
+            jo.put(ID_TITRE_PSEUDO,"Pseudo");
+            jo.put(ID_TITRE_CREER_PARTIE_MULTI,"Create a multiplayers game");
+            
+            jo.put(ID_TXT_DESCRIPTION,"Description");
+            jo.put(ID_TXT_MODE,"Mode");
+            jo.put(ID_TXT_JOUEURS_MAX,"Pl. max.");
+            jo.put(ID_TXT_EQUIPES_MAX,"Team max.");
+            jo.put(ID_TXT_APERCU,"Preview");
+            
+            jo.put(ID_TXT_FILTRE,"Filter");
+            jo.put(ID_TITRE_CONN_PAR_IP,"IP connection");
+            jo.put(ID_TXT_BTN_RAFRAICHIR,"Refresh");
+            jo.put(ID_TXT_NOM,"Name");
+            jo.put(ID_TXT_IP,"IP");
+            jo.put(ID_TXT_PORT,"Port");
+            jo.put(ID_TXT_TERRAIN,"Field");
+            jo.put(ID_TXT_PLACES_DISPO,"Places available");
+            jo.put(ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI,"Join a multiplayers game");
+            
+            jo.put(ID_TXT_BTN_SE_DECONNECTER,"Disconnect");
+            jo.put(ID_TITRE_ATTENTE_DE_JOUEURS,"Waiting for players...");
+            jo.put(ID_TXT_DESCR_CONSOLE_CHAT,"Awaiting start of the game... <br/>" +
+            "This console allows you to communicate with others online players .<br />");
+            
+            jo.put(ID_TXT_DECONNEXION,"Logout");
+            jo.put(ID_TXT_VOS_ADRESSES_IP,"Your IPs");
+            
+            jo.put(ID_TXT_NOM_TOUR_ARCHER,"Archer Tower");
+            jo.put(ID_TXT_NOM_TOUR_CANON,"Canon Tower");
+            jo.put(ID_TXT_NOM_TOUR_ANTI_AERIENNE,"Anti Air Tower");
+            jo.put(ID_TXT_NOM_TOUR_ELECTRIQUE,"Electric Tower");
+            jo.put(ID_TXT_NOM_TOUR_TERRE,"Earth Tower");
+            jo.put(ID_TXT_NOM_TOUR_GLACE,"Ice Tower");
+            jo.put(ID_TXT_NOM_TOUR_FEU,"Fire Tower");
+            jo.put(ID_TXT_NOM_TOUR_AIR,"Air Tower");
+            
+            
             Langue.sauver("lang/en_En.json");
         
 
+            
             // FR
             
             jo = new JSONObject();
@@ -434,6 +505,46 @@ public class Langue
             jo.put(ID_TXT_DUREE,"Durée");
             jo.put(ID_TXT_DATE,"Date");
             
+            
+            jo.put(ID_TITRE_NOM_SERVEUR,"Nom du serveur");
+            jo.put(ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN,"Choisissez votre terrain");
+            jo.put(ID_TITRE_PSEUDO,"Pseudo");
+            jo.put(ID_TITRE_CREER_PARTIE_MULTI,"Creer une partie multijoueurs");
+
+            jo.put(ID_TXT_DESCRIPTION,"Description");
+            jo.put(ID_TXT_MODE,"Mode");
+            jo.put(ID_TXT_JOUEURS_MAX,"Jo. max.");
+            jo.put(ID_TXT_EQUIPES_MAX,"Eq. max.");
+            jo.put(ID_TXT_APERCU,"Aperçu");
+            
+            jo.put(ID_TXT_FILTRE,"Filtre");
+            jo.put(ID_TITRE_CONN_PAR_IP,"Connexion par IP");
+            jo.put(ID_TXT_BTN_RAFRAICHIR,"Rafraichir");
+            jo.put(ID_TXT_NOM,"Nom");
+            jo.put(ID_TXT_IP,"IP");
+            jo.put(ID_TXT_PORT,"Port");
+            jo.put(ID_TXT_TERRAIN,"Terrain");
+            jo.put(ID_TXT_PLACES_DISPO,"Places dispo.");
+            jo.put(ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI,"Rejoindre une partie multijoueurs");
+            
+            jo.put(ID_TXT_BTN_SE_DECONNECTER,"Se déconnecter");
+            jo.put(ID_TITRE_ATTENTE_DE_JOUEURS,"Attente de joueurs...");
+            jo.put(ID_TXT_DESCR_CONSOLE_CHAT,"Attente du démarrage de la partie... <br/>" +
+                    "Cette console vous permet de communiquer avec les " +
+                    "autres joueurs connectés.<br />");
+            
+            jo.put(ID_TXT_DECONNEXION,"Déconnexion");
+            jo.put(ID_TXT_VOS_ADRESSES_IP,"Vos adresses IP");
+            
+            jo.put(ID_TXT_NOM_TOUR_ARCHER,"Tour Archer");
+            jo.put(ID_TXT_NOM_TOUR_CANON,"Tour Canon");
+            jo.put(ID_TXT_NOM_TOUR_ANTI_AERIENNE,"Tour Anti aérienne");
+            jo.put(ID_TXT_NOM_TOUR_ELECTRIQUE,"Tour Electrique");
+            jo.put(ID_TXT_NOM_TOUR_TERRE,"Tour de Terre");
+            jo.put(ID_TXT_NOM_TOUR_GLACE,"Tour de Glace");
+            jo.put(ID_TXT_NOM_TOUR_FEU,"Tour de Feu");
+            jo.put(ID_TXT_NOM_TOUR_AIR,"Tour d'Air");
+
             Langue.sauver("lang/fr_FR.json");
         } 
         catch (JSONException e)

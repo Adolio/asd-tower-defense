@@ -1,5 +1,7 @@
 package vues.reseau;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -40,17 +42,17 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private JFrame parent;
  
     // form
-    private JLabel lblNomServeur = new JLabel("Nom du serveur :");
+    private JLabel lblNomServeur = new JLabel(Langue.getTexte(Langue.ID_TITRE_NOM_SERVEUR));
     private JTextField tfNomServeur = new JTextField("Test");
     //private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
     //private JCheckBox cbEquipeAleatoire = new JCheckBox();
-    private JLabel lblTitreTerrains = new JLabel("Choisissez votre terrain");
+    private JLabel lblTitreTerrains = new JLabel(Langue.getTexte(Langue.ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN));
     private JLabel lblEtat = new JLabel();
     
-    private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField("Joueur", 10);
-    private JButton bCreer = new JButton("Créer");
-    private JButton bAnnuler = new JButton("Annuler");
+    private JLabel lblPseudo = new JLabel(Langue.getTexte(Langue.ID_TITRE_PSEUDO));
+    private JTextField tfPseudo = new JTextField("", 10);
+    private JButton bCreer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER));
+    private JButton bAnnuler = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
     
     // terrains
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
@@ -68,7 +70,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // initialisation
         super(new BorderLayout());
         this.parent = parent;
-        parent.setTitle("Créer une partie multijoueurs");
+        parent.setTitle(Langue.getTexte(Langue.ID_TITRE_CREER_PARTIE_MULTI));
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
 
@@ -81,7 +83,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         pTop.setOpaque(false);
 
-        JLabel lblTitre = new JLabel("CREER UNE PARTIE");
+        JLabel lblTitre = new JLabel(Langue.getTexte(Langue.ID_TITRE_CREER_PARTIE_MULTI));
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(lblTitre, BorderLayout.NORTH);
@@ -194,11 +196,11 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         tbTerrains.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // nom de colonnes
-        model.addColumn("Nom");
-        model.addColumn("Mode");
-        model.addColumn("Joueurs Max.");
-        model.addColumn("Equipes Max.");
-        model.addColumn("Apercu");
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_DESCRIPTION));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_MODE));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_JOUEURS_MAX));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_EQUIPES_MAX));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_APERCU));
 
         
         // Taille des colonnes

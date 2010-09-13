@@ -182,7 +182,7 @@ public class VagueDeCreatures
                             getTempsLancement(VITESSE_CREATURE_RAPIDE));
 
         case 6: // 15 normales
-            return new VagueDeCreatures(15, new Mouton(SANTE_CREATURE_NORMALE,
+            return new VagueDeCreatures(15, new MoutonNoir(SANTE_CREATURE_NORMALE,
                     (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 

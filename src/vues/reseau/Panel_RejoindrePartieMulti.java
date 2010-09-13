@@ -1,5 +1,7 @@
 package vues.reseau;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
@@ -38,21 +40,21 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     private ArrayList<ServeurInfo> serveurs = new ArrayList<ServeurInfo>();
 
     private String filtre = "";
-    private static final String FILTRE_DEFAUT = "Filtre";
+    private static final String FILTRE_DEFAUT = Langue.getTexte(Langue.ID_TXT_FILTRE);
     private JTextField tfFiltre = new JTextField(FILTRE_DEFAUT);
 
-    private JLabel lblConnexionParIP = new JLabel("Connexion par IP : ");
+    private JLabel lblConnexionParIP = new JLabel(Langue.getTexte(Langue.ID_TITRE_CONN_PAR_IP));
     private JTextField tfConnexionParIP = new JTextField("127.0.0.1",10);
 
-    private JLabel lblPseudo = new JLabel("Pseudo : ");
-    private JTextField tfPseudo = new JTextField("Joueur",10);
+    private JLabel lblPseudo = new JLabel(Langue.getTexte(Langue.ID_TITRE_PSEUDO));
+    private JTextField tfPseudo = new JTextField("",10);
 
-    private JButton bRejoindre = new JButton("Rejoindre");
-    private JButton bRafraichir = new JButton("Rafraichir");
+    private JButton bRejoindre = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
+    private JButton bRafraichir = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RAFRAICHIR));
     
     private JLabel lblEtat = new JLabel();
 
-    private JButton bAnnuler = new JButton("Annuler");
+    private JButton bAnnuler = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
 
     private CanalTCP canalServeurEnregistrement;
     
@@ -138,7 +140,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // initialisation
         super(new BorderLayout());
         this.parent = parent;
-        parent.setTitle("Rejoindre une partie multijoueurs");
+        parent.setTitle(Langue.getTexte(Langue.ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI));
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
         setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -149,7 +151,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel pTop = new JPanel(new BorderLayout());
         pTop.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
-        JLabel titre = new JLabel("REJOINDRE UNE PARTIE");
+        JLabel titre = new JLabel(Langue.getTexte(Langue.ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI));
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         titre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(titre, BorderLayout.NORTH);
@@ -188,12 +190,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         tbServeurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // nom de colonnes
-        model.addColumn("Nom");
-        model.addColumn("IP");
-        model.addColumn("Port");
-        model.addColumn("Mode");
-        model.addColumn("Terrain");
-        model.addColumn("Places dispo.");
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_NOM));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_IP));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_PORT));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_MODE));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_TERRAIN));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_PLACES_DISPO));
 
         // Création du canal avec le serveur d'enregistrement
         try

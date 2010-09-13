@@ -1,5 +1,7 @@
 package vues.reseau;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
@@ -40,9 +42,9 @@ public class Panel_AttendreJoueurs extends JPanel implements
     private final int MARGES_PANEL = 40;
     private final boolean ADMIN;
     private JFrame parent;
-    private JButton bDemarrerMaintenant = new JButton("Démarrer maintenant");
+    private JButton bDemarrerMaintenant = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEMARRER));
     private JLabel lblEtat = new JLabel();
-    private JButton bDeconnecter = new JButton("Se Deconnecter");
+    private JButton bDeconnecter = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_SE_DECONNECTER));
     private Jeu_Serveur jeuServeur;
     private Jeu_Client jeuClient;
     private Panel_EmplacementsTerrain pEmplacementsTerrain;
@@ -102,7 +104,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         // initialisation
         setLayout(new BorderLayout());
 
-        parent.setTitle("Attendre des joueurs");
+        parent.setTitle(Langue.getTexte(Langue.ID_TITRE_ATTENTE_DE_JOUEURS));
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
         setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -113,7 +115,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         JPanel pTop = new JPanel(new BorderLayout());
         pTop.setOpaque(false);
 
-        JLabel lblTitre = new JLabel("ATTENTE DE JOUEURS...");
+        JLabel lblTitre = new JLabel(Langue.getTexte(Langue.ID_TITRE_ATTENTE_DE_JOUEURS));
         lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         pTop.add(lblTitre, BorderLayout.NORTH);
@@ -216,7 +218,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
            
             try
             {
-                String s = "Vos adresses IP : ";
+                String s = Langue.getTexte(Langue.ID_TXT_VOS_ADRESSES_IP)+" : ";
                 
                 for (NetworkInterface netint : Collections.list(NetworkInterface.getNetworkInterfaces())) {
                     for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
@@ -236,9 +238,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
         }
         else
         {
-            console.ajouterTexteHTMLDansConsole("Attente du démarrage de la partie... <br/>" +
-                "Cette console vous permet de communiquer avec les " +
-                "autres joueurs connectés.<br />");
+            console.ajouterTexteHTMLDansConsole(Langue.getTexte(Langue.ID_TXT_DESCR_CONSOLE_CHAT));
         }
         
         bDeconnecter.addActionListener(this);
@@ -606,7 +606,7 @@ public class Panel_AttendreJoueurs extends JPanel implements
     @Override
     public void joueurDeconnecte(Joueur joueur)
     {
-        console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>#Déconnexion : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
+        console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>#"+Langue.getTexte(Langue.ID_TXT_DECONNEXION)+" : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
     }
 
     @Override

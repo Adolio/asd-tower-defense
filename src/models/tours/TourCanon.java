@@ -47,7 +47,7 @@ public class TourCanon extends Tour
 			  20, 				// largeur
 		      20, 				// hauteur
 			  COULEUR,			// couleur de fond
-			  "Canon",	        // nom
+			  Langue.getTexte(Langue.ID_TXT_NOM_TOUR_CANON),	        // nom
 			  PRIX_ACHAT,		// prix achat
 			  18,				// degats
 			  40,				// rayon de portee
