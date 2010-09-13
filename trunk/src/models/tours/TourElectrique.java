@@ -45,7 +45,7 @@ public class TourElectrique extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Electrique",     // nom
+              Langue.getTexte(Langue.ID_TXT_NOM_TOUR_ELECTRIQUE),     // nom
               PRIX_ACHAT,       // prix achat
               120,              // degats
               70,               // rayon de portee

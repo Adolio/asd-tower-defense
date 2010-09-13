@@ -47,7 +47,7 @@ public class TourDeTerre extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Terre",          // nom
+              Langue.getTexte(Langue.ID_TXT_NOM_TOUR_TERRE),          // nom
               PRIX_ACHAT,       // prix achat
               500,              // degats
               150,              // rayon de portee

@@ -47,7 +47,7 @@ public class TourDeFeu extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Feu",            // nom
+              Langue.getTexte(Langue.ID_TXT_NOM_TOUR_FEU),            // nom
               PRIX_ACHAT,       // prix achat
               10,              // degats
               40,               // rayon de portee

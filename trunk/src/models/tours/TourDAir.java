@@ -42,7 +42,7 @@ public class TourDAir extends Tour
               20,               // largeur
               20,               // hauteur
               COULEUR,          // couleur de fond
-              "Air",            // nom
+              Langue.getTexte(Langue.ID_TXT_NOM_TOUR_AIR),            // nom
               PRIX_ACHAT,       // prix achat
               200,               // degats
               100,               // rayon de portee
