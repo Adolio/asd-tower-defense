@@ -131,7 +131,7 @@ public class Langue
     public static final String ID_TXT_PORT                  = "TXT_PORT";
     public static final String ID_TXT_TERRAIN               = "TXT_TERRAIN";
     public static final String ID_TXT_PLACES_DISPO          = "TXT_PLACES_DISPO";
-    public static final String ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI = "TITLE_REJOINDRE_UNE_PARTIE_MULTI";
+    public static final String ID_TITRE_REJOINDRE_UNE_PARTIE_MULTI = "TITRE_REJOINDRE_UNE_PARTIE_MULTI";
     public static final String ID_TXT_BTN_SE_DECONNECTER    = "TXT_BTN_SE_DECONNECTER";
     public static final String ID_TITRE_ATTENTE_DE_JOUEURS  = "TITRE_ATTENTE_DE_JOUEURS";
     public static final String ID_TXT_DESCR_CONSOLE_CHAT    = "TXT_DESCR_CONSOLE_CHAT";
@@ -144,7 +144,14 @@ public class Langue
     public static final String ID_TXT_NOM_TOUR_FEU          = "TXT_NOM_TOUR_FEU";
     public static final String ID_TXT_NOM_TOUR_AIR          = "TXT_NOM_TOUR_AIR";
     public static final String ID_TXT_NOM_TOUR_CANON        = "TXT_NOM_TOUR_CANON";
-    public static final String ID_TXT_NOM_TOUR_ANTI_AERIENNE = "TXT_NOM_TOUR_ANTI_AERIENNE";
+    public static final String ID_TXT_NOM_TOUR_ANTI_AERIENNE= "TXT_NOM_TOUR_ANTI_AERIENNE";
+    public static final String ID_TXT_BTN_NOUVEAU           = "TXT_BTN_NOUVEAU";
+    public static final String ID_TXT_BTN_OUVRIR            = "TXT_BTN_OUVRIR";
+    public static final String ID_TXT_BTN_ENREGISTRER       = "TXT_BTN_ENREGISTRER";
+    public static final String ID_TXT_BTN_ENREGISTRER_SOUS  = "TXT_BTN_ENREGISTRER_SOUS";
+    public static final String ID_TXT_BTN_TESTER            = "TXT_BTN_TESTER";
+    public static final String ID_TXT_PRET                  = "TXT_PRET";
+    public static final String ID_TITRE_EDITEUR_DE_TERRAIN  = "TITRE_EDITEUR_DE_TERRAIN";
 
 
     private static boolean initialise = false;
@@ -230,8 +237,9 @@ public class Langue
             
             jo = new JSONObject();
             
+            // BOUTONS
             jo.put(ID_TXT_BTN_SOLO, "Solo");
-            jo.put(ID_TXT_BTN_VOS_PARTIES, "Costum");
+            jo.put(ID_TXT_BTN_VOS_PARTIES, "Custom");
             jo.put(ID_TXT_BTN_REJOINDRE, "Join");
             jo.put(ID_TXT_BTN_CREER, "Create");
             jo.put(ID_TXT_BTN_REGLES, "Rules");
@@ -258,7 +266,13 @@ public class Langue
             jo.put(ID_TXT_BTN_VENDRE,"Sell");
             jo.put(ID_TXT_BTN_EDITEUR_DE_TERRAIN,"Field editor");
             jo.put(ID_TXT_BTN_DEMARRER,"Start");
+            jo.put(ID_TXT_BTN_NOUVEAU,"New");
+            jo.put(ID_TXT_BTN_OUVRIR,"Open");
+            jo.put(ID_TXT_BTN_ENREGISTRER,"Save");
+            jo.put(ID_TXT_BTN_ENREGISTRER_SOUS,"Save as");
+            jo.put(ID_TXT_BTN_TESTER,"Try it");
             
+            // TEXTE
             jo.put(ID_TXT_NIVEAU,"level");
             jo.put(ID_TXT_CLIQUER_SUR_TERRAIN, "Click on an available field to start the game.");
             jo.put(ID_TXT_VAGUE_SUIVANTE,"Next wave");
@@ -276,29 +290,12 @@ public class Langue
             jo.put(ID_TXT_VITESSE,"Speed");
             jo.put(ID_TXT_TERRIENNE,"Earthling");
             jo.put(ID_TXT_AERIENNE,"Air");
-            
-            jo.put(ID_TXT_DIALOG_ARRETER_PARTIE,"Are you sure you would like to stop the game ?");
-            jo.put(ID_TXT_DIALOG_QUITTER_JEU,"Are you sure you would like to quit the game ?");
-            jo.put(ID_TXT_DIALOG_SAUVER, "Would you like to save your score ?");
-            
-            jo.put(ID_ADRESSE_A_PROPOS,"aPropos/aPropos_en.html");
-            jo.put(ID_ADRESSE_REGLES_DU_JEU,"donnees/regles/regles_en.html");
-            
-            jo.put(ID_TITRE_PARTIE_SOLO, "Single player");
-            jo.put(ID_TITRE_INFO_SELECTION,"Information of selection");
-            jo.put(ID_TITRE_PARTIE_TERMINEE,"Game over");
-            jo.put(ID_TITRE_CHOIX_TERRAIN,"Select your battlefield");
-            jo.put(ID_TITRE_PARTIE_PERSONNALISEES,"Costum game"); 
-            jo.put(ID_TITRE_RESEAU,"Network");
-            jo.put(ID_TITRE_ETOILE_GAGNEE,"Star won");
-            
             jo.put(ID_TXT_SCORE_OBTENU,"Your score");
             jo.put(ID_TXT_VOTRE_PSEUDO,"Your pseudo");
             jo.put(ID_TXT_JOUEUR,"Player");
             jo.put(ID_TXT_COMMANDES,"Commands");
             jo.put(ID_TXT_RESEAU,"Network");
-            jo.put(ID_TXT_STYLE,"Style");   
-            
+            jo.put(ID_TXT_STYLE,"Style"); 
             jo.put(ID_TXT_BTN_OK,"OK");
             jo.put(ID_TXT_BTN_FERMER,"Close");
             
@@ -333,8 +330,6 @@ public class Langue
             jo.put(ID_TXT_LA_PLUS_LOIN,"further creature");
             jo.put(ID_TXT_LA_PLUS_FAIBLE,"weakest creature (hp)");
             jo.put(ID_TXT_LA_PLUS_FORTE,"strongest creature (hp)");
-              
-            
             
             jo.put(ID_TXT_ASTUCE_1,"The white circle around a tower indicates the range of the tower.");
             jo.put(ID_TXT_ASTUCE_2,"Beware not to get stuck with the flying waves ");
@@ -343,18 +338,36 @@ public class Langue
             jo.put(ID_TXT_ASTUCE_5,"Stars allow you to have access to others playgrounds");
             jo.put(ID_TXT_ASTUCE_6,"At each game over, you can save your score");
             jo.put(ID_TXT_ASTUCE_7,"The sale of a tower makes you recover 60 percent of its total price");
-            jo.put(ID_TXT_ASTUCE_8,"This game is free, you can even access the source code");
-            
+            jo.put(ID_TXT_ASTUCE_8,"This game is free, you can even access the source code"); 
             jo.put(ID_TXT_LES_X_MEILLEURS_SCORES,"The %d best scores");
-            
             jo.put(ID_TXT_SCORE,"Score");
             jo.put(ID_TXT_DUREE,"Duration");
             jo.put(ID_TXT_DATE,"Date");
             
+
+            jo.put(ID_TXT_DIALOG_ARRETER_PARTIE,"Are you sure you would like to stop the game ?");
+            jo.put(ID_TXT_DIALOG_QUITTER_JEU,"Are you sure you would like to quit the game ?");
+            jo.put(ID_TXT_DIALOG_SAUVER, "Would you like to save your score ?");
+            
+            
+            jo.put(ID_ADRESSE_A_PROPOS,"aPropos/aPropos_en.html");
+            jo.put(ID_ADRESSE_REGLES_DU_JEU,"donnees/regles/regles_en.html");
+            
+            
+            jo.put(ID_TITRE_PARTIE_SOLO, "Single player");
+            jo.put(ID_TITRE_INFO_SELECTION,"Information of selection");
+            jo.put(ID_TITRE_PARTIE_TERMINEE,"Game over");
+            jo.put(ID_TITRE_CHOIX_TERRAIN,"Select your battlefield");
+            jo.put(ID_TITRE_PARTIE_PERSONNALISEES,"Costum game"); 
+            jo.put(ID_TITRE_RESEAU,"Network");
+            jo.put(ID_TITRE_ETOILE_GAGNEE,"Star won");
             jo.put(ID_TITRE_NOM_SERVEUR,"Server name");
             jo.put(ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN,"Select your field");
             jo.put(ID_TITRE_PSEUDO,"Pseudo");
             jo.put(ID_TITRE_CREER_PARTIE_MULTI,"Create a multiplayers game");
+            jo.put(ID_TITRE_EDITEUR_DE_TERRAIN,"Field editor");
+            jo.put(ID_TITRE_CONN_PAR_IP,"IP connection");
+            jo.put(ID_TITRE_REJOINDRE_UNE_PARTIE_MULTI,"Join a multiplayers game");
             
             jo.put(ID_TXT_DESCRIPTION,"Description");
             jo.put(ID_TXT_MODE,"Mode");
@@ -363,14 +376,14 @@ public class Langue
             jo.put(ID_TXT_APERCU,"Preview");
             
             jo.put(ID_TXT_FILTRE,"Filter");
-            jo.put(ID_TITRE_CONN_PAR_IP,"IP connection");
+            
             jo.put(ID_TXT_BTN_RAFRAICHIR,"Refresh");
             jo.put(ID_TXT_NOM,"Name");
             jo.put(ID_TXT_IP,"IP");
             jo.put(ID_TXT_PORT,"Port");
             jo.put(ID_TXT_TERRAIN,"Field");
             jo.put(ID_TXT_PLACES_DISPO,"Places available");
-            jo.put(ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI,"Join a multiplayers game");
+            
             
             jo.put(ID_TXT_BTN_SE_DECONNECTER,"Disconnect");
             jo.put(ID_TITRE_ATTENTE_DE_JOUEURS,"Waiting for players...");
@@ -388,6 +401,10 @@ public class Langue
             jo.put(ID_TXT_NOM_TOUR_GLACE,"Ice Tower");
             jo.put(ID_TXT_NOM_TOUR_FEU,"Fire Tower");
             jo.put(ID_TXT_NOM_TOUR_AIR,"Air Tower");
+            
+
+            jo.put(ID_TXT_PRET,"Ready");
+            
             
             
             Langue.sauver("lang/en_En.json");
@@ -525,7 +542,7 @@ public class Langue
             jo.put(ID_TXT_PORT,"Port");
             jo.put(ID_TXT_TERRAIN,"Terrain");
             jo.put(ID_TXT_PLACES_DISPO,"Places dispo.");
-            jo.put(ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI,"Rejoindre une partie multijoueurs");
+            jo.put(ID_TITRE_REJOINDRE_UNE_PARTIE_MULTI,"Rejoindre une partie multijoueurs");
             
             jo.put(ID_TXT_BTN_SE_DECONNECTER,"Se déconnecter");
             jo.put(ID_TITRE_ATTENTE_DE_JOUEURS,"Attente de joueurs...");
@@ -545,6 +562,16 @@ public class Langue
             jo.put(ID_TXT_NOM_TOUR_FEU,"Tour de Feu");
             jo.put(ID_TXT_NOM_TOUR_AIR,"Tour d'Air");
 
+            
+            jo.put(ID_TXT_BTN_NOUVEAU,"Nouveau");
+            jo.put(ID_TXT_BTN_OUVRIR,"Ouvrir");
+            jo.put(ID_TXT_BTN_ENREGISTRER,"Enregistrer");
+            jo.put(ID_TXT_BTN_ENREGISTRER_SOUS,"Enregistrer sous");
+            jo.put(ID_TXT_BTN_TESTER,"Tester");
+            jo.put(ID_TXT_PRET,"Prêt");
+            jo.put(ID_TITRE_EDITEUR_DE_TERRAIN,"Editeur de terrain");
+            
+            
             Langue.sauver("lang/fr_FR.json");
         } 
         catch (JSONException e)

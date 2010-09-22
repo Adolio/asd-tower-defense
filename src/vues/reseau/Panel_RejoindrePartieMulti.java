@@ -140,7 +140,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         // initialisation
         super(new BorderLayout());
         this.parent = parent;
-        parent.setTitle(Langue.getTexte(Langue.ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI));
+        parent.setTitle(Langue.getTexte(Langue.ID_TITRE_REJOINDRE_UNE_PARTIE_MULTI));
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
         setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -151,7 +151,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel pTop = new JPanel(new BorderLayout());
         pTop.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
-        JLabel titre = new JLabel(Langue.getTexte(Langue.ID_TITLE_REJOINDRE_UNE_PARTIE_MULTI));
+        JLabel titre = new JLabel(Langue.getTexte(Langue.ID_TITRE_REJOINDRE_UNE_PARTIE_MULTI));
         titre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         titre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pTop.add(titre, BorderLayout.NORTH);
