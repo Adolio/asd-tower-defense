@@ -1,5 +1,7 @@
 package vues.editeurTerrain;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -68,16 +70,16 @@ public class Fenetre_CreationTerrain extends    JFrame
     private Panel_CreationEquipes panelCreationEquipes;
     
     private final JMenuBar  menuPrincipal   = new JMenuBar();
-    private final JMenu     menuFichier     = new JMenu("Fichier");
-    private final JMenu     menuEdition     = new JMenu("Edition");
-    private final JMenu     menuAide        = new JMenu("Aide");
+    private final JMenu     menuFichier     = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_FICHIER));
+    private final JMenu     menuEdition     = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_EDITION));
+    private final JMenu     menuAide        = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_AIDE));
     
-    private final JMenuItem itemNouveau      = new JMenuItem("Nouveau",I_NOUVEAU);
-    private final JMenuItem itemOuvrir      = new JMenuItem("Ouvrir...",I_OUVRIR);
-    private final JMenuItem itemEnregistrer = new JMenuItem("Enregistrer",I_ENREGISTRER);
-    private final JMenuItem itemEnregistrerSous = new JMenuItem("Enregistrer sous...",I_ENREGISTRER_SOUS);
-    private final JMenuItem itemQuitter      = new JMenuItem("Quitter",I_QUITTER);
-    private final JMenuItem itemTester      = new JMenuItem("Tester",I_TESTER);
+    private final JMenuItem itemNouveau      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_NOUVEAU),I_NOUVEAU);
+    private final JMenuItem itemOuvrir      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_OUVRIR)+"..",I_OUVRIR);
+    private final JMenuItem itemEnregistrer = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ENREGISTRER),I_ENREGISTRER);
+    private final JMenuItem itemEnregistrerSous = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ENREGISTRER_SOUS)+"...",I_ENREGISTRER_SOUS);
+    private final JMenuItem itemQuitter      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
+    private final JMenuItem itemTester      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_TESTER),I_TESTER);
     
     private JFileChooser fcOuvrir = new JFileChooser("./maps");
     private JFileChooser fcSauver = new JFileChooser("./maps");
@@ -86,7 +88,7 @@ public class Fenetre_CreationTerrain extends    JFrame
     private File fichierCourant;
     //private boolean sauve = false;
     
-    private JLabel lblEtat = new JLabel("Prêt.");
+    private JLabel lblEtat = new JLabel(Langue.getTexte(Langue.ID_TXT_PRET));
     
     private static FileFilter filtreFichier = new FileFilter()
     {
@@ -106,7 +108,7 @@ public class Fenetre_CreationTerrain extends    JFrame
     
     public Fenetre_CreationTerrain()
     {
-        super("ASD - Tower Defense - Editeur de terrain");
+        super(Langue.getTexte(Langue.ID_TITRE_EDITEUR_DE_TERRAIN));
         setIconImage(I_FENETRE.getImage());
         getContentPane().setLayout(new BorderLayout());
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -177,13 +179,13 @@ public class Fenetre_CreationTerrain extends    JFrame
         bSupprimer.addActionListener(this);
         bTester.addActionListener(this);
  
-        bNouveau.setToolTipText("Nouveau");
-        bOuvrir.setToolTipText("Ouvrir...");
-        bEnregistrer.setToolTipText("Enregistrer");
+        bNouveau.setToolTipText(Langue.getTexte(Langue.ID_TXT_BTN_NOUVEAU));
+        bOuvrir.setToolTipText(Langue.getTexte(Langue.ID_TXT_BTN_OUVRIR)+"...");
+        bEnregistrer.setToolTipText(Langue.getTexte(Langue.ID_TXT_BTN_ENREGISTRER));
         bMain.setToolTipText("Déplacements");
         bMurs.setToolTipText("Edition de zone");
         bSupprimer.setToolTipText("Supprimer la zone sélectionnée");
-        bTester.setToolTipText("Tester");
+        bTester.setToolTipText(Langue.getTexte(Langue.ID_TXT_BTN_TESTER));
         
         add(tbPrincipale,BorderLayout.NORTH);
         

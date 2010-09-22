@@ -159,8 +159,8 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         tbTerrains.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // nom de colonnes
-        model.addColumn("Nom");
-        model.addColumn("Apercu");
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_DESCRIPTION));
+        model.addColumn(Langue.getTexte(Langue.ID_TXT_APERCU));
 
         
         // Taille des colonnes
