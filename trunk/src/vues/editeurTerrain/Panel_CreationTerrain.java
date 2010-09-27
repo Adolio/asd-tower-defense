@@ -45,7 +45,6 @@ public class Panel_CreationTerrain extends Panel_Terrain
         super(jeu,edpt);
         
         afficherQuadrillage = true;
-        afficherMurs        = true;
     }
 
     private int taillePoignee = 6;

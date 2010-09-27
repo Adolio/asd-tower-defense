@@ -59,6 +59,8 @@ public class WaterWorld extends Terrain
               NOM   // nom
         );
 
+        opaciteMurs = 0.f;
+        
         // Création des équipes
         Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);
         e.ajouterZoneDepartCreatures(new Rectangle(-30, 30, 20, 80));

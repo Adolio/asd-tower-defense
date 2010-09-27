@@ -60,6 +60,7 @@ public class ElementTD_Coop extends Terrain
                 NOM  // nom
           );
  
+        opaciteMurs = 0.f;
         
         // Création des équipes
         Equipe e1 = new Equipe(1,"Les rouges",Color.RED);

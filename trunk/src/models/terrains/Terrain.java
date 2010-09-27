@@ -140,7 +140,7 @@ public class Terrain implements Serializable
     /**
      * Permet de spécifier l'affichage des murs par défaut
      */
-    protected boolean afficherMurs;
+    protected float opaciteMurs = 1.0f;
     
     /**
      * musique d'ambiance du terrain
@@ -965,14 +965,14 @@ public class Terrain implements Serializable
         this.nbViesInitiales = nbViesInitiales;
     }
     
-    public boolean getAfficherMurs()
+    public float getOpaciteMurs()
     {
-        return afficherMurs;
+        return opaciteMurs;
     }
     
-    public void setAfficherMurs(boolean afficherMurs)
+    public void setOpaciteMurs(float opaciteMurs)
     {
-        this.afficherMurs = afficherMurs;
+        this.opaciteMurs = opaciteMurs;
     }
 
     public void setModeDeJeu(int modeDeJeu)

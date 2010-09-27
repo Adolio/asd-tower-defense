@@ -79,14 +79,16 @@ public class Panel_EmplacementsTerrain extends JPanel
             }
             
             // murs
-            if(terrain.getAfficherMurs())
-            {
-                g2.setColor(terrain.getCouleurMurs());
-                ArrayList<Rectangle> murs = terrain.getMurs();
-                g2.setColor(terrain.getCouleurMurs());
-                for(Rectangle mur : murs)
-                    dessinerZone(mur,g2);
-            }
+            setTransparence(terrain.getOpaciteMurs(), g2);
+            
+            g2.setColor(terrain.getCouleurMurs());
+            ArrayList<Rectangle> murs = terrain.getMurs();
+            g2.setColor(terrain.getCouleurMurs());
+            for(Rectangle mur : murs)
+                dessinerZone(mur,g2);
+            
+            setTransparence(1.0f, g2);
+            
             
             //---------------------------------------
             //-- affichage des zone de contruction --
@@ -165,5 +167,16 @@ public class Panel_EmplacementsTerrain extends JPanel
                     (int) zone.getY(), 
                     (int) zone.getWidth(), 
                     (int) zone.getHeight());
+    }
+    
+    /**
+     * Permet de modifier la transparence du Graphics2D
+     * 
+     * @param tauxTransparence le taux (1.f = 100% opaque et 0.f = 100% transparent)
+     * @param g2 le Graphics2D a configurer
+     */
+    protected void setTransparence(float tauxTransparence, Graphics2D g2)
+    {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, tauxTransparence));
     }
 }

@@ -64,6 +64,7 @@ public class ElementTD_Versus_4 extends Terrain
         taillePanelTerrain = new Dimension(480,500);
         
         nomFichier = getClass().getSimpleName()+".map";
+        opaciteMurs = 0.f;
         
         // Création des équipes
         Equipe e1 = new Equipe(1,"Les verts",Color.GREEN);

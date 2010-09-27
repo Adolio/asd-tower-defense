@@ -61,7 +61,7 @@ public class SimpleFiveVersus extends Terrain
           );
  
         nomFichier = getClass().getSimpleName()+".map";
-        
+        opaciteMurs = 0.f;
         
         // Création des équipes
         Equipe e1 = new Equipe(1,"Les Rouges",Color.RED);
