@@ -240,8 +240,8 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         
         // zoom
         // TODO TRADUCTON
-        bZoomAvant.setToolTipText("Zoom Avant [Roulette de la souris]");
-        bZoomArriere.setToolTipText("Zoom Arrière [Roulette de la souris]");
+        bZoomAvant.setToolTipText(Langue.getTexte(Langue.ID_TXT_ZOOM_AVANT_ET_RACCOURCI));
+        bZoomArriere.setToolTipText(Langue.getTexte(Langue.ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI));
         GestionnaireDesPolices.setStyle(bZoomAvant);
         GestionnaireDesPolices.setStyle(bZoomArriere);
         //bZoomAvant.setPreferredSize(dimBouton);
@@ -253,7 +253,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         
         // centrer
         // TODO TRADUCTON
-        bCentrer.setToolTipText("Centrer [Double-clique]");
+        bCentrer.setToolTipText(Langue.getTexte(Langue.ID_TXT_CENTRER_ET_RACCOURCI));
         GestionnaireDesPolices.setStyle(bCentrer);
         //bCentrer.setPreferredSize(dimBouton);
         boutonsHaut.add(bCentrer);
@@ -261,7 +261,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         
         // maximisation / minimisation
         // TODO TRADUCTON
-        bPleinEcran.setToolTipText("Maximiser / Minimiser la fenêtre");
+        bPleinEcran.setToolTipText(Langue.getTexte(Langue.ID_TXT_MAXI_MINI_FENETRE));
         GestionnaireDesPolices.setStyle(bPleinEcran);
         //bPleinEcran.setPreferredSize(dimBouton);
         boutonsHaut.add(bPleinEcran);
@@ -273,7 +273,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bVitesseJeu.setIcon(I_VITESSE_JEU);
         bVitesseJeu.setText("x"+jeu.getCoeffVitesse());
         // TODO TRADUCTON
-        bVitesseJeu.setToolTipText("Vitesse du jeu");
+        bVitesseJeu.setToolTipText(Langue.getTexte(Langue.ID_TXT_VITESSE_DU_JEU));
         GestionnaireDesPolices.setStyle(bVitesseJeu);
         
         //bVitesseJeu.setPreferredSize(dimBouton);
@@ -482,7 +482,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {
 	    if(JOptionPane.showConfirmDialog(this,
 	            Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
-                "Vraiment redémarrer ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+                "", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
             demanderEnregistrementDuScore();
             
@@ -504,7 +504,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {
 	    if(JOptionPane.showConfirmDialog(this, 
 	            Langue.getTexte(Langue.ID_TXT_DIALOG_QUITTER_JEU), 
-	            "Vraiment quitter ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	            "", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {  
             quitter();
 	    }
@@ -526,7 +526,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
     {
 	    if(JOptionPane.showConfirmDialog(this, 
 	            Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
-	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	            "", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
 	        //demanderEnregistrementDuScore();
 	        
@@ -549,7 +549,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	        
 	        if(JOptionPane.showConfirmDialog(this, 
 	                Langue.getTexte(Langue.ID_TXT_DIALOG_SAUVER), 
-                    "Sauver ?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
+                    "", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
 	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getBrefDescription()); 
             }

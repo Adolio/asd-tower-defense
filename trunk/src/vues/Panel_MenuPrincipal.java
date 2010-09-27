@@ -62,7 +62,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         // -------------------------------
         // -- preferances de le fenetre --
         // -------------------------------
-        parent.setTitle("Menu principal - ASD Tower Defense");
+        parent.setTitle(Langue.getTexte(Langue.ID_TITRE_MENU_PRINCIPAL)+" - ASD Tower Defense");
 
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));

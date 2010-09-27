@@ -43,7 +43,7 @@ public class Main
                     */ 
                } 
  
-      Langue.tmp();
+      Langue.creerFichiersDeLangue();
       
       GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);       
            
