@@ -225,7 +225,7 @@ public class Terrain implements Serializable
         hauteur                 = 500;
         nbPiecesOrInitiales     = 100;
         nbViesInitiales         = 20;
-        brefDescription         = "<sans description>";
+        brefDescription         = "";
         modeDeJeu               = ModeDeJeu.MODE_SOLO;   
     }
 

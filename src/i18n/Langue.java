@@ -162,6 +162,17 @@ public class Langue
     public static final String ID_TXT_MURS_VISIBLES_PAR_DEF = "TXT_MURS_VISIBLES_PAR_DEF";
     public static final String ID_TXT_PROPRIETES            = "TXT_PROPRIETES";
     public static final String ID_TXT_EQUIPES               = "TXT_EQUIPES";
+    public static final String ID_TITRE_MENU_PRINCIPAL      = "TITRE_MENU_PRINCIPAL";
+    public static final String ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT = "ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT";
+    public static final String ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE = "ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE";
+    public static final String ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE = "ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE";
+    public static final String ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT = "ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT";
+    public static final String ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT = "ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT";
+    public static final String ID_TXT_ZOOM_AVANT_ET_RACCOURCI = "TXT_ZOOM_AVANT_ET_RACCOURCI";
+    public static final String ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI = "TXT_ZOOM_ARRIERE_ET_RACCOURCI";
+    public static final String ID_TXT_CENTRER_ET_RACCOURCI  = "TXT_CENTRER_ET_RACCOURCI";
+    public static final String ID_TXT_MAXI_MINI_FENETRE             = "TXT_MAXI_MINI";
+    public static final String ID_TXT_VITESSE_DU_JEU        = "TXT_VITESSE_DU_JEU";
 
 
     private static boolean initialise = false;
@@ -239,7 +250,7 @@ public class Langue
         }
     }
     
-    public static void tmp()
+    public static void creerFichiersDeLangue()
     {
         try
         {
@@ -417,8 +428,8 @@ public class Langue
             
             jo.put(ID_TXT_BTN_PARCOURIR,"Browse");
             jo.put(ID_TXT_TAILLE_TERRAIN,"Size of field");
-            jo.put(ID_TXT_NB_PIECES_OR_INIT,"Nb coins init.");
-            jo.put(ID_TXT_NB_VIES_INIT,"Nb lifes init.");
+            jo.put(ID_TXT_NB_PIECES_OR_INIT,"Nb init. coins");
+            jo.put(ID_TXT_NB_VIES_INIT,"Nb init. lifes");
             jo.put(ID_TXT_COULEUR_DE_FOND,"Background color");
             jo.put(ID_TXT_COULEUR_MURS,"Color of walls");
             jo.put(ID_TXT_IMAGE_DE_FOND,"Background image");
@@ -426,9 +437,20 @@ public class Langue
             
             jo.put(ID_TXT_PROPRIETES,"Properties");
             jo.put(ID_TXT_EQUIPES,"Teams");
+            jo.put(ID_TITRE_MENU_PRINCIPAL, "Main menu");
+            
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Impossible building : not enough money");
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE,"Impossible building : inaccessible area");
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE,"Impossible building : way blocked");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT,"Impossible upgrade : maximum level reached");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Impossible upgrade : not enough money");
             
             
-            
+            jo.put(ID_TXT_ZOOM_AVANT_ET_RACCOURCI,"Zoom in [Mouse wheel]");
+            jo.put(ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI,"Zoom out [Mouse wheel]");
+            jo.put(ID_TXT_CENTRER_ET_RACCOURCI,"Center [Double-click]");
+            jo.put(ID_TXT_MAXI_MINI_FENETRE,"Maximization / Minimization of windows");
+            jo.put(ID_TXT_VITESSE_DU_JEU,"Speed of the game");
             
             Langue.sauver("lang/en_En.json");
         
@@ -605,6 +627,19 @@ public class Langue
             
             jo.put(ID_TXT_PROPRIETES,"Propriétés");
             jo.put(ID_TXT_EQUIPES,"Equipes");
+            jo.put(ID_TITRE_MENU_PRINCIPAL, "Menu principal");
+            
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Pose impossible : pas assez d'argent");
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE,"Pose impossible : zone inaccessible");
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE,"Pose impossible : chemin bloqué");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT,"Amélioration impossible : niveau max atteint");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Amélioration impossible : pas assez d'argent");
+            
+            jo.put(ID_TXT_ZOOM_AVANT_ET_RACCOURCI,"Zoom Avant [Roulette de la souris]");
+            jo.put(ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI,"Zoom Arrière [Roulette de la souris]");
+            jo.put(ID_TXT_CENTRER_ET_RACCOURCI,"Centrer [Double-clique]");
+            jo.put(ID_TXT_MAXI_MINI_FENETRE,"Maximiser / Minimiser la fenêtre");
+            jo.put(ID_TXT_VITESSE_DU_JEU,"Vitesse du jeu");
             
             
             Langue.sauver("lang/fr_FR.json");

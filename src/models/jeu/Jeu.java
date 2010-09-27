@@ -1,5 +1,7 @@
 package models.jeu;
 
+import i18n.Langue;
+
 import java.awt.Graphics2D;
 import java.util.*;
 import outils.myTimer;
@@ -308,15 +310,15 @@ public abstract class Jeu implements EcouteurDeJoueur,
 
         // suffisemment d'argent ?
         if(!laTourPeutEtreAchetee(tour))    
-            throw new ArgentInsuffisantException("Pose impossible : Pas assez d'argent");
+            throw new ArgentInsuffisantException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT));
         
         // si elle peut pas etre posee
         if (!laTourPeutEtrePosee(tour))
-            throw new ZoneInaccessibleException("Pose impossible : Zone non accessible");
+            throw new ZoneInaccessibleException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE));
 
         // si elle bloque le chemin de A vers B
         if (terrain.laTourBloqueraLeChemin(tour))
-            throw new CheminBloqueException("Pose impossible : Chemin bloqué");
+            throw new CheminBloqueException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE));
         
         // desactive la zone dans le maillage qui correspond a la tour
         terrain.desactiverZone(tour, true);
@@ -377,10 +379,10 @@ public abstract class Jeu implements EcouteurDeJoueur,
     public void ameliorerTour(Tour tour) throws NiveauMaxAtteintException, ArgentInsuffisantException, ActionNonAutoriseeException, JoueurHorsJeu
     {
         if(!tour.peutEncoreEtreAmelioree())
-            throw new NiveauMaxAtteintException("Amélioration impossible : Niveau max atteint");
+            throw new NiveauMaxAtteintException(Langue.getTexte(Langue.ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT));
         
         if(tour.getPrioprietaire().getNbPiecesDOr() < tour.getPrixAchat())
-            throw new ArgentInsuffisantException("Amélioration impossible : Pas assez d'argent");
+            throw new ArgentInsuffisantException(Langue.getTexte(Langue.ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT));
 
         // debit des pieces d'or
         tour.getPrioprietaire().setNbPiecesDOr(tour.getPrioprietaire().getNbPiecesDOr() - tour.getPrixAchat());
