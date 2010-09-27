@@ -1,10 +1,14 @@
 package vues.editeurTerrain;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -22,7 +26,7 @@ import models.terrains.Terrain;
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class Panel_OptionsTerrain extends JPanel implements ActionListener, DocumentListener
+public class Panel_OptionsTerrain extends JPanel implements ActionListener, DocumentListener, ChangeListener
 {
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_DEL = new ImageIcon("img/icones/delete.png");
@@ -43,7 +47,9 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     
     private JCheckBox cbAfficherMurs = new JCheckBox();
     
-    private JButton bImageDeFond    = new JButton("Parcourir...");
+    private JSlider sOpaciteMurs    = new JSlider(0,100);
+    
+    private JButton bImageDeFond    = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_PARCOURIR)+"...");
     private  JButton bSupprImageDeFond = new JButton(I_DEL);
     private JButton bCouleurDeFond  = new JButton();
     private JButton bCouleurDesMurs = new JButton();
@@ -73,14 +79,14 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         cbModeDeJeu.addItem("Solo");
         cbModeDeJeu.addItem("Versus");
         //cbModeDeJeu.addItem(ModeDeJeu.MODE_COOP); // TODO
-        pForm.add(new JLabel("Mode de jeu"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_MODE)),0,ligne);
         cbModeDeJeu.setPreferredSize(dim);
         cbModeDeJeu.addActionListener(this);
         pForm.add(cbModeDeJeu,1,ligne);
         ligne++;
              
         // Taille Terrain
-        pForm.add(new JLabel("Taille du terrain"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_TAILLE_TERRAIN)),0,ligne);
         tfLargeurT.setText(Integer.toString(jeu.getTerrain().getLargeur()));
         tfHauteurT.setText(Integer.toString(jeu.getTerrain().getHauteur()));
         tfLargeurT.setPreferredSize(new Dimension(40,25));
@@ -91,7 +97,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         
         JPanel pTailleT = new JPanel();
         pTailleT.setOpaque(false);
-        pTailleT.add(new JLabel("l:"));
+        pTailleT.add(new JLabel("w:"));
         pTailleT.add(tfLargeurT);
         pTailleT.add(new JLabel("h:"));
         pTailleT.add(tfHauteurT);
@@ -99,7 +105,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
         
         // Description du terrain
-        pForm.add(new JLabel("Description"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DESCRIPTION)),0,ligne);
         tfDescription.setPreferredSize(dim);
         tfDescription.setText(jeu.getTerrain().getBrefDescription());
         
@@ -109,7 +115,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
         
         // Nombre de pieces d'or initiales
-        pForm.add(new JLabel("Nb pièces d'or init."),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_NB_PIECES_OR_INIT)),0,ligne);
         tfNbPiecesOrInit.setPreferredSize(dim);
         tfNbPiecesOrInit.setText(jeu.getTerrain().getNbPiecesOrInitiales()+"");
         
@@ -119,7 +125,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
 
         // Nombre de vies initiales
-        pForm.add(new JLabel("Nb vies init."),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_NB_VIES_INIT)),0,ligne);
         tfNbViesInit.setPreferredSize(dim);
         tfNbViesInit.setText(jeu.getTerrain().getNbViesInitiales()+"");
         
@@ -129,7 +135,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
         
         // Couleur de fond
-        pForm.add(new JLabel("Couleur de Fond"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND)),0,ligne);
         bCouleurDeFond.setPreferredSize(new Dimension(25,25));
         bCouleurDeFond.addActionListener(this);
         bCouleurDeFond.setBackground(jeu.getTerrain().getCouleurDeFond());
@@ -137,7 +143,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
         
         // Couleur des murs
-        pForm.add(new JLabel("Couleur des murs"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_MURS)),0,ligne);
         bCouleurDesMurs.setPreferredSize(new Dimension(25,25));
         bCouleurDesMurs.addActionListener(this);
         bCouleurDesMurs.setBackground(jeu.getTerrain().getCouleurMurs());
@@ -145,7 +151,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
         
         // Image de fond
-        pForm.add(new JLabel("Image de fond"),0,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_IMAGE_DE_FOND)),0,ligne);
         bImageDeFond.setPreferredSize(dim);
         bImageDeFond.addActionListener(this);
         bSupprImageDeFond.addActionListener(this);
@@ -154,9 +160,15 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         ligne++;
 
         // Afficher les murs
-        pForm.add(new JLabel("Murs visiblent par default"),0,ligne);
-        cbAfficherMurs.addActionListener(this);
-        pForm.add(cbAfficherMurs,1,ligne);
+        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_MURS_VISIBLES_PAR_DEF)),0,ligne);
+        sOpaciteMurs.addChangeListener(this);
+        sOpaciteMurs.setMajorTickSpacing(20);
+        sOpaciteMurs.setMinorTickSpacing(10);
+        sOpaciteMurs.setPaintTicks(true);
+        sOpaciteMurs.setPaintLabels(true);
+
+        sOpaciteMurs.setValue((int)jeu.getTerrain().getOpaciteMurs()*100);
+        pForm.add(sOpaciteMurs,1,ligne);
         ligne++;
         
         // Taille Maillage
@@ -196,15 +208,11 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
        else if (e.getSource() == bSupprImageDeFond) 
        {
            jeu.getTerrain().setImageDeFond(null);
-       }
-       else if (e.getSource() == cbAfficherMurs) 
-       {
-           jeu.getTerrain().setAfficherMurs(cbAfficherMurs.isSelected());
-       }   
+       }  
        else if (e.getSource() == bCouleurDeFond)
        {
            Color couleur = JColorChooser.showDialog(null,
-                   "Couleur de fond du terrain ",jeu.getTerrain().getCouleurDeFond());
+                   Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND),jeu.getTerrain().getCouleurDeFond());
              
            if(couleur != null)
            {
@@ -215,7 +223,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
        else if (e.getSource() == bCouleurDesMurs)
        {
            Color couleur = JColorChooser.showDialog(null,
-                   "Couleur de fond du terrain ",jeu.getTerrain().getCouleurDeFond());
+                   Langue.getTexte(Langue.ID_TXT_COULEUR_MURS),jeu.getTerrain().getCouleurDeFond());
              
            if(couleur != null)
            {
@@ -238,7 +246,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         bCouleurDeFond.setBackground(t.getCouleurDeFond());
         bCouleurDesMurs.setBackground(t.getCouleurMurs());
         
-        cbAfficherMurs.setSelected(t.getAfficherMurs());
+        sOpaciteMurs.setValue((int)t.getOpaciteMurs()*100);
         
         tfLargeurT.setText(t.getLargeur()+"");
         tfHauteurT.setText(t.getHauteur()+"");
@@ -360,6 +368,12 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
                 */
             }
         }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent arg0)
+    {
+        jeu.getTerrain().setOpaciteMurs((float)(sOpaciteMurs.getValue()/100.0));
     }
     
 }

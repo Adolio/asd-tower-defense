@@ -61,6 +61,7 @@ public class Desert extends Terrain
                 NOM       // nom
           );
 		
+		opaciteMurs = 0.f;
 		
 		// Création des équipes
 		Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);

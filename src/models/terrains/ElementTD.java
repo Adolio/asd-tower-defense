@@ -59,7 +59,8 @@ public class ElementTD extends Terrain
                 IMAGE_DE_FOND, // imageDeFond
                 NOM  // nom
           );
- 
+        
+        opaciteMurs = 0.f;
         
         // Création des équipes
         Equipe e = new Equipe(1,"Equipe par defaut",Color.BLACK);

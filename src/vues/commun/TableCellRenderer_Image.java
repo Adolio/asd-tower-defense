@@ -1,5 +1,6 @@
 package vues.commun;
 
+import java.awt.AlphaComposite;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -43,14 +44,15 @@ public class TableCellRenderer_Image implements TableCellRenderer
         }
         
         // murs
-        if(t.getAfficherMurs())
-        {
-            g2.setColor(t.getCouleurMurs());
-            ArrayList<Rectangle> murs = t.getMurs();
-            g2.setColor(t.getCouleurMurs());
-            for(Rectangle mur : murs)
-                dessinerZone(mur,g2);
-        }
+        setTransparence(t.getOpaciteMurs(),g2);
+            
+        g2.setColor(t.getCouleurMurs());
+        ArrayList<Rectangle> murs = t.getMurs();
+        g2.setColor(t.getCouleurMurs());
+        for(Rectangle mur : murs)
+            dessinerZone(mur,g2);
+        
+        setTransparence(1.f,g2);
 
         return new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
     }
@@ -67,5 +69,16 @@ public class TableCellRenderer_Image implements TableCellRenderer
                     (int) zone.getY(), 
                     (int) zone.getWidth(), 
                     (int) zone.getHeight());
+    }
+    
+    /**
+     * Permet de modifier la transparence du Graphics2D
+     * 
+     * @param tauxTransparence le taux (1.f = 100% opaque et 0.f = 100% transparent)
+     * @param g2 le Graphics2D a configurer
+     */
+    protected void setTransparence(float tauxTransparence, Graphics2D g2)
+    {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, tauxTransparence));
     }
 }

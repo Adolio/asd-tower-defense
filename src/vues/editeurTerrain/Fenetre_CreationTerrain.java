@@ -210,8 +210,8 @@ public class Fenetre_CreationTerrain extends    JFrame
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
         panelCreationEquipes = new Panel_CreationEquipes(jeu, panelCreationTerrain);
         
-        panelOnglets.add("Propriétés",panelOptionsTerrain );
-        panelOnglets.add("Equipes",panelCreationEquipes);
+        panelOnglets.add(Langue.getTexte(Langue.ID_TXT_PROPRIETES),panelOptionsTerrain );
+        panelOnglets.add(Langue.getTexte(Langue.ID_TXT_EQUIPES),panelCreationEquipes);
         
         JPanel p = new JPanel(new BorderLayout());
         p.add(panelOnglets,BorderLayout.CENTER);
@@ -533,13 +533,13 @@ public class Fenetre_CreationTerrain extends    JFrame
     public void zoneModifiee(Rectangle zone)
     {
         lblEtat.setForeground(Color.BLACK);
-        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" l:"+zone.width+" h:"+zone.height); 
+        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" w:"+zone.width+" h:"+zone.height); 
     }
 
     @Override
     public void zoneSelectionnee(Rectangle zone)
     {
         lblEtat.setForeground(Color.BLACK);
-        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" l:"+zone.width+" h:"+zone.height);
+        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" w:"+zone.width+" h:"+zone.height);
     }
 }

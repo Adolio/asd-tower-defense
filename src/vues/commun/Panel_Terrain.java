@@ -115,7 +115,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	private static final float ALPHA_SURFACE_ZONE_DA   = .5f;
 	private static final float ALPHA_TOUR_A_AJOUTER    = .7f;
 	private static final float ALPHA_CHEMIN_CREATURE   = .5f;
-	private static final float ALPHA_SURFACE_MUR       = .8f;
+	private static final float ALPHA_SURFACE_MUR_DEBUG = .8f;
 	private static final float ALPHA_QUADRILLAGE     = .2f;
 	
 	private static final Color COULEUR_ZONE_DEPART 	   = Color.GREEN;
@@ -218,12 +218,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	 * Activation du mode debug (affichage des murs et formes primitives)
 	 */
 	private boolean modeDebug;
-	
-	/**
-	 * Permet d'afficher ou non les murs
-	 */
-	protected boolean afficherMurs;
-	
+		
 	/**
 	 * Permet d'afficher ou non le maillage et les chemins
 	 */
@@ -333,8 +328,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
                 centrerSur((int)zoneConstruction.getCenterX(),(int)zoneConstruction.getCenterY());
             }
         }
-        
-        afficherMurs = jeu.getTerrain().getAfficherMurs();
         
         // ajout des ecouteurs
         addKeyListener(this);
@@ -582,18 +575,18 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		}
 		
 		
+		if(modeDebug)
+		    setTransparence(ALPHA_SURFACE_MUR_DEBUG, g2);
+		else
+		    setTransparence(jeu.getTerrain().getOpaciteMurs(), g2);
 		
+	    ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
+        g2.setColor(jeu.getTerrain().getCouleurMurs());
+        for(Rectangle mur : murs)
+            dessinerZone(mur,g2);
+        
+        setTransparence(1.f, g2);
 		
-		if(modeDebug || afficherMurs)
-		{
-		    ArrayList<Rectangle> murs = jeu.getTerrain().getMurs();
-            setTransparence(ALPHA_SURFACE_MUR, g2);
-            g2.setColor(jeu.getTerrain().getCouleurMurs());
-            for(Rectangle mur : murs)
-                dessinerZone(mur,g2);
-            
-            setTransparence(1.f, g2);
-		}
 		
 		
 		//-------------------------------------------------

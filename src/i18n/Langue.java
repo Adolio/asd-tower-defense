@@ -152,6 +152,16 @@ public class Langue
     public static final String ID_TXT_BTN_TESTER            = "TXT_BTN_TESTER";
     public static final String ID_TXT_PRET                  = "TXT_PRET";
     public static final String ID_TITRE_EDITEUR_DE_TERRAIN  = "TITRE_EDITEUR_DE_TERRAIN";
+    public static final String ID_TXT_BTN_PARCOURIR         = "TXT_BTN_PARCOURIR";
+    public static final String ID_TXT_TAILLE_TERRAIN        = "TXT_TAILLE_TERRAIN";
+    public static final String ID_TXT_NB_PIECES_OR_INIT     = "TXT_NB_PIECES_OR_INIT";
+    public static final String ID_TXT_NB_VIES_INIT          = "TXT_NB_VIES_INIT";
+    public static final String ID_TXT_COULEUR_DE_FOND       = "TXT_COULEUR_DE_FOND";
+    public static final String ID_TXT_COULEUR_MURS          = "TXT_COULEUR_MURS";
+    public static final String ID_TXT_IMAGE_DE_FOND         = "TXT_IMAGE_DE_FOND";
+    public static final String ID_TXT_MURS_VISIBLES_PAR_DEF = "TXT_MURS_VISIBLES_PAR_DEF";
+    public static final String ID_TXT_PROPRIETES            = "TXT_PROPRIETES";
+    public static final String ID_TXT_EQUIPES               = "TXT_EQUIPES";
 
 
     private static boolean initialise = false;
@@ -405,6 +415,19 @@ public class Langue
 
             jo.put(ID_TXT_PRET,"Ready");
             
+            jo.put(ID_TXT_BTN_PARCOURIR,"Browse");
+            jo.put(ID_TXT_TAILLE_TERRAIN,"Size of field");
+            jo.put(ID_TXT_NB_PIECES_OR_INIT,"Nb coins init.");
+            jo.put(ID_TXT_NB_VIES_INIT,"Nb lifes init.");
+            jo.put(ID_TXT_COULEUR_DE_FOND,"Background color");
+            jo.put(ID_TXT_COULEUR_MURS,"Color of walls");
+            jo.put(ID_TXT_IMAGE_DE_FOND,"Background image");
+            jo.put(ID_TXT_MURS_VISIBLES_PAR_DEF,"Visible walls");
+            
+            jo.put(ID_TXT_PROPRIETES,"Properties");
+            jo.put(ID_TXT_EQUIPES,"Teams");
+            
+            
             
             
             Langue.sauver("lang/en_En.json");
@@ -570,6 +593,18 @@ public class Langue
             jo.put(ID_TXT_BTN_TESTER,"Tester");
             jo.put(ID_TXT_PRET,"Prêt");
             jo.put(ID_TITRE_EDITEUR_DE_TERRAIN,"Editeur de terrain");
+            
+            jo.put(ID_TXT_BTN_PARCOURIR,"Parcourir");
+            jo.put(ID_TXT_TAILLE_TERRAIN,"Taille du terrain");
+            jo.put(ID_TXT_NB_PIECES_OR_INIT,"Nb pièces d'or init.");
+            jo.put(ID_TXT_NB_VIES_INIT,"Nb vies init.");
+            jo.put(ID_TXT_COULEUR_DE_FOND,"Couleur de fond");
+            jo.put(ID_TXT_COULEUR_MURS,"Couleurs des murs");
+            jo.put(ID_TXT_IMAGE_DE_FOND,"Image de fond");
+            jo.put(ID_TXT_MURS_VISIBLES_PAR_DEF,"Murs visibles par défaut");
+            
+            jo.put(ID_TXT_PROPRIETES,"Propriétés");
+            jo.put(ID_TXT_EQUIPES,"Equipes");
             
             
             Langue.sauver("lang/fr_FR.json");
