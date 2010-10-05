@@ -132,7 +132,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
     private static final Color COULEUR_QUADRILLAGE      = Color.BLACK;
 	
     private static final Image I_CHATEAU = Toolkit.getDefaultToolkit().getImage("img/tours/chateau.png");
-    
+    private static final Image I_CADRILLAGE = Toolkit.getDefaultToolkit().getImage("img/animations/cadrillage.png");
+
 	/**
 	 * Thread de gestion du rafraichissement de l'affichage
 	 */
@@ -789,6 +790,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		//------------------------------------
 		if(tourAAjouter != null && sourisSurTerrain)
 		{
+		    g2.drawImage(I_CADRILLAGE,tourAAjouter.x-40,tourAAjouter.y-40,null);
+		    
 		    // modification de la transparence
 		    setTransparence(ALPHA_TOUR_A_AJOUTER,g2);
 		    

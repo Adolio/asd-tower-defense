@@ -142,19 +142,19 @@ public class VagueDeCreatures
         int uniteVague = noVague % 10;
 
         final long SANTE_CREATURE_NORMALE = fSante(noVague);
-        final long GAIN_VAGUE_COURANTE = fGainVague(SANTE_CREATURE_NORMALE);
+        final long GAIN_VAGUE_COURANTE = fGainVague2(noVague)/*fGainVague(SANTE_CREATURE_NORMALE)*/;
 
         switch (uniteVague)
         {
         
         case 1: // 5 normales
             return new VagueDeCreatures(5, new Mouton(SANTE_CREATURE_NORMALE,
-                    (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
+                    (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 2: // 10 normales
             return new VagueDeCreatures(10, new Araignee(SANTE_CREATURE_NORMALE,
-                    (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
+                    (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 3: // 10 volantes
@@ -162,7 +162,7 @@ public class VagueDeCreatures
                     10,
                     new Aigle(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
-                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_NORMALE),
+                            (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 4: // 10 resistantes
@@ -170,7 +170,7 @@ public class VagueDeCreatures
                     10,
                     new Rhinoceros(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
-                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_LENTE),
+                            (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_LENTE),
                             getTempsLancement(VITESSE_CREATURE_LENTE));
 
         case 5: // 10 rapides
@@ -178,12 +178,13 @@ public class VagueDeCreatures
                     10,
                     new Mouton(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
-                            (int) (GAIN_VAGUE_COURANTE / 10), VITESSE_CREATURE_RAPIDE),
+                            (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_RAPIDE),
                             getTempsLancement(VITESSE_CREATURE_RAPIDE));
 
         case 6: // 15 normales
             return new VagueDeCreatures(15, new MoutonNoir(SANTE_CREATURE_NORMALE,
-                    (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_NORMALE),
+                    (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), 
+                    VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 7: // 15 resistantes
@@ -191,7 +192,7 @@ public class VagueDeCreatures
                     15,
                     new Elephant(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RESISTANTE),
-                            (int) (GAIN_VAGUE_COURANTE / 15), VITESSE_CREATURE_LENTE),
+                            (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), VITESSE_CREATURE_LENTE),
                             getTempsLancement(VITESSE_CREATURE_LENTE));
 
         case 8: // 30 volantes
@@ -199,19 +200,19 @@ public class VagueDeCreatures
                     30,
                     new Pigeon(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_AERIENNE),
-                            (int) (GAIN_VAGUE_COURANTE / 30), VITESSE_CREATURE_NORMALE),
+                            (int) Math.ceil(GAIN_VAGUE_COURANTE / 30.0), VITESSE_CREATURE_NORMALE),
                             getTempsLancement(VITESSE_CREATURE_NORMALE));
 
         case 9: // 3 pre-boss
             return new VagueDeCreatures(3, new Araignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_PRE_BOSS),
-                    (int) (GAIN_VAGUE_COURANTE / 3), VITESSE_CREATURE_LENTE),
+                    (int) Math.ceil(GAIN_VAGUE_COURANTE / 3.0), VITESSE_CREATURE_LENTE),
                     getTempsLancement(VITESSE_CREATURE_LENTE));
 
         default: // boss
             return new VagueDeCreatures(1, new GrandeAraignee(
                     (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_BOSS),
-                    (int) GAIN_VAGUE_COURANTE, VITESSE_CREATURE_LENTE),
+                    (int) Math.ceil(GAIN_VAGUE_COURANTE), VITESSE_CREATURE_LENTE),
                     getTempsLancement(VITESSE_CREATURE_LENTE));
         }
     }
@@ -240,8 +241,7 @@ public class VagueDeCreatures
     public static long fSante(int noVague)
     {
         // 0.01 * noVague^4 + 0.25 * noVague + 70
-        return (long) (0.01 * noVague * noVague * noVague * noVague + 0.25
-                * noVague + 70);
+        return (long) (noVague * noVague / 0.8 + 5);
     }
 
     /**
@@ -254,5 +254,11 @@ public class VagueDeCreatures
     private static long fGainVague(long santeCreature)
     {
         return (long) (0.08 * santeCreature) + 30;
+    }
+    
+    
+    private static long fGainVague2(long noVague)
+    {
+        return (long) (2 * noVague) + 1;
     }
 }
