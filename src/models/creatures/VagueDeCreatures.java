@@ -241,7 +241,8 @@ public class VagueDeCreatures
     public static long fSante(int noVague)
     {
         // 0.01 * noVague^4 + 0.25 * noVague + 70
-        return (long) (noVague * noVague / 0.8 + 5);
+        // [3] (long) (noVague * noVague / 0.8 + 5);
+        return (long) (noVague * noVague * noVague / 20 + 10);
     }
 
     /**
@@ -259,6 +260,6 @@ public class VagueDeCreatures
     
     private static long fGainVague2(long noVague)
     {
-        return (long) (2 * noVague) + 1;
+        return (long) (2.5 * noVague) + 1;
     }
 }

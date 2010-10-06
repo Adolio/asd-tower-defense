@@ -49,7 +49,7 @@ public class TourDeTerre extends Tour
               COULEUR,          // couleur de fond
               Langue.getTexte(Langue.ID_TXT_NOM_TOUR_TERRE),          // nom
               PRIX_ACHAT,       // prix achat
-              500,              // degats
+              400,              // degats
               150,              // rayon de portee
               0.5,              // cadence de tir (tirs / sec.)
               Tour.TYPE_TERRESTRE,// type
