@@ -3,7 +3,7 @@
 
 = Les fonctionnalités en cours de développement =
 
-- *Création d'un siteweb dédié* (0%)<br/>
+- *Création d'un siteweb dédié* (80%)<br/>
 Le jeu manque cruellement d'un site dédié ou l'on pourrait présenter le projet sous une forme plus attrayante qu'ici, sur notre hébergeur de code.
 <br/><br/>
 
