@@ -1,7 +1,6 @@
 package vues.reseau;
 
 import i18n.Langue;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
@@ -568,13 +567,13 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Pas de place pour rejoindre!");
                 
-                bRejoindre.setText("Rejoindre");
+                bRejoindre.setText(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
                 bRejoindre.setEnabled(true);
             }
         }
         catch (ConnectException e)
         {
-            bRejoindre.setText("Rejoindre");
+            bRejoindre.setText(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
             bRejoindre.setEnabled(true);
             
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
@@ -582,12 +581,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         } 
         catch (CanalException e)
         {
-            bRejoindre.setText("Rejoindre");
+            bRejoindre.setText(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
             bRejoindre.setEnabled(true);
             
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Connexion au serveur de jeu impossible");
-        } 
+        }
     }
 
     @Override

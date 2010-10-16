@@ -241,19 +241,19 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    {
 		        bouton.setEnabled(false);
 		        
-		        pInfoTerrain.add(new JLabel("1 étoile min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel(Langue.getTexte(Langue.ID_TXT_1_ETOILE_MIN),icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		        
 		    if(i == 2 && nbEtoiles < 3)
 		    {
                 bouton.setEnabled(false);
-		        pInfoTerrain.add(new JLabel("3 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),3),icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 		    
 		    if(i == 3 && nbEtoiles < 7)
 		    {
 		        bouton.setEnabled(false);
-		        pInfoTerrain.add(new JLabel("7 étoiles min.",icoCADENAS,0),BorderLayout.SOUTH);
+		        pInfoTerrain.add(new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),7),icoCADENAS,0),BorderLayout.SOUTH);
 		    }
 
 		    // ajout au panel

@@ -1,9 +1,7 @@
 package vues.reseau;
 
 import models.animations.*;
-import vues.*;
 import i18n.Langue;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -77,26 +75,26 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	//-- declaration des menus --
 	//---------------------------
 	private final JMenuBar 	menuPrincipal 	= new JMenuBar();
-	private final JMenu 	menuFichier 	= new JMenu("Fichier");
-	private final JMenu 	menuEdition 	= new JMenu("Edition");
-	private final JMenu     menuSon         = new JMenu("Son");
-	private final JMenu 	menuAide 		= new JMenu("Aide");
-	private final JMenuItem itemRegles      = new JMenuItem("Règles du jeu...",I_REGLES);
-	private final JMenuItem itemAPropos	    = new JMenuItem("A propos...",I_AIDE);
+	private final JMenu 	menuFichier 	= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_FICHIER));
+	private final JMenu 	menuEdition 	= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_EDITION));
+	private final JMenu     menuSon         = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_SON));
+	private final JMenu 	menuAide 		= new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_AIDE));
+	private final JMenuItem itemRegles      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_REGLES)+"...",I_REGLES);
+	private final JMenuItem itemAPropos	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS)+"...",I_AIDE);
 
 	
 	
 	private final JMenuItem itemActiverDesactiverSon 
-	    = new JMenuItem("Activer / Désactiver",I_SON_ACTIF); 
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ACTIVE_DESACTIVE),I_SON_ACTIF); 
 	private final JMenuItem itemAfficherRayonsPortee	    
-		= new JMenuItem("Activer / Désactiver l'affichage des rayons de portée");
+		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RAYONS_DE_PORTEE));
 	private final JMenuItem itemAfficherZonesJoueurs       
     = new JMenuItem("Activer / Désactiver l'affichage des zones et nom de joueurs");
 	
 	private final JMenuItem itemQuitter	    
-	    = new JMenuItem("Quitter",I_QUITTER);
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
 	private final JMenuItem itemRetourMenu  
-	    = new JMenuItem("Retour vers le menu principal",I_RETOUR);
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR_MENU_P),I_RETOUR);
 	
 	private JLabel lblEtat = new JLabel(" ");
 	
@@ -291,14 +289,14 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         panelSelectionEtVague.setOpaque(true);
 		panelSelectionEtVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,420));
 		panelSelectionEtVague.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-        panelSelectionEtVague.add("Info séléction", panelSelection);
+        panelSelectionEtVague.add(Langue.getTexte(Langue.ID_TITRE_INFO_SELECTION), panelSelection);
            
         // panel de création de vagues
         panelCreationVague = new Panel_CreationVague(jeu,jeu.getJoueurPrincipal(),this);
         JScrollPane jsCreationVague = new JScrollPane(panelCreationVague);
         jsCreationVague.setOpaque(false);
         jsCreationVague.setPreferredSize(new Dimension(LARGEUR_MENU_DROITE,300));
-        panelSelectionEtVague.add("Lanceur de créatures", jsCreationVague);
+        panelSelectionEtVague.add(Langue.getTexte(Langue.ID_TXT_LANCEUR_DE_CREATURES), jsCreationVague);
         
 		
 		JPanel pN1 = new JPanel(new BorderLayout());
@@ -464,8 +462,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private void quitter()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "Etes-vous sûr de vouloir quitter le jeu ?", 
-	            "Vraiment quittez ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	            "", Langue.getTexte(Langue.ID_TXT_DIALOG_QUITTER_JEU), 
+	            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
 	        deconnexionDuJoueur();
 	        
@@ -481,8 +479,8 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private void demanderRetourAuMenuPrincipal()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "Etes-vous sûr de vouloir arrêter la partie ?", 
-	            "Retour au menu", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+	            "", Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
+	            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
 	        retourAuMenuPrincipal();
         }
@@ -522,7 +520,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
             
             
             lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-            lblEtat.setText("Tour posée");
+            lblEtat.setText(Langue.getTexte(Langue.ID_TXT_TOUR_POSEE));
 	    }
 	    catch(Exception e)
 	    {
@@ -541,7 +539,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	        panelSelection.setSelection(tour, Panel_InfoTour.MODE_SELECTION);
 	        
 	        lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-            lblEtat.setText("Tour Améliorée");
+            lblEtat.setText(Langue.getTexte(Langue.ID_TXT_TOUR_AMELIOREE));
         }
 	    catch(Exception e)
         {
@@ -565,7 +563,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                     );
             
             lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-            lblEtat.setText("Tour vendue");
+            lblEtat.setText(Langue.getTexte(Langue.ID_TXT_TOUR_VENDUE));
         } 
         catch (ActionNonAutoriseeException e)
         {
@@ -736,7 +734,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         
         // FIXME continuer...
         if(equipeGagnante == null)
-            new Dialog_Message (this, "Pas de gagant!", "Personne n'a gagné !");         
+            new Dialog_Message (this, "Pas de gagnant!", "Personne n'a gagné !");         
         else if(equipeGagnante == jeu.getJoueurPrincipal().getEquipe())
         {
             new Dialog_Message (this, "Gagné!", "Vous avez gagné :) Bravo!");
