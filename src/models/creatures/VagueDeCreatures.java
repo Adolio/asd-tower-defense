@@ -1,5 +1,7 @@
 package models.creatures;
 
+import java.util.ArrayList;
+
 import i18n.Langue;
 
 /**
@@ -127,6 +129,9 @@ public class VagueDeCreatures
     public static final double COEF_SANTE_PRE_BOSS = 4.0;
     public static final double COEF_SANTE_BOSS = 8.0;
 
+    
+    private static ArrayList<VagueDeCreatures> vagues = new ArrayList<VagueDeCreatures>();
+    
     /**
      * Permet de generer une vague en fonction de son indice de vague courante
      * 
@@ -140,7 +145,9 @@ public class VagueDeCreatures
     {
         int noVague = indiceVagueCourante;
         int uniteVague = noVague % 10;
-
+        
+        System.out.println(indiceVagueCourante);
+        
         final long SANTE_CREATURE_NORMALE = fSante(noVague);
         final long GAIN_VAGUE_COURANTE = fGainVague2(noVague)/*fGainVague(SANTE_CREATURE_NORMALE)*/;
 
@@ -148,12 +155,15 @@ public class VagueDeCreatures
         {
         
         case 1: // 5 normales
+            
             return new VagueDeCreatures(5, new Mouton(SANTE_CREATURE_NORMALE,
                     (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
+            
+            
         case 2: // 10 normales
-            return new VagueDeCreatures(10, new Araignee(SANTE_CREATURE_NORMALE,
+            return new VagueDeCreatures(10, new MoutonNoir(SANTE_CREATURE_NORMALE,
                     (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
@@ -176,13 +186,13 @@ public class VagueDeCreatures
         case 5: // 10 rapides
             return new VagueDeCreatures(
                     10,
-                    new Mouton(
+                    new Araignee(
                             (int) (SANTE_CREATURE_NORMALE * COEF_SANTE_CREATURE_RAPIDE),
                             (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_RAPIDE),
                             getTempsLancement(VITESSE_CREATURE_RAPIDE));
 
         case 6: // 15 normales
-            return new VagueDeCreatures(15, new MoutonNoir(SANTE_CREATURE_NORMALE,
+            return new VagueDeCreatures(15, new Paysan(SANTE_CREATURE_NORMALE,
                     (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), 
                     VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
@@ -242,7 +252,7 @@ public class VagueDeCreatures
     {
         // 0.01 * noVague^4 + 0.25 * noVague + 70
         // [3] (long) (noVague * noVague / 0.8 + 5);
-        return (long) (noVague * noVague * noVague / 20 + 10);
+        return (long) (noVague * noVague * noVague / 20 + 30);
     }
 
     /**

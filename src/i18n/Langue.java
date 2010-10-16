@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+import javax.swing.JLabel;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -171,9 +173,48 @@ public class Langue
     public static final String ID_TXT_ZOOM_AVANT_ET_RACCOURCI = "TXT_ZOOM_AVANT_ET_RACCOURCI";
     public static final String ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI = "TXT_ZOOM_ARRIERE_ET_RACCOURCI";
     public static final String ID_TXT_CENTRER_ET_RACCOURCI  = "TXT_CENTRER_ET_RACCOURCI";
-    public static final String ID_TXT_MAXI_MINI_FENETRE             = "TXT_MAXI_MINI";
+    public static final String ID_TXT_MAXI_MINI_FENETRE     = "TXT_MAXI_MINI";
     public static final String ID_TXT_VITESSE_DU_JEU        = "TXT_VITESSE_DU_JEU";
-
+    public static final String ID_TXT_1_ETOILE_MIN          = "TXT_1_ETOILE_MIN";
+    public static final String ID_TXT_X_ETOILES_MIN         = "TXT_X_ETOILES_MIN";
+    
+    
+    // fenetre d'options
+    public static final String ID_TXT_IP_SRV_ENR            = "TXT_IP_SRV_ENR";
+    public static final String ID_TXT_DEPL_HAUT             = "TXT_DEPL_HAUT";
+    public static final String ID_TXT_DEPL_GAUCHE           = "TXT_DEPL_GAUCHE";
+    public static final String ID_TXT_DEPL_BAS              = "TXT_DEPL_BAS";
+    public static final String ID_TXT_DEPL_DROITE           = "TXT_DEPL_DROITE";
+    public static final String ID_TXT_LANCER_VAGUE_SUIVANTE = "TXT_LANCER_VAGUE_SUIVANTE";
+    public static final String ID_TXT_AMELIORER_TOUR        = "TXT_AMELIORER_TOUR";
+    public static final String ID_TXT_VENDRE_TOUR           = "TXT_VENDRE_TOUR";
+    public static final String ID_TXT_METTRE_JEU_EN_PAUSE   = "TXT_METTRE_JEU_EN_PAUSE";
+    public static final String ID_TXT_SUIVRE_CREATURE       = "TXT_SUIVRE_CREATURE";
+    public static final String ID_TXT_AUGMENTER_VITESSE_JEU = "TXT_AUGMENTER_VITESSE_JEU";
+    public static final String ID_TXT_DIMINUER_VITESSE_JEU  = "TXT_DIMINUER_VITESSE_JEU";
+    public static final String ID_TXT_ZOMMER                = "TXT_ZOMMER";
+    public static final String ID_TXT_ROULETTE_SOURIS       = "TXT_ROULETTE_SOURIS";
+    public static final String ID_TXT_ACTIF                 = "TXT_ACTIF";
+    public static final String ID_TXT_VOLUME                = "TXT_VOLUME";
+    public static final String ID_TXT_BTN_REINITIALISER     = "TXT_BTN_REINITIALISER";
+    public static final String ID_TXT_OUI                   = "TXT_OUI";
+    public static final String ID_TXT_NON                   = "TXT_NON";
+    public static final String ID_TXT_COULEUR_DE_FOND_PRI   = "TXT_COULEUR_DE_FOND_PRI";
+    public static final String ID_TXT_COULEUR_TXT_PRI       = "TXT_COULEUR_TXT_PRI";
+    public static final String ID_TXT_COULEUR_DE_FOND_SEC   = "TXT_COULEUR_DE_FOND_SEC";
+    public static final String ID_TXT_COULEUR_TEXTE_SEC     = "TXT_COULEUR_TEXTE_SEC";
+    public static final String ID_TXT_COULEUR_DE_FOND_BTN   = "TXT_COULEUR_DE_FOND_BTN";
+    public static final String ID_TXT_COULEUR_TEXTE_BTN     = "TXT_COULEUR_TEXTE_BTN";
+    
+    // TODO
+    public static final String ID_TXT_LANCEUR_DE_CREATURES  = "TXT_LANCEUR_DE_CREATURES";
+    public static final String ID_TXT_TOUR_POSEE            = "TXT_TOUR_POSEE";
+    public static final String ID_TXT_TOUR_AMELIOREE        = "TXT_TOUR_AMELIOREE";
+    public static final String ID_TXT_TOUR_VENDUE           = "TXT_TOUR_VENDUE";
+    
+    
+    
+    
 
     private static boolean initialise = false;
     
@@ -452,6 +493,37 @@ public class Langue
             jo.put(ID_TXT_MAXI_MINI_FENETRE,"Maximization / Minimization of windows");
             jo.put(ID_TXT_VITESSE_DU_JEU,"Speed of the game");
             
+            jo.put(ID_TXT_1_ETOILE_MIN,"1 star required");
+            jo.put(ID_TXT_X_ETOILES_MIN,"%d stars required");
+            
+            // fenetre d'options
+            jo.put(ID_TXT_IP_SRV_ENR,"Registering server IP");
+            jo.put(ID_TXT_DEPL_HAUT,"Moving up");
+            jo.put(ID_TXT_DEPL_GAUCHE,"Moving left");
+            jo.put(ID_TXT_DEPL_BAS,"Moving down");
+            jo.put(ID_TXT_DEPL_DROITE,"Moving right");
+            jo.put(ID_TXT_LANCER_VAGUE_SUIVANTE,"Launch the next wave");
+            jo.put(ID_TXT_AMELIORER_TOUR,"Upgrade the selected tower");
+            jo.put(ID_TXT_VENDRE_TOUR,"Sell the selected tower");
+            jo.put(ID_TXT_METTRE_JEU_EN_PAUSE,"Switch pause");
+            jo.put(ID_TXT_SUIVRE_CREATURE,"Follow the selected creature");
+            jo.put(ID_TXT_AUGMENTER_VITESSE_JEU,"Increase the speed of the game");
+            jo.put(ID_TXT_DIMINUER_VITESSE_JEU,"Decrease the speed of the game");
+            jo.put(ID_TXT_ZOMMER,"Zoom");
+            jo.put(ID_TXT_ROULETTE_SOURIS,"Mouse wheel");
+            jo.put(ID_TXT_ACTIF,"Active");
+            jo.put(ID_TXT_VOLUME,"Volume");
+            jo.put(ID_TXT_BTN_REINITIALISER,"Reset");
+            jo.put(ID_TXT_OUI,"yes");
+            jo.put(ID_TXT_NON,"no");
+            jo.put(ID_TXT_COULEUR_DE_FOND_PRI,"Primary background color");
+            jo.put(ID_TXT_COULEUR_TXT_PRI,"Primary texts color");
+            jo.put(ID_TXT_COULEUR_DE_FOND_SEC,"Secondary background color");
+            jo.put(ID_TXT_COULEUR_TEXTE_SEC,"Secondary texts color");
+            jo.put(ID_TXT_COULEUR_DE_FOND_BTN,"Buttons background color");
+            jo.put(ID_TXT_COULEUR_TEXTE_BTN,"Buttons texts color");
+            
+            
             Langue.sauver("lang/en_En.json");
         
 
@@ -641,7 +713,38 @@ public class Langue
             jo.put(ID_TXT_MAXI_MINI_FENETRE,"Maximiser / Minimiser la fenêtre");
             jo.put(ID_TXT_VITESSE_DU_JEU,"Vitesse du jeu");
             
+            jo.put(ID_TXT_1_ETOILE_MIN,"1 étoile min.");
+            jo.put(ID_TXT_X_ETOILES_MIN,"%d étoiles min.");
             
+            jo.put(ID_TXT_IP_SRV_ENR,"IP Serveur d'enregistrement");
+            
+            // fenetre d'options
+            jo.put(ID_TXT_DEPL_HAUT,"Déplacement haut");
+            jo.put(ID_TXT_DEPL_GAUCHE,"Déplacement gauche");
+            jo.put(ID_TXT_DEPL_BAS,"Déplacement bas");
+            jo.put(ID_TXT_DEPL_DROITE,"Déplacement droite");
+            jo.put(ID_TXT_LANCER_VAGUE_SUIVANTE,"Lancer la vague suivante");
+            jo.put(ID_TXT_AMELIORER_TOUR,"Améliorer la tour sélectionnée");
+            jo.put(ID_TXT_VENDRE_TOUR,"Vendre la tour sélectionnée");
+            jo.put(ID_TXT_METTRE_JEU_EN_PAUSE,"Mettre le jeu en pause");
+            jo.put(ID_TXT_SUIVRE_CREATURE,"Suivre la créature sélectionnée");
+            jo.put(ID_TXT_AUGMENTER_VITESSE_JEU,"Augmenter la vitesse du jeu");
+            jo.put(ID_TXT_DIMINUER_VITESSE_JEU,"Diminuer la vitesse du jeu");
+            jo.put(ID_TXT_ZOMMER,"Zoomer");
+            jo.put(ID_TXT_ROULETTE_SOURIS,"Roulette");
+            jo.put(ID_TXT_ACTIF,"Actif");
+            jo.put(ID_TXT_VOLUME,"Volume");
+            jo.put(ID_TXT_BTN_REINITIALISER,"Réinitialiser");
+            jo.put(ID_TXT_OUI,"oui");
+            jo.put(ID_TXT_NON,"non");
+            jo.put(ID_TXT_COULEUR_DE_FOND_PRI,"Couleur de fond primaire");
+            jo.put(ID_TXT_COULEUR_TXT_PRI,"Couleur texte primaire");
+            jo.put(ID_TXT_COULEUR_DE_FOND_SEC,"Couleur de fond secondaire");
+            jo.put(ID_TXT_COULEUR_TEXTE_SEC,"Couleur texte secondaire");
+            jo.put(ID_TXT_COULEUR_DE_FOND_BTN,"Couleur de fond des boutons");
+            jo.put(ID_TXT_COULEUR_TEXTE_BTN,"Couleur du texte des boutons");
+            
+   
             Langue.sauver("lang/fr_FR.json");
         } 
         catch (JSONException e)

@@ -3,6 +3,8 @@ package models.outils;
 import java.io.Serializable;
 import java.util.Date;
 
+import models.creatures.VagueDeCreatures;
+
 /**
  * Fichier : Score.java
  * <p>
@@ -146,6 +148,17 @@ public class Score implements Serializable, Comparable<Score>
       return nomJoueur + " - " + valeur + " - " + date;
    }
    
+   /*
+   // Affiche les scores parfaits (sans erreur)
+   int score = 0;  
+      for(int i=1;i<=50;i++)
+      {
+          VagueDeCreatures v = VagueDeCreatures.genererVagueStandard(i);
+          score += v.getNbCreatures() * v.getNouvelleCreature().getNbPiecesDOr();
+          System.out.println(i+" "+score);
+      }
+   */
+   
    /**
     * Permet de recuperer le nombre d'étoiles relative au score
     * Limiter par MAX_ETOILES
@@ -154,15 +167,15 @@ public class Score implements Serializable, Comparable<Score>
     */
    public int getNbEtoiles()
    {
-       if(valeur > 10000)
+       if(valeur >= 3349)
            return 5;
-       if(valeur > 5000)
+       if(valeur >= 2215)
            return 4;
-       else if(valeur > 3000)
+       else if(valeur >= 1295)
            return 3;
-       else if(valeur > 1500)
+       else if(valeur >= 624)
            return 2;
-       else if(valeur > 500)
+       else if(valeur >= 205)
            return 1;
        else
            return 0;

@@ -29,7 +29,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel("IP Serveur d'enregistrement :"),0,0);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_IP_SRV_ENR)+" :"),0,0);
             
             tfIP_SE.setPreferredSize(new Dimension(100,25));
             pFormulaire.add(tfIP_SE,1,0);
@@ -158,7 +158,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         private BoutonKeyCode lAugmenterVitesseJeu = new BoutonKeyCode(Configuration.AUG_VIT_JEU);
         private BoutonKeyCode lDiminuerVitesseJeu = new BoutonKeyCode(Configuration.DIM_VIT_JEU);
         
-        private JLabel lZoom = new JLabel("Roulette");
+        private JLabel lZoom = new JLabel(Langue.getTexte(Langue.ID_TXT_ROULETTE_SOURIS));
         private ArrayList<BoutonKeyCode> boutons = new ArrayList<BoutonKeyCode>();
         private boolean attenteTouche;
         private BoutonKeyCode boutonCourant;
@@ -190,18 +190,18 @@ public class Fenetre_Options extends JFrame implements ActionListener
             
             int i=0;  
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel("Déplacement haut"),0,i++);
-            pFormulaire.add(new JLabel("Déplacement gauche"),0,i++);
-            pFormulaire.add(new JLabel("Déplacement bas"),0,i++);
-            pFormulaire.add(new JLabel("Déplacement droite"),0,i++);
-            pFormulaire.add(new JLabel("Lancer la vague suivante"),0,i++);
-            pFormulaire.add(new JLabel("Améliorer la tour sélectionnée"),0,i++);
-            pFormulaire.add(new JLabel("Vendre la tour sélectionnée"),0,i++);
-            pFormulaire.add(new JLabel("Mettre le jeu en pause"),0,i++);
-            pFormulaire.add(new JLabel("Suivre la créature sélectionnée"),0,i++);
-            pFormulaire.add(new JLabel("Augmenter la vitesse du jeu"),0,i++);
-            pFormulaire.add(new JLabel("Diminuer la vitesse du jeu"),0,i++);
-            pFormulaire.add(new JLabel("Zoom"),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_HAUT)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_GAUCHE)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_BAS)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_DROITE)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_LANCER_VAGUE_SUIVANTE)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_AMELIORER_TOUR)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_VENDRE_TOUR)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_METTRE_JEU_EN_PAUSE)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_SUIVRE_CREATURE)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_AUGMENTER_VITESSE_JEU)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DIMINUER_VITESSE_JEU)),0,i++);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_ZOMMER)),0,i++);
             
             
             i = 0;
@@ -274,7 +274,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
     {
         private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
-        private JButton bSonActif = new JButton("oui");
+        private JButton bSonActif = new JButton(Langue.getTexte(Langue.ID_TXT_OUI));
         private JSlider sVolumeSon = new JSlider(0,100); // %
         
         public Panel_OptionsSon()
@@ -283,11 +283,11 @@ public class Fenetre_Options extends JFrame implements ActionListener
             
             pFormulaire.setOpaque(false);
             
-            pFormulaire.add(new JLabel("Actif ?"),0,0);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_ACTIF)+" ?"),0,0);
             pFormulaire.add(bSonActif,1,0);
             
             sVolumeSon.setValue(GestionnaireSons.getVolumeSysteme());
-            pFormulaire.add(new JLabel("Volume"),0,1);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_VOLUME)),0,1);
             pFormulaire.add(sVolumeSon,1,1);
 
             
@@ -295,9 +295,9 @@ public class Fenetre_Options extends JFrame implements ActionListener
             sVolumeSon.addChangeListener(this);
             
             if(GestionnaireSons.isVolumeMute())
-                bSonActif.setText("non");
+                bSonActif.setText(Langue.getTexte(Langue.ID_TXT_NON));
             else
-                bSonActif.setText("oui");
+                bSonActif.setText(Langue.getTexte(Langue.ID_TXT_OUI));
 
             add(pFormulaire); 
         }
@@ -307,12 +307,12 @@ public class Fenetre_Options extends JFrame implements ActionListener
         {
             if(GestionnaireSons.isVolumeMute())
             {
-                bSonActif.setText("oui");
+                bSonActif.setText(Langue.getTexte(Langue.ID_TXT_OUI));
                 GestionnaireSons.setVolumeMute(false);
             }
             else
             {
-                bSonActif.setText("non");
+                bSonActif.setText(Langue.getTexte(Langue.ID_TXT_NON));
                 GestionnaireSons.setVolumeMute(true);
             }
         }
@@ -337,7 +337,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         private JButton bCouleurDeFond_Boutons = new JButton();
         private JButton bCouleurTexte_Boutons = new JButton();
         
-        private JButton bReinitialiser = new JButton("Réinitialiser");
+        private JButton bReinitialiser = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_REINITIALISER));
         
         
         public Panel_OptionsStyle()
@@ -348,41 +348,38 @@ public class Fenetre_Options extends JFrame implements ActionListener
             
             pFormulaire.setOpaque(false);
             
+            pFormulaire.add(bReinitialiser,1,ln++);
+            
             bCouleurDeFond_Pri.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Pri.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-            pFormulaire.add(new JLabel("Couleur de fond primaire"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_PRI)),0,ln);
             pFormulaire.add(bCouleurDeFond_Pri,1,ln++);
 
             bCouleurTexte_Pri.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Pri.setBackground(LookInterface.COULEUR_TEXTE_PRI);
-            pFormulaire.add(new JLabel("Couleur du texte primaire"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TXT_PRI)),0,ln);
             pFormulaire.add(bCouleurTexte_Pri,1,ln++);
             
             bCouleurDeFond_Sec.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Sec.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-            pFormulaire.add(new JLabel("Couleur de fond secondaire"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_SEC)),0,ln);
             pFormulaire.add(bCouleurDeFond_Sec,1,ln++);
   
             bCouleurTexte_Sec.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Sec.setBackground(LookInterface.COULEUR_TEXTE_SEC);
-            pFormulaire.add(new JLabel("Couleur du texte secondaire"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_SEC)),0,ln);
             pFormulaire.add(bCouleurTexte_Sec,1,ln++);
             
             bCouleurDeFond_Boutons.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-            pFormulaire.add(new JLabel("Couleur de fond des boutons"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_BTN)),0,ln);
             pFormulaire.add(bCouleurDeFond_Boutons,1,ln++);
 
             bCouleurTexte_Boutons.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Boutons.setBackground(LookInterface.COULEUR_TEXTE_BTN);
-            pFormulaire.add(new JLabel("Couleur du texte des boutons"),0,ln);
+            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_BTN)),0,ln);
             pFormulaire.add(bCouleurTexte_Boutons,1,ln++);
-            
-            
-            
-            
-            pFormulaire.add(bReinitialiser,1,ln++);
-            
+       
             bCouleurDeFond_Pri.addActionListener(this);
             bCouleurTexte_Pri.addActionListener(this);
             bCouleurDeFond_Sec.addActionListener(this);
@@ -402,7 +399,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             if(src == bCouleurDeFond_Pri)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur de fond primaire",LookInterface.COULEUR_DE_FOND_PRI);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_PRI),LookInterface.COULEUR_DE_FOND_PRI);
                   
                 if(couleur != null)
                 {
@@ -414,7 +411,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             else if(src == bCouleurTexte_Pri)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur texte primaire",LookInterface.COULEUR_TEXTE_PRI);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_TXT_PRI),LookInterface.COULEUR_TEXTE_PRI);
                   
                 if(couleur != null)
                 {
@@ -426,7 +423,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             else if(src == bCouleurDeFond_Sec)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur de fond secondaire",LookInterface.COULEUR_DE_FOND_SEC);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_SEC),LookInterface.COULEUR_DE_FOND_SEC);
                   
                 if(couleur != null)
                 {
@@ -438,7 +435,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             else if(src == bCouleurTexte_Sec)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur texte secondaire",LookInterface.COULEUR_TEXTE_SEC);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_SEC),LookInterface.COULEUR_TEXTE_SEC);
                   
                 if(couleur != null)
                 {
@@ -450,7 +447,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             else if(src == bCouleurDeFond_Boutons)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur de fond des boutons",LookInterface.COULEUR_DE_FOND_BTN);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_BTN),LookInterface.COULEUR_DE_FOND_BTN);
                   
                 if(couleur != null)
                 {
@@ -462,7 +459,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
             else if(src == bCouleurTexte_Boutons)
             {
                 Color couleur = JColorChooser.showDialog(null,
-                        "Couleur du texte des boutons",LookInterface.COULEUR_TEXTE_BTN);
+                        Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_BTN),LookInterface.COULEUR_TEXTE_BTN);
                   
                 if(couleur != null)
                 {
