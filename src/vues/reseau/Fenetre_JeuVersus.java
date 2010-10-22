@@ -89,8 +89,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private final JMenuItem itemAfficherRayonsPortee	    
 		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RAYONS_DE_PORTEE));
 	private final JMenuItem itemAfficherZonesJoueurs       
-    = new JMenuItem("Activer / Désactiver l'affichage des zones et nom de joueurs");
-	
+	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_AFFICHER_ZONES_JOUEURS));
 	private final JMenuItem itemQuitter	    
 	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
 	private final JMenuItem itemRetourMenu  
@@ -430,7 +429,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
                     } 
                     catch (MessageChatInvalide e)
                     {
-                        ajouterTexteHTMLDansConsole("<font color='red'>#Quotes ouvrantes et fermantes interdites</font> <br/>");
+                        ajouterTexteHTMLDansConsole("<font color='red'>"+Langue.getTexte(Langue.ID_TXT_HTML_INTERDIT)+"</font> <br/>");
                     }
                     
                 }
@@ -462,7 +461,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private void quitter()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "", Langue.getTexte(Langue.ID_TXT_DIALOG_QUITTER_JEU), 
+	            Langue.getTexte(Langue.ID_TXT_DIALOG_QUITTER_JEU), "", 
 	            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 	    {
 	        deconnexionDuJoueur();
@@ -479,7 +478,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 	private void demanderRetourAuMenuPrincipal()
     {
 	    if(JOptionPane.showConfirmDialog(this, 
-	            "", Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), 
+	            Langue.getTexte(Langue.ID_TXT_DIALOG_ARRETER_PARTIE), "", 
 	            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
         {
 	        retourAuMenuPrincipal();
@@ -734,20 +733,20 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
         
         // FIXME continuer...
         if(equipeGagnante == null)
-            new Dialog_Message (this, "Pas de gagnant!", "Personne n'a gagné !");         
+            new Dialog_Message (this, "Draw!", "Nobody won !");         
         else if(equipeGagnante == jeu.getJoueurPrincipal().getEquipe())
         {
-            new Dialog_Message (this, "Gagné!", "Vous avez gagné :) Bravo!");
-            ajouterTexteHTMLDansConsole("<b>Vous avez gagné !</b><br/>"); 
+            new Dialog_Message (this, "Won!", "You win :) Nice!");
+            ajouterTexteHTMLDansConsole("<b>You win !</b><br/>"); 
         }
         else
         {
-            new Dialog_Message (this, "Résultat de la partie", 
-                    " L'équipe \""+equipeGagnante.getNom()+"\" " +
-                    "remporte la partie!");  
+            new Dialog_Message (this, "Results", 
+                    " Team \""+equipeGagnante.getNom()+"\" " +
+                    " win!");  
             
             String couleurHexa = Outils.ColorToHexa(equipeGagnante.getCouleur());
-            ajouterTexteHTMLDansConsole("L'équipe \"<b><font color='#"+couleurHexa+"'>"+equipeGagnante.getNom()+"</font></b>\" remporte la partie!<br/>"); 
+            ajouterTexteHTMLDansConsole("Team \"<b><font color='#"+couleurHexa+"'>"+equipeGagnante.getNom()+"</font></b>\" wins!<br/>"); 
         }
     }
 
@@ -813,13 +812,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         String couleurHexa = Outils.ColorToHexa(auteur.getEquipe().getCouleur());
         
-        ajouterTexteHTMLDansConsole("<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b> dit : "+message+" <br />");
+        ajouterTexteHTMLDansConsole(String.format(Langue.getTexte(Langue.ID_TXT_PSEUDO_DIT_MESSAGE), "<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b>",message)+"<br />");
     }
 
     @Override
     public void joueurDeconnecte(Joueur joueur)
     {
-        ajouterTexteHTMLDansConsole("<font color='#FF0000'>#Déconnexion : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
+        ajouterTexteHTMLDansConsole("<font color='#FF0000'>"+String.format(Langue.getTexte(Langue.ID_TXT_PSEUDO_EST_PARTI), joueur.getPseudo())+"</font><br />");
     }
 
     @Override
@@ -835,13 +834,13 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
     {
         if(equipe == jeu.getJoueurPrincipal().getEquipe())
         {
-            new Dialog_Message (this, "Perdu!", "Vous avez perdu :(");
-            ajouterTexteHTMLDansConsole("<b>Vous avez perdu!</b><br />");
+            new Dialog_Message (this, "Lost!", "You lose :(");
+            ajouterTexteHTMLDansConsole("<b>You lose!</b><br />");
         }
         else
         {   
             String couleurHexa = Outils.ColorToHexa(equipe.getCouleur());
-            ajouterTexteHTMLDansConsole("L'équipe \"<b><font color='#"+couleurHexa+"'>"+equipe.getNom()+"</font></b>\" a perdue!<br />");
+            ajouterTexteHTMLDansConsole("Team \"<b><font color='#"+couleurHexa+"'>"+equipe.getNom()+"</font></b>\" loses!<br />");
         }
     }
 

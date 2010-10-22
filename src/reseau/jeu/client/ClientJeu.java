@@ -45,7 +45,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 	/**
 	 * Mode verbeux
 	 */
-    private final boolean verbeux = true;
+    private final boolean verbeux = false;
     
     /**
      * Ecouteur de client jeu pour les notifications
@@ -834,7 +834,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
     {
         System.err.println("[CLIENT][ERREUR][JOUEUR "+jeu.getJoueurPrincipal().getId()+"] "+msg);
     
-        e.printStackTrace();
+        //e.printStackTrace();
     }
     
     public void demanderChangementEquipe(Joueur joueur, Equipe equipe) throws AucunEmplacementDisponibleException, CanalException
