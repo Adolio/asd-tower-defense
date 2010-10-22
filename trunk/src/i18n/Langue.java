@@ -205,17 +205,21 @@ public class Langue
     public static final String ID_TXT_COULEUR_TEXTE_SEC     = "TXT_COULEUR_TEXTE_SEC";
     public static final String ID_TXT_COULEUR_DE_FOND_BTN   = "TXT_COULEUR_DE_FOND_BTN";
     public static final String ID_TXT_COULEUR_TEXTE_BTN     = "TXT_COULEUR_TEXTE_BTN";
-    
-    // TODO
     public static final String ID_TXT_LANCEUR_DE_CREATURES  = "TXT_LANCEUR_DE_CREATURES";
     public static final String ID_TXT_TOUR_POSEE            = "TXT_TOUR_POSEE";
     public static final String ID_TXT_TOUR_AMELIOREE        = "TXT_TOUR_AMELIOREE";
     public static final String ID_TXT_TOUR_VENDUE           = "TXT_TOUR_VENDUE";
+    public static final String ID_TXT_CREATURE              = "TXT_CREATURE";
+    public static final String ID_TXT_REVENU                = "TXT_REVENU";
+    public static final String ID_TXT_BTN_LANCER            = "TXT_BTN_LANCER";
+    public static final String ID_TXT_PRIX                  = "TXT_BTN_PRIX";
+    public static final String ID_TXT_BTN_AFFICHER_ZONES_JOUEURS = "TXT_BTN_AFFICHER_ZONES_JOUEURS";
+    public static final String ID_TXT_HTML_INTERDIT         = "TXT_HTML_INTERDIT";
+    public static final String ID_TXT_PSEUDO_DIT_MESSAGE    = "TXT_PSEUDO_DIT_MESSAGE";
+    public static final String ID_TXT_PSEUDO_EST_PARTI      = "TXT_PSEUDO_EST_PARTI";
     
+ 
     
-    
-    
-
     private static boolean initialise = false;
     
     private static JSONObject jo;
@@ -417,7 +421,7 @@ public class Langue
             
             
             jo.put(ID_TITRE_PARTIE_SOLO, "Single player");
-            jo.put(ID_TITRE_INFO_SELECTION,"Information of selection");
+            jo.put(ID_TITRE_INFO_SELECTION,"Selection info");
             jo.put(ID_TITRE_PARTIE_TERMINEE,"Game over");
             jo.put(ID_TITRE_CHOIX_TERRAIN,"Select your battlefield");
             jo.put(ID_TITRE_PARTIE_PERSONNALISEES,"Costum game"); 
@@ -522,7 +526,20 @@ public class Langue
             jo.put(ID_TXT_COULEUR_TEXTE_SEC,"Secondary texts color");
             jo.put(ID_TXT_COULEUR_DE_FOND_BTN,"Buttons background color");
             jo.put(ID_TXT_COULEUR_TEXTE_BTN,"Buttons texts color");
+            jo.put(ID_TXT_LANCEUR_DE_CREATURES,"Creatures launcher");
+            jo.put(ID_TXT_TOUR_POSEE,"Tower put");
+            jo.put(ID_TXT_TOUR_AMELIOREE,"Tour upgraded");
+            jo.put(ID_TXT_TOUR_VENDUE,"Tour sold"); 
             
+            jo.put(ID_TXT_CREATURE,"Creature");
+            jo.put(ID_TXT_REVENU,"Income");
+            jo.put(ID_TXT_PRIX, "Price");
+            jo.put(ID_TXT_BTN_LANCER,"Launch");
+            
+            jo.put(ID_TXT_BTN_AFFICHER_ZONES_JOUEURS,"Show players area");
+            jo.put(ID_TXT_HTML_INTERDIT,"#HTML not allowed");
+            jo.put(ID_TXT_PSEUDO_DIT_MESSAGE,"%s says : %s");
+            jo.put(ID_TXT_PSEUDO_EST_PARTI,"#Logout : %s left the game!");
             
             Langue.sauver("lang/en_En.json");
         
@@ -570,7 +587,7 @@ public class Langue
             jo.put(ID_ADRESSE_REGLES_DU_JEU,"donnees/regles/regles_fr.html");
             
             jo.put(ID_TITRE_PARTIE_SOLO, "Partie solo");
-            jo.put(ID_TITRE_INFO_SELECTION,"Information sur la selection");
+            jo.put(ID_TITRE_INFO_SELECTION,"Info selection");
             jo.put(ID_TITRE_PARTIE_TERMINEE,"Partie terminee");
             jo.put(ID_TITRE_CHOIX_TERRAIN,"Selectionnez votre terrain");
             jo.put(ID_TITRE_PARTIE_PERSONNALISEES,"Partie personnalisees"); 
@@ -743,8 +760,21 @@ public class Langue
             jo.put(ID_TXT_COULEUR_TEXTE_SEC,"Couleur texte secondaire");
             jo.put(ID_TXT_COULEUR_DE_FOND_BTN,"Couleur de fond des boutons");
             jo.put(ID_TXT_COULEUR_TEXTE_BTN,"Couleur du texte des boutons");
+            jo.put(ID_TXT_LANCEUR_DE_CREATURES,"Lanceur de créatures");
+            jo.put(ID_TXT_TOUR_POSEE,"Tour posée");
+            jo.put(ID_TXT_TOUR_AMELIOREE,"Tour améliorée");
+            jo.put(ID_TXT_TOUR_VENDUE,"Tour vendue");   
             
-   
+            jo.put(ID_TXT_CREATURE,"Créature");
+            jo.put(ID_TXT_REVENU,"Revenu");
+            jo.put(ID_TXT_PRIX, "Prix");
+            jo.put(ID_TXT_BTN_LANCER,"Lancer");
+            
+            jo.put(ID_TXT_BTN_AFFICHER_ZONES_JOUEURS,"Afficher zones joueurs");
+            jo.put(ID_TXT_HTML_INTERDIT,"#Quotes ouvrantes et fermantes interdites");
+            jo.put(ID_TXT_PSEUDO_DIT_MESSAGE,"%s dit : %s");
+            jo.put(ID_TXT_PSEUDO_EST_PARTI,"#Déconnexion : %s est parti!");
+            
             Langue.sauver("lang/fr_FR.json");
         } 
         catch (JSONException e)

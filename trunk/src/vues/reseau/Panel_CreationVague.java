@@ -1,5 +1,7 @@
 package vues.reseau;
 
+import i18n.Langue;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -41,8 +43,9 @@ public class Panel_CreationVague extends JPanel
     Jeu jeu;
     
     private JButton[] bLancers = new JButton[creatures.length];
+    /*
     private JComboBox[] cbNbCreatures = new JComboBox[creatures.length];
-    
+    */
     public Panel_CreationVague(final Jeu jeu, final Joueur cible, 
             final EcouteurDeLanceurDeVagues edlv)                          
     {
@@ -51,22 +54,23 @@ public class Panel_CreationVague extends JPanel
         this.jeu = jeu;
         setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
-        
+        /*
         JLabel titre = new JLabel("Lancement des creatures");
         titre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         add(titre,BorderLayout.NORTH);
+        */
         
         tb.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-        tb.add(new JLabel("Créature"),0,0);
-        tb.add(new JLabel("Prix"),1,0);
-        tb.add(new JLabel("Revenu"),2,0);
+        tb.add(new JLabel(Langue.getTexte(Langue.ID_TXT_CREATURE)),0,0);
+        tb.add(new JLabel(Langue.getTexte(Langue.ID_TXT_PRIX)),1,0);
+        tb.add(new JLabel(Langue.getTexte(Langue.ID_TXT_REVENU)),2,0);
         
         for(int i=0;i < creatures.length;i++)
         {
             final Creature creature = creatures[i];
             
             ImageIcon image = new ImageIcon(creature.getImage());
-
+            /*
             final JComboBox cbNbCreatures = new JComboBox();
             
             this.cbNbCreatures[i] = cbNbCreatures;
@@ -79,7 +83,8 @@ public class Panel_CreationVague extends JPanel
             cbNbCreatures.addItem("15");
             cbNbCreatures.addItem("20");
             cbNbCreatures.addItem("30");
-            
+            */
+            /*
             cbNbCreatures.addActionListener(new ActionListener()
             {
                 @Override
@@ -88,19 +93,20 @@ public class Panel_CreationVague extends JPanel
                    miseAJour();
                 }
             });
+            */
             
             JPanel p = new JPanel(new FlowLayout());
             p.setOpaque(false);
             p.add(new JLabel(image));
-            p.add(new JLabel(" x "));
-            p.add(cbNbCreatures);
+            //p.add(new JLabel(" x "));
+            //p.add(cbNbCreatures);
             tb.add(p,0,i+1);    
             
             tb.add(new JLabel(""+creature.getNbPiecesDOr()),1,i+1);    
             tb.add(new JLabel(""+creature.getNbPiecesDOr() * 
                     GestionnaireDeRevenu.POURCENTAGE_NB_PIECES_OR_CREATURE),2,i+1); 
                
-            JButton bLancer = new JButton("Lancer");
+            JButton bLancer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_LANCER));
             bLancers[i] = bLancer;
             tb.add(bLancer,3,i+1);
             
@@ -111,7 +117,7 @@ public class Panel_CreationVague extends JPanel
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    VagueDeCreatures vague = new VagueDeCreatures(Integer.parseInt((String) cbNbCreatures.getSelectedItem()), creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()));
+                    VagueDeCreatures vague = new VagueDeCreatures(1/*Integer.parseInt((String) cbNbCreatures.getSelectedItem())*/, creature, VagueDeCreatures.getTempsLancement(creature.getVitesseNormale()));
                     
                     try
                     {
@@ -138,8 +144,8 @@ public class Panel_CreationVague extends JPanel
        {
            bouton = bLancers[i];
            
-           int nbCreatures = Integer.parseInt((String) cbNbCreatures[i].getSelectedItem());
-           
+           int nbCreatures = 1;//Integer.parseInt((String) cbNbCreatures[i].getSelectedItem());
+
            bouton.setEnabled(nbPiecesDOr >= creatures[i].getNbPiecesDOr() * nbCreatures);
        }
     }
