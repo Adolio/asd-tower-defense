@@ -8,25 +8,24 @@ import reseau.*;
 /**
  * 
  * @author lazhar
- * 
  */
 public class SEInscription
 {
    
    private static ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
    private Port port;
-   private boolean avecLog;
+   private boolean debug;
    private CanalTCP canal;
    
    /**
     * 
     * @param port
-    * @param avecLog
+    * @param debug
     */
-   public SEInscription(Port port, boolean avecLog)
+   public SEInscription(Port port, boolean debug)
    {
       this.port = port;
-      this.avecLog = avecLog;
+      this.debug = debug;
    }
    
    /**
@@ -40,15 +39,18 @@ public class SEInscription
          
          while (true)
          {
-            System.out
-                  .println("\n+ Un nouveau thread du Serveur d'enregistrement va demarrer...");
+            if(debug)
+                System.out.println("\n+ Connexion d'un client...");
+            
             // Fonction bloquante qui attend que quelqu'un se connecte
             creerCanal();
+            
             (new Thread(new SEConnexion(canal))).start();
          }
-      } catch (IOException e)
+      } 
+      catch (IOException e)
       {
-         System.err.println("Serveur déjà lancé !");
+         System.err.println("Serveur d'enregistrement déjà lancé !");
       }
    }
    
@@ -57,12 +59,12 @@ public class SEInscription
     */
    private void creerCanal()
    {
-      try
-      {
+      try{
          canal = new CanalTCP(port);
-      } catch (CanalException ce)
-      {
-         System.out.println("\tProbleme de connexion : " + ce.getMessage());
+      } 
+      catch (CanalException ce){
+        
+          System.err.println("\tProbleme de connexion : " + ce.getMessage());
       }
    }
    
@@ -78,15 +80,18 @@ public class SEInscription
       if (!jeuxEnregistres.contains(e))
       {
          jeuxEnregistres.add(e);
+         
          System.out.println("Nb d'enreg. : " + jeuxEnregistres.size());
+         
          return true;
       }
       return false;
    }
    
    /**
+    * Permet de supprimer un enregistrement
     * 
-    * @param e
+    * @param e l'enregistrement a supprimer
     */
    public static synchronized void enleverEnregistrement(Enregistrement e)
    {
@@ -94,8 +99,9 @@ public class SEInscription
    }
    
    /**
+    * Permet de recuperer le nombre d'enregistrements
     * 
-    * @return
+    * @return le nombre d'enregistrements
     */
    public static synchronized int getNombreEnregistrements()
    {
@@ -103,8 +109,9 @@ public class SEInscription
    }
    
    /**
+    * Permet de recuperer les jeux enregistres
     * 
-    * @return
+    * @return les jeux enregistres
     */
    public static synchronized ArrayList<Enregistrement> getJeuxEnregistres()
    {

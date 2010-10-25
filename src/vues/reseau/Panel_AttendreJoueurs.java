@@ -256,14 +256,12 @@ public class Panel_AttendreJoueurs extends JPanel implements
             if (jeuServeur.estEnregisterSurSE())
             {
                 lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-                lblEtat.setText("La connexion avec le serveur central à réussie"); 
+                lblEtat.setText(Langue.getTexte(Langue.ID_TXT_CON_SRV_CENTRAL_ETABLIE)); 
             } 
             else
             {
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                lblEtat.setText("La connexion avec le serveur central a échouée, "+
-                                "votre serveur n'apparaîtra pas dans la liste " +
-                               	"des serveurs");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE));
             }
 
         pBottom.add(lblEtat, BorderLayout.SOUTH);
@@ -354,10 +352,10 @@ public class Panel_AttendreJoueurs extends JPanel implements
                         
                         tfSaisieMsg.setText("");
                         tfSaisieMsg.requestFocus();
-                    } 
+                    }
                     catch (MessageChatInvalide e1)
                     {
-                       console.ajouterTexteHTMLDansConsole("<font color='red'>#Quotes ouvrantes et fermantes interdites</font> <br/>");
+                       console.ajouterTexteHTMLDansConsole("<font color='red'>"+Langue.getTexte(Langue.ID_TXT_HTML_INTERDIT)+"</font> <br/>");
                     }
                 }
             } 
@@ -599,14 +597,14 @@ public class Panel_AttendreJoueurs extends JPanel implements
     public void messageRecu(String message, Joueur auteur)
     {
         String couleurHexa = Outils.ColorToHexa(auteur.getEquipe().getCouleur());
-        console.ajouterTexteHTMLDansConsole("<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b> dit : "+message+" <br />");
-
+        
+        console.ajouterTexteHTMLDansConsole(String.format(Langue.getTexte(Langue.ID_TXT_PSEUDO_DIT_MESSAGE), "<b><font color='#"+couleurHexa+"'>"+auteur.getPseudo()+"</font></b>",message)+"<br />");
     }
 
     @Override
     public void joueurDeconnecte(Joueur joueur)
     {
-        console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>#"+Langue.getTexte(Langue.ID_TXT_DECONNEXION)+" : <b>"+joueur.getPseudo()+"</b></font> est parti.<br />");
+        console.ajouterTexteHTMLDansConsole("<font color='#FF0000'>"+String.format(Langue.getTexte(Langue.ID_TXT_PSEUDO_EST_PARTI), joueur.getPseudo())+"</font><br />");
     }
 
     @Override

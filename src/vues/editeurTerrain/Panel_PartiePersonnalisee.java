@@ -88,7 +88,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         // -- CENTER --
         // ------------
         JPanel pCentre = new JPanel(new GridBagLayout());
-        pCentre.setBorder(new LineBorder(LookInterface.COULEUR_TEXTE_PRI));
+        pCentre.setBorder(new LineBorder(LookInterface.COULEUR_DE_FOND_SEC));
         pCentre.setOpaque(false);
 
         int ligne = 0;
@@ -256,6 +256,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
 
         bRetour.addActionListener(this);
         GestionnaireDesPolices.setStyle(bRetour);
+        bRetour.setPreferredSize(new Dimension(80,50));
         pBottom.add(bRetour, BorderLayout.WEST);
 
         add(pBottom, BorderLayout.SOUTH);

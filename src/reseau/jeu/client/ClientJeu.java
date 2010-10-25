@@ -1,5 +1,7 @@
 package reseau.jeu.client;
 
+import i18n.Langue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -191,12 +193,12 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
 			JSONObject resultatJSON = new JSONObject(resultat);
 			switch(resultatJSON.getInt("STATUS"))
 			{
-			    case ARGENT_INSUFFISANT :
-			        throw new ArgentInsuffisantException("Pas assez d'argent");
+			    case ARGENT_INSUFFISANT : 
+			        throw new ArgentInsuffisantException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT));
 			    case ZONE_INACCESSIBLE :
-                    throw new ZoneInaccessibleException("Zone non accessible");
+                    throw new ZoneInaccessibleException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE));
 			    case CHEMIN_BLOQUE :
-                    throw new ZoneInaccessibleException("La tour bloque le chemin");
+                    throw new ZoneInaccessibleException(Langue.getTexte(Langue.ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE));
                 // TODO case JOUEUR_HORS_JEU:
                 //   throw new JoueurHorsJeu("Tour inconnue");
 			}
@@ -235,15 +237,15 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             switch(resultatJSON.getInt("STATUS"))
             {
                 case TOUR_INCONNUE:
-                    throw new NullPointerException("Tour inconnue");
+                    throw new NullPointerException("Unknown tower");
                 case ARGENT_INSUFFISANT :
-                    throw new ArgentInsuffisantException("Pas assez d'argent");
+                    throw new ArgentInsuffisantException(Langue.getTexte(Langue.ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT));
                 case   NIVEAU_MAX_ATTEINT:
-                    throw new NiveauMaxAtteintException("Niveau max atteint");
+                    throw new NiveauMaxAtteintException(Langue.getTexte(Langue.ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT));
                 case ACTION_NON_AUTORISEE :
-                    throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
+                    throw new ActionNonAutoriseeException("Non authorized");
                 case JOUEUR_HORS_JEU:
-                    throw new JoueurHorsJeu("Tour inconnue");
+                    throw new JoueurHorsJeu("Unknown tower");
             }
 			
 		} 
@@ -275,7 +277,7 @@ public class ClientJeu implements ConstantesServeurJeu, Runnable{
             switch(resultatJSON.getInt("STATUS"))
             {
                 case ACTION_NON_AUTORISEE :
-                    throw new ActionNonAutoriseeException("Vous n'êtes pas propriétaire");
+                    throw new ActionNonAutoriseeException("Non authorized");
                     
                 // TODO case JOUEUR_HORS_JEU:
                 //   throw new JoueurHorsJeu("Tour inconnue");

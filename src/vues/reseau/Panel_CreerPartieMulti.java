@@ -43,7 +43,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
  
     // form
     private JLabel lblNomServeur = new JLabel(Langue.getTexte(Langue.ID_TITRE_NOM_SERVEUR));
-    private JTextField tfNomServeur = new JTextField("Test");
+    private JTextField tfNomServeur = new JTextField(Configuration.getPseudoJoueur()+"Server");
     //private JLabel lblEquipeAleatoire = new JLabel("Equipes aleatoires :");
     //private JCheckBox cbEquipeAleatoire = new JCheckBox();
     private JLabel lblTitreTerrains = new JLabel(Langue.getTexte(Langue.ID_TITRE_CHOISISSEZ_VOTRE_TERRAIN));
@@ -52,7 +52,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
     private JLabel lblPseudo = new JLabel(Langue.getTexte(Langue.ID_TITRE_PSEUDO));
     private JTextField tfPseudo = new JTextField("", 10);
     private JButton bCreer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER));
-    private JButton bAnnuler = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
+    private JButton bRetour = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
     
     // terrains
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
@@ -94,7 +94,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
         // -- CENTER --
         // ------------
         JPanel pCentre = new JPanel(new GridBagLayout());
-        pCentre.setBorder(new LineBorder(Color.BLACK));
+        pCentre.setBorder(new LineBorder(LookInterface.COULEUR_DE_FOND_SEC));
         pCentre.setOpaque(false);
 
         int ligne = 0;
@@ -246,13 +246,13 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                 catch (IOException e)
                 {
                     lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                    lblEtat.setText("Erreur lors du chargement des terrains");
+                    lblEtat.setText("Error during loading of maps");
                     e.printStackTrace();
                 } 
                 catch (ClassNotFoundException e)
                 {
                     lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                    lblEtat.setText("Erreur lors du chargement des terrains");
+                    lblEtat.setText("Error during loading of maps");
                     e.printStackTrace();
                 } 
             }
@@ -327,9 +327,10 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
-        bAnnuler.addActionListener(this);
-        GestionnaireDesPolices.setStyle(bAnnuler);
-        pBottom.add(bAnnuler, BorderLayout.WEST);
+        bRetour.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bRetour);
+        bRetour.setPreferredSize(new Dimension(80,50));
+        pBottom.add(bRetour, BorderLayout.WEST);
 
         add(pBottom, BorderLayout.SOUTH);
     }
@@ -351,19 +352,19 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
             
             if(tfNomServeur.getText().isEmpty())
             {
-                lblEtat.setText("Veuillez saisir le nom de votre partie.");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_NOM_SERVEUR_VIDE));
                 return;
             }
  
             if(tbTerrains.getSelectedRow() == -1)
             {
-                lblEtat.setText("Veuillez sélectionner un terrain de jeu.");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_PAS_DE_TERRAIN_SELECTIONNE));
                 return;
             }
   
             if(tfPseudo.getText().isEmpty())
             {
-                lblEtat.setText("Veuillez entrer votre pseudo.");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_PSEUDO_VIDE));
                 return;
             }
             
@@ -439,7 +440,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                     try
                     {
                         lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
-                        lblEtat.setText("Tentative de connexion au serveur local...");
+                        lblEtat.setText(Langue.getTexte(Langue.ID_TXT_TENTATIVE_DE_CONNEXION));
                         
                         // TODO port dynamique
                         try
@@ -452,7 +453,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                         
                             // Information
                             lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
-                            lblEtat.setText("Enregistrement au serveur central...");
+                            lblEtat.setText(Langue.getTexte(Langue.ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL)+"...");
     
                             if (jeuServeur.enregistrerSurSE(tfNomServeur.getText(),
                                     terrain.getNbJoueursMax(),
@@ -460,12 +461,12 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                                     terrain.getMode()))
                             {
                                 lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-                                lblEtat.setText("Enregistrement au serveur central réussi!");
+                                lblEtat.setText(Langue.getTexte(Langue.ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL_REUSSI));
                             } 
                             else
                             {
                                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                                lblEtat.setText("Enregistrement au serveur central échoué!");
+                                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE));
                             }
                             
                             // connexion réussie
@@ -478,29 +479,28 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
                         catch (AucunEmplacementDisponibleException e1)
                         {
                             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                            lblEtat.setText("Pas de place pour rejoindre!");
+                            lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_PAS_DE_PLACE));
                         }
                     }
                     catch (ConnectException e2)
                     {
                         lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                        lblEtat.setText("Connection au serveur de jeu impossible");
+                        lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CONNEXION_IMPOSSIBLE));
                     } 
                     catch (CanalException e3)
                     {
                         lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                        lblEtat.setText("Connection au serveur de jeu impossible");
+                        lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CONNEXION_IMPOSSIBLE));
                     } 
                 } 
                 catch (IOException e1)
                 {
                     lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                    lblEtat.setText("Création du serveur de jeu impossible " +
-                    		        "- un serveur possible par machine (pour le moment)");
+                    lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CREATION_IMPOSSIBLE_UN_SRV_PAR_MACHINE));
                 }
             }
         } 
-        else if (src == bAnnuler)
+        else if (src == bRetour)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),

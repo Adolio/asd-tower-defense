@@ -45,8 +45,6 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     private JTextField tfLargeurT = new JTextField();
     private JTextField tfHauteurT = new JTextField();
     
-    private JCheckBox cbAfficherMurs = new JCheckBox();
-    
     private JSlider sOpaciteMurs    = new JSlider(0,100);
     
     private JButton bImageDeFond    = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_PARCOURIR)+"...");

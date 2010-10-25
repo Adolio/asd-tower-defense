@@ -1,11 +1,11 @@
 package vues.editeurTerrain;
 
+import i18n.Langue;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import vues.GestionnaireDesPolices;
 import vues.commun.Panel_Table;
 import models.jeu.Jeu;
@@ -32,7 +32,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private static final ImageIcon I_COULEURS = new ImageIcon("img/icones/color_swatch.png");
     private static final ImageIcon I_ZONE_EDITION = new ImageIcon("img/icones/shape_square_edit.png");
 
-    private JButton bCreerEquipe = new JButton("Créer une équipe",I_AJOUTER_EQUIPE);
+    private JButton bCreerEquipe = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER),I_AJOUTER_EQUIPE);
     private Jeu jeu;
     private int idEquipe = 1;
     private Panel_Table pTabEquipes = new Panel_Table();   
@@ -122,8 +122,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 {
                     
                     Color couleur = JColorChooser.showDialog(
-                            null,
-                            "Couleur de l'équipe "+equipe.getNom(),equipe.getCouleur());
+                            null,"",equipe.getCouleur());
                       
                     if(couleur != null)
                     {
@@ -137,7 +136,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             //ligne++;
             
             // Zone de départ
-            final JButton bZoneDepart = new JButton("ZD",I_ZONE_EDITION);
+            final JButton bZoneDepart = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEPART));
             GestionnaireDesPolices.setStyle(bZoneDepart);
             pTabEquipes.add(bZoneDepart,2,ligne);
             
@@ -155,7 +154,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             // Zone d'arrivé
             
-            final JButton bZoneArrive = new JButton("ZA",I_ZONE_EDITION);
+            final JButton bZoneArrive = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_ARRIVEE));
             GestionnaireDesPolices.setStyle(bZoneArrive);
             pTabEquipes.add(bZoneArrive,3,ligne);
             
@@ -169,7 +168,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             });
 
             // Zone d'arrivée
-            final JButton bNouvelEmplacement = new JButton("E++");
+            final JButton bNouvelEmplacement = new JButton("+"+Langue.getTexte(Langue.ID_TXT_ZONE_JOUEUR));
             GestionnaireDesPolices.setStyle(bNouvelEmplacement);
             pTabEquipes.add(bNouvelEmplacement,4,ligne);
             
@@ -206,7 +205,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             for(final EmplacementJoueur ej : equipe.getEmplacementsJoueur())
             {
-                final JLabel lNomEmplacement = new JLabel("Emplacement "+ej.getId());
+                final JLabel lNomEmplacement = new JLabel(Langue.getTexte(Langue.ID_TXT_ZONE_JOUEUR)+ej.getId());
                 lNomEmplacement.setForeground(ej.getCouleur());
                 
                 pTabEquipes.add(lNomEmplacement,1,ligne);
@@ -237,8 +236,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     public void actionPerformed(ActionEvent e)
                     {
                         Color couleur = JColorChooser.showDialog(
-                                null,
-                                "Couleur de l'emplacement "+ej.getId(),ej.getCouleur());
+                                null,"",ej.getCouleur());
                           
                         if(couleur != null)
                         {
@@ -279,13 +277,15 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         if(src == bCreerEquipe)
         {
-            Equipe equipe = new Equipe(idEquipe, "Equipe "+idEquipe, Color.BLACK);
+            Equipe equipe = new Equipe(idEquipe, Langue.getTexte(Langue.ID_TXT_EQUIPE)+" "+idEquipe, Color.BLACK);
             
             jeu.ajouterEquipe(equipe);
             
             equipe.ajouterZoneDepart(new Rectangle(40,40,40,40));
             equipe.setZoneArriveeCreatures(new Rectangle(140,140,40,40));
             
+            equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
+
             idEquipe++;
             
             construirePanelEquipes(); 

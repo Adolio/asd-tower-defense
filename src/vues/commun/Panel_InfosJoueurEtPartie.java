@@ -64,6 +64,9 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         //timer
         pGlobalInfo.add(lTitreTimer);
         pGlobalInfo.add(lTimer);
+        
+        lTitreTimer.setToolTipText("Time spent");
+        lTimer.setToolTipText("Time spent");
         lTimer.setText("00.00.00");
         lTimer.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lTimer.setForeground(LookInterface.COULEUR_TEXTE_PRI);
@@ -73,6 +76,8 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         {
             pGlobalInfo.add(lTitreEtoiles);
             pGlobalInfo.add(lEtoiles);
+            lTitrePiecesOr.setToolTipText("Stars won");
+            lEtoiles.setToolTipText("Stars won");
             lEtoiles.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
             lEtoiles.setForeground(LookInterface.COULEUR_TEXTE_PRI);
             miseAJourNbEtoiles();
@@ -83,6 +88,8 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         {
             pGlobalInfo.add(lTitreRevenu);
             pGlobalInfo.add(lRevenu);
+            lTitreRevenu.setToolTipText("Income par second");
+            lRevenu.setToolTipText("Income par second");
             lRevenu.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
             lRevenu.setForeground(LookInterface.COULEUR_TEXTE_PRI);
             miseAJourRevenu();
@@ -98,21 +105,27 @@ public class Panel_InfosJoueurEtPartie extends JPanel
         // score
         pJoueur.add(lTitreScore);
         lTitreScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lTitreScore.setToolTipText("Score");
         pJoueur.add(lScore);
         lScore.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lScore.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+        lScore.setToolTipText("Score");
         miseAJourScore();
         
         // pieces d'or
         pJoueur.add(lTitrePiecesOr);
         pJoueur.add(lNbPiecesOr);
+        lTitrePiecesOr.setToolTipText("Coins");
         lNbPiecesOr.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lNbPiecesOr.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+        lNbPiecesOr.setToolTipText("Coins");
         miseAJourNbPiecesOr();
         
-        // vies restantes
+        // vies restantes 
         pJoueur.add(lTitreVies);
         pJoueur.add(lVies);
+        lTitreVies.setToolTipText("Remaining lives");
+        lVies.setToolTipText("Remaining lives");
         lVies.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
         lVies.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         miseAJourNbViesRestantes();
