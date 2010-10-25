@@ -7,9 +7,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
-import javax.swing.JLabel;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -218,8 +215,32 @@ public class Langue
     public static final String ID_TXT_PSEUDO_DIT_MESSAGE    = "TXT_PSEUDO_DIT_MESSAGE";
     public static final String ID_TXT_PSEUDO_EST_PARTI      = "TXT_PSEUDO_EST_PARTI";
     
- 
+    // editeur
+    public static final String ID_TXT_BTN_DEPART            = "TXT_BTN_DEPART";
+    public static final String ID_TXT_BTN_ARRIVEE           = "TXT_BTN_ARRIVEE";
+    public static final String ID_TXT_ZONE_JOUEUR           = "TXT_ZONE_JOUEUR";
+    public static final String ID_TXT_EQUIPE                = "TXT_EQUIPE";
     
+    
+    public static final String ID_ERREUR_CON_SRV_CENTRAL_IMP_ENREZ_IP = "ERREUR_CON_SRV_CENTRAL_IMP_ENREZ_IP";
+    public static final String ID_ERREUR_CON_SRV_CENTRAL_INVALIDE = "ERREUR_CON_SRV_CENTRAL_INVALIDE";
+    public static final String ID_TXT_CON_SRV_CENTRAL_ETABLIE= "TXT_CON_SRV_CENTRAL_ETABLIE";
+    public static final String ID_TXT_AUCUN_SRV_DISPONIBLE = "TXT_AUCUN_SRV_DISPONIBLE";
+    public static final String ID_ERREUR_PSEUDO_VIDE = "ERREUR_PSEUDO_VIDE";
+    public static final String ID_ERREUR_SEL_SRV_OU_IP = "ERREUR_SEL_SRV_OU_IP";
+    public static final String ID_ERREUR_IP_INCORRECT = "ERREUR_IP_INCORRECT";
+    public static final String ID_TXT_CONNEXION = "TXT_CONNEXION";
+    public static final String ID_TXT_TENTATIVE_DE_CONNEXION = "TXT_TENTATIVE_DE_CONNEXION";
+    public static final String ID_ERREUR_PAS_DE_PLACE = "ERREUR_PAS_DE_PLACE";
+    public static final String ID_ERREUR_CONNEXION_IMPOSSIBLE = "ERREUR_CONNEXION_IMPOSSIBLE";
+    
+    public static final String ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL = "TXT_ENREGISTREMENT_AU_SRV_CENTRAL";
+    public static final String ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL_REUSSI = "TXT_ENREGISTREMENT_AU_SRV_CENTRAL_REUSSI";
+    public static final String ID_ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE = "ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE";
+    public static final String ID_ERREUR_CREATION_IMPOSSIBLE_UN_SRV_PAR_MACHINE = "ERREUR_CREATION_IMPOSSIBLE_UN_SRV_PAR_MACHINE";
+    public static final String ID_ERREUR_NOM_SERVEUR_VIDE = "ERREUR_NOM_SERVEUR_VIDE";
+    public static final String ID_ERREUR_PAS_DE_TERRAIN_SELECTIONNE = "ERREUR_PAS_DE_TERRAIN_SELECTIONNE";
+
     private static boolean initialise = false;
     
     private static JSONObject jo;
@@ -486,9 +507,9 @@ public class Langue
             
             jo.put(ID_ERROR_POSE_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Impossible building : not enough money");
             jo.put(ID_ERROR_POSE_IMPOSSIBLE_ZONE_INACCESSIBLE,"Impossible building : inaccessible area");
-            jo.put(ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE,"Impossible building : way blocked");
-            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT,"Impossible upgrade : maximum level reached");
-            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Impossible upgrade : not enough money");
+            jo.put(ID_ERROR_POSE_IMPOSSIBLE_CHEMIN_BLOQUE,"Impossible building : way is blocked");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_NIVEAU_MAX_ATTEINT,"Impossible improvement : maximum level reached");
+            jo.put(ID_ERROR_AMELIORATON_IMPOSSIBLE_PAS_ASSEZ_D_ARGENT,"Impossible improvement : not enough money");
             
             
             jo.put(ID_TXT_ZOOM_AVANT_ET_RACCOURCI,"Zoom in [Mouse wheel]");
@@ -540,6 +561,33 @@ public class Langue
             jo.put(ID_TXT_HTML_INTERDIT,"#HTML not allowed");
             jo.put(ID_TXT_PSEUDO_DIT_MESSAGE,"%s says : %s");
             jo.put(ID_TXT_PSEUDO_EST_PARTI,"#Logout : %s left the game!");
+            
+            jo.put(ID_TXT_BTN_DEPART,"Start");
+            jo.put(ID_TXT_BTN_ARRIVEE,"Castel");
+            jo.put(ID_TXT_ZONE_JOUEUR,"PZ");
+            jo.put(ID_TXT_EQUIPE,"Team");
+            
+            // rejoindre partie multi
+            jo.put(ID_ERREUR_CON_SRV_CENTRAL_IMP_ENREZ_IP,"Info: Connection to the central server impossible! Enter the server IP directly.");
+            jo.put(ID_ERREUR_CON_SRV_CENTRAL_INVALIDE,"Info: The connection with the registration server is not valid. Please return to main menu");
+            jo.put(ID_TXT_CON_SRV_CENTRAL_ETABLIE,"Connection to the central server established!");
+            jo.put(ID_TXT_AUCUN_SRV_DISPONIBLE,"No server available at the moment");
+            jo.put(ID_ERREUR_PSEUDO_VIDE,"Error: Username empty");
+            jo.put(ID_ERREUR_SEL_SRV_OU_IP,"Error: Select a server or directly enter the IP of the server.");
+            jo.put(ID_ERREUR_IP_INCORRECT,"Error: Incorrect IP format");
+            jo.put(ID_TXT_CONNEXION,"Connection");
+            jo.put(ID_TXT_TENTATIVE_DE_CONNEXION,"Trying to connect to server");
+            jo.put(ID_ERREUR_PAS_DE_PLACE,"Error: No place to join");
+            jo.put(ID_ERREUR_CONNEXION_IMPOSSIBLE,"Error: Connecting to game server impossible");
+
+            // creer partie multi
+            jo.put(ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL,"Registration to the central server");
+            jo.put(ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL_REUSSI,"Registration to the central server success!");
+            jo.put(ID_ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE,"Info: Registration to the central server failed, your server will not be visible in the list of parties.");
+            jo.put(ID_ERREUR_CREATION_IMPOSSIBLE_UN_SRV_PAR_MACHINE,"Error: Can not create! A server by computer, if this is not the case, restart the game");
+            jo.put(ID_ERREUR_NOM_SERVEUR_VIDE,"Error: Server Name is empty");
+            jo.put(ID_ERREUR_PAS_DE_TERRAIN_SELECTIONNE,"Error: No map selected");
+
             
             Langue.sauver("lang/en_En.json");
         
@@ -775,6 +823,32 @@ public class Langue
             jo.put(ID_TXT_PSEUDO_DIT_MESSAGE,"%s dit : %s");
             jo.put(ID_TXT_PSEUDO_EST_PARTI,"#Déconnexion : %s est parti!");
             
+            jo.put(ID_TXT_BTN_DEPART,"Départ");
+            jo.put(ID_TXT_BTN_ARRIVEE,"Château");
+            jo.put(ID_TXT_ZONE_JOUEUR,"ZJ");
+            jo.put(ID_TXT_EQUIPE,"Equipe");
+            
+            // rejoindre partie multi
+            jo.put(ID_ERREUR_CON_SRV_CENTRAL_IMP_ENREZ_IP,"Info: Connexion au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
+            jo.put(ID_ERREUR_CON_SRV_CENTRAL_INVALIDE,"Info: La connexion avec le serveur d'enregistrement n'est plus valide. Veuillez retourner au menu principal");
+            jo.put(ID_TXT_CON_SRV_CENTRAL_ETABLIE,"Connexion au serveur central établie!");
+            jo.put(ID_TXT_AUCUN_SRV_DISPONIBLE,"Aucun serveur disponible pour le moment");
+            jo.put(ID_ERREUR_PSEUDO_VIDE,"Erreur: Pseudo vide.");
+            jo.put(ID_ERREUR_SEL_SRV_OU_IP,"Erreur: Selectionnez un serveur ou entrez directement l'IP du serveur.");
+            jo.put(ID_ERREUR_IP_INCORRECT,"Erreur: Format IP incorrect");
+            jo.put(ID_TXT_CONNEXION,"Connexion");
+            jo.put(ID_TXT_TENTATIVE_DE_CONNEXION,"Tentative de connexion au serveur");
+            jo.put(ID_ERREUR_PAS_DE_PLACE,"Erreur: Pas de place pour rejoindre!");
+            jo.put(ID_ERREUR_CONNEXION_IMPOSSIBLE,"Erreur: Connexion au serveur de jeu impossible");
+
+            // creer partie multi
+            jo.put(ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL,"Enregistrement au serveur central");
+            jo.put(ID_TXT_ENREGISTREMENT_AU_SRV_CENTRAL_REUSSI,"Enregistrement au serveur central réussi!");
+            jo.put(ID_ERREUR_ENREGISTREMENT_AU_SRV_CENTRAL_ECHOUE,"Info: Enregistrement au serveur central échoué, votre serveur ne sera pas visible dans la liste des parties");
+            jo.put(ID_ERREUR_CREATION_IMPOSSIBLE_UN_SRV_PAR_MACHINE,"Erreur: Creation impossible! Un serveur par machine, si ce n'est pas le cas, redemarrez le jeu.");
+            jo.put(ID_ERREUR_NOM_SERVEUR_VIDE,"Erreur: Nom du serveur vide");
+            jo.put(ID_ERREUR_PAS_DE_TERRAIN_SELECTIONNE,"Erreur: Aucun terrain selectionné");
+
             Langue.sauver("lang/fr_FR.json");
         } 
         catch (JSONException e)

@@ -527,7 +527,7 @@ public class Fenetre_Options extends JFrame implements ActionListener
         pTop.setBorder(new EmptyBorder(10, 10, 10, 10));
         
         JLabel lblTitre = new JLabel("OPTIONS");
-        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_SEC);
         lblTitre.setFont(GestionnaireDesPolices.POLICE_TITRE);
         
         pTop.add(lblTitre, BorderLayout.NORTH);

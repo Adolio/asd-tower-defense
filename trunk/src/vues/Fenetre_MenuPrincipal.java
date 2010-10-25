@@ -1,15 +1,8 @@
 package vues;
 
-import i18n.Langue;
-
 import java.awt.*;
-import java.awt.event.*;
 import java.io.File;
-
 import javax.swing.*;
-
-import vues.commun.Fenetre_HTML;
-
 import models.outils.GestionnaireSons;
 import models.outils.Son;
 
@@ -22,29 +15,18 @@ import models.outils.Son;
  * @version 1.0 | 20 avril 2010
  * @since jdk1.6.0_16
  */
-public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
+public class Fenetre_MenuPrincipal extends JFrame
 {
     // constantes statiques
     private static final long serialVersionUID = 1L;
-    private static final ImageIcon I_QUITTER = new ImageIcon(
-            "img/icones/door_out.png");
-    private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
     private static final ImageIcon I_FENETRE = new ImageIcon(
             "img/icones/icone_pgm.png");
-
-    // elements du formulaire
-    private final JMenuBar menuPrincipal = new JMenuBar();
-    private final JMenu menuFichier = new JMenu("Fichier");
-    private final JMenu menuAide = new JMenu("Aide");
-    private final JMenuItem itemAPropos = new JMenuItem("A propos", I_AIDE);
-    private final JMenuItem itemQuitter = new JMenuItem("Quitter", I_QUITTER);
 
     public static final int LARGEUR_FENETRE = 800;
     public static final int HAUTEUR_FENETRE = 600;
     
-    public static final File FICHIER_MUSIQUE_MENU = new File("snd/Oursvince_Etincelle/Espoir.mp3");
-    
-    
+    public static final File FICHIER_MUSIQUE_MENU 
+    = new File("snd/Oursvince_Etincelle/Perdue.mp3");
     
     /**
      * Constructeur de la fenetre du menu principal
@@ -59,25 +41,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // --------------------
-        // -- menu principal --
-        // --------------------
-        // menu Fichier
-        menuFichier.add(itemQuitter);
-        menuPrincipal.add(menuFichier);
-
-        // menu A propos
-        menuAide.add(itemAPropos);
-        menuPrincipal.add(menuAide);
-
-        // ajout des ecouteurs
-        itemQuitter.addActionListener(this);
-        itemAPropos.addActionListener(this);
-
-        // ajout du menu
-        //setJMenuBar(menuPrincipal);
-
-        
         // ------------------------
         // -- musique d'ambiance --
         // ------------------------
@@ -85,7 +48,6 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
 
         GestionnaireSons.ajouterSon(musiqueDAmbiance);
         musiqueDAmbiance.lire(0); // lecture infinie
-        
         
         // ---------------------
         // -- panel principal --
@@ -99,19 +61,5 @@ public class Fenetre_MenuPrincipal extends JFrame implements ActionListener
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae)
-    {
-        Object source = ae.getSource();
-
-        // quitter
-        if (source == itemQuitter)
-            System.exit(0); // Fermeture correcte du logiciel
-
-        // a propos
-        else if (source == itemAPropos)
-            new Fenetre_HTML(Langue.getTexte(Langue.ID_TXT_BTN_A_PROPOS),new File(Langue.getTexte(Langue.ID_ADRESSE_A_PROPOS)),this);
     }
 }

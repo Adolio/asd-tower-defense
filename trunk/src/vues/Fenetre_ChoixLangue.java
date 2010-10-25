@@ -30,9 +30,9 @@ public class Fenetre_ChoixLangue extends JDialog implements ActionListener
     
     private JButton bFR = new JButton("Français",new ImageIcon(Outils.redimentionner(I_FR.getImage(), 100, 66)));
     private JButton bEN = new JButton("English",new ImageIcon(Outils.redimentionner(I_EN.getImage(), 100, 66)));
-    private JButton bQuitter = new JButton("Quitter");
+    private JButton bQuitter = new JButton("Quit");
     
-    private JLabel lblTitre = new JLabel("CHOIX DE LA LANGUE");
+    private JLabel lblTitre = new JLabel("Select your language");
     private static final ImageIcon I_FENETRE = new ImageIcon(
     "img/icones/icone_pgm.png");
     
@@ -48,7 +48,7 @@ public class Fenetre_ChoixLangue extends JDialog implements ActionListener
         setContentPane(pForm);
         
         
-        setTitle("Choix de la langue - ASD Tower Defense");
+        setTitle("Select your language - ASD Tower Defense");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         
         pForm.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
@@ -60,7 +60,7 @@ public class Fenetre_ChoixLangue extends JDialog implements ActionListener
         pDrapeaux.setOpaque(false);
         
         lblTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+        lblTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pForm.add(lblTitre,BorderLayout.NORTH);
         
         GestionnaireDesPolices.setStyle(bFR);

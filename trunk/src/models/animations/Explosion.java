@@ -25,7 +25,7 @@ public class Explosion extends Animation
 	static
     { 
 	    for(int i=0;i<EXPLOSION.length;i++)
-	        EXPLOSION[i] = Toolkit.getDefaultToolkit().getImage("img/animations/explosion/"+i+".gif");
+	        EXPLOSION[i] = Toolkit.getDefaultToolkit().getImage("img/animations/explosion/"+i+".png");
     }
 	
 	/**

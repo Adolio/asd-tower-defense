@@ -53,7 +53,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
     
     private JLabel lblEtat = new JLabel();
 
-    private JButton bAnnuler = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
+    private JButton bRetour = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
 
     private CanalTCP canalServeurEnregistrement;
     
@@ -223,9 +223,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         JPanel pBottom = new JPanel(new BorderLayout());
         pBottom.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         
-        bAnnuler.addActionListener(this);
-        GestionnaireDesPolices.setStyle(bAnnuler);
-        pBottom.add(bAnnuler, BorderLayout.WEST);
+        bRetour.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bRetour);
+        bRetour.setPreferredSize(new Dimension(80,50));
+        pBottom.add(bRetour, BorderLayout.WEST);
 
         JPanel bottomCenter = new JPanel();
         bottomCenter.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -272,7 +273,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         bRafraichir.setEnabled(false);
         tfFiltre.setEnabled(false);
         lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-        lblEtat.setText("Connexion au serveur central impossible! Entrez directement l'IP du serveur du jeu.");
+        lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CON_SRV_CENTRAL_IMP_ENREZ_IP)); 
     }
 
     /**
@@ -300,9 +301,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             catch (CanalException e)
             {
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                lblEtat.setText("Erreur! La connexion avec le serveur " +
-                "d'enregistrement n'est plus valide. " +
-                "Veuillez retourner au menu principal");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CON_SRV_CENTRAL_INVALIDE));          
             } 
         }
     }
@@ -347,12 +346,12 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
                     tbServeurs.setRowSelectionInterval(0, 0);
                 
                 lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-                lblEtat.setText("Connexion au serveur central établie!");
+                lblEtat.setText(Langue.getTexte(Langue.ID_TXT_CON_SRV_CENTRAL_ETABLIE)); 
             }
             else
             {
                 lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-                lblEtat.setText("Connexion au serveur central établie! [ Aucun serveur disponible pour le moment ]");
+                lblEtat.setText(Langue.getTexte(Langue.ID_TXT_CON_SRV_CENTRAL_ETABLIE)+" ["+Langue.getTexte(Langue.ID_TXT_AUCUN_SRV_DISPONIBLE)+"]");
             }
         } 
         catch (JSONException e1)
@@ -437,7 +436,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             try
             {
                 if (tfPseudo.getText().trim().isEmpty())
-                    throw new Exception("Erreur : Pseudo vide.");
+                    throw new Exception(Langue.getTexte(Langue.ID_ERREUR_PSEUDO_VIDE));
 
                 Configuration.setPseudoJoueur(tfPseudo.getText());
                 
@@ -453,7 +452,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         {
             mettreAJourListeDesServeurs();  
         }
-        else if (src == bAnnuler)
+        else if (src == bRetour)
         {
             parent.getContentPane().removeAll();
             parent.getContentPane().add(new Panel_MenuPrincipal(parent),
@@ -493,11 +492,10 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         
         // sinon on retourne l'ip manuelle si elle est valide
         else if (tfConnexionParIP.getText().isEmpty())
-            throw new Exception("Erreur : Selectionnez un serveur "
-                    + "ou entrez directement l'IP du serveur.");
+            throw new Exception(Langue.getTexte(Langue.ID_ERREUR_SEL_SRV_OU_IP));
         
         else if(!checkIp(tfConnexionParIP.getText()))
-            throw new Exception("Erreur : Format IP incorrect");
+            throw new Exception(Langue.getTexte(Langue.ID_ERREUR_IP_INCORRECT));
         else
             return tfConnexionParIP.getText();
     }
@@ -546,7 +544,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
      */
     private void connexion(String IP, int port)
     {
-        bRejoindre.setText("Connexion...");
+        bRejoindre.setText(Langue.getTexte(Langue.ID_TXT_CONNEXION)+"...");
         bRejoindre.setEnabled(false);
 
         joueur = new Joueur(tfPseudo.getText());
@@ -556,7 +554,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
         try
         {
             lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
-            lblEtat.setText("Tentative de connexion au serveur "+IP+"...");
+            lblEtat.setText(Langue.getTexte(Langue.ID_TXT_TENTATIVE_DE_CONNEXION)+"...");
             
             try
             { 
@@ -565,7 +563,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             catch (AucunEmplacementDisponibleException e)
             {
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-                lblEtat.setText("Pas de place pour rejoindre!");
+                lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_PAS_DE_PLACE));
                 
                 bRejoindre.setText(Langue.getTexte(Langue.ID_TXT_BTN_REJOINDRE));
                 bRejoindre.setEnabled(true);
@@ -577,7 +575,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             bRejoindre.setEnabled(true);
             
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-            lblEtat.setText("Connexion au serveur de jeu impossible");
+            lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CONNEXION_IMPOSSIBLE));
         } 
         catch (CanalException e)
         {
@@ -585,7 +583,7 @@ public class Panel_RejoindrePartieMulti extends JPanel implements
             bRejoindre.setEnabled(true);
             
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
-            lblEtat.setText("Connexion au serveur de jeu impossible");
+            lblEtat.setText(Langue.getTexte(Langue.ID_ERREUR_CONNEXION_IMPOSSIBLE));
         }
     }
 

@@ -110,7 +110,7 @@ public class Panel_MenuPrincipal extends JPanel implements ActionListener
         // partie multijoueurs
         lblReseau.setBounds(53, 60, 200, 50);
         lblReseau.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
-        lblReseau.setForeground(LookInterface.COULEUR_TEXTE_SEC);
+        lblReseau.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         pAbsolu.add(lblReseau);
         
         bRejoindrePartieMulti.setBounds(50, 100, 100, 50);

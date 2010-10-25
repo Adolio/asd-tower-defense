@@ -241,19 +241,30 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		    {
 		        bouton.setEnabled(false);
 		        
-		        pInfoTerrain.add(new JLabel(Langue.getTexte(Langue.ID_TXT_1_ETOILE_MIN),icoCADENAS,0),BorderLayout.SOUTH);
+		        JLabel lbl = new JLabel(Langue.getTexte(Langue.ID_TXT_1_ETOILE_MIN),icoCADENAS,0);
+                lbl.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+		        
+		        pInfoTerrain.add(lbl,BorderLayout.SOUTH);
 		    }
 		        
 		    if(i == 2 && nbEtoiles < 3)
 		    {
                 bouton.setEnabled(false);
-		        pInfoTerrain.add(new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),3),icoCADENAS,0),BorderLayout.SOUTH);
+                
+                JLabel lbl = new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),3),icoCADENAS,0);
+                lbl.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+                
+		        pInfoTerrain.add(lbl,BorderLayout.SOUTH);
 		    }
 		    
 		    if(i == 3 && nbEtoiles < 7)
 		    {
 		        bouton.setEnabled(false);
-		        pInfoTerrain.add(new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),7),icoCADENAS,0),BorderLayout.SOUTH);
+		        
+		        JLabel lbl = new JLabel(String.format(Langue.getTexte(Langue.ID_TXT_X_ETOILES_MIN),7),icoCADENAS,0);
+                lbl.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+                
+                pInfoTerrain.add(lbl,BorderLayout.SOUTH);
 		    }
 
 		    // ajout au panel
@@ -293,7 +304,7 @@ public class Panel_ModeSolo extends JPanel implements ActionListener, Runnable
 		
 		
 		bRetour.addActionListener(this);
-		bRetour.setPreferredSize(new Dimension(80,60));
+		bRetour.setPreferredSize(new Dimension(80,50));
 		GestionnaireDesPolices.setStyle(bRetour);
 		pFond.add(bRetour,BorderLayout.WEST);
         pFormulaire.add(pFond,BorderLayout.SOUTH);
