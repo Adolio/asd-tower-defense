@@ -1,5 +1,4 @@
 
-import i18n.Langue;
 import javax.swing.UIManager;
 import models.outils.GestionnaireSons;
 import vues.Fenetre_ChoixLangue;
@@ -42,7 +41,7 @@ public class Main
                     */ 
                }    
                
-      Langue.creerFichiersDeLangue();
+      //Langue.creerFichiersDeLangue();
       
       GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);       
            
