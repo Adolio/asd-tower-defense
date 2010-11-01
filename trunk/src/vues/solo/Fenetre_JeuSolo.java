@@ -148,8 +148,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 */
     private boolean vaguePeutEtreLancee = true;
     private boolean demandeDEnregistrementDuScoreEffectuee;
-
-    // TODO commenter
+    
+    /**
+     * Boutons du menu gaut dessus du terrain
+     */
     private JButton bVitesseJeu = new JButton("x"+VITESSE_JEU_MIN);
     private JButton bPleinEcran = new JButton(I_PLEIN_ECRAN);
     private JButton bCentrer = new JButton(I_CENTRE);
@@ -239,7 +241,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //Dimension dimBouton = new Dimension(51, 32);
         
         // zoom
-        // TODO TRADUCTON
         bZoomAvant.setToolTipText(Langue.getTexte(Langue.ID_TXT_ZOOM_AVANT_ET_RACCOURCI));
         bZoomArriere.setToolTipText(Langue.getTexte(Langue.ID_TXT_ZOOM_ARRIERE_ET_RACCOURCI));
         GestionnaireDesPolices.setStyle(bZoomAvant);
@@ -252,7 +253,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bZoomArriere.addActionListener(this);
         
         // centrer
-        // TODO TRADUCTON
         bCentrer.setToolTipText(Langue.getTexte(Langue.ID_TXT_CENTRER_ET_RACCOURCI));
         GestionnaireDesPolices.setStyle(bCentrer);
         //bCentrer.setPreferredSize(dimBouton);
@@ -260,7 +260,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         bCentrer.addActionListener(this);
         
         // maximisation / minimisation
-        // TODO TRADUCTON
         bPleinEcran.setToolTipText(Langue.getTexte(Langue.ID_TXT_MAXI_MINI_FENETRE));
         GestionnaireDesPolices.setStyle(bPleinEcran);
         //bPleinEcran.setPreferredSize(dimBouton);
@@ -272,7 +271,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //boutonsHaut.add(new JLabel(I_VITESSE_JEU));
         bVitesseJeu.setIcon(I_VITESSE_JEU);
         bVitesseJeu.setText("x"+jeu.getCoeffVitesse());
-        // TODO TRADUCTON
         bVitesseJeu.setToolTipText(Langue.getTexte(Langue.ID_TXT_VITESSE_DU_JEU));
         GestionnaireDesPolices.setStyle(bVitesseJeu);
         
@@ -821,6 +819,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
+    /*
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
@@ -830,6 +829,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         
         miseAJourInfoJeu(); 
     }
+    */
     
 
     @Override
@@ -842,14 +842,16 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         if(keyChar == 'M')
         {
-            ajouterPiecesDOr(1000);
+            //ajouterPiecesDOr(1000);
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         else if(keyChar == 'L')
         {
+            /*
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
+            */
         }
         else if(keyCode == Configuration.getKeyCode(Configuration.AUG_VIT_JEU))
         {

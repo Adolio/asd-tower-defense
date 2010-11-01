@@ -29,7 +29,9 @@ public class Fenetre_Options extends JFrame implements ActionListener
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_IP_SRV_ENR)+" :"),0,0);
+            JLabel lblIPSrv = new JLabel(Langue.getTexte(Langue.ID_TXT_IP_SRV_ENR)+" :");
+            lblIPSrv.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            pFormulaire.add(lblIPSrv,0,0);
             
             tfIP_SE.setPreferredSize(new Dimension(100,25));
             pFormulaire.add(tfIP_SE,1,0);
@@ -72,7 +74,9 @@ public class Fenetre_Options extends JFrame implements ActionListener
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel("Pseudo"),0,0);
+            JLabel lPseudo = new JLabel("Pseudo");
+            lPseudo.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            pFormulaire.add(lPseudo,0,0);
             
             tfPseudoJoueur.setPreferredSize(new Dimension(100,25));
             pFormulaire.add(tfPseudoJoueur,1,0);
@@ -121,7 +125,6 @@ public class Fenetre_Options extends JFrame implements ActionListener
             {   
                 PROPRIETE = propriete;
                 
-                
                 int keyCode2 = Integer.parseInt(Configuration.getProprety(PROPRIETE));
                 
                 setKeyCode(keyCode2);
@@ -146,17 +149,30 @@ public class Fenetre_Options extends JFrame implements ActionListener
         private static final long serialVersionUID = 1L;
         private Panel_Table pFormulaire = new Panel_Table();
         
-        private BoutonKeyCode lDeplHaut = new BoutonKeyCode(Configuration.DEPL_HAUT);
-        private BoutonKeyCode lDeplBas = new BoutonKeyCode(Configuration.DEPL_BAS);
-        private BoutonKeyCode lDeplDroite = new BoutonKeyCode(Configuration.DEPL_DROITE);
-        private BoutonKeyCode lDeplGauche = new BoutonKeyCode(Configuration.DEPL_GAUCHE);
-        private BoutonKeyCode lLancerVagueSuivante = new BoutonKeyCode(Configuration.LANCER_VAGUE);
-        private BoutonKeyCode lVendre = new BoutonKeyCode(Configuration.VENDRE_TOUR);
-        private BoutonKeyCode lAmeliorer = new BoutonKeyCode(Configuration.AMELIO_TOUR);
-        private BoutonKeyCode lPause = new BoutonKeyCode(Configuration.PAUSE);
-        private BoutonKeyCode lSuivre = new BoutonKeyCode(Configuration.SUIVRE_CREATURE);
-        private BoutonKeyCode lAugmenterVitesseJeu = new BoutonKeyCode(Configuration.AUG_VIT_JEU);
-        private BoutonKeyCode lDiminuerVitesseJeu = new BoutonKeyCode(Configuration.DIM_VIT_JEU);
+        private JLabel lDeplHaut = new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_HAUT));
+        private JLabel lDeplGauche = new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_GAUCHE));
+        private JLabel lDeplBas = new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_BAS));
+        private JLabel lDeplDroite = new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_DROITE));
+        private JLabel lLancerVague = new JLabel(Langue.getTexte(Langue.ID_TXT_LANCER_VAGUE_SUIVANTE));
+        private JLabel lAmeliorerTour = new JLabel(Langue.getTexte(Langue.ID_TXT_AMELIORER_TOUR));
+        private JLabel lVendreTour = new JLabel(Langue.getTexte(Langue.ID_TXT_VENDRE_TOUR));
+        private JLabel lMettreEnPause = new JLabel(Langue.getTexte(Langue.ID_TXT_METTRE_JEU_EN_PAUSE));
+        private JLabel lSuivreCreature = new JLabel(Langue.getTexte(Langue.ID_TXT_SUIVRE_CREATURE));
+        private JLabel lAugmenterVitesse = new JLabel(Langue.getTexte(Langue.ID_TXT_AUGMENTER_VITESSE_JEU));
+        private JLabel lDiminuerVitesse = new JLabel(Langue.getTexte(Langue.ID_TXT_DIMINUER_VITESSE_JEU));
+        private JLabel lZoomer = new JLabel(Langue.getTexte(Langue.ID_TXT_ZOMMER));
+        
+        private BoutonKeyCode bDeplHaut = new BoutonKeyCode(Configuration.DEPL_HAUT);
+        private BoutonKeyCode bDeplBas = new BoutonKeyCode(Configuration.DEPL_BAS);
+        private BoutonKeyCode bDeplDroite = new BoutonKeyCode(Configuration.DEPL_DROITE);
+        private BoutonKeyCode bDeplGauche = new BoutonKeyCode(Configuration.DEPL_GAUCHE);
+        private BoutonKeyCode bLancerVagueSuivante = new BoutonKeyCode(Configuration.LANCER_VAGUE);
+        private BoutonKeyCode bVendre = new BoutonKeyCode(Configuration.VENDRE_TOUR);
+        private BoutonKeyCode bAmeliorer = new BoutonKeyCode(Configuration.AMELIO_TOUR);
+        private BoutonKeyCode bPause = new BoutonKeyCode(Configuration.PAUSE);
+        private BoutonKeyCode bSuivre = new BoutonKeyCode(Configuration.SUIVRE_CREATURE);
+        private BoutonKeyCode bAugmenterVitesseJeu = new BoutonKeyCode(Configuration.AUG_VIT_JEU);
+        private BoutonKeyCode bDiminuerVitesseJeu = new BoutonKeyCode(Configuration.DIM_VIT_JEU);
         
         private JLabel lZoom = new JLabel(Langue.getTexte(Langue.ID_TXT_ROULETTE_SOURIS));
         private ArrayList<BoutonKeyCode> boutons = new ArrayList<BoutonKeyCode>();
@@ -167,17 +183,17 @@ public class Fenetre_Options extends JFrame implements ActionListener
         {  
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
             
-            boutons.add(lDeplHaut);
-            boutons.add(lDeplGauche);
-            boutons.add(lDeplBas);
-            boutons.add(lDeplDroite);
-            boutons.add(lLancerVagueSuivante);
-            boutons.add(lVendre);
-            boutons.add(lAmeliorer);
-            boutons.add(lPause);
-            boutons.add(lSuivre);
-            boutons.add(lAugmenterVitesseJeu);
-            boutons.add(lDiminuerVitesseJeu);
+            boutons.add(bDeplHaut);
+            boutons.add(bDeplGauche);
+            boutons.add(bDeplBas);
+            boutons.add(bDeplDroite);
+            boutons.add(bLancerVagueSuivante);
+            boutons.add(bVendre);
+            boutons.add(bAmeliorer);
+            boutons.add(bPause);
+            boutons.add(bSuivre);
+            boutons.add(bAugmenterVitesseJeu);
+            boutons.add(bDiminuerVitesseJeu);
             
             for(JButton b : boutons)
             {
@@ -187,35 +203,49 @@ public class Fenetre_Options extends JFrame implements ActionListener
                 b.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),
                 "doNothing");
             }
-            
-            int i=0;  
+
+            // styles
+            lDeplHaut.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lDeplGauche.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lDeplBas.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lDeplDroite.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lLancerVague.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lAmeliorerTour.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lVendreTour.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lMettreEnPause.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lSuivreCreature.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lAugmenterVitesse.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lDiminuerVitesse.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lZoomer.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lZoom.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+
+            int i=0;
             pFormulaire.setOpaque(false);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_HAUT)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_GAUCHE)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_BAS)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DEPL_DROITE)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_LANCER_VAGUE_SUIVANTE)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_AMELIORER_TOUR)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_VENDRE_TOUR)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_METTRE_JEU_EN_PAUSE)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_SUIVRE_CREATURE)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_AUGMENTER_VITESSE_JEU)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DIMINUER_VITESSE_JEU)),0,i++);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_ZOMMER)),0,i++);
-            
+            pFormulaire.add(lDeplHaut,0,i++);
+            pFormulaire.add(lDeplGauche,0,i++);
+            pFormulaire.add(lDeplBas,0,i++);
+            pFormulaire.add(lDeplDroite,0,i++);
+            pFormulaire.add(lLancerVague,0,i++);
+            pFormulaire.add(lAmeliorerTour,0,i++);
+            pFormulaire.add(lVendreTour,0,i++);
+            pFormulaire.add(lMettreEnPause,0,i++);
+            pFormulaire.add(lSuivreCreature,0,i++);
+            pFormulaire.add(lAugmenterVitesse,0,i++);
+            pFormulaire.add(lDiminuerVitesse,0,i++);
+            pFormulaire.add(lZoomer,0,i++);
             
             i = 0;
-            pFormulaire.add(lDeplHaut,1,i++);
-            pFormulaire.add(lDeplGauche,1,i++);
-            pFormulaire.add(lDeplBas,1,i++);
-            pFormulaire.add(lDeplDroite,1,i++);
-            pFormulaire.add(lLancerVagueSuivante,1,i++);
-            pFormulaire.add(lAmeliorer,1,i++);
-            pFormulaire.add(lVendre,1,i++);
-            pFormulaire.add(lPause,1,i++);
-            pFormulaire.add(lSuivre,1,i++);
-            pFormulaire.add(lAugmenterVitesseJeu,1,i++);
-            pFormulaire.add(lDiminuerVitesseJeu,1,i++);
+            pFormulaire.add(bDeplHaut,1,i++);
+            pFormulaire.add(bDeplGauche,1,i++);
+            pFormulaire.add(bDeplBas,1,i++);
+            pFormulaire.add(bDeplDroite,1,i++);
+            pFormulaire.add(bLancerVagueSuivante,1,i++);
+            pFormulaire.add(bAmeliorer,1,i++);
+            pFormulaire.add(bVendre,1,i++);
+            pFormulaire.add(bPause,1,i++);
+            pFormulaire.add(bSuivre,1,i++);
+            pFormulaire.add(bAugmenterVitesseJeu,1,i++);
+            pFormulaire.add(bDiminuerVitesseJeu,1,i++);
             pFormulaire.add(lZoom,1,i++);
             
             // Style
@@ -283,11 +313,17 @@ public class Fenetre_Options extends JFrame implements ActionListener
             
             pFormulaire.setOpaque(false);
             
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_ACTIF)+" ?"),0,0);
+            JLabel lActif = new JLabel(Langue.getTexte(Langue.ID_TXT_ACTIF)+" ?");
+            lActif.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            
+            pFormulaire.add(lActif,0,0);
             pFormulaire.add(bSonActif,1,0);
             
+            
             sVolumeSon.setValue(GestionnaireSons.getVolumeSysteme());
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_VOLUME)),0,1);
+            JLabel lVolume = new JLabel(Langue.getTexte(Langue.ID_TXT_VOLUME));
+            lVolume.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            pFormulaire.add(lVolume,0,1);
             pFormulaire.add(sVolumeSon,1,1);
 
             
@@ -339,10 +375,26 @@ public class Fenetre_Options extends JFrame implements ActionListener
         
         private JButton bReinitialiser = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_REINITIALISER));
         
+        private JLabel lCouleurDeFondPri = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_PRI));
+        private JLabel lCouleurTxtPri = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TXT_PRI));
+        private JLabel lCouleurDeFondSec = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_SEC));
+        private JLabel lCouleurTxtSec = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_SEC));
+        private JLabel lCouleurDeFondBtn = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_BTN));
+        private JLabel lCouleurTxtBtn = new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_BTN));
+
         
         public Panel_OptionsStyle()
         {
             setBackground(LookInterface.COULEUR_DE_FOND_PRI);
+                      
+            // style
+            lCouleurDeFondPri.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lCouleurTxtPri.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lCouleurDeFondSec.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lCouleurTxtSec.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lCouleurDeFondBtn.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lCouleurTxtBtn.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+ 
             
             int ln = 0;
             
@@ -352,32 +404,32 @@ public class Fenetre_Options extends JFrame implements ActionListener
             
             bCouleurDeFond_Pri.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Pri.setBackground(LookInterface.COULEUR_DE_FOND_PRI);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_PRI)),0,ln);
+            pFormulaire.add(lCouleurDeFondPri,0,ln);
             pFormulaire.add(bCouleurDeFond_Pri,1,ln++);
 
             bCouleurTexte_Pri.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Pri.setBackground(LookInterface.COULEUR_TEXTE_PRI);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TXT_PRI)),0,ln);
+            pFormulaire.add(lCouleurTxtPri,0,ln);
             pFormulaire.add(bCouleurTexte_Pri,1,ln++);
             
             bCouleurDeFond_Sec.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Sec.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_SEC)),0,ln);
+            pFormulaire.add(lCouleurDeFondSec,0,ln);
             pFormulaire.add(bCouleurDeFond_Sec,1,ln++);
   
             bCouleurTexte_Sec.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Sec.setBackground(LookInterface.COULEUR_TEXTE_SEC);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_SEC)),0,ln);
+            pFormulaire.add(lCouleurTxtSec,0,ln);
             pFormulaire.add(bCouleurTexte_Sec,1,ln++);
             
             bCouleurDeFond_Boutons.setPreferredSize(new Dimension(50,50));
             bCouleurDeFond_Boutons.setBackground(LookInterface.COULEUR_DE_FOND_BTN);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND_BTN)),0,ln);
+            pFormulaire.add(lCouleurDeFondBtn,0,ln);
             pFormulaire.add(bCouleurDeFond_Boutons,1,ln++);
 
             bCouleurTexte_Boutons.setPreferredSize(new Dimension(50,50));
             bCouleurTexte_Boutons.setBackground(LookInterface.COULEUR_TEXTE_BTN);
-            pFormulaire.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_TEXTE_BTN)),0,ln);
+            pFormulaire.add(lCouleurTxtBtn,0,ln);
             pFormulaire.add(bCouleurTexte_Boutons,1,ln++);
        
             bCouleurDeFond_Pri.addActionListener(this);
