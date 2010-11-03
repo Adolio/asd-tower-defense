@@ -17,6 +17,6 @@ public class ServeurEnregistrement
     */
    public static void main(String[] args)
    {
-      new SEInscription(new Port(Configuration.getPortSE()), true).lancer();
+      new SEInscription(new Port(Configuration.getPortSE())).lancer();
    }
 }

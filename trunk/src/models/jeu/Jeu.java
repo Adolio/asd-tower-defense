@@ -35,7 +35,7 @@ public abstract class Jeu implements EcouteurDeJoueur,
 	 * version du jeu
 	 */
     private static final String VERSION 
-        = "ASD - Tower Defense v2.0 (beta 4) | october 2010 | heig-vd";
+        = "ASD - Tower Defense v2.0 (beta 4) | nov 2010 | heig-vd";
     
     /**
      * Mode de positionnement centré des créatures dans la zone de départ

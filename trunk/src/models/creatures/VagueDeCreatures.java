@@ -146,8 +146,6 @@ public class VagueDeCreatures
         int noVague = indiceVagueCourante;
         int uniteVague = noVague % 10;
         
-        System.out.println(indiceVagueCourante);
-        
         final long SANTE_CREATURE_NORMALE = fSante(noVague);
         final long GAIN_VAGUE_COURANTE = fGainVague2(noVague)/*fGainVague(SANTE_CREATURE_NORMALE)*/;
 
@@ -160,8 +158,6 @@ public class VagueDeCreatures
                     (int) Math.ceil(GAIN_VAGUE_COURANTE / 15.0), VITESSE_CREATURE_NORMALE),
                     getTempsLancement(VITESSE_CREATURE_NORMALE));
 
-            
-            
         case 2: // 10 normales
             return new VagueDeCreatures(10, new MoutonNoir(SANTE_CREATURE_NORMALE,
                     (int) Math.ceil(GAIN_VAGUE_COURANTE / 10.0), VITESSE_CREATURE_NORMALE),
