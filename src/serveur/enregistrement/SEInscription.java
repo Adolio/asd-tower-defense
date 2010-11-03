@@ -2,34 +2,39 @@ package serveur.enregistrement;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import reseau.*;
 
 /**
+ * Classe de gestion d'un serveur d'enregistrement de parties reseaux
  * 
  * @author lazhar
+ * @author Aurelien Da Campo
  */
 public class SEInscription
 {
    
    private static ArrayList<Enregistrement> jeuxEnregistres = new ArrayList<Enregistrement>();
    private Port port;
-   private boolean debug;
+   private static final boolean debug = true;
    private CanalTCP canal;
    
    /**
+    * Constructeur
     * 
     * @param port
     * @param debug
     */
-   public SEInscription(Port port, boolean debug)
+   public SEInscription(Port port)
    {
       this.port = port;
-      this.debug = debug;
    }
    
    /**
+    * Permet de lancer le serveur
     * 
+    * 1) reservation du port
+    * 2) attente de connexion d'un client
+    *   2.1) Creation d'une tache de traitement du client
     */
    public void lancer()
    {
@@ -37,25 +42,30 @@ public class SEInscription
       {
          port.reserver();
          
+         System.out.println("Le serveur d'enregistrement a bien ete lance.");
+         System.out.println("Attente de connexions...");
+         
          while (true)
          {
-            if(debug)
-                System.out.println("\n+ Connexion d'un client...");
-            
-            // Fonction bloquante qui attend que quelqu'un se connecte
+             // Fonction bloquante qui attend que quelqu'un se connecte
             creerCanal();
+            
+            if(debug)
+                System.out.println("\n+ Connexion d'un client!");
             
             (new Thread(new SEConnexion(canal))).start();
          }
       } 
       catch (IOException e)
       {
-         System.err.println("Serveur d'enregistrement déjà lancé !");
+         System.err.println("Serveur d'enregistrement deja lance !");
       }
    }
    
    /**
+    * Permet de creer un canal
     * 
+    * Methode bloquante sur l'arrive d'un client
     */
    private void creerCanal()
    {
@@ -69,8 +79,9 @@ public class SEInscription
    }
    
    /**
+    * Permet d'ajouter un serveur de jeu.
     * 
-    * @param e
+    * @param e l'enregistrement (serveur de jeu)
     * @return
     */
    public static synchronized boolean ajouterEnregistrement(Enregistrement e)
@@ -81,7 +92,9 @@ public class SEInscription
       {
          jeuxEnregistres.add(e);
          
-         System.out.println("Nb d'enreg. : " + jeuxEnregistres.size());
+         if(debug)
+             System.out.println("+ Ajout d'un enregistrement, nb enr. : " 
+                     + jeuxEnregistres.size());
          
          return true;
       }
@@ -95,6 +108,9 @@ public class SEInscription
     */
    public static synchronized void enleverEnregistrement(Enregistrement e)
    {
+      if(debug)
+          System.out.println("- Suppression d'un enregistrement");
+      
       jeuxEnregistres.remove(e);
    }
    
