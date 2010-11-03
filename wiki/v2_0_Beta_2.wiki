@@ -1,6 +1,0 @@
-#summary Nouvelles fonctionnalités de la version.
-
-= Les nouvelles fonctionnalités =
-
-- Correction de quelques petits bugs <br/><br/>
-- Meilleure présentation dans l'archive <br/><br/>
