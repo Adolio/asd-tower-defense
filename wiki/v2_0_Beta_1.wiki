@@ -1,9 +1,0 @@
-#summary Nouvelles fonctionnalités de la version.
-
-= Les nouvelles fonctionnalités =
-
-- Nouvelle interface graphique <br/><br/>
-- Design des créatures entièrement refait<br/><br/>
-- Le jeu est maintenant entièrement libre ; toutes les ressources sont libres<br/><br/>
-- Intégration d'un système de progression (système des étoiles) <br/><br/>
-- Mode de jeu réseau (Versus) <br/><br/>
