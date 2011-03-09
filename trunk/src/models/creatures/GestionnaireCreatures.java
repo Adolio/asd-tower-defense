@@ -290,17 +290,21 @@ public class GestionnaireCreatures implements Runnable
             @Override
             public void run()
             {
-                // recuperation des zones
-                // FIXME pour chaque zone de depart, lancer la vague...
-                final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(0);
-                final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
-
-                int xDepart = (int) ZONE_DEPART.getCenterX();
-                int yDepart = (int) ZONE_DEPART.getCenterY();
-
                 // creation des creatures de la vague
                 for (int i = 0; i < vague.getNbCreatures() && jeu.estDemarre(); i++)
                 {
+                    
+                    // recuperation des zones
+                    // FIXME pour chaque zone de depart, lancer la vague...
+                    // for(final Rectangle ZONE_DEPART : equipeCiblee.getZonesDepartCreatures())
+                    
+                    // Actuellement c'est un random sur le nombre de zone
+                    final Rectangle ZONE_DEPART = equipeCiblee.getZoneDepartCreatures(Outils.tirerNombrePseudoAleatoire(0, equipeCiblee.getNbZonesDepart()-1));
+                    final Rectangle ZONE_ARRIVEE = equipeCiblee.getZoneArriveeCreatures();
+                    
+                    int xDepart = (int) ZONE_DEPART.getCenterX();
+                    int yDepart = (int) ZONE_DEPART.getCenterY();
+                    
                     // gestion de la pause
                     try
                     {

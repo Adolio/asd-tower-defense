@@ -1,16 +1,8 @@
 package vues.editeurTerrain;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
-import vues.commun.EcouteurDePanelTerrain;
-import vues.commun.Panel_Terrain;
+import java.awt.*;
+import java.awt.event.*;
+import vues.commun.*;
 import models.jeu.Jeu;
 import models.joueurs.Equipe;
 import models.terrains.Terrain;
@@ -21,214 +13,217 @@ import models.terrains.Terrain;
  * Ce panel hérite du panel d'affichage du terrain de jeu durant la partie.
  * 
  * @author Aurelien Da Campo
- * @version 1.0 | juillet 2010
+ * @version 1.1 | mars 2011
  * @since jdk1.6.0_16
  * @see Terrain
  */
-public class Panel_CreationTerrain extends Panel_Terrain
-{
-    private static final long serialVersionUID      = 1L;
-    private static final int MODE_DEPLACEMENT       = 0;
-    private static final int MODE_TRAITEMENT_REC    = 1;
-    
-    //private Terrain terrain;
+public class Panel_CreationTerrain extends Panel_Terrain {
+    private static final long serialVersionUID = 1L;
+    private static final int MODE_DEPLACEMENT = 0;
+    private static final int MODE_TRAITEMENT_REC = 1;
+
+    // private Terrain terrain;
     private int mode = MODE_DEPLACEMENT;
     private Rectangle recEnTraitement;
-    
+
     /**
      * largeur d'un case du maillage pour le positionnement des tours
      */
     private static final int CADRILLAGE = 10; // unite du cadriallage en pixel
 
-    public Panel_CreationTerrain(Jeu jeu, EcouteurDePanelTerrain edpt)
-    {
-        super(jeu,edpt);
-        
+    public Panel_CreationTerrain(Jeu jeu, EcouteurDePanelTerrain edpt) {
+        super(jeu, edpt);
+
         afficherQuadrillage = true;
     }
 
     private int taillePoignee = 6;
     private int taillePoigneeSur2 = taillePoignee / 2;
     private boolean redimGrab;
+
+    private static final int POIGNEE_DROITE = 0;
+    private static final int POIGNEE_GAUCHE = 1;
+    private static final int POIGNEE_BAS = 2;
+    private static final int POIGNEE_HAUT = 3;
+    private static final int POIGNEE_DROITE_HAUT = 4;
+    private static final int POIGNEE_GAUCHE_HAUT = 5;
+    private static final int POIGNEE_GAUCHE_BAS = 6;
+    private static final int POIGNEE_DROITE_BAS = 7;
+
+    /**
+     * la poignee qui est agripee
+     */
     private int poigneeGrab;
     private Rectangle recEnTraitementOriginal;
     private boolean deplGrab;
     private EcouteurDePanelCreationTerrain edpct;
-    
+
     @Override
-    public void paintComponent(Graphics g)
-    {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         Graphics2D g2 = (Graphics2D) g;
-        
-        if(recEnTraitement != null)
-        {
-            setTransparence(1.0f,g2);
-            
+
+        if (recEnTraitement != null) {
+            setTransparence(1.0f, g2);
+
             // dessin du tour (selection)
             g2.setColor(Color.WHITE);
-            g.drawRect(recEnTraitement.x,
-                    recEnTraitement.y,
-                    recEnTraitement.width,
-                    recEnTraitement.height);
-            
-            // dessin des poignée 
+            g.drawRect(recEnTraitement.x, recEnTraitement.y,
+                    recEnTraitement.width, recEnTraitement.height);
+
+            // dessin des poignées
             g2.setColor(Color.RED);
             Rectangle poignee;
-            for(int i=0;i<4;i++)
-            {
-                poignee = getPoignee(recEnTraitement,i);
-                g2.fillRect(poignee.x,poignee.y,poignee.width,poignee.height);
+            for (int i = 0; i < 8; i++) {
+                poignee = getPoignee(recEnTraitement, i);
+                g2.fillRect(poignee.x, poignee.y, poignee.width, poignee.height);
             }
         }
     }
 
-    private Rectangle getPoignee(Rectangle rectangle, int i)
-    {
+    private Rectangle getPoignee(Rectangle rectangle, int i) {
         final int L_SUR_2 = recEnTraitement.width / 2;
         final int H_SUR_2 = recEnTraitement.height / 2;
-        
-        
+
         taillePoignee = (int) (6 / coeffTaille);
         taillePoigneeSur2 = taillePoignee / 2;
-        
-        
-        switch(i)
-        {
-            case 0 : // droite
-                return new Rectangle(recEnTraitement.x-taillePoigneeSur2,
-                        recEnTraitement.y+H_SUR_2-taillePoigneeSur2,taillePoignee,taillePoignee);
-            case 1 : // haut
-                return new Rectangle(recEnTraitement.x+recEnTraitement.width-taillePoigneeSur2,
-                        recEnTraitement.y+H_SUR_2-taillePoigneeSur2,taillePoignee,taillePoignee);
-            case 2 : // gauche
-                return new Rectangle(recEnTraitement.x+L_SUR_2-taillePoigneeSur2,
-                        recEnTraitement.y-taillePoigneeSur2,taillePoignee,taillePoignee);
-            case 3 : // bas
-                return new Rectangle(recEnTraitement.x+L_SUR_2-taillePoigneeSur2,
-                        recEnTraitement.y+recEnTraitement.height-taillePoigneeSur2,taillePoignee,taillePoignee);
+
+        switch (i) {
+        case POIGNEE_DROITE:
+            return new Rectangle(recEnTraitement.x + recEnTraitement.width
+                    - taillePoigneeSur2, recEnTraitement.y + H_SUR_2
+                    - taillePoigneeSur2, taillePoignee, taillePoignee);
+        case POIGNEE_GAUCHE:
+            return new Rectangle(recEnTraitement.x - taillePoigneeSur2,
+                    recEnTraitement.y + H_SUR_2 - taillePoigneeSur2,
+                    taillePoignee, taillePoignee);
+        case POIGNEE_HAUT:
+            return new Rectangle(recEnTraitement.x + L_SUR_2
+                    - taillePoigneeSur2, recEnTraitement.y
+                    + recEnTraitement.height - taillePoigneeSur2,
+                    taillePoignee, taillePoignee);
+        case POIGNEE_BAS:
+            return new Rectangle(recEnTraitement.x + L_SUR_2
+                    - taillePoigneeSur2, recEnTraitement.y - taillePoigneeSur2,
+                    taillePoignee, taillePoignee);
+
+        case POIGNEE_DROITE_HAUT:
+            return new Rectangle(recEnTraitement.x + recEnTraitement.width
+                    - taillePoigneeSur2, recEnTraitement.y
+                    + recEnTraitement.height - taillePoigneeSur2,
+                    taillePoignee, taillePoignee);
+        case POIGNEE_GAUCHE_HAUT:
+            return new Rectangle(recEnTraitement.x - taillePoigneeSur2,
+                    recEnTraitement.y + recEnTraitement.height
+                            - taillePoigneeSur2, taillePoignee, taillePoignee);
+        case POIGNEE_GAUCHE_BAS:
+            return new Rectangle(recEnTraitement.x - taillePoigneeSur2,
+                    recEnTraitement.y - taillePoigneeSur2, taillePoignee,
+                    taillePoignee);
+        case POIGNEE_DROITE_BAS:
+            return new Rectangle(recEnTraitement.x + recEnTraitement.width
+                    - taillePoigneeSur2, recEnTraitement.y - taillePoigneeSur2,
+                    taillePoignee, taillePoignee);
         }
-        
+
         return null;
     }
 
     @Override
-    public void mousePressed(MouseEvent me)
-    {
+    public void mousePressed(MouseEvent me) {
         boutonGrab = me.getButton();
 
-        switch(mode)
-        {
-            case MODE_DEPLACEMENT : 
-                super.mousePressed(me);
-                break;
-                
-            case MODE_TRAITEMENT_REC : 
-                
-                sourisGrabX = me.getX();
-                sourisGrabY = me.getY();
-                
-                decaleGrabX = decaleX;
-                decaleGrabY = decaleY;
-                
-                redimGrab = false;
-                deplGrab  = false;
-                
-                Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
-                
-                
-                if(recEnTraitement != null)
-                {
-                    // Contact avec une poignée ?
-                    Rectangle poignee;
-                    for(int i=0;i<4;i++)
-                    {
-                        poignee = getPoignee(recEnTraitement,i);
-                        
-                        if(poignee.contains(p))
-                        {
-                            redimGrab = true;
-                            poigneeGrab = i;
-                            return;
-                            //recEnTraitement.width+=10; 
-                        }
-                    }   
-                }
-                
-                // si il y une zone de départ ou d'arrivee
-                for(Equipe e : jeu.getEquipes())
-                {
-                    
-                    // zone de départ
-                    for(int i=0;i<e.getNbZonesDepart();i++)
-                    {
-                        Rectangle r = e.getZoneDepartCreatures(i); 
-                        
-                        if(r.contains(p))
-                        {
-                            setRecEnTraitement(r);
-                            return;
-                        }
-                    }
-                     
-                    // zone d'arrive
-                    if(e.getZoneArriveeCreatures().contains(p))
-                    {
-                        setRecEnTraitement(e.getZoneArriveeCreatures());
-                        return;
-                    }
-                }
-                
-                // si il a un mur
-                for(Rectangle r : jeu.getTerrain().getMurs())
-                    if(r.contains(p))
-                    {
-                        setRecEnTraitement(r);
-                        
-                        if(edpct != null)
-                            edpct.zoneSelectionnee(r);
-                        
-                        return;
-                    }
-                
-                
-                // si il y une zone de construction
-                /*
-                for(Equipe e : jeu.getEquipes())
-                {
-                    for(EmplacementJoueur ej : e.getEmplacementsJoueur())
-                    {
-                        if(ej.getZoneDeConstruction().contains(me.getPoint()))
-                        {
-                            setRecEnTraitement(ej.getZoneDeConstruction());
-                            return;
-                        }
-                    }
-                }
-                */
+        switch (mode) {
+        case MODE_DEPLACEMENT:
+            super.mousePressed(me);
+            break;
 
-                break;
+        case MODE_TRAITEMENT_REC:
+
+            sourisGrabX = me.getX();
+            sourisGrabY = me.getY();
+
+            decaleGrabX = decaleX;
+            decaleGrabY = decaleY;
+
+            redimGrab = false;
+            deplGrab = false;
+
+            Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
+
+            if (recEnTraitement != null) {
+                // Contact avec une poignée ?
+                Rectangle poignee;
+                for (int i = 0; i < 8; i++) {
+                    poignee = getPoignee(recEnTraitement, i);
+
+                    if (poignee.contains(p)) {
+                        redimGrab = true;
+                        poigneeGrab = i;
+                        return;
+                        // recEnTraitement.width+=10;
+                    }
+                }
+            }
+
+            // si il y une zone de départ ou d'arrivee
+            for (Equipe e : jeu.getEquipes()) {
+
+                // zone de départ
+                for (int i = 0; i < e.getNbZonesDepart(); i++) {
+                    Rectangle r = e.getZoneDepartCreatures(i);
+
+                    if (r.contains(p)) {
+                        setRecEnTraitement(r);
+                        return;
+                    }
+                }
+
+                // zone d'arrive
+                if (e.getZoneArriveeCreatures().contains(p)) {
+                    setRecEnTraitement(e.getZoneArriveeCreatures());
+                    return;
+                }
+            }
+
+            // si il a un mur
+            for (Rectangle r : jeu.getTerrain().getMurs())
+                if (r.contains(p)) {
+                    setRecEnTraitement(r);
+
+                    if (edpct != null)
+                        edpct.zoneSelectionnee(r);
+
+                    return;
+                }
+
+            // si il y une zone de construction
+            /*
+             * for(Equipe e : jeu.getEquipes()) { for(EmplacementJoueur ej :
+             * e.getEmplacementsJoueur()) {
+             * if(ej.getZoneDeConstruction().contains(me.getPoint())) {
+             * setRecEnTraitement(ej.getZoneDeConstruction()); return; } } }
+             */
+
+            break;
         }
-        
-        
+
     }
 
     @Override
-    public void mouseMoved(MouseEvent me)
-    {
-        switch(mode)
-        {
-            case MODE_DEPLACEMENT : 
-                super.mouseMoved(me);
-                break;
-                
-            case MODE_TRAITEMENT_REC : 
-                super.mouseMoved(me);
-                break;
+    public void mouseMoved(MouseEvent me) {
+        switch (mode) {
+        case MODE_DEPLACEMENT:
+            super.mouseMoved(me);
+            break;
+
+        case MODE_TRAITEMENT_REC:
+            super.mouseMoved(me);
+            break;
         }
     }
-    
+
     /**
      * Methode de gestion du clique enfoncé de la souris lorsque qu'elle bouge.
      * 
@@ -236,203 +231,221 @@ public class Panel_CreationTerrain extends Panel_Terrain
      * @see MouseMotionListener
      */
     @Override
-    public void mouseDragged(MouseEvent me)
-    {
-        switch(mode)
-        {
-            case MODE_DEPLACEMENT : 
-                super.mouseDragged(me);
-                break;
-                
-            case MODE_TRAITEMENT_REC : 
-                
-                Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
-                Point sourisGrab = getCoordoneeSurTerrainOriginal(sourisGrabX,sourisGrabY);
-                //Point reto_CTO = getCoordoneeSurTerrainOriginal(recEnTraitementOriginal.x,recEnTraitementOriginal.y);
+    public void mouseDragged(MouseEvent me) {
+        switch (mode) {
+        case MODE_DEPLACEMENT:
+            super.mouseDragged(me);
+            break;
 
-                if(boutonGrab == MouseEvent.BUTTON1)
-                {
-                    if(recEnTraitement != null)
-                    {
-                        if(redimGrab)
-                        {
-                            Rectangle tmpRec = new Rectangle(recEnTraitement);
-                            
-                            switch(poigneeGrab)
-                            {
-                                case 0: // gauche
-                                    recEnTraitement.width   = getLongueurSurGrillage(sourisGrab.x - p.x + recEnTraitementOriginal.width);
-                                    recEnTraitement.x       = recEnTraitementOriginal.x + (recEnTraitementOriginal.width - recEnTraitement.width); 
-                                    break;
-                                case 1: // droite
-                                    recEnTraitement.width   = getLongueurSurGrillage(p.x - sourisGrab.x + recEnTraitementOriginal.width);
-                                    break;
-                                case 2: // haut
-                                    recEnTraitement.height  = getLongueurSurGrillage(sourisGrab.y - p.y + recEnTraitementOriginal.height);
-                                    recEnTraitement.y       = recEnTraitementOriginal.y + (recEnTraitementOriginal.height - recEnTraitement.height);
-                                    break;
-                                case 3: // bas
-                                    recEnTraitement.height  = getLongueurSurGrillage(p.y - sourisGrab.y + recEnTraitementOriginal.height);
-                                    break;
-                            } 
-                            
-                            // pas de taille négative
-                            if(recEnTraitement.width <= 0)
-                            {
-                                recEnTraitement.width   = tmpRec.width;
-                                recEnTraitement.x       = tmpRec.x;
-                            }
-                            if(recEnTraitement.height <= 0)
-                            {
-                                recEnTraitement.height  = tmpRec.height;
-                                recEnTraitement.y       = tmpRec.y;
-                            }
-                            
-                            if(edpct != null)
-                                edpct.zoneModifiee(recEnTraitement);
+        case MODE_TRAITEMENT_REC:
+
+            Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
+            Point sourisGrab = getCoordoneeSurTerrainOriginal(sourisGrabX,
+                    sourisGrabY);
+            // Point reto_CTO =
+            // getCoordoneeSurTerrainOriginal(recEnTraitementOriginal.x,recEnTraitementOriginal.y);
+
+            if (boutonGrab == MouseEvent.BUTTON1) {
+                if (recEnTraitement != null) {
+                    if (redimGrab) {
+                        Rectangle tmpRec = new Rectangle(recEnTraitement);
+
+                        Boolean g = false, d = false, h = false, b = false;
+
+                        switch (poigneeGrab) {
+                        case POIGNEE_GAUCHE:
+                            g = true;
+                            break;
+                        case POIGNEE_DROITE:
+                            d = true;
+                            break;
+                        case POIGNEE_BAS:
+                            b = true;
+                            break;
+                        case POIGNEE_HAUT:
+                            h = true;
+                            break;
+                        case POIGNEE_DROITE_HAUT:
+                            d = true;
+                            h = true;
+                            break;
+                        case POIGNEE_GAUCHE_HAUT:
+                            g = true;
+                            h = true;
+                            break;
+                        case POIGNEE_GAUCHE_BAS:
+                            g = true;
+                            b = true;
+                            break;
+                        case POIGNEE_DROITE_BAS:
+                            d = true;
+                            b = true;
+                            break;
                         }
-                        else if(deplGrab)
-                        {
-                            Point pSouris = getCoordoneeSurTerrainOriginal(me.getPoint());
-                            
-                            recEnTraitement.x = getPositionSurQuadrillage(recEnTraitementOriginal.x + pSouris.x - sourisGrabX);
-                            recEnTraitement.y = getPositionSurQuadrillage(recEnTraitementOriginal.y + pSouris.y - sourisGrabY);
-                        
-                            if(edpct != null)
-                                edpct.zoneModifiee(recEnTraitement);
+
+                        if (g) {
+                            recEnTraitement.width = getLongueurSurGrillage(sourisGrab.x
+                                    - p.x + recEnTraitementOriginal.width);
+                            recEnTraitement.x = recEnTraitementOriginal.x
+                                    + (recEnTraitementOriginal.width - recEnTraitement.width);
                         }
+
+                        if (d) {
+                            recEnTraitement.width = getLongueurSurGrillage(p.x
+                                    - sourisGrab.x
+                                    + recEnTraitementOriginal.width);
+                        }
+
+                        if (b) {
+                            recEnTraitement.height = getLongueurSurGrillage(sourisGrab.y
+                                    - p.y + recEnTraitementOriginal.height);
+                            recEnTraitement.y = recEnTraitementOriginal.y
+                                    + (recEnTraitementOriginal.height - recEnTraitement.height);
+                        }
+
+                        if (h) {
+                            recEnTraitement.height = getLongueurSurGrillage(p.y
+                                    - sourisGrab.y
+                                    + recEnTraitementOriginal.height);
+                        }
+
+                        // pas de taille négative
+                        if (recEnTraitement.width <= 0) {
+                            recEnTraitement.width = tmpRec.width;
+                            recEnTraitement.x = tmpRec.x;
+                        }
+                        if (recEnTraitement.height <= 0) {
+                            recEnTraitement.height = tmpRec.height;
+                            recEnTraitement.y = tmpRec.y;
+                        }
+
+                        if (edpct != null)
+                            edpct.zoneModifiee(recEnTraitement);
+                    } else if (deplGrab) {
+                        Point pSouris = getCoordoneeSurTerrainOriginal(me
+                                .getPoint());
+
+                        recEnTraitement.x = getPositionSurQuadrillage(recEnTraitementOriginal.x
+                                + pSouris.x - sourisGrabX);
+                        recEnTraitement.y = getPositionSurQuadrillage(recEnTraitementOriginal.y
+                                + pSouris.y - sourisGrabY);
+
+                        if (edpct != null)
+                            edpct.zoneModifiee(recEnTraitement);
                     }
                 }
-                
-                break;
+            }
+
+            break;
         }
     }
 
-    private int getLongueurSurGrillage(int longueur)
-    {
+    private int getLongueurSurGrillage(int longueur) {
         return longueur - longueur % CADRILLAGE;
     }
 
     @Override
-    public void mouseReleased(MouseEvent e)
-    {  
-        switch(mode)
-        {
-            case MODE_DEPLACEMENT : 
-                super.mouseReleased(e);
-                break;
-                
-            case MODE_TRAITEMENT_REC : 
-                
-                // On clique sans opération particulière
-                // -> sélection d'un élément
-                if(!deplGrab && !redimGrab)
-                {  
-                    Point p = getCoordoneeSurTerrainOriginal(e.getPoint());
-                    
-                    // si il a un mur
-                    for(Rectangle r : jeu.getTerrain().getMurs())
-                        if(r.contains(p))
-                        {
-                            setRecEnTraitement(r);
-                            
-                            if(edpct != null)
-                                edpct.zoneSelectionnee(r);
-                            
-                            return;
-                        }
-                    
-                    // creation d'un mur si pas de mur
-                    setRecEnTraitement(new Rectangle(
-                            getPositionSurQuadrillage(p.x),
-                            getPositionSurQuadrillage(p.y),
-                            20,20));
-                    
-                    if(edpct != null)
-                        edpct.zoneSelectionnee(recEnTraitement);
-                    
-                    jeu.getTerrain().ajouterMur(recEnTraitement);
-                } 
-                
-                // MISE A JOUR DU RECTANGLE ORIGINAL
-                else if(deplGrab)
-                {
-                    // Après un déplacement, la position du rectangle original est
-                    // mis à jour
-                    recEnTraitementOriginal.x = recEnTraitement.x;
-                    recEnTraitementOriginal.y = recEnTraitement.y;
-                }
-                else if(redimGrab)
-                {
-                    // Après un redimentionnement, la position et la taille
-                    // du rectangle original est mis à jour
-                    recEnTraitementOriginal.x       = recEnTraitement.x;
-                    recEnTraitementOriginal.y       = recEnTraitement.y;
-                    recEnTraitementOriginal.width   = recEnTraitement.width;
-                    recEnTraitementOriginal.height  = recEnTraitement.height;
-                }
-                
-                break;
+    public void mouseReleased(MouseEvent e) {
+        switch (mode) {
+        case MODE_DEPLACEMENT:
+            super.mouseReleased(e);
+            break;
+
+        case MODE_TRAITEMENT_REC:
+
+            // On clique sans opération particulière
+            // -> sélection d'un élément
+            if (!deplGrab && !redimGrab) {
+                Point p = getCoordoneeSurTerrainOriginal(e.getPoint());
+
+                // si il a un mur
+                for (Rectangle r : jeu.getTerrain().getMurs())
+                    if (r.contains(p)) {
+                        setRecEnTraitement(r);
+
+                        if (edpct != null)
+                            edpct.zoneSelectionnee(r);
+
+                        return;
+                    }
+
+                // creation d'un mur si pas de mur
+                setRecEnTraitement(new Rectangle(
+                        getPositionSurQuadrillage(p.x),
+                        getPositionSurQuadrillage(p.y), 20, 20));
+
+                if (edpct != null)
+                    edpct.zoneSelectionnee(recEnTraitement);
+
+                jeu.getTerrain().ajouterMur(recEnTraitement);
+            }
+
+            // MISE A JOUR DU RECTANGLE ORIGINAL
+            else if (deplGrab) {
+                // Après un déplacement, la position du rectangle original est
+                // mis à jour
+                recEnTraitementOriginal.x = recEnTraitement.x;
+                recEnTraitementOriginal.y = recEnTraitement.y;
+            } else if (redimGrab) {
+                // Après un redimentionnement, la position et la taille
+                // du rectangle original est mis à jour
+                recEnTraitementOriginal.x = recEnTraitement.x;
+                recEnTraitementOriginal.y = recEnTraitement.y;
+                recEnTraitementOriginal.width = recEnTraitement.width;
+                recEnTraitementOriginal.height = recEnTraitement.height;
+            }
+
+            break;
         }
     }
-    
-    void setRecEnTraitement(Rectangle r)
-    {
+
+    void setRecEnTraitement(Rectangle r) {
         recEnTraitement = r;
         deplGrab = true;
         recEnTraitementOriginal = new Rectangle(recEnTraitement);
         mode = MODE_TRAITEMENT_REC;
     }
-    
-    void deselectionnerRecEnTraitement()
-    {
+
+    void deselectionnerRecEnTraitement() {
         recEnTraitement = null;
     }
-    
+
     @Override
-    public void keyReleased(KeyEvent ke)
-    {
-        switch(mode)
-        {
-            case MODE_DEPLACEMENT : 
-                super.keyReleased(ke);
-                break;
-                
-            case MODE_TRAITEMENT_REC : 
-                
-                if(ke.getKeyCode() == KeyEvent.VK_DELETE)
-                {
-                    if(recEnTraitement != null)
-                    {
-                        jeu.getTerrain().supprimerMur(recEnTraitement);
-                        recEnTraitement = null;
-                    }
+    public void keyReleased(KeyEvent ke) {
+        switch (mode) {
+        case MODE_DEPLACEMENT:
+            super.keyReleased(ke);
+            break;
+
+        case MODE_TRAITEMENT_REC:
+
+            if (ke.getKeyCode() == KeyEvent.VK_DELETE) {
+                if (recEnTraitement != null) {
+                    jeu.getTerrain().supprimerMur(recEnTraitement);
+                    recEnTraitement = null;
                 }
-                
-                break;
+            }
+
+            break;
         }
     }
-    
-    
-    public void activerModeCreationMurs()
-    {
+
+    public void activerModeCreationMurs() {
         mode = MODE_TRAITEMENT_REC;
     }
 
-    public void activerModeDeplacement()
-    {
+    public void activerModeDeplacement() {
         recEnTraitement = null;
-        
-        mode = MODE_DEPLACEMENT; 
+
+        mode = MODE_DEPLACEMENT;
     }
 
-    public void setEcouteurDeCreationTerrain(EcouteurDePanelCreationTerrain edpct)
-    {
+    public void setEcouteurDeCreationTerrain(
+            EcouteurDePanelCreationTerrain edpct) {
         this.edpct = edpct;
     }
 
-    public Rectangle getRecEnTraitement()
-    {
+    public Rectangle getRecEnTraitement() {
         return recEnTraitement;
     }
 }

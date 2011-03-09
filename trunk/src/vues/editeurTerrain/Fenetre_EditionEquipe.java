@@ -1,0 +1,116 @@
+package vues.editeurTerrain;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import vues.GestionnaireDesPolices;
+import vues.commun.Panel_Table;
+import models.joueurs.Equipe;
+
+public class Fenetre_EditionEquipe extends JFrame implements ActionListener
+{
+    private static final long serialVersionUID = 1L;
+    private final int MARGES_PANEL = 20;
+    
+    private final Equipe equipe;
+    
+    private final JLabel lTitre = new JLabel("Edition d'une equipe");
+    
+    private final JLabel lNomEquipe = new JLabel("Nom :");
+    private final JLabel lCouleurEquipe = new JLabel("Couleur :");
+    
+    private final JTextField tfNomEquipe = new JTextField();
+    private final JButton bCouleurEquipe = new JButton();
+    
+    private final JButton bOk = new JButton("OK");
+    private final JButton bAnnuler = new JButton("Annuler");
+    
+    public Fenetre_EditionEquipe(Equipe equipe)
+    {
+        super("Edition d'une équipe");
+        
+        this.equipe = equipe;
+ 
+        Panel_Table p = new Panel_Table();
+        
+        p.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
+                MARGES_PANEL, MARGES_PANEL)));
+        
+        int ln=0;
+        
+        // Titre
+        lTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lTitre.setBorder(new EmptyBorder(new Insets(0, 0, 10, 0)));
+        p.add(lTitre,0,ln++,3,1);
+        
+        // Nom
+        p.addFieldTitle(lNomEquipe,ln);
+        tfNomEquipe.setText(equipe.getNom());
+        tfNomEquipe.setPreferredSize(new Dimension(90,30));
+        p.addField(tfNomEquipe,ln++);
+        
+        // Couleur
+        p.addFieldTitle(lCouleurEquipe,ln);
+        bCouleurEquipe.setBackground(equipe.getCouleur());
+        bCouleurEquipe.addActionListener(this);
+        bCouleurEquipe.setPreferredSize(new Dimension(90,30));
+        p.addField(bCouleurEquipe,ln++);
+        
+        
+        // Boutons
+        JPanel pButton = new JPanel(new FlowLayout());
+        
+        bOk.addActionListener(this);
+        pButton.add(bOk);
+        
+        bAnnuler.addActionListener(this);
+        pButton.add(bAnnuler);
+        
+        p.add(pButton,1,ln++);
+        
+        add(p,BorderLayout.CENTER);
+        
+        pack();
+        setVisible(true);
+        setLocationRelativeTo(null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        Object obj = e.getSource();
+        
+        if(obj == bCouleurEquipe)
+        {
+            Color couleur = JColorChooser.showDialog(
+                    null,"",equipe.getCouleur());
+              
+            if(couleur != null)
+            {
+                equipe.setCouleur(couleur);
+                bCouleurEquipe.setBackground(couleur);
+            }
+        }
+        else if(obj == bOk)
+        {
+            if(!tfNomEquipe.getText().trim().isEmpty())
+            {
+                equipe.setNom(tfNomEquipe.getText());
+                
+                // TODO raise notification
+                
+                dispose();
+            }
+            else
+            {
+                // TODO erreur nom vide
+            }
+        }
+        else if(obj == bAnnuler)
+        {
+            dispose();
+        }
+    }
+}

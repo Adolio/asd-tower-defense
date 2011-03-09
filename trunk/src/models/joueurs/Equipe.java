@@ -482,4 +482,13 @@ public class Equipe implements Serializable
     {
         this.nom = nom;
     }
+
+    public void suppimerZoneDepart(Rectangle z)
+    {
+        // TODO Protection ?
+        // if(zonesDepartCreatures.size() > 1)
+        zonesDepartCreatures.remove(z);
+        // else
+        //  throw new ... 
+    }
 }

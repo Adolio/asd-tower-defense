@@ -126,7 +126,7 @@ public class Terrain implements Serializable
      * Pour le mode debug
      */
     private Color couleurMurs = Color.BLACK;
-    private Color couleurDeFond = Color.WHITE;
+    private Color couleurDeFond = new Color(0, 100, 0);
     
     /**
      * Les murs sont utilises pour empecher le joueur de construire des tours

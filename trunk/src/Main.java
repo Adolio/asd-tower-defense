@@ -1,4 +1,3 @@
-
 import javax.swing.UIManager;
 import models.outils.GestionnaireSons;
 import vues.Fenetre_ChoixLangue;
@@ -40,7 +39,7 @@ public class Main
                     * C'est juste le look and feel qui n'est pas installe.
                     */ 
                }    
-               
+             
       //Langue.creerFichiersDeLangue();
       
       GestionnaireSons.setVolumeSysteme(GestionnaireSons.VOLUME_PAR_DEFAUT);       
