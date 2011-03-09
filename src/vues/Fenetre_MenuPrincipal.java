@@ -45,7 +45,6 @@ public class Fenetre_MenuPrincipal extends JFrame
         // -- musique d'ambiance --
         // ------------------------
         Son musiqueDAmbiance = new Son(FICHIER_MUSIQUE_MENU);
-
         GestionnaireSons.ajouterSon(musiqueDAmbiance);
         musiqueDAmbiance.lire(0); // lecture infinie
         

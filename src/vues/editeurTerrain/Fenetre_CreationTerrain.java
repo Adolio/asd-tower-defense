@@ -63,7 +63,7 @@ public class Fenetre_CreationTerrain extends    JFrame
     
     
     private final Insets INSETS     = new Insets(5, 5, 5, 5);
-    private final Color C_BTN_SEL   = Color.BLUE;
+    private final Color C_BTN_SEL   = LookInterface.COULEUR_DE_FOND_SEC;
      
     private Panel_CreationTerrain panelCreationTerrain;
     private Panel_OptionsTerrain panelOptionsTerrain;
