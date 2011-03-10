@@ -241,7 +241,7 @@ public class Langue
     public static final String ID_ERREUR_NOM_SERVEUR_VIDE = "ERREUR_NOM_SERVEUR_VIDE";
     public static final String ID_ERREUR_PAS_DE_TERRAIN_SELECTIONNE = "ERREUR_PAS_DE_TERRAIN_SELECTIONNE";
 
-    private static boolean initialise = false;
+    private static boolean initialisee = false;
     
     private static JSONObject jo;
     
@@ -278,14 +278,14 @@ public class Langue
             e.printStackTrace();
         }
         
-        initialise = true;
+        initialisee = true;
 
         return true;
     }
     
     public static String getTexte(String idTxt)
     {
-        if(initialise)
+        if(initialisee)
             try
             {
                 return jo.getString(idTxt);
@@ -855,5 +855,9 @@ public class Langue
         {
             e.printStackTrace();
         } 
+    }
+
+    public static boolean estInitialisee() {
+        return initialisee ;
     }
 }

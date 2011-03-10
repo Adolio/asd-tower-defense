@@ -214,13 +214,78 @@ public class Panel_CreationTerrain extends Panel_Terrain {
     @Override
     public void mouseMoved(MouseEvent me) {
         switch (mode) {
-        case MODE_DEPLACEMENT:
-            super.mouseMoved(me);
-            break;
+            case MODE_DEPLACEMENT:
+                super.mouseMoved(me);
+                break;
+    
+            case MODE_TRAITEMENT_REC:
+                super.mouseMoved(me);
+                
+                if(recEnTraitement != null)
+                {
+                    sourisGrabX = me.getX();
+                    sourisGrabY = me.getY();
 
-        case MODE_TRAITEMENT_REC:
-            super.mouseMoved(me);
-            break;
+                    decaleGrabX = decaleX;
+                    decaleGrabY = decaleY;
+
+                    redimGrab = false;
+                    deplGrab = false;
+
+                    Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
+
+                    if (recEnTraitement != null) {
+                       
+                        // Contact avec une poignée ?
+                        Rectangle poignee;
+                        for (int i = 0; i < 8; i++) {
+                            poignee = getPoignee(recEnTraitement, i);
+
+                            if (poignee.contains(p)) {
+                                
+                                switch(i)
+                                {
+                                    case POIGNEE_GAUCHE:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_DROITE:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_BAS:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_HAUT:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_DROITE_HAUT:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_GAUCHE_HAUT:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_GAUCHE_BAS:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                                        return;
+                                    case POIGNEE_DROITE_BAS:
+                                        setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+                                        return;
+                                
+                                }
+                                // recEnTraitement.width+=10;
+                            }
+                        }
+                        
+                        // Contact avec la surface d'un mur
+                        if(recEnTraitement.contains(p))
+                        {
+                            setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                        }
+                        
+                    } 
+                    
+                }
+                
+                break;
         }
     }
 
@@ -369,15 +434,25 @@ public class Panel_CreationTerrain extends Panel_Terrain {
                         return;
                     }
 
-                // creation d'un mur si pas de mur
-                setRecEnTraitement(new Rectangle(
-                        getPositionSurQuadrillage(p.x),
-                        getPositionSurQuadrillage(p.y), 20, 20));
-
-                if (edpct != null)
-                    edpct.zoneSelectionnee(recEnTraitement);
-
-                jeu.getTerrain().ajouterMur(recEnTraitement);
+                if(e.getButton() == MouseEvent.BUTTON1)
+                {
+                    // creation d'un mur si pas de mur
+                    setRecEnTraitement(new Rectangle(
+                            getPositionSurQuadrillage(p.x),
+                            getPositionSurQuadrillage(p.y), 20, 20));
+    
+                    if (edpct != null)
+                        edpct.zoneSelectionnee(recEnTraitement);
+    
+                    jeu.getTerrain().ajouterMur(recEnTraitement);
+                }
+                else if(e.getButton() == MouseEvent.BUTTON3)
+                {
+                    deselectionnerRecEnTraitement();
+                    
+                    if (edpct != null)
+                        edpct.zoneSelectionnee(null);
+                }
             }
 
             // MISE A JOUR DU RECTANGLE ORIGINAL

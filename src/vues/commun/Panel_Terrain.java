@@ -488,7 +488,6 @@ public class Panel_Terrain extends JPanel implements Runnable,
         //-- affichage de l'espace --
         //---------------------------
 	    g2.setColor(LookInterface.COULEUR_DE_FOND_SEC);
-	    
 	    g2.fillRect(
 	            -MARGE_UNIVERS, 
 	            -MARGE_UNIVERS, 
@@ -546,7 +545,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
                     // tour de couleur
                     setTransparence(1.f, g2);
                     g2.setColor(equipe.getCouleur());
-                    g2.drawRect(r.x, r.y, r.width, r.height);  
+                    Stroke tmp = g2.getStroke();
+                    g2.setStroke(TRAIT_TILLE_EPAIS);
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                    g2.setStroke(tmp);
 		        }
 	        }
 	        
