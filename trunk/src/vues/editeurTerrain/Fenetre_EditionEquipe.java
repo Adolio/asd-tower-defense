@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import vues.GestionnaireDesPolices;
+import vues.LookInterface;
 import vues.commun.Panel_Table;
 import models.joueurs.Equipe;
 
@@ -33,8 +34,10 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
         
         this.equipe = equipe;
  
+        getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_SEC);
+
         Panel_Table p = new Panel_Table();
-        
+        p.setOpaque(false);
         p.setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
                 MARGES_PANEL, MARGES_PANEL)));
         
@@ -42,6 +45,7 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
         
         // Titre
         lTitre.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
+        lTitre.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         lTitre.setBorder(new EmptyBorder(new Insets(0, 0, 10, 0)));
         p.add(lTitre,0,ln++,3,1);
         
@@ -61,11 +65,14 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
         
         // Boutons
         JPanel pButton = new JPanel(new FlowLayout());
+        pButton.setOpaque(false);
         
         bOk.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bOk);
         pButton.add(bOk);
         
         bAnnuler.addActionListener(this);
+        GestionnaireDesPolices.setStyle(bAnnuler);
         pButton.add(bAnnuler);
         
         p.add(pButton,1,ln++);

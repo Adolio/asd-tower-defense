@@ -3,14 +3,11 @@ package vues.editeurTerrain;
 import i18n.Langue;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.border.LineBorder;
 import vues.GestionnaireDesPolices;
 import vues.LookInterface;
 import vues.commun.Panel_Table;
-import models.attaques.RafaleDeVent;
 import models.jeu.Jeu;
 import models.joueurs.EmplacementJoueur;
 import models.joueurs.Equipe;
@@ -66,7 +63,9 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         JPanel pEquipe = new JPanel(new BorderLayout());
         pEquipe.setOpaque(false);
         pTabEquipes.setOpaque(false);
-        pEquipe.add(new JScrollPane(pTabEquipes),BorderLayout.NORTH);
+        
+        //new JScrollPane(
+        pEquipe.add(pTabEquipes,BorderLayout.NORTH);
         pEquipe.setPreferredSize(new Dimension(100,200));
         
         //JScrollPane js = new JScrollPane(pEquipe);
@@ -88,6 +87,13 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         for(final Equipe equipe : jeu.getEquipes())
         {
+            JPanel lTrait = new JPanel();
+            lTrait.setBorder(new LineBorder(LookInterface.COULEUR_DE_FOND_PRI, 4));
+            lTrait.setPreferredSize(new Dimension(380,8));
+            //JLabel lTrait = new JLabel("------------------------------------------------------------------------------------------------------");
+            pTabEquipes.add(lTrait,0,ligne++,5,1);
+            
+ 
             // nom de l'équipe
             final JLabel lNomEquipe = new JLabel(equipe.getNom());
             lNomEquipe.setFont(GestionnaireDesPolices.POLICE_TITRE);
@@ -148,7 +154,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 }
             });
             
-            pTabEquipes.add(bAjouterZonesDepart,3,ligne);
+            pTabEquipes.add(bAjouterZonesDepart,1,ligne);
             
             ligne++;
             
@@ -229,7 +235,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             final JButton bNouvelEmplacement = new JButton(I_AJOUTER);
             GestionnaireDesPolices.setStyle(bNouvelEmplacement);
-            pTabEquipes.add(bNouvelEmplacement,3,ligne);
+            pTabEquipes.add(bNouvelEmplacement,1,ligne);
             
             bNouvelEmplacement.addActionListener(new ActionListener()
             {
@@ -250,7 +256,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 pTabEquipes.add(lNomEmplacement,0,ligne);
                 
                 // Couleur
-                final JButton bCouleurEmplacement = new JButton(I_COULEURS);
+                final JButton bCouleurEmplacement = new JButton(I_PARAMETRES);
                 GestionnaireDesPolices.setStyle(bCouleurEmplacement);
                 pTabEquipes.add(bCouleurEmplacement,1,ligne);
                 bCouleurEmplacement.addActionListener(new ActionListener()

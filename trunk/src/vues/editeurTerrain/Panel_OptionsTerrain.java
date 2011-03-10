@@ -1,19 +1,16 @@
 package vues.editeurTerrain;
 
 import i18n.Langue;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
+import javax.swing.event.*;
+import vues.GestionnaireDesPolices;
 import vues.commun.Panel_Table;
 import models.jeu.Jeu;
+import models.jeu.ModeDeJeu;
 import models.terrains.Terrain;
 
 /**
@@ -31,36 +28,44 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_DEL = new ImageIcon("img/icones/delete.png");
     
-    
+    // ----------------------------
+    // -- Elements du formulaire --
+    // ----------------------------
     private JTextField tfDescription = new JTextField();
-    
     private JTextField tfNbPiecesOrInit = new JTextField();
     private JTextField tfNbViesInit = new JTextField();
-
-    private JComboBox cbModeDeJeu = new JComboBox();
-    
+    private JComboBox cbModeDeJeu = new JComboBox(); 
     private JTextField tfLargeurM = new JTextField();
     private JTextField tfHauteurM = new JTextField();
-    
     private JTextField tfLargeurT = new JTextField();
-    private JTextField tfHauteurT = new JTextField();
-    
+    private JTextField tfHauteurT = new JTextField(); 
     private JSlider sOpaciteMurs    = new JSlider(0,100);
-    
     private JButton bImageDeFond    = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_PARCOURIR)+"...");
     private  JButton bSupprImageDeFond = new JButton(I_DEL);
     private JButton bCouleurDeFond  = new JButton();
     private JButton bCouleurDesMurs = new JButton();
-    
     private final JFileChooser fcImageDeFond = new JFileChooser();
+    
+    /**
+     * Le jeu a editer
+     */
     private Jeu jeu;
     
-    private Panel_Table pForm = new Panel_Table(); 
+    /**
+     * Formulaire (affichage clef / champ)
+     */
+    private Panel_Table pForm = new Panel_Table(new Insets(1,5,1,5)); 
     
-    private Dimension dim = new Dimension(120,25);
-    
-    
-    
+    /**
+     * Dimension des elements de droite
+     */
+    private Dimension dim = new Dimension(150,25);
+
+    /**
+     * Constructeur
+     * 
+     * @param jeu
+     */
     public Panel_OptionsTerrain(Jeu jeu)
     {
         this.jeu = jeu;
@@ -74,33 +79,40 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.setOpaque(false);
         
         // mode de jeu
-        cbModeDeJeu.addItem("Solo");
-        cbModeDeJeu.addItem("Versus");
-        //cbModeDeJeu.addItem(ModeDeJeu.MODE_COOP); // TODO
-        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_MODE)),0,ligne);
+        cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_SOLO));
+        cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_VERSUS));
+        //cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_COOP)); // TODO
+        
+        JLabel lMode = new JLabel(Langue.getTexte(Langue.ID_TXT_MODE));
+        lMode.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+        pForm.add(lMode,0,ligne);
         cbModeDeJeu.setPreferredSize(dim);
         cbModeDeJeu.addActionListener(this);
         pForm.add(cbModeDeJeu,1,ligne);
         ligne++;
              
-        // Taille Terrain
-        pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_TAILLE_TERRAIN)),0,ligne);
+        // Taille du terrain
         tfLargeurT.setText(Integer.toString(jeu.getTerrain().getLargeur()));
         tfHauteurT.setText(Integer.toString(jeu.getTerrain().getHauteur()));
-        tfLargeurT.setPreferredSize(new Dimension(40,25));
-        tfHauteurT.setPreferredSize(new Dimension(40,25));
-        
+        tfLargeurT.setPreferredSize(dim);
+        tfHauteurT.setPreferredSize(dim);
         tfLargeurT.getDocument().addDocumentListener(this);
         tfHauteurT.getDocument().addDocumentListener(this);
         
-        JPanel pTailleT = new JPanel();
-        pTailleT.setOpaque(false);
-        pTailleT.add(new JLabel("w:"));
-        pTailleT.add(tfLargeurT);
-        pTailleT.add(new JLabel("h:"));
-        pTailleT.add(tfHauteurT);
-        pForm.add(pTailleT,1,ligne);
+        // TODO translate
+        JLabel lLargeur = new JLabel("Width");
+        lLargeur.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+        pForm.add(lLargeur,0,ligne);
+        pForm.add(tfLargeurT,1,ligne);
         ligne++;
+
+        // TODO translate
+        JLabel lHauteur = new JLabel("Height");
+        lHauteur.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
+        pForm.add(lHauteur,0,ligne);
+        pForm.add(tfHauteurT,1,ligne);
+        ligne++;
+        
         
         // Description du terrain
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_DESCRIPTION)),0,ligne);
@@ -112,6 +124,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(tfDescription,1,ligne);
         ligne++;
         
+        
         // Nombre de pieces d'or initiales
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_NB_PIECES_OR_INIT)),0,ligne);
         tfNbPiecesOrInit.setPreferredSize(dim);
@@ -122,6 +135,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(tfNbPiecesOrInit,1,ligne);
         ligne++;
 
+        
         // Nombre de vies initiales
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_NB_VIES_INIT)),0,ligne);
         tfNbViesInit.setPreferredSize(dim);
@@ -132,21 +146,24 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(tfNbViesInit,1,ligne);
         ligne++;
         
+        
         // Couleur de fond
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_DE_FOND)),0,ligne);
-        bCouleurDeFond.setPreferredSize(new Dimension(25,25));
+        bCouleurDeFond.setPreferredSize(dim);
         bCouleurDeFond.addActionListener(this);
         bCouleurDeFond.setBackground(jeu.getTerrain().getCouleurDeFond());
         pForm.add(bCouleurDeFond,1,ligne);
         ligne++;
         
+        
         // Couleur des murs
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_COULEUR_MURS)),0,ligne);
-        bCouleurDesMurs.setPreferredSize(new Dimension(25,25));
+        bCouleurDesMurs.setPreferredSize(dim);
         bCouleurDesMurs.addActionListener(this);
         bCouleurDesMurs.setBackground(jeu.getTerrain().getCouleurMurs());
         pForm.add(bCouleurDesMurs,1,ligne);
         ligne++;
+        
         
         // Image de fond
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_IMAGE_DE_FOND)),0,ligne);
@@ -157,6 +174,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         pForm.add(bSupprImageDeFond,2,ligne);
         ligne++;
 
+        
         // Afficher les murs
         pForm.add(new JLabel(Langue.getTexte(Langue.ID_TXT_MURS_VISIBLES_PAR_DEF)),0,ligne);
         sOpaciteMurs.addChangeListener(this);
@@ -164,10 +182,11 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
         sOpaciteMurs.setMinorTickSpacing(10);
         sOpaciteMurs.setPaintTicks(true);
         sOpaciteMurs.setPaintLabels(true);
-
+        sOpaciteMurs.setPreferredSize(new Dimension(dim.width,50));
         sOpaciteMurs.setValue((int)jeu.getTerrain().getOpaciteMurs()*100);
         pForm.add(sOpaciteMurs,1,ligne);
         ligne++;
+        
         
         // Taille Maillage
         /*
@@ -190,23 +209,16 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener, Docu
     
     public void actionPerformed(ActionEvent e) 
     {
-
         if (e.getSource() == cbModeDeJeu) 
-        {
             jeu.getTerrain().setModeDeJeu(cbModeDeJeu.getSelectedIndex());
-        }
         else if (e.getSource() == bImageDeFond) 
-        {
             if (fcImageDeFond.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
             {
                 File file = fcImageDeFond.getSelectedFile();
                 jeu.getTerrain().setImageDeFond(Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath()));
-            }
-       } 
+            } 
        else if (e.getSource() == bSupprImageDeFond) 
-       {
-           jeu.getTerrain().setImageDeFond(null);
-       }  
+           jeu.getTerrain().setImageDeFond(null); 
        else if (e.getSource() == bCouleurDeFond)
        {
            Color couleur = JColorChooser.showDialog(null,

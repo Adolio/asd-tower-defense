@@ -109,6 +109,7 @@ public class Fenetre_CreationTerrain extends    JFrame
     public Fenetre_CreationTerrain()
     {
         super(Langue.getTexte(Langue.ID_TITRE_EDITEUR_DE_TERRAIN));
+        
         setIconImage(I_FENETRE.getImage());
         getContentPane().setLayout(new BorderLayout());
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
@@ -248,6 +249,8 @@ public class Fenetre_CreationTerrain extends    JFrame
                      */ 
                 } 
         
+        Langue.initaliser("lang/en_EN.json");
+                      
         new Fenetre_CreationTerrain();
     }
 
@@ -532,14 +535,19 @@ public class Fenetre_CreationTerrain extends    JFrame
     @Override
     public void zoneModifiee(Rectangle zone)
     {
-        lblEtat.setForeground(Color.BLACK);
+        lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
         lblEtat.setText("x:"+zone.x+" y:"+zone.y+" w:"+zone.width+" h:"+zone.height); 
     }
 
     @Override
     public void zoneSelectionnee(Rectangle zone)
     {
-        lblEtat.setForeground(Color.BLACK);
-        lblEtat.setText("x:"+zone.x+" y:"+zone.y+" w:"+zone.width+" h:"+zone.height);
+        if(zone == null)
+            lblEtat.setText(" ");
+        else
+        {
+            lblEtat.setForeground(LookInterface.COULEUR_TEXTE_PRI);
+            lblEtat.setText("x:"+zone.x+" y:"+zone.y+" w:"+zone.width+" h:"+zone.height);
+        }
     }
 }

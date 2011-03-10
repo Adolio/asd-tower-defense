@@ -25,6 +25,15 @@ public class Panel_Table extends JPanel
 	{
 		setLayout(gbl);
 	}
+	
+	/**
+     * Constructor without insets
+     */
+    public Panel_Table(Insets insets)
+    {
+        this();
+        this.ct.insets = insets;
+    }
 
 	/**
      * Constructor without params
