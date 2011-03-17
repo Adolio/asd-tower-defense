@@ -542,9 +542,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 		            g2.setColor(COULEUR_ZONE_DEPART);
                     dessinerZone(r,g2);
                     
-                    // tour de couleur
+                    // numero
                     setTransparence(1.f, g2);
                     g2.setColor(equipe.getCouleur());
+                    g2.drawString(i+"", r.x+r.width/2-5, r.y+r.height/2-5);
+                    
+                    // tour de couleur
                     Stroke tmp = g2.getStroke();
                     g2.setStroke(TRAIT_TILLE_EPAIS);
                     g2.drawRect(r.x, r.y, r.width, r.height);

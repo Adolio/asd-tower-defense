@@ -137,7 +137,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             ligne++;
             
-            JLabel lZonesDepart = new JLabel("Zones D et A");
+            JLabel lZonesDepart = new JLabel("Arrivee et departs");
             lZonesDepart.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
             pTabEquipes.add(lZonesDepart,0,ligne);
             
@@ -208,6 +208,9 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 GestionnaireDesPolices.setStyle(bSupprimerZoneDepart);
                 pTabEquipes.add(bSupprimerZoneDepart,3,ligne);
                 
+                if(equipe.getNbZonesDepart() == 1)
+                    bSupprimerZoneDepart.setEnabled(false);
+                
                 bSupprimerZoneDepart.addActionListener(new ActionListener()
                 {
                     @Override
@@ -253,6 +256,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             { 
                 
                 JLabel lNomEmplacement = new JLabel(Langue.getTexte(Langue.ID_TXT_ZONE_JOUEUR)+ej.getId());
+                GestionnaireDesPolices.setStyle(lNomEmplacement);
                 pTabEquipes.add(lNomEmplacement,0,ligne);
                 
                 // Couleur
@@ -296,6 +300,10 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 final JButton bSupprimerEmplacement = new JButton(I_SUPPRIMER);
                 GestionnaireDesPolices.setStyle(bSupprimerEmplacement);
                 pTabEquipes.add(bSupprimerEmplacement,3,ligne);
+                
+                if(equipe.getNbEmplacements() == 1)
+                    bSupprimerEmplacement.setEnabled(false);
+                
                 bSupprimerEmplacement.addActionListener(new ActionListener()
                 {
                     @Override

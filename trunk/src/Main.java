@@ -31,7 +31,7 @@ public class Main
                try 
                {
                    UIManager.setLookAndFeel(laf.getClassName());
-               } 
+               }
                catch (Exception e) 
                {
                    /* 
