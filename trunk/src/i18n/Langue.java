@@ -618,7 +618,7 @@ public class Langue
             jo.put(ID_TXT_BTN_ACTIVE_DESACTIVE,"Activé / Désactivé");
             jo.put(ID_TXT_BTN_PAUSE,"Pause");
             jo.put(ID_TXT_BTN_LANCER_VAGUE,"Lancer la vague");
-            jo.put(ID_TXT_BTN_RETOUR_MENU_P, "Retour au menu principale");
+            jo.put(ID_TXT_BTN_RETOUR_MENU_P, "Retour au menu principal");
             jo.put(ID_TXT_BTN_REDEMARRER_PARTIE, "Redémarrer la partie");
             jo.put(ID_TXT_BTN_AMELIORER,"Améliorer");
             jo.put(ID_TXT_BTN_VENDRE,"Vendre");

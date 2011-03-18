@@ -17,6 +17,8 @@ import exceptions.*;
 import models.creatures.Creature;
 import models.jeu.Jeu;
 import models.jeu.Jeu_Solo;
+import models.joueurs.EmplacementJoueur;
+import models.joueurs.Equipe;
 import models.joueurs.Joueur;
 import models.outils.GestionnaireSons;
 import models.terrains.Terrain;
@@ -167,6 +169,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         tbPrincipale.addSeparator();
         tbPrincipale.add(bMain);
         tbPrincipale.add(bMurs);
+        activerBouton(bMurs);
         tbPrincipale.addSeparator();
         tbPrincipale.add(bSupprimer);
         tbPrincipale.addSeparator();
@@ -223,6 +226,8 @@ public class Fenetre_CreationTerrain extends    JFrame
         add(panelConteneurPCT,BorderLayout.CENTER);
         
         add(lblEtat,BorderLayout.SOUTH);
+        
+        //nouveauTerrain();
         
         pack();
         setLocationRelativeTo(null);
@@ -333,11 +338,27 @@ public class Fenetre_CreationTerrain extends    JFrame
             tester();
         }
     }
+    
+    
+    private void activerBouton(JButton b)
+    {
+        bMurs.setBorder(new EmptyBorder(INSETS));
+        bMain.setBorder(new EmptyBorder(INSETS));
+       
+        b.setBorder(new LineBorder(C_BTN_SEL,2));
+    }
 
     private void nouveauTerrain()
     {
-        Terrain t = new Terrain(jeu);
+        Terrain t = new Terrain(jeu);  
         jeu.setTerrain(t);
+        
+        // creation de la premiere equipe
+        Equipe equipe = new Equipe(1, Langue.getTexte(Langue.ID_TXT_EQUIPE)+" 1", Color.BLACK);
+        equipe.ajouterZoneDepart(new Rectangle(40,40,40,40));
+        equipe.setZoneArriveeCreatures(new Rectangle(140,140,40,40));
+        equipe.ajouterEmplacementJoueur(new EmplacementJoueur(1, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
+        jeu.ajouterEquipe(equipe);
         
         fichierCourant = null;
         

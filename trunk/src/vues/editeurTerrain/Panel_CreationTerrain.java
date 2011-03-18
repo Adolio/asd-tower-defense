@@ -23,7 +23,7 @@ public class Panel_CreationTerrain extends Panel_Terrain {
     private static final int MODE_TRAITEMENT_REC = 1;
 
     // private Terrain terrain;
-    private int mode = MODE_DEPLACEMENT;
+    private int mode = MODE_TRAITEMENT_REC;
     private Rectangle recEnTraitement;
 
     /**
