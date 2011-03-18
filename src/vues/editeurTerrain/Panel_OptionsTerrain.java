@@ -30,7 +30,12 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     private static final long serialVersionUID = 1L;
     private static final ImageIcon I_DEL = new ImageIcon(
             "img/icones/delete.png");
+    private static final ImageIcon I_PLAY = new ImageIcon(
+            "img/icones/control_play_blue.png");
+    
+    
     private static final Object EXTENTION_MP3 = ".mp3";
+    private static final String DOSSIER_MUSIQUES = "snd";
 
     // ----------------------------
     // -- Elements du formulaire --
@@ -51,7 +56,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     private JButton bCouleurDesMurs = new JButton();
     private final JFileChooser fcImageDeFond = new JFileChooser();
     private JComboBox cbMusique = new JComboBox();
-    private JButton bJouerMusique = new JButton("Play");
+    private JButton bJouerMusique = new JButton(I_PLAY);
     
     /**
      * Le jeu a editer
@@ -216,20 +221,21 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         pForm.add(sOpaciteMurs, 1, ligne);
         ligne++;
 
-        // Musique
+        // Musiques
         JLabel lMusique = new JLabel("Music");
         lMusique.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         pForm.add(lMusique, 0, ligne);
-        cbMusique.addItem("None");
-        cbMusique.addItem(new File("snd/Defnael/Combat.mp3"));
-        cbMusique.setPreferredSize(dim);
-        pForm.add(cbMusique, 1, ligne);
-
-        // TODO load all files
+        
         // importation des fichiers ou dossier selectionnes
-        File[] fichiers = new File("snd").listFiles();
+        cbMusique.addItem("None");
+        File[] fichiers = new File(DOSSIER_MUSIQUES).listFiles();
         for (int i = 0; i < fichiers.length; i++)
            importerRecucivement(fichiers[i]);
+        
+        cbMusique.setPreferredSize(dim);
+        cbMusique.addActionListener(this);
+        pForm.add(cbMusique, 1, ligne);
+
         
         
         bJouerMusique.addActionListener(this);
@@ -252,6 +258,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         add(pForm);
     }
 
+    @SuppressWarnings("serial")
     private void importerRecucivement(File f) {
        
         if (f.isDirectory()) {
@@ -267,7 +274,18 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
                extension = f.getName().substring(dotPos);
 
                if (extension.equals(EXTENTION_MP3))
-                   cbMusique.addItem(f);
+               {
+                   // classe anonyme pour surcharger la methode toString
+                   // afin de n'afficher que le nom du fichier dans la liste
+                   // deroulante...
+                   cbMusique.addItem(new File(f.getPath())
+                   {
+                       public String toString()
+                       {
+                           return this.getName();
+                       }
+                   });
+               }
             }
          } 
     }
@@ -303,6 +321,17 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
             if (couleur != null) {
                 jeu.getTerrain().setCouleurMurs(couleur);
                 bCouleurDesMurs.setBackground(couleur);
+            }
+        } else if(src == cbMusique) {
+            if(cbMusique.getSelectedItem().equals("None")){
+                jeu.getTerrain().setFichierMusiqueDAmbiance(null);
+            }
+            else
+            {
+               File fMusique = (File) cbMusique.getSelectedItem();
+               
+               if(fMusique.exists())
+                   jeu.getTerrain().setFichierMusiqueDAmbiance(fMusique);
             }
         } else if(src == bJouerMusique) {
             

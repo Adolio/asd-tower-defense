@@ -979,4 +979,8 @@ public class Terrain implements Serializable
     {
         this.modeDeJeu = modeDeJeu;
     }
+
+    public void setFichierMusiqueDAmbiance(File fichierMusiqueDAmbiance) {
+        this.fichierMusiqueDAmbiance = fichierMusiqueDAmbiance;
+    }
 }

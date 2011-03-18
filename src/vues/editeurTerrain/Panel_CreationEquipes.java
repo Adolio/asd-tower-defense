@@ -30,13 +30,14 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
     private static final ImageIcon I_AJOUTER_EQUIPE = new ImageIcon("img/icones/flag_add.gif");
     private static final ImageIcon I_AJOUTER = new ImageIcon("img/icones/add.png");
     private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/delete.png");
-    private static final ImageIcon I_COULEURS = new ImageIcon("img/icones/color_swatch.png");
-    private static final ImageIcon I_ZONE_EDITION = new ImageIcon("img/icones/shape_square_edit.png");
+    //private static final ImageIcon I_COULEURS = new ImageIcon("img/icones/color_swatch.png");
+    //private static final ImageIcon I_ZONE_EDITION = new ImageIcon("img/icones/shape_square_edit.png");
     private static final ImageIcon I_PARAMETRES = new ImageIcon("img/icones/wrench.png");
-
+    private static final ImageIcon I_SELECTION_ZONE = new ImageIcon("img/icones/shape_handles.png");
+   
     private JButton bCreerEquipe = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER),I_AJOUTER_EQUIPE);
     private Jeu jeu;
-    private int idEquipe = 1;
+    private int idEquipe;
     private Panel_Table pTabEquipes = new Panel_Table();   
     
     private int idEJ;
@@ -49,6 +50,15 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         this.jeu = jeu;
         this.panelCreationTerrain = panelCreationTerrain;
         
+        // initialisation de l'id courant -> recupere l'id le plus grand + 1
+        idEquipe = 0;
+        for(Equipe e : jeu.getEquipes())
+            if(e.getId() > idEquipe)
+                idEquipe = e.getId();
+        idEquipe++;
+        
+        System.out.println(idEquipe);
+
         setOpaque(false);
         
         //add(new JLabel("Equipes!"));
@@ -107,12 +117,14 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             final JButton bEditerEquipe = new JButton(I_PARAMETRES);
             GestionnaireDesPolices.setStyle(bEditerEquipe);
             
+            final Panel_CreationEquipes pce = this;
+            
             bEditerEquipe.addActionListener(new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    new Fenetre_EditionEquipe(equipe);
+                    new Fenetre_EditionEquipe(pce,equipe);
                 }
             });
             
@@ -123,17 +135,24 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             final JButton bSupprimerEquipe = new JButton(I_SUPPRIMER);
             GestionnaireDesPolices.setStyle(bSupprimerEquipe);
             pTabEquipes.add(bSupprimerEquipe,3,ligne);
-            bSupprimerEquipe.addActionListener(new ActionListener()
+            
+            // minimum 1 equipe
+            if(jeu.getEquipes().size() < 2)
+                bSupprimerEquipe.setEnabled(false);
+            else
             {
-                
-                @Override
-                public void actionPerformed(ActionEvent e)
+                bSupprimerEquipe.addActionListener(new ActionListener()
                 {
-                    jeu.supprimerEquipe(equipe);
                     
-                    construirePanelEquipes();
-                } 
-            });
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        jeu.supprimerEquipe(equipe);
+                        
+                        construirePanelEquipes();
+                    } 
+                });
+            }
             
             ligne++;
             
@@ -165,7 +184,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             GestionnaireDesPolices.setStyle(bZoneArrive);
             pTabEquipes.add(bZoneArrive,0,ligne);
             
-            final JButton bSelectionZoneArrive = new JButton(I_ZONE_EDITION);
+            final JButton bSelectionZoneArrive = new JButton(I_SELECTION_ZONE);
             GestionnaireDesPolices.setStyle(bSelectionZoneArrive);
             pTabEquipes.add(bSelectionZoneArrive,2,ligne);
             
@@ -191,7 +210,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 GestionnaireDesPolices.setStyle(bZoneDepart);
                 pTabEquipes.add(bZoneDepart,0,ligne);                
                 
-                final JButton bSelectionZoneDepart = new JButton(I_ZONE_EDITION);
+                final JButton bSelectionZoneDepart = new JButton(I_SELECTION_ZONE);
                 GestionnaireDesPolices.setStyle(bSelectionZoneDepart);
                 pTabEquipes.add(bSelectionZoneDepart,2,ligne);
                 
@@ -280,7 +299,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 });
                 
                 // Selection
-                final JButton bSelectionnerEmplacement = new JButton(I_ZONE_EDITION);
+                final JButton bSelectionnerEmplacement = new JButton(I_SELECTION_ZONE);
                 GestionnaireDesPolices.setStyle(bSelectionnerEmplacement);
                 pTabEquipes.add(bSelectionnerEmplacement,2,ligne);
                 bSelectionnerEmplacement.addActionListener(new ActionListener()

@@ -28,10 +28,14 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
     private final JButton bOk = new JButton("OK");
     private final JButton bAnnuler = new JButton("Annuler");
     
-    public Fenetre_EditionEquipe(Equipe equipe)
+    private Panel_CreationEquipes pce;
+    
+    
+    public Fenetre_EditionEquipe(Panel_CreationEquipes pce, Equipe equipe)
     {
         super("Edition d'une équipe");
         
+        this.pce = pce;
         this.equipe = equipe;
  
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_SEC);
@@ -106,7 +110,7 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
             {
                 equipe.setNom(tfNomEquipe.getText());
                 
-                // TODO raise notification
+                pce.miseAJour();
                 
                 dispose();
             }
