@@ -61,9 +61,9 @@ public class Terrain implements Serializable
     transient public static final String EMPLACEMENT_TERRAINS_MULTI = "maps/multi/";
     
     /**
-     * bref description
+     * breve description
      */
-    private String brefDescription;
+    private String breveDescription;
 
     /**
      * nombre de vies au debut de la partie
@@ -204,7 +204,7 @@ public class Terrain implements Serializable
         this.positionMaillageX  = positionMaillageX;
         this.positionMaillageY  = positionMaillageY;
         
-        this.brefDescription    = description;
+        this.breveDescription    = description;
         this.couleurDeFond      = couleurDeFond;
         this.couleurMurs        = couleurMurs;
         this.modeDeJeu          = modeDeJeu;   
@@ -225,7 +225,7 @@ public class Terrain implements Serializable
         hauteur                 = 500;
         nbPiecesOrInitiales     = 100;
         nbViesInitiales         = 20;
-        brefDescription         = "";
+        breveDescription         = "";
         modeDeJeu               = ModeDeJeu.MODE_SOLO;   
     }
 
@@ -347,9 +347,9 @@ public class Terrain implements Serializable
      * 
      * @return le nom du terrain
      */
-    public String getBrefDescription()
+    public String getBreveDescription()
     {
-        return brefDescription;
+        return breveDescription;
     }
     
     /**
@@ -927,9 +927,9 @@ public class Terrain implements Serializable
         couleurMurs = couleur;
     }
 
-    public void setBrefDescription(String brefDescription)
+    public void setBreveDescription(String breveDescription)
     {
-       this.brefDescription = brefDescription;   
+       this.breveDescription = breveDescription;   
     }
     
     

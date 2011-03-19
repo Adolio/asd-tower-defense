@@ -307,9 +307,7 @@ public class Panel_CreationTerrain extends Panel_Terrain {
             Point p = getCoordoneeSurTerrainOriginal(me.getPoint());
             Point sourisGrab = getCoordoneeSurTerrainOriginal(sourisGrabX,
                     sourisGrabY);
-            // Point reto_CTO =
-            // getCoordoneeSurTerrainOriginal(recEnTraitementOriginal.x,recEnTraitementOriginal.y);
-
+            
             if (boutonGrab == MouseEvent.BUTTON1) {
                 if (recEnTraitement != null) {
                     if (redimGrab) {
@@ -391,9 +389,9 @@ public class Panel_CreationTerrain extends Panel_Terrain {
                                 .getPoint());
 
                         recEnTraitement.x = getPositionSurQuadrillage(recEnTraitementOriginal.x
-                                + pSouris.x - sourisGrabX);
+                                + pSouris.x - sourisGrab.x);
                         recEnTraitement.y = getPositionSurQuadrillage(recEnTraitementOriginal.y
-                                + pSouris.y - sourisGrabY);
+                                + pSouris.y - sourisGrab.y);
 
                         if (edpct != null)
                             edpct.zoneModifiee(recEnTraitement);

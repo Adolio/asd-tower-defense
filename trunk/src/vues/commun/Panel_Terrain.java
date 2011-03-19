@@ -448,6 +448,14 @@ public class Panel_Terrain extends JPanel implements Runnable,
         return afficherZonesJoueurs = !afficherZonesJoueurs;
     }
 
+    /**
+     * Permet d'activer / désactiver l'affichage des fps 
+     */
+    public boolean basculerAffichageFPS()
+    {
+        return afficherFps = !afficherFps;
+    }
+
 	@Override
 	public void paintComponent(Graphics g)
 	{
@@ -1170,9 +1178,10 @@ public class Panel_Terrain extends JPanel implements Runnable,
     						// si une tour est selectionnee, il n'y pas d'ajout
     						tourAAjouter = null;
     					}
-    					
+    				 
     				    // informe la fenetre qu'une tour a ete selectionnee
-    					edpt.tourSelectionnee(tourSelectionnee,
+    				    if(edpt != null)
+    				        edpt.tourSelectionnee(tourSelectionnee,
     											Panel_InfoTour.MODE_SELECTION);
     					return;
     				}
@@ -1207,7 +1216,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
     					else
     						creatureSelectionnee = creature; // la creature est selectionnee
     					
-    					edpt.creatureSelectionnee(creatureSelectionnee);
+    			        if(edpt != null)
+    			            edpt.creatureSelectionnee(creatureSelectionnee);
     					
     					return;
     				}
@@ -1216,8 +1226,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
     			creatureSelectionnee = null;
     			
     			// aucune tour et aucune creature trouvee => clique dans le vide.
-    			if(tourAAjouter == null)
-        			edpt.deselection();
+    			if(tourAAjouter == null && edpt != null)
+    			    edpt.deselection();
 	        }
 	        else // double click 
 	        {
@@ -1232,7 +1242,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
 			tourAAjouter 		 = null;
 			creatureSelectionnee = null;
 			
-			edpt.deselection();
+			if(edpt != null)
+			    edpt.deselection();
 		}
 	}
 	
@@ -1249,7 +1260,9 @@ public class Panel_Terrain extends JPanel implements Runnable,
     	    // l'ajout se fait lors de la relache du clique
     		if(tourAAjouter != null)
     		{
-    			edpt.acheterTour(tourAAjouter);
+    		    if(edpt != null)
+    		        edpt.acheterTour(tourAAjouter);
+    		    
     			setCursor(curNormal);
     			
     			// informe la fenetre qu'une tour a ete selectionnee
@@ -1452,12 +1465,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
     	    // raccourcis des tours
     	    if(tourSelectionnee != null)
     		{
-    	        // raccourci de vente
-    			if(keyCode == Configuration.getKeyCode(Configuration.VENDRE_TOUR))
-    				edpt.vendreTour(tourSelectionnee);
-    			// raccourci d'amelioration
-    			else if(keyCode == Configuration.getKeyCode(Configuration.AMELIO_TOUR))
-    				edpt.ameliorerTour(tourSelectionnee);
+    	        if(edpt != null)
+    	        {
+        	        // raccourci de vente
+        			if(keyCode == Configuration.getKeyCode(Configuration.VENDRE_TOUR))
+        				edpt.vendreTour(tourSelectionnee);
+        			// raccourci d'amelioration
+        			else if(keyCode == Configuration.getKeyCode(Configuration.AMELIO_TOUR))
+        			    edpt.ameliorerTour(tourSelectionnee);
+    	        }
     		}
     	    
     	    // focus sur la creature

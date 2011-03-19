@@ -206,10 +206,10 @@ public class Fenetre_CreationTerrain extends    JFrame
         
         panelCreationTerrain = new Panel_CreationTerrain(jeu,this);
         
-        JPanel panelConteneurPCT = new JPanel();
+        JPanel panelConteneurPCT = new JPanel(new BorderLayout());
         panelConteneurPCT.setBorder(new EmptyBorder(10,10,10,10));
         panelConteneurPCT.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-        panelConteneurPCT.add(panelCreationTerrain);
+        panelConteneurPCT.add(panelCreationTerrain,BorderLayout.CENTER);
         
         panelOptionsTerrain = new Panel_OptionsTerrain(jeu);
         panelCreationEquipes = new Panel_CreationEquipes(jeu, panelCreationTerrain);
@@ -234,6 +234,13 @@ public class Fenetre_CreationTerrain extends    JFrame
         setVisible(true);
     }
     
+    public Fenetre_CreationTerrain(Terrain terrain,File fichierTerrain) {
+        this();
+        
+        fichierCourant = fichierTerrain;
+        changerTerrain(terrain);
+    }
+
     /**
      * @param args
      */
@@ -350,7 +357,7 @@ public class Fenetre_CreationTerrain extends    JFrame
 
     private void nouveauTerrain()
     {
-        Terrain t = new Terrain(jeu);  
+        Terrain t = new Terrain(jeu);
         jeu.setTerrain(t);
         
         // creation de la premiere equipe
@@ -509,6 +516,20 @@ public class Fenetre_CreationTerrain extends    JFrame
         }
     }
 
+    private void changerTerrain(Terrain t)
+    {
+        jeu.setTerrain(t);
+        t.setJeu(jeu);
+        
+        panelCreationTerrain.deselectionnerRecEnTraitement();
+        panelOptionsTerrain.miseAJour();
+        panelCreationEquipes.miseAJour();
+        
+        lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
+        lblEtat.setText("Fichier chargé");
+    }
+    
+    
     /**
      * Permet d'ouvir un Terrain sérialisé
      */
@@ -523,17 +544,9 @@ public class Fenetre_CreationTerrain extends    JFrame
             {
                 Terrain t = Terrain.charger(fichier);
                 
-                jeu.setTerrain(t);
-                t.setJeu(jeu);
-                
                 fichierCourant = fichier;
                 
-                panelCreationTerrain.deselectionnerRecEnTraitement();
-                panelOptionsTerrain.miseAJour();
-                panelCreationEquipes.miseAJour();
-                
-                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
-                lblEtat.setText("Fichier chargé");
+                changerTerrain(t);
             } 
             catch (ClassCastException e1)
             {

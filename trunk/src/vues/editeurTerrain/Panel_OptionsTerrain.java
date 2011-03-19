@@ -5,15 +5,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.border.*;
 import javax.swing.event.*;
-import vues.GestionnaireDesPolices;
-import vues.commun.Panel_Table;
 import models.jeu.Jeu;
 import models.jeu.ModeDeJeu;
 import models.outils.GestionnaireSons;
 import models.outils.Son;
 import models.terrains.Terrain;
+import vues.GestionnaireDesPolices;
+import vues.commun.Panel_Table;
 
 /**
  * Formlaire de choix des preferences du Terrain.
@@ -40,7 +40,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     // ----------------------------
     // -- Elements du formulaire --
     // ----------------------------
-    private JTextField tfDescription = new JTextField();
+    private JTextField tfBreveDescription = new JTextField();
     private JTextField tfNbPiecesOrInit = new JTextField();
     private JTextField tfNbViesInit = new JTextField();
     private JComboBox cbModeDeJeu = new JComboBox();
@@ -57,6 +57,8 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     private final JFileChooser fcImageDeFond = new JFileChooser();
     private JComboBox cbMusique = new JComboBox();
     private JButton bJouerMusique = new JButton(I_PLAY);
+    
+    private Border bordsParDefaut = tfNbViesInit.getBorder();
     
     /**
      * Le jeu a editer
@@ -137,12 +139,12 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
                 Langue.getTexte(Langue.ID_TXT_DESCRIPTION));
         lDescription.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         pForm.add(lDescription, 0, ligne);
-        tfDescription.setPreferredSize(dim);
-        tfDescription.setText(jeu.getTerrain().getBrefDescription());
+        tfBreveDescription.setPreferredSize(dim);
+        tfBreveDescription.setText(jeu.getTerrain().getBreveDescription());
 
-        tfDescription.addActionListener(this);
-        tfDescription.getDocument().addDocumentListener(this);
-        pForm.add(tfDescription, 1, ligne);
+        tfBreveDescription.addActionListener(this);
+        tfBreveDescription.getDocument().addDocumentListener(this);
+        pForm.add(tfBreveDescription, 1, ligne);
         ligne++;
 
         // Nombre de pieces d'or initiales
@@ -222,7 +224,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         ligne++;
 
         // Musiques
-        JLabel lMusique = new JLabel("Music");
+        JLabel lMusique = new JLabel("Ambient Music");
         lMusique.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         pForm.add(lMusique, 0, ligne);
         
@@ -352,7 +354,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
 
         cbModeDeJeu.setSelectedIndex(t.getMode());
 
-        tfDescription.setText(t.getBrefDescription());
+        tfBreveDescription.setText(t.getBreveDescription());
         tfNbPiecesOrInit.setText(t.getNbPiecesOrInitiales() + "");
         tfNbViesInit.setText(t.getNbViesInitiales() + "");
 
@@ -384,15 +386,18 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     }
 
     public void changementChamp(DocumentEvent e) {
-        if (e.getDocument() == tfDescription.getDocument()) {
-            jeu.getTerrain().setBrefDescription(tfDescription.getText());
+        if (e.getDocument() == tfBreveDescription.getDocument()) {
+            jeu.getTerrain().setBreveDescription(tfBreveDescription.getText());
         } else if (e.getDocument() == tfNbViesInit.getDocument()) {
             try {
                 int nbViesInitiales = Integer.parseInt(tfNbViesInit.getText());
 
                 if (nbViesInitiales > 0) {
                     jeu.getTerrain().setNbViesInitiales(nbViesInitiales);
-                    tfNbViesInit.setBorder(new LineBorder(Color.BLACK));
+                    
+                    //System.out.println(tfNbViesInit.getBorder());
+                    tfNbViesInit.setBorder(bordsParDefaut);
+                    
                 } else
                     throw new Exception();
 
@@ -405,7 +410,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
 
                 if (piecesOr > 0) {
                     jeu.getTerrain().setNbPiecesOrInitiales(piecesOr);
-                    tfNbPiecesOrInit.setBorder(new LineBorder(Color.BLACK));
+                    tfNbPiecesOrInit.setBorder(bordsParDefaut);
                 } else
                     throw new Exception();
 
@@ -418,7 +423,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
 
                 if (largeur > 0) {
                     jeu.getTerrain().setLargeur(largeur);
-                    tfLargeurT.setBorder(new LineBorder(Color.BLACK));
+                    tfLargeurT.setBorder(bordsParDefaut);
                 } else
                     throw new Exception();
             } catch (Exception e1) {
@@ -434,7 +439,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
 
                 if (hauteur > 0) {
                     jeu.getTerrain().setHauteur(hauteur);
-                    tfHauteurT.setBorder(new LineBorder(Color.BLACK));
+                    tfHauteurT.setBorder(bordsParDefaut);
                 } else
                     throw new Exception();
             } catch (Exception e1) {
