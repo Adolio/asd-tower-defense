@@ -236,7 +236,7 @@ public class Panel_CreerPartieMulti extends JPanel implements ActionListener
 
                     terrains.add(t);
                     
-                    Object[] obj = new Object[] { t.getBrefDescription(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
+                    Object[] obj = new Object[] { t.getBreveDescription(), ModeDeJeu.getNomMode(t.getMode()), t.getNbJoueursMax(), 
                             t.getEquipesInitiales().size()+"", t };
                     
                     model.addRow(obj);

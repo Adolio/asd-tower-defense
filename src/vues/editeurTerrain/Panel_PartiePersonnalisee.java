@@ -2,27 +2,45 @@ package vues.editeurTerrain;
 
 import i18n.Langue;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import exceptions.AucunePlaceDisponibleException;
-import exceptions.JeuEnCoursException;
-import models.jeu.*;
+
+import models.jeu.Jeu;
+import models.jeu.Jeu_Solo;
+import models.jeu.ModeDeJeu;
 import models.joueurs.Joueur;
 import models.outils.GestionnaireSons;
-import models.terrains.*;
-import outils.*;
+import models.terrains.Terrain;
+import outils.OutilsFichier;
 import vues.GestionnaireDesPolices;
 import vues.LookInterface;
 import vues.Panel_MenuPrincipal;
-import vues.commun.Panel_EmplacementsTerrain;
+import vues.commun.Panel_Terrain;
 import vues.commun.TableCellRenderer_Image;
 import vues.solo.Fenetre_JeuSolo;
+import exceptions.*;
 
 /**
  * Panel de création d'une partie réseau.
@@ -43,14 +61,20 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
     private JLabel lblEtat = new JLabel();
     
     private JButton bLancer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEMARRER));
+    private JButton bEditerCarte = new JButton("Edit this map",I_EDITEUR_T);
     private JButton bRetour = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
     private JButton bEditeurDeTerrain = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_EDITEUR_DE_TERRAIN), I_EDITEUR_T);
     
     // terrains
+    
+    private ArrayList<File> fichiersTerrains = new ArrayList<File>();
     private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
     private DefaultTableModel model = new DefaultTableModel();
     private JTable tbTerrains;
-    Panel_EmplacementsTerrain pEmplacementTerrain = new Panel_EmplacementsTerrain(300, 300);
+    
+    private Jeu jeu = new Jeu_Solo();
+    
+    Panel_Terrain pEmplacementTerrain;
     
    
     /**
@@ -62,6 +86,13 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
     {
         // initialisation
         super(new BorderLayout());
+        
+        
+        jeu.setTerrain(new Terrain(jeu));
+        pEmplacementTerrain = new Panel_Terrain(jeu,null);
+        pEmplacementTerrain.basculerAffichageFPS();
+        pEmplacementTerrain.basculeraffichageZonesDepartArrivee();
+        
         this.parent = parent;
         parent.setTitle(Langue.getTexte(Langue.ID_TITRE_PARTIE_PERSONNALISEES)+" - ASD Tower Defense");
         setBorder(new EmptyBorder(new Insets(MARGES_PANEL, MARGES_PANEL,
@@ -151,7 +182,9 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
                 {
                     int ligneSelectionnee = lsm.getMinSelectionIndex();
                     
-                    pEmplacementTerrain.setTerrain(terrains.get(ligneSelectionnee));
+                    jeu.setTerrain(terrains.get(ligneSelectionnee));
+                    
+                    //pEmplacementTerrain.setTerrain(terrains.get(ligneSelectionnee));
                 }
             }});
 
@@ -192,8 +225,9 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
                     t = Terrain.charger(f2);
 
                     terrains.add(t);
+                    fichiersTerrains.add(f2);
                     
-                    Object[] obj = new Object[] { t.getBrefDescription(), t };
+                    Object[] obj = new Object[] { t.getBreveDescription(), t };
                     
                     model.addRow(obj);
                     
@@ -226,7 +260,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         
         JPanel pTmp = new JPanel(new BorderLayout());
         pTmp.setOpaque(false);
-        pTmp.add(new JScrollPane(pEmplacementTerrain), BorderLayout.NORTH);
+        pTmp.add(pEmplacementTerrain, BorderLayout.NORTH);
 
         pTerrains.add(pTmp, BorderLayout.CENTER);
         
@@ -249,9 +283,17 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         // bouton lancer
         bLancer.setPreferredSize(new Dimension(100, 50));
         GestionnaireDesPolices.setStyle(bLancer);
-        pBottom.add(bLancer, BorderLayout.EAST);
         bLancer.addActionListener(this);
-
+        
+        bEditerCarte.setPreferredSize(new Dimension(150, 50));
+        GestionnaireDesPolices.setStyle(bEditerCarte);
+        bEditerCarte.addActionListener(this);
+        
+        JPanel panelEst = new JPanel();
+        panelEst.setOpaque(false);
+        panelEst.add(bEditerCarte);
+        panelEst.add(bLancer);
+        pBottom.add(panelEst, BorderLayout.EAST);
         pBottom.add(lblEtat, BorderLayout.SOUTH);
 
         bRetour.addActionListener(this);
@@ -325,7 +367,20 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
                     lblEtat.setText("Aucune place disponible dans ce terrain.");
                 } 
             }
-        } 
+        }
+        else if(src == bEditerCarte)
+        {
+            Terrain terrain = terrains.get(tbTerrains.getSelectedRow());
+            
+            File fichierTerrain = fichiersTerrains.get(tbTerrains.getSelectedRow());
+
+            terrain.initialiser();
+            new Fenetre_CreationTerrain(terrain,fichierTerrain);
+            
+            GestionnaireSons.arreterTousLesSons();
+            
+            parent.dispose();
+        }
         else if(src == bEditeurDeTerrain)
         {
             new Fenetre_CreationTerrain();

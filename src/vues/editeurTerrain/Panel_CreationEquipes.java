@@ -4,6 +4,7 @@ import i18n.Langue;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import vues.GestionnaireDesPolices;
 import vues.LookInterface;
@@ -50,15 +51,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         this.jeu = jeu;
         this.panelCreationTerrain = panelCreationTerrain;
         
-        // initialisation de l'id courant -> recupere l'id le plus grand + 1
-        idEquipe = 0;
-        for(Equipe e : jeu.getEquipes())
-            if(e.getId() > idEquipe)
-                idEquipe = e.getId();
-        idEquipe++;
-        
-        System.out.println(idEquipe);
-
+        initIds();
+ 
         setOpaque(false);
         
         //add(new JLabel("Equipes!"));
@@ -70,18 +64,19 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         pTmp.add(bCreerEquipe);
         add(pTmp,BorderLayout.NORTH);
         
-        JPanel pEquipe = new JPanel(new BorderLayout());
-        pEquipe.setOpaque(false);
-        pTabEquipes.setOpaque(false);
         
-        //new JScrollPane(
-        pEquipe.add(pTabEquipes,BorderLayout.NORTH);
-        pEquipe.setPreferredSize(new Dimension(100,200));
+        pTabEquipes.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
         
-        //JScrollPane js = new JScrollPane(pEquipe);
-        //js.setPreferredSize(new Dimension(300,400));
-        add(pEquipe,BorderLayout.CENTER);
-       
+        
+        
+        
+        JScrollPane jsTest = new JScrollPane(pTabEquipes);
+        jsTest.setBorder(new EmptyBorder(0,0,0,0));
+        jsTest.setOpaque(false);
+        
+        add(jsTest,BorderLayout.CENTER);
+        
+        
         construirePanelEquipes();
         
         setPreferredSize(new Dimension(400,200));
@@ -367,6 +362,17 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
 
     public void miseAJour()
     {
+        initIds();
         construirePanelEquipes();
+    }
+
+    private void initIds() {
+        
+        // initialisation de l'id courant -> recupere l'id le plus grand + 1
+        idEquipe = 0;
+        for(Equipe e : jeu.getEquipes())
+            if(e.getId() > idEquipe)
+                idEquipe = e.getId();
+        idEquipe++;
     }
 }

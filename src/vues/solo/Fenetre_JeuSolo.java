@@ -549,7 +549,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	                Langue.getTexte(Langue.ID_TXT_DIALOG_SAUVER), 
                     "", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION)
             {
-	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getBrefDescription()); 
+	            new Fenetre_PartieTerminee(this, jeu.getJoueurPrincipal().getScore(), jeu.getTimer().getTime() / 1000, jeu.getTerrain().getBreveDescription()); 
             }
         }
 	}
