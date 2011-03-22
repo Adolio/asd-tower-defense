@@ -26,7 +26,7 @@ public class Fleche extends Attaque
     private static final long serialVersionUID = 1L;
     private static final int LONGUEUR_FLECHE   = 10;
     private static final Color COULEUR_FLECHE  = new Color(128,0,0);
-    public static final File FICHIER_SON_ARC   = new File("snd/fleche.mp3");
+    public static final File FICHIER_SON_ARC   = new File("snd/effects/fleche.mp3");
     
     
     //private static final int MAX_SONS_ARC      = 3;

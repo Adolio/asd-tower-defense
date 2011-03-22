@@ -33,7 +33,7 @@ public class Desert extends Terrain
 	
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/Petite Viking/Battle.mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/ambient/Petite Viking - Battle.mp3");
         
         IMAGE_MENU = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/objectif.png");

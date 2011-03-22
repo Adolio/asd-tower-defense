@@ -116,7 +116,8 @@ public class Fenetre_EditionEquipe extends JFrame implements ActionListener
             }
             else
             {
-                // TODO erreur nom vide
+                // TODO Traduire
+                JOptionPane.showConfirmDialog(this, "Nom vide !", "Erreur",JOptionPane.OK_OPTION,JOptionPane.ERROR_MESSAGE);
             }
         }
         else if(obj == bAnnuler)

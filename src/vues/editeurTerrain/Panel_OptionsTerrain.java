@@ -35,7 +35,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     
     
     private static final Object EXTENTION_MP3 = ".mp3";
-    private static final String DOSSIER_MUSIQUES = "snd";
+    private static final String DOSSIER_MUSIQUES = "snd/ambient/";
 
     // ----------------------------
     // -- Elements du formulaire --
@@ -44,8 +44,6 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
     private JTextField tfNbPiecesOrInit = new JTextField();
     private JTextField tfNbViesInit = new JTextField();
     private JComboBox cbModeDeJeu = new JComboBox();
-    private JTextField tfLargeurM = new JTextField();
-    private JTextField tfHauteurM = new JTextField();
     private JTextField tfLargeurT = new JTextField();
     private JTextField tfHauteurT = new JTextField();
     private JSlider sOpaciteMurs = new JSlider(0, 100);
@@ -100,7 +98,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         // mode de jeu
         cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_SOLO));
         cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_VERSUS));
-        // TODO
+        // TODO Ajouter le mode Coopératif
         // cbModeDeJeu.addItem(ModeDeJeu.getNomMode(ModeDeJeu.MODE_COOP));
         
 
@@ -120,14 +118,14 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         tfLargeurT.getDocument().addDocumentListener(this);
         tfHauteurT.getDocument().addDocumentListener(this);
 
-        // TODO translate
+        // TODO Traduire
         JLabel lLargeur = new JLabel("Width");
         lLargeur.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         pForm.add(lLargeur, 0, ligne);
         pForm.add(tfLargeurT, 1, ligne);
         ligne++;
 
-        // TODO translate
+        // TODO Traduire
         JLabel lHauteur = new JLabel("Height");
         lHauteur.setFont(GestionnaireDesPolices.POLICE_TITRE_CHAMP);
         pForm.add(lHauteur, 0, ligne);
@@ -219,7 +217,7 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         sOpaciteMurs.setPaintTicks(true);
         sOpaciteMurs.setPaintLabels(true);
         sOpaciteMurs.setPreferredSize(new Dimension(dim.width, 50));
-        sOpaciteMurs.setValue((int) jeu.getTerrain().getOpaciteMurs() * 100);
+        sOpaciteMurs.setValue(100);
         pForm.add(sOpaciteMurs, 1, ligne);
         ligne++;
 
@@ -330,7 +328,9 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
             }
             else
             {
-               File fMusique = (File) cbMusique.getSelectedItem();
+               // convertie en "vrai" File pour la serialisation -> 
+               // la class anonyme ne marche pas pour la serialization !
+               File fMusique = new File(((File) cbMusique.getSelectedItem()).getAbsolutePath());
                
                if(fMusique.exists())
                    jeu.getTerrain().setFichierMusiqueDAmbiance(fMusique);
@@ -361,14 +361,10 @@ public class Panel_OptionsTerrain extends JPanel implements ActionListener,
         bCouleurDeFond.setBackground(t.getCouleurDeFond());
         bCouleurDesMurs.setBackground(t.getCouleurMurs());
 
-        sOpaciteMurs.setValue((int) t.getOpaciteMurs() * 100);
+        sOpaciteMurs.setValue((int) (t.getOpaciteMurs() * 100));
 
         tfLargeurT.setText(t.getLargeur() + "");
         tfHauteurT.setText(t.getHauteur() + "");
-
-        // FIXME Maillage !
-        tfLargeurM.setText(t.getLargeur() + "");
-        tfHauteurM.setText(t.getHauteur() + "");
     }
 
     @Override
