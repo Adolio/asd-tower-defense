@@ -31,7 +31,7 @@ public class ElementTD_Versus_4 extends Terrain
 
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/Filippo Vicarelli/The War Begins.mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/ambient/Filippo Vicarelli - The War Begins.mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                           "img/cartes/menu_principal/elementTD.png");

@@ -53,6 +53,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
 {
     private static final int MARGES_PANEL = 40;
     private static final ImageIcon I_EDITEUR_T = new ImageIcon("img/icones/map_edit.png");
+    private static final ImageIcon I_PLAY = new ImageIcon("img/icones/controller.png");
 
     private JFrame parent;
     
@@ -60,7 +61,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
     private JLabel lblTitreTerrains = new JLabel(Langue.getTexte(Langue.ID_TITRE_CHOIX_TERRAIN));
     private JLabel lblEtat = new JLabel();
     
-    private JButton bLancer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEMARRER));
+    private JButton bLancer = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_DEMARRER),I_PLAY);
     private JButton bEditerCarte = new JButton("Edit this map",I_EDITEUR_T);
     private JButton bRetour = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR));
     private JButton bEditeurDeTerrain = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_EDITEUR_DE_TERRAIN), I_EDITEUR_T);
@@ -90,6 +91,7 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
         
         jeu.setTerrain(new Terrain(jeu));
         pEmplacementTerrain = new Panel_Terrain(jeu,null);
+        pEmplacementTerrain.setPreferredSize(new Dimension(300,300));
         pEmplacementTerrain.basculerAffichageFPS();
         pEmplacementTerrain.basculeraffichageZonesDepartArrivee();
         
@@ -183,6 +185,8 @@ public class Panel_PartiePersonnalisee extends JPanel implements ActionListener
                     int ligneSelectionnee = lsm.getMinSelectionIndex();
                     
                     jeu.setTerrain(terrains.get(ligneSelectionnee));
+                    
+                    pEmplacementTerrain.voirToutLeTerrain();
                     
                     //pEmplacementTerrain.setTerrain(terrains.get(ligneSelectionnee));
                 }

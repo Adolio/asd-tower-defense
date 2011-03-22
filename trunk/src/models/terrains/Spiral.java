@@ -33,7 +33,7 @@ public class Spiral extends Terrain
  
     static
     {
-        FICHIER_MUSIQUE_DE_FOND = new File("snd/Defnael/Tork.mp3");
+        FICHIER_MUSIQUE_DE_FOND = new File("snd/ambient/Defnael - Tork.mp3");
         
         IMAGE_MENU    = Toolkit.getDefaultToolkit().getImage(
                                               "img/cartes/menu_principal/spirale.png");

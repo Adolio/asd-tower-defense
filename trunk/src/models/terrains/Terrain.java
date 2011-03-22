@@ -862,7 +862,6 @@ public class Terrain implements Serializable
          
          // seule les ImageIcon peuvent etre serialisée 
          // donc la on met a jour l'image de font avec une ImageIcon
-         
          if(terrain.iconImageDeFond != null)
              terrain.imageDeFond = terrain.iconImageDeFond.getImage();
         

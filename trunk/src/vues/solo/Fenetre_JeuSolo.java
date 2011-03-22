@@ -52,7 +52,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
 	private static final ImageIcon I_REGLES = new ImageIcon("img/icones/script.png");
 	private static final ImageIcon I_ACTIF = new ImageIcon("img/icones/tick.png");
-	private static final ImageIcon I_INACTIF = null;
 	private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/icone_pgm.png");
 	private static final ImageIcon I_SON_ACTIF = new ImageIcon("img/icones/sound.png");
 	private static final ImageIcon I_VITESSE_JEU   = new ImageIcon("img/icones/clock_play.png");
@@ -62,6 +61,10 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private static final ImageIcon I_ZOOM = new ImageIcon("img/icones/magnifier_zoom_in.png");
 	private static final ImageIcon I_DEZOOM = new ImageIcon("img/icones/magnifier_zoom_out.png");
 	private static final ImageIcon I_OPTIONS = new ImageIcon("img/icones/wrench.png");
+	private static final ImageIcon I_DEBUG = new ImageIcon("img/icones/bug.png");
+	private static final ImageIcon I_MAILLAGE = new ImageIcon("img/icones/mesh.png");
+	private static final ImageIcon I_RAYON = new ImageIcon("img/icones/target.png");
+	
 	
 	private static final String FENETRE_TITRE = "ASD - Tower Defense";
     private static final String TXT_VAGUE_SUIVANTE  = Langue.getTexte(Langue.ID_TXT_BTN_LANCER_VAGUE);
@@ -85,11 +88,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	private final JMenuItem itemActiverDesactiverSon 
 	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ACTIVE_DESACTIVE),I_SON_ACTIF); 
 	private final JMenuItem itemAfficherMaillage	    
-		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MAILLAGE));
+		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MAILLAGE),I_MAILLAGE);
 	private final JMenuItem itemModeDebug       
-        = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MODE_DEBUG));
+        = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_MODE_DEBUG),I_DEBUG);
 	private final JMenuItem itemAfficherRayonsPortee	    
-		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RAYONS_DE_PORTEE));
+		= new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RAYONS_DE_PORTEE),I_RAYON);
 	private final JMenuItem itemQuitter	    
 	    = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
 	private final JMenuItem itemRetourMenu  
@@ -401,14 +404,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 			if(panelTerrain.basculerAffichageMaillage())
 			   itemAfficherMaillage.setIcon(I_ACTIF);
 			else
-			    itemAfficherMaillage.setIcon(I_INACTIF);
+			    itemAfficherMaillage.setIcon(I_MAILLAGE);
 		
 		// basculer affichage du maillage
         else if(source == itemModeDebug)
             if(panelTerrain.basculerModeDebug())
                 itemModeDebug.setIcon(I_ACTIF);
             else
-                itemModeDebug.setIcon(I_INACTIF);
+                itemModeDebug.setIcon(I_DEBUG);
 
 		else if(source == itemPause) 
 		    activerDesactiverLaPause();
@@ -421,7 +424,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 		    if(panelTerrain.basculerAffichageRayonPortee())
 		        itemAfficherRayonsPortee.setIcon(I_ACTIF);
 		    else
-		        itemAfficherRayonsPortee.setIcon(I_INACTIF);
+		        itemAfficherRayonsPortee.setIcon(I_RAYON);
 		
 		else if(source == bLancerVagueSuivante)
 		{
@@ -819,7 +822,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
      * 
      * @param nbPiecesDOr le nombre de piece d'or a ajouter
      */
-    /*
     public void ajouterPiecesDOr(int nbPiecesDOr)
     {
         jeu.getJoueurPrincipal().setNbPiecesDOr(jeu.getJoueurPrincipal().getNbPiecesDOr() + nbPiecesDOr); 
@@ -829,8 +831,6 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         
         miseAJourInfoJeu(); 
     }
-    */
-    
 
     @Override
     public void keyPressed(KeyEvent ke)
@@ -842,16 +842,14 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         // raccourci de gain d'argent (debug)
         if(keyChar == 'M')
         {
-            //ajouterPiecesDOr(1000);
+            ajouterPiecesDOr(1000);
         }
         // TODO [DEBUG] enlever pour version finale
         // raccourci de gain d'argent (debug)
         else if(keyChar == 'L')
         {
-            /*
             jeu.lancerVagueSuivante(jeu.getJoueurPrincipal(), jeu.getJoueurPrincipal().getEquipe());
             ajouterInfoVagueSuivanteDansConsole();
-            */
         }
         else if(keyCode == Configuration.getKeyCode(Configuration.AUG_VIT_JEU))
         {

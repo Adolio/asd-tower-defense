@@ -10,8 +10,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
+
+import vues.Fenetre_MenuPrincipal;
 import vues.LookInterface;
 import vues.commun.EcouteurDePanelTerrain;
+import vues.commun.Fenetre_HTML;
 import vues.solo.Fenetre_JeuSolo;
 import exceptions.*;
 import models.creatures.Creature;
@@ -25,9 +28,10 @@ import models.terrains.Terrain;
 import models.tours.Tour;
 
 /**
- * Fenêtre de création et d'édition de terrain de jeu.
+ * Fenetre de creation et d'edition de terrain de jeu.
  * 
- * TODO compléter
+ * Cette fenetre permet de creer des terrains de jeu. Un terrain de jeu est 
+ * compose d'une zone de jeu et d'equipes.
  * 
  * @author Aurelien Da Campo
  * @version 1.0 | juillet 2010
@@ -40,21 +44,22 @@ public class Fenetre_CreationTerrain extends    JFrame
                                                 ActionListener
 {
     private static final long serialVersionUID = 1L;
+    
+    // Images
     private static final ImageIcon I_FENETRE = new ImageIcon("img/icones/map_edit.png");
     private static final ImageIcon I_MAIN = new ImageIcon("img/icones/hand.png");
     private static final ImageIcon I_MURS = new ImageIcon("img/icones/shape_square_edit.png");
     private static final ImageIcon I_TESTER = new ImageIcon("img/icones/cog.png");
     private static final ImageIcon I_ENREGISTRER = new ImageIcon("img/icones/disk.png");
     private static final ImageIcon I_ENREGISTRER_SOUS = new ImageIcon("img/icones/disk_multiple.png");
-    
     private static final ImageIcon I_NOUVEAU = new ImageIcon("img/icones/page_white_star.png");
     private static final ImageIcon I_OUVRIR = new ImageIcon("img/icones/folder_explore.png");
     private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/shape_square_delete.png");
     private static final ImageIcon I_QUITTER = new ImageIcon("img/icones/door_out.png");
+    private static final ImageIcon I_MAISON = new ImageIcon("img/icones/application_home.png");
+    private static final ImageIcon I_AIDE = new ImageIcon("img/icones/help.png");
     
-    
-    
-    
+    // Boutons
     private JButton bMain           = new JButton(I_MAIN);
     private JButton bMurs           = new JButton(I_MURS);
     private JButton bNouveau        = new JButton(I_NOUVEAU);
@@ -63,35 +68,65 @@ public class Fenetre_CreationTerrain extends    JFrame
     private JButton bSupprimer      = new JButton(I_SUPPRIMER);
     private JButton bTester         = new JButton(I_TESTER);
     
-    
+    // Style
     private final Insets INSETS     = new Insets(5, 5, 5, 5);
     private final Color C_BTN_SEL   = LookInterface.COULEUR_DE_FOND_SEC;
      
+    /**
+     * Panel de creation du terrain
+     */
     private Panel_CreationTerrain panelCreationTerrain;
+    
+    /**
+     * Panel de gestion des options du terrain
+     */
     private Panel_OptionsTerrain panelOptionsTerrain;
+    
+    /**
+     * Panel de creation des equipes
+     */
     private Panel_CreationEquipes panelCreationEquipes;
     
+    // Menu
     private final JMenuBar  menuPrincipal   = new JMenuBar();
     private final JMenu     menuFichier     = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_FICHIER));
     private final JMenu     menuEdition     = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_EDITION));
     private final JMenu     menuAide        = new JMenu(Langue.getTexte(Langue.ID_TXT_BTN_AIDE));
-    
     private final JMenuItem itemNouveau      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_NOUVEAU),I_NOUVEAU);
     private final JMenuItem itemOuvrir      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_OUVRIR)+"..",I_OUVRIR);
     private final JMenuItem itemEnregistrer = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ENREGISTRER),I_ENREGISTRER);
     private final JMenuItem itemEnregistrerSous = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_ENREGISTRER_SOUS)+"...",I_ENREGISTRER_SOUS);
     private final JMenuItem itemQuitter      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_QUITTER),I_QUITTER);
+    private final JMenuItem itemMenuPrincipal      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_RETOUR_MENU_P),I_MAISON);
     private final JMenuItem itemTester      = new JMenuItem(Langue.getTexte(Langue.ID_TXT_BTN_TESTER),I_TESTER);
     
-    private JFileChooser fcOuvrir = new JFileChooser("./maps");
-    private JFileChooser fcSauver = new JFileChooser("./maps");
+    // TODO Traduire
+    private final JMenuItem itemCommentUtiliserLEditeur      = new JMenuItem("Comment marche l'éditeur ?",I_AIDE);
     
+    
+    /**
+     * Le jeu
+     */
     private Jeu jeu;
+    
+    /**
+     * Le fichier map en cours de traitement
+     */
     private File fichierCourant;
+    
+    /**
+     * Etat du fichier
+     */
     //private boolean sauve = false;
     
+    /**
+     * Etat de l'editeur
+     */
     private JLabel lblEtat = new JLabel(Langue.getTexte(Langue.ID_TXT_PRET));
     
+    // Chercheurs de fichiers
+    private JFileChooser fcOuvrir = new JFileChooser("./maps");
+    private JFileChooser fcSauver = new JFileChooser("./maps");
     private static FileFilter filtreFichier = new FileFilter()
     {
         public String getDescription()
@@ -108,6 +143,9 @@ public class Fenetre_CreationTerrain extends    JFrame
         }
     };
     
+    /**
+     * Constructeur
+     */
     public Fenetre_CreationTerrain()
     {
         super(Langue.getTexte(Langue.ID_TITRE_EDITEUR_DE_TERRAIN));
@@ -117,6 +155,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         getContentPane().setBackground(LookInterface.COULEUR_DE_FOND_PRI);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
+        // creation du jeu
         jeu = new Jeu_Solo();
         jeu.setTerrain(new Terrain(jeu));
         
@@ -132,9 +171,11 @@ public class Fenetre_CreationTerrain extends    JFrame
         itemOuvrir.addActionListener(this);
         itemEnregistrer.addActionListener(this);
         itemEnregistrerSous.addActionListener(this);
+        itemMenuPrincipal.addActionListener(this);
         itemQuitter.addActionListener(this);
         itemTester.addActionListener(this);
- 
+        itemCommentUtiliserLEditeur.addActionListener(this);
+        
         // Raccourcis clavier
         itemNouveau.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_N, Event.CTRL_MASK));
@@ -146,17 +187,20 @@ public class Fenetre_CreationTerrain extends    JFrame
                 KeyEvent.VK_W, Event.CTRL_MASK));
         itemTester.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_E, Event.CTRL_MASK));
+        itemCommentUtiliserLEditeur.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         
         menuFichier.add(itemNouveau);
         menuFichier.add(itemOuvrir);
         menuFichier.add(itemEnregistrer);
         menuFichier.add(itemEnregistrerSous);
         menuFichier.addSeparator();
+        menuFichier.add(itemMenuPrincipal);
         menuFichier.add(itemQuitter);
         menuEdition.add(itemTester);
         menuPrincipal.add(menuFichier);
         menuPrincipal.add(menuEdition);
         menuPrincipal.add(menuAide);
+        menuAide.add(itemCommentUtiliserLEditeur);
         
         setJMenuBar(menuPrincipal);
         
@@ -242,6 +286,8 @@ public class Fenetre_CreationTerrain extends    JFrame
     }
 
     /**
+     * On peut aussi lancer seulement l'editeur de terrain. (debug)
+     * 
      * @param args
      */
     public static void main(String[] args)
@@ -261,6 +307,7 @@ public class Fenetre_CreationTerrain extends    JFrame
                      */ 
                 } 
         
+        // Anglais uniquement
         Langue.initaliser("lang/en_EN.json");
                       
         new Fenetre_CreationTerrain();
@@ -302,24 +349,19 @@ public class Fenetre_CreationTerrain extends    JFrame
         Object src = e.getSource();
         
         if(src == bNouveau || src == itemNouveau)
-        {
             nouveauTerrain();
-        }
         else if(src == bOuvrir || src == itemOuvrir)
-        {
             ouvrirTerrain();
-        }
         else if(src == bEnregistrer || src == itemEnregistrer)
-        {
             enregistrerTerrain();
-        }
         else if(src == itemEnregistrerSous)
-        {
             enregistrerTerrainSous();
-        }  
         else if(src == itemQuitter)
-        {
             System.exit(0);
+        else if(src == itemMenuPrincipal)
+        {
+            new Fenetre_MenuPrincipal();
+            dispose();
         }
         else if(src == bMain)
         {
@@ -341,9 +383,10 @@ public class Fenetre_CreationTerrain extends    JFrame
             panelCreationTerrain.deselectionnerRecEnTraitement(); 
         }
         else if(src == bTester || src == itemTester)
-        {
             tester();
-        }
+        else if(src == itemCommentUtiliserLEditeur)
+            // TODO Traduire
+            new Fenetre_HTML("Aide", new File("donnees/aide/editeurDeTerrains/aide_editeurDeTerrain_en.html"), this);
     }
     
     
@@ -373,6 +416,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         panelOptionsTerrain.miseAJour();
         panelCreationEquipes.miseAJour();
         
+        // TODO Traduire
         lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
         lblEtat.setText("Fichier chargé");
     }
@@ -397,6 +441,7 @@ public class Fenetre_CreationTerrain extends    JFrame
             } 
             catch (IOException e)
             {
+                // TODO Traduire
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Erreur lors de la sauvegarde!");
             }
@@ -456,26 +501,31 @@ public class Fenetre_CreationTerrain extends    JFrame
         }
         catch (ClassCastException e1)
         {
+            // TODO Traduire
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         } 
         catch (IOException e1)
         {
+            // TODO Traduire
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         } 
         catch (ClassNotFoundException e1)
         {
+            // TODO Traduire
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Fichier invalide");
         }
         catch (JeuEnCoursException e1)
         {
+            // TODO Traduire
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Le jeu est en cours!");
         } 
         catch (AucunePlaceDisponibleException e1)
         {
+            // TODO Traduire
             lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
             lblEtat.setText("Il n'y a aucun emplacement de joueur!");
         }
@@ -507,9 +557,16 @@ public class Fenetre_CreationTerrain extends    JFrame
                 jeu.getTerrain().setHauteurMaillage(jeu.getTerrain().getHauteur());
                 
                 Terrain.serialiser(jeu.getTerrain(),fichierCourant/*new File("maps/"+jeu.getTerrain().getNom()+"."+Terrain.EXTENSION_FICHIER)*/);
+            
+                // TODO Traduire
+                lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
+                lblEtat.setText("Fichier correctement sauvegardé!");
             } 
             catch (IOException e)
             {
+                e.printStackTrace();
+                
+                // TODO Traduire
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Erreur lors de la sauvegarde!");
             } 
@@ -525,6 +582,7 @@ public class Fenetre_CreationTerrain extends    JFrame
         panelOptionsTerrain.miseAJour();
         panelCreationEquipes.miseAJour();
         
+        // TODO Traduire
         lblEtat.setForeground(LookInterface.COULEUR_SUCCES);
         lblEtat.setText("Fichier chargé");
     }
@@ -550,16 +608,19 @@ public class Fenetre_CreationTerrain extends    JFrame
             } 
             catch (ClassCastException e1)
             {
+                // TODO Traduire
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             } 
             catch (IOException e1)
             {
+                // TODO Traduire
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             } 
             catch (ClassNotFoundException e1)
             {
+                // TODO Traduire
                 lblEtat.setForeground(LookInterface.COULEUR_ERREUR);
                 lblEtat.setText("Fichier invalide");
             }

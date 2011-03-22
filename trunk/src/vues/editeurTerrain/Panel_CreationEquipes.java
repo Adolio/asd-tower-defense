@@ -15,105 +15,132 @@ import models.joueurs.Equipe;
 import models.terrains.Terrain;
 
 /**
- * Fenêtre de création d'équipes.
+ * Panel de création d'équipes.
  * 
- * TODO commenter tout le fichier
+ * Ce panel permet de gerer la creation des equipes. Le terrain contient les 
+ * equipes qu'il peut accueillir pour une partie.
  * 
  * @author Aurelien Da Campo
  * @version 1.0 | juillet 2010
  * @since jdk1.6.0_16
  * @see Terrain
+ * @see Equipe
  */
 public class Panel_CreationEquipes extends JPanel implements ActionListener
 {
     private static final long serialVersionUID = 1L;
     
+    // Images
     private static final ImageIcon I_AJOUTER_EQUIPE = new ImageIcon("img/icones/flag_add.gif");
     private static final ImageIcon I_AJOUTER = new ImageIcon("img/icones/add.png");
     private static final ImageIcon I_SUPPRIMER = new ImageIcon("img/icones/delete.png");
-    //private static final ImageIcon I_COULEURS = new ImageIcon("img/icones/color_swatch.png");
-    //private static final ImageIcon I_ZONE_EDITION = new ImageIcon("img/icones/shape_square_edit.png");
     private static final ImageIcon I_PARAMETRES = new ImageIcon("img/icones/wrench.png");
     private static final ImageIcon I_SELECTION_ZONE = new ImageIcon("img/icones/shape_handles.png");
-   
-    private JButton bCreerEquipe = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER),I_AJOUTER_EQUIPE);
+    
+    /**
+     * Le jeu
+     */
     private Jeu jeu;
-    private int idEquipe;
+     
+    /**
+     * id d'autoincrementation des equipes
+     */
+    private int idAutoIncrEquipe;
+    
+    /**
+     * Tableau des equipes (visualisation)
+     */
     private Panel_Table pTabEquipes = new Panel_Table();   
     
-    private int idEJ;
+    /**
+     * id d'autoincrementation des emplacements de joueurs
+     */
+    private int idAutoIncrEJ;
+    
+    /**
+     * Le panel de creation du terrain (pour modification direct)
+     * 
+     * Ce serait peut-etre mieux de faire un ecouteur...
+     */
     private Panel_CreationTerrain panelCreationTerrain;
     
+    /**
+     * Bouton de creation d'une equipe
+     */
+    private JButton bCreerEquipe = new JButton(Langue.getTexte(Langue.ID_TXT_BTN_CREER),I_AJOUTER_EQUIPE);
+    
+    /**
+     * Constructeur
+     * 
+     * @param jeu le jeu
+     * @param panelCreationTerrain le panel de creation du terrain
+     */
     public Panel_CreationEquipes(Jeu jeu,Panel_CreationTerrain panelCreationTerrain)
     {
         super(new BorderLayout());
+        setOpaque(false);
         
         this.jeu = jeu;
         this.panelCreationTerrain = panelCreationTerrain;
         
+        // Initialisation des id au cas ou le terrain du jeu contient deja des equipes
         initIds();
- 
-        setOpaque(false);
-        
-        //add(new JLabel("Equipes!"));
+
+        // Bouton d'ajout d'une equipe
         GestionnaireDesPolices.setStyle(bCreerEquipe);
         bCreerEquipe.addActionListener(this);
+        bCreerEquipe.setBorder(new EmptyBorder(10, 10, 10, 10));
+        add(bCreerEquipe,BorderLayout.NORTH);
         
-        JPanel pTmp = new JPanel();
-        pTmp.setOpaque(false);
-        pTmp.add(bCreerEquipe);
-        add(pTmp,BorderLayout.NORTH);
-        
-        
+        // Tableau des equipes
         pTabEquipes.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
-        
-        
-        
-        
         JScrollPane jsTest = new JScrollPane(pTabEquipes);
         jsTest.setBorder(new EmptyBorder(0,0,0,0));
-        jsTest.setOpaque(false);
-        
+        jsTest.setOpaque(false); 
         add(jsTest,BorderLayout.CENTER);
         
-        
+        // Remplissage du panel des equipes
         construirePanelEquipes();
         
+        // Taille du panel
         setPreferredSize(new Dimension(400,200));
     }
 
+    /**
+     * Permet de contruire le panel des equipes.
+     * 
+     * Le panel est dabord vide puis reconstruit
+     */
     private void construirePanelEquipes()
     {
+        // vidage
         pTabEquipes.removeAll();
 
+        // ligne courante
         int ligne=0;
         
-        idEJ = 1;
+        // reinitialisation des ids des emplacements de joueurs
+        idAutoIncrEJ = 1;
         
+        // Pour chaque equipe du jeu...
         for(final Equipe equipe : jeu.getEquipes())
         {
+            // Separateur
             JPanel lTrait = new JPanel();
             lTrait.setBorder(new LineBorder(LookInterface.COULEUR_DE_FOND_PRI, 4));
             lTrait.setPreferredSize(new Dimension(380,8));
-            //JLabel lTrait = new JLabel("------------------------------------------------------------------------------------------------------");
             pTabEquipes.add(lTrait,0,ligne++,5,1);
             
- 
-            // nom de l'équipe
+            // Nom de l'équipe
             final JLabel lNomEquipe = new JLabel(equipe.getNom());
             lNomEquipe.setFont(GestionnaireDesPolices.POLICE_TITRE);
             lNomEquipe.setForeground(equipe.getCouleur());
-            //lNomEquipe.setMinimumSize(new Dimension(80,25));
-            //lNomEquipe.setPreferredSize(new Dimension(80,25));
-            //GestionnaireDesPolices.setStyle(lNomEquipe);
-            
             pTabEquipes.add(lNomEquipe,0,ligne);
             
+            // Edition de l'equipe
             final JButton bEditerEquipe = new JButton(I_PARAMETRES);
             GestionnaireDesPolices.setStyle(bEditerEquipe);
-            
             final Panel_CreationEquipes pce = this;
-            
             bEditerEquipe.addActionListener(new ActionListener()
             {
                 @Override
@@ -122,23 +149,19 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     new Fenetre_EditionEquipe(pce,equipe);
                 }
             });
-            
             pTabEquipes.add(bEditerEquipe,1,ligne);
             
-            
-            // Suppression
+            // Suppression de l'equipe
             final JButton bSupprimerEquipe = new JButton(I_SUPPRIMER);
             GestionnaireDesPolices.setStyle(bSupprimerEquipe);
             pTabEquipes.add(bSupprimerEquipe,3,ligne);
             
-            // minimum 1 equipe
-            if(jeu.getEquipes().size() < 2)
+            if(jeu.getEquipes().size() < 2) // Minimum 1 equipe
                 bSupprimerEquipe.setEnabled(false);
             else
             {
                 bSupprimerEquipe.addActionListener(new ActionListener()
                 {
-                    
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
@@ -151,6 +174,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             
             ligne++;
             
+            // Arrivee et departs
+            // TODO Traduire
             JLabel lZonesDepart = new JLabel("Arrivee et departs");
             lZonesDepart.setFont(GestionnaireDesPolices.POLICE_SOUS_TITRE);
             pTabEquipes.add(lZonesDepart,0,ligne);
@@ -173,7 +198,6 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
             ligne++;
             
             
-            
             // Zone d'arrivée
             final JLabel bZoneArrive = new JLabel(Langue.getTexte(Langue.ID_TXT_BTN_ARRIVEE));
             GestionnaireDesPolices.setStyle(bZoneArrive);
@@ -191,16 +215,16 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     panelCreationTerrain.setRecEnTraitement(equipe.getZoneArriveeCreatures());
                 }
             });
-            
-            
+
             ligne++;
             
-            // Zones de depart
+            
+            // Pour chaque zones de depart
             for(int noZD=0;noZD<equipe.getNbZonesDepart();noZD++)
             {
                 final Rectangle z = equipe.getZoneDepartCreatures(noZD);
 
-                // Zone de départ
+                // Zone de depart
                 final JLabel bZoneDepart = new JLabel(Langue.getTexte(Langue.ID_TXT_BTN_DEPART) + " - " + noZD);
                 GestionnaireDesPolices.setStyle(bZoneDepart);
                 pTabEquipes.add(bZoneDepart,0,ligne);                
@@ -259,7 +283,7 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
+                    equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idAutoIncrEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
                 
                     construirePanelEquipes();
                 }
@@ -306,8 +330,8 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
                     } 
                 });
                 
-                if(ej.getId() >= idEJ)
-                    idEJ = ej.getId() + 1;
+                if(ej.getId() >= idAutoIncrEJ)
+                    idAutoIncrEJ = ej.getId() + 1;
                 
                 
                 // Suppression
@@ -345,34 +369,41 @@ public class Panel_CreationEquipes extends JPanel implements ActionListener
         
         if(src == bCreerEquipe)
         {
-            Equipe equipe = new Equipe(idEquipe, Langue.getTexte(Langue.ID_TXT_EQUIPE)+" "+idEquipe, Color.BLACK);
+            Equipe equipe = new Equipe(idAutoIncrEquipe, Langue.getTexte(Langue.ID_TXT_EQUIPE)+" "+idAutoIncrEquipe, Color.BLACK);
             
             jeu.ajouterEquipe(equipe);
             
+            // TODO positionner au milieu du viewport
             equipe.ajouterZoneDepart(new Rectangle(40,40,40,40));
             equipe.setZoneArriveeCreatures(new Rectangle(140,140,40,40));
             
-            equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
+            equipe.ajouterEmplacementJoueur(new EmplacementJoueur(idAutoIncrEJ++, new Rectangle(0,0,jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur())));
 
-            idEquipe++;
+            idAutoIncrEquipe++;
             
             construirePanelEquipes(); 
         }
     }
 
+    /**
+     * Permet de mettre a jour tout le panel
+     */
     public void miseAJour()
     {
         initIds();
         construirePanelEquipes();
     }
 
+    /**
+     * Initilise les ids en fonction de l'etat actuel du jeu
+     */
     private void initIds() {
         
         // initialisation de l'id courant -> recupere l'id le plus grand + 1
-        idEquipe = 0;
+        idAutoIncrEquipe = 0;
         for(Equipe e : jeu.getEquipes())
-            if(e.getId() > idEquipe)
-                idEquipe = e.getId();
-        idEquipe++;
+            if(e.getId() > idAutoIncrEquipe)
+                idAutoIncrEquipe = e.getId();
+        idAutoIncrEquipe++;
     }
 }

@@ -1405,8 +1405,8 @@ public class Panel_Terrain extends JPanel implements Runnable,
             {
                 setCursor(curMainAgripper);
                 
-                decaleX = decaleGrabX - (sourisGrabX - me.getX()) / 2;
-                decaleY = decaleGrabY - (sourisGrabY - me.getY()) / 2;
+                decaleX = (int) (decaleGrabX - (sourisGrabX - me.getX()) / coeffTaille);
+                decaleY = (int) (decaleGrabY - (sourisGrabY - me.getY()) / coeffTaille);
             }
         }
     }
@@ -1512,7 +1512,7 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	@Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        zoomer(e.getWheelRotation()); 
+        zoomer(e.getWheelRotation());
     }
     
     /**
@@ -1590,5 +1590,15 @@ public class Panel_Terrain extends JPanel implements Runnable,
             // centrer sur le milieu du terrain
             centrerSur(jeu.getTerrain().getLargeur()/2, jeu.getTerrain().getHauteur()/2);
         */
+    }
+    
+    public void voirToutLeTerrain()
+    {
+        double maxTaille = Math.max(jeu.getTerrain().getLargeur(),jeu.getTerrain().getHauteur()) * 1.3;
+        
+        double maxTaillePanel = Math.max(getPreferredSize().width,getPreferredSize().height);
+        
+        decaleX = decaleY = 0;
+        coeffTaille = maxTaillePanel / maxTaille;
     }
 }
