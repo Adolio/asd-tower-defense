@@ -275,7 +275,7 @@ public class Langue
         //lecture du fichier texte  
         try{
             InputStream ips=new FileInputStream(fichierDeLangue); 
-            InputStreamReader ipsr=new InputStreamReader(ips);
+            InputStreamReader ipsr=new InputStreamReader(ips, "UTF-8");
             BufferedReader br=new BufferedReader(ipsr);
             String ligne;
             while ((ligne=br.readLine())!=null){
