@@ -294,7 +294,7 @@ public class Fenetre_JeuVersus extends JFrame implements ActionListener,
 		panelAjoutTour = new Panel_AjoutTour(jeu, this, LARGEUR_MENU_DROITE, 80);
 		
 		// Selection (tour et créature)
-        panelSelection = new Panel_Selection(this);
+        panelSelection = new Panel_Selection(jeu, this);
         
         // Conteneur en onglets
 		panelSelectionEtVague = new JTabbedPane();

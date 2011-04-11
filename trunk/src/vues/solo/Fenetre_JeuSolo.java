@@ -35,6 +35,7 @@ import vues.commun.EcouteurDePanelTerrain;
 import vues.commun.Fenetre_HTML;
 import vues.commun.Panel_InfoCreature;
 import vues.commun.Panel_InfoTour;
+import vues.commun.Panel_InfoVagues;
 import vues.commun.Panel_Terrain;
 import exceptions.*;
 import models.outils.GestionnaireSons;
@@ -132,6 +133,11 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
 	 * panel contenant le menu d'interaction
 	 */
 	private Panel_MenuInteraction_ModeSolo panelMenuInteraction;
+	
+	/**
+     * panel contenant les informations des vagues suivantes
+     */
+	private Panel_InfoVagues panelInfoVagues;
 	
 	/**
 	 * panel pour afficher les caracteristiques d'une tour 
@@ -344,6 +350,7 @@ public class Fenetre_JeuSolo extends JFrame implements ActionListener,
         //--------------------
 
 		panelMenuInteraction = new Panel_MenuInteraction_ModeSolo(this,jeu);
+		panelInfoVagues   = panelMenuInteraction.getPanelInfoVagues();
 		panelInfoTour     = panelMenuInteraction.getPanelInfoTour();
 		panelInfoCreature = panelMenuInteraction.getPanelInfoCreature();
 		

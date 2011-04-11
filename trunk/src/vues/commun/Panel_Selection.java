@@ -30,6 +30,7 @@ import vues.GestionnaireDesPolices;
 import vues.LookInterface;
 
 import models.creatures.Creature;
+import models.jeu.Jeu;
 import models.tours.*;
 
 /**
@@ -51,13 +52,16 @@ public class Panel_Selection extends JPanel
     private static final long serialVersionUID = 1L;
 	private Panel_InfoTour pInfoTour;
 	private Panel_InfoCreature pInfoCreature;
+	private Panel_InfoVagues pInfoVagues;
 
     /**
 	 * Constructeur du panel
 	 * 
+	 * FIXME ATTENTION avec le panel des info vagues en multi
+	 * 
 	 * @param la fenetre de jeu parent
 	 */
-	public Panel_Selection(EcouteurDePanelTerrain edpt)
+	public Panel_Selection(Jeu jeu,EcouteurDePanelTerrain edpt)
 	{
 		super(new BorderLayout());
 		
@@ -75,7 +79,6 @@ public class Panel_Selection extends JPanel
 		//p.setOpaque(false);
 		p.setBackground(LookInterface.COULEUR_DE_FOND_SEC);
 		
-		
 		pInfoTour = new Panel_InfoTour(edpt);
 		p.add(pInfoTour);
 		pInfoTour.setVisible(false);
@@ -83,6 +86,10 @@ public class Panel_Selection extends JPanel
 	    pInfoCreature = new Panel_InfoCreature();
         p.add(pInfoCreature);
         pInfoCreature.setVisible(false);
+        
+        pInfoVagues = new Panel_InfoVagues(jeu);
+        p.add(pInfoVagues);
+        pInfoVagues.setVisible(true);
         
         add(p,BorderLayout.CENTER);  
 	}
@@ -108,8 +115,11 @@ public class Panel_Selection extends JPanel
 	{
 	    if(selection == null)
 	    {
+	        System.out.println("selection nulle");
+	        
 	        pInfoCreature.setVisible(false);
 	        pInfoTour.setVisible(false);
+	        pInfoVagues.setVisible(true);
 	    }
 	    // Tour
 	    else if(Tour.class.isInstance(selection))
@@ -117,6 +127,7 @@ public class Panel_Selection extends JPanel
 	        pInfoTour.setTour((Tour) selection, mode);
 	        pInfoTour.setVisible(true);
 	        pInfoCreature.setVisible(false);
+	        pInfoVagues.setVisible(false);
 		}
 	    // Creature
 		else if(Creature.class.isInstance(selection))
@@ -124,6 +135,7 @@ public class Panel_Selection extends JPanel
 		    pInfoCreature.setCreature((Creature) selection);
 		    pInfoCreature.setVisible(true);
 		    pInfoTour.setVisible(false);
+		    pInfoVagues.setVisible(false);
         }
 	}
 
@@ -157,10 +169,10 @@ public class Panel_Selection extends JPanel
         return pInfoCreature;
     }
     
-    
     public void deselection()
-    {
+    {  
         pInfoTour.setVisible(false);
         pInfoCreature.setVisible(false);
+        pInfoVagues.setVisible(true);
     }
 }

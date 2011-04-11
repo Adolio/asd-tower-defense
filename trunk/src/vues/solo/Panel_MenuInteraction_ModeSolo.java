@@ -27,6 +27,7 @@ import vues.commun.EcouteurDePanelTerrain;
 import vues.commun.Panel_AjoutTour;
 import vues.commun.Panel_InfoCreature;
 import vues.commun.Panel_InfoTour;
+import vues.commun.Panel_InfoVagues;
 import vues.commun.Panel_InfosJoueurEtPartie;
 import vues.commun.Panel_Selection;
 import models.creatures.*;
@@ -57,6 +58,7 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
 	private Panel_InfosJoueurEtPartie pInfosJoueurEtPartie;
 	private Panel_AjoutTour pAjoutTour;
 	private Panel_Selection pSelection;
+    private Panel_InfoVagues panelInfoVagues;
 
 	/**
 	 * Constructeur du panel d'interaction
@@ -84,7 +86,7 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
 		
 	    add(pToursEtJoueur,BorderLayout.NORTH);
 		
-	    pSelection = new Panel_Selection(edpt);
+	    pSelection = new Panel_Selection(jeu, edpt);
         add(pSelection,BorderLayout.CENTER);
 
 	}
@@ -155,5 +157,9 @@ public class Panel_MenuInteraction_ModeSolo extends JPanel
     {
         pInfosJoueurEtPartie.miseAJour();
         pAjoutTour.miseAJour();
+    }
+
+    public Panel_InfoVagues getPanelInfoVagues() {
+        return panelInfoVagues;
     }
 }
