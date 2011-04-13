@@ -32,11 +32,15 @@ import java.awt.Toolkit;
 public class Araignee extends Creature
 {
 	private static final long serialVersionUID = 1L;
-	private static final Image IMAGE;
+	private static final Image IMAGES[];
 	
 	static
 	{
-		IMAGE = Toolkit.getDefaultToolkit().getImage("img/creatures/araignee.png");
+	   IMAGES = new Image[]
+       {        
+               Toolkit.getDefaultToolkit().getImage("img/creatures/araignee/araignee_0_32.png"),
+               Toolkit.getDefaultToolkit().getImage("img/creatures/araignee/araignee_1_32.png")
+       };
 	}
 	
 	/**
@@ -62,8 +66,8 @@ public class Araignee extends Creature
 	 */
 	public Araignee(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, IMAGE.getWidth(null), IMAGE.getHeight(null), santeMax, nbPiecesDOr, vitesse,
-		        Creature.TYPE_TERRIENNE, IMAGE, "Araignée");
+		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse,
+		        Creature.TYPE_TERRIENNE, IMAGES[0], "Araignée");
 	}
 
 	/**
@@ -73,4 +77,19 @@ public class Araignee extends Creature
 	{
 		return new Araignee(x,y,getSanteMax(),getNbPiecesDOr(),getVitesseNormale());
 	}
+	
+	long temps = 0;
+    int iImage = 0;
+    public void action(long tempsPasse)
+    {
+        super.action(tempsPasse);
+        
+        temps += tempsPasse;
+        
+        if(temps > 100)
+        {
+            image = IMAGES[iImage++ % IMAGES.length];
+            temps -= 100;
+        }
+    }
 }
