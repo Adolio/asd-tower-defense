@@ -61,7 +61,7 @@ public class Rhinoceros extends Creature
 	 */
 	public Rhinoceros(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, IMAGE.getWidth(null), IMAGE.getHeight(null), santeMax, nbPiecesDOr, vitesse, 
+		super(x, y, 24, 24, santeMax, nbPiecesDOr, vitesse, 
 		      Creature.TYPE_TERRIENNE, IMAGE, "Rhinoceros");
 	}
 

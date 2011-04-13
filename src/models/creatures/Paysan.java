@@ -22,7 +22,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 /**
- * Classe de gestion d'un mouton.
+ * Classe de gestion d'un paysan.
  * 
  * @author Aurélien Da Campo
  * @version 1.0 | 27 novemenbre 2009
@@ -39,8 +39,8 @@ public class Paysan extends Creature
 	{
 		IMAGES = new Image[]
 		{        
-		        Toolkit.getDefaultToolkit().getImage("img/creatures/paysan/paysan_0_20.png"),
-		        Toolkit.getDefaultToolkit().getImage("img/creatures/paysan/paysan_1_20.png")
+		        Toolkit.getDefaultToolkit().getImage("img/creatures/paysan/paysan_0_32.png"),
+		        Toolkit.getDefaultToolkit().getImage("img/creatures/paysan/paysan_1_32.png")
 		};
 	}
 	
@@ -67,7 +67,7 @@ public class Paysan extends Creature
 	 */
 	public Paysan(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, IMAGES[0].getWidth(null), IMAGES[0].getHeight(null), santeMax, nbPiecesDOr, vitesse,
+		super(x, y, 20, 20, santeMax, nbPiecesDOr, vitesse,
 		        Creature.TYPE_TERRIENNE, IMAGES[0], "Paysan");
 	}
 
@@ -91,7 +91,7 @@ public class Paysan extends Creature
 	    if(temps > 300)
 	    {
 	        image = IMAGES[iImage++ % IMAGES.length];
-	        temps = 0;
+	        temps -= 300;
 	    }
 	}
 	

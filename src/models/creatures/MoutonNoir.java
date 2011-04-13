@@ -62,7 +62,7 @@ public class MoutonNoir extends Creature
 	 */
 	public MoutonNoir(int x, int y, long santeMax, int nbPiecesDOr, double vitesse)
 	{
-		super(x, y, IMAGE.getWidth(null), IMAGE.getHeight(null), santeMax, nbPiecesDOr, vitesse,
+		super(x, y, 16, 16, santeMax, nbPiecesDOr, vitesse,
 		        Creature.TYPE_TERRIENNE, IMAGE, "Mouton");
 	}
 

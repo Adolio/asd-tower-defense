@@ -921,10 +921,12 @@ public class Panel_Terrain extends JPanel implements Runnable,
 	    {
 	        // rotation des créatures
 	        AffineTransform tx = new AffineTransform();
+	        
 	        tx.translate(creature.getCenterX(), creature.getCenterY());
 	        tx.rotate(creature.getAngle()+Math.PI/2);
 	        tx.translate(-creature.getWidth()/2, -creature.getHeight()/2);
-	        
+	        tx.scale(creature.getWidth() / (double) creature.getImage().getWidth(null), creature.getHeight() / (double) creature.getImage().getHeight(null));
+
 	        // dessin de la créature avec rotation
 	        g2.drawImage(creature.getImage(), tx, this);
 	    }
