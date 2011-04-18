@@ -88,7 +88,8 @@ public class GestionnaireSons
           // Le systeme ne possede pas de sortie audio (triste!).
           else
           {
-              System.out.println("Impossible d'avoir une sortie audio!");
+             // FIXME: Pas exactement...
+             // System.out.println("Impossible d'avoir une sortie audio!");
           }
        }
        catch (Exception erreur) // Une erreur liee au volume est survenue.
@@ -130,7 +131,7 @@ public class GestionnaireSons
             while(eSons.hasMoreElements())
             {
                 son = eSons.nextElement();
-                if(son.isAlive())
+                if(!son.estTerminee())
                     son.arreter();
             }
      
@@ -185,7 +186,7 @@ public class GestionnaireSons
         int nbSons = 0;
         
         for(Son son : sons)
-            if(son.isAlive())
+            if(!son.estTerminee())
                 nbSons++;
         
         return nbSons;
@@ -205,7 +206,7 @@ public class GestionnaireSons
         synchronized (sons)
         {
             for(Son son : sons)
-                if(son.getFichier() == fichier && son.isAlive())
+                if(son.getFichier() == fichier && !son.estTerminee())
                     nbSons++;
         
         }
