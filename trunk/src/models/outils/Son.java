@@ -20,8 +20,20 @@ package models.outils;
 
 import java.io.*;
 import java.util.*;
-import javax.media.*;
-import javax.media.format.*;
+import static org.jouvieje.fmodex.defines.FMOD_INITFLAGS.*;
+import static org.jouvieje.fmodex.defines.FMOD_MODE.*;
+import static org.jouvieje.fmodex.defines.VERSIONS.*;
+import static org.jouvieje.fmodex.enumerations.FMOD_CHANNELINDEX.*;
+import static org.jouvieje.fmodex.utils.BufferUtils.*;
+import static org.jouvieje.fmodex.utils.SizeOfPrimitive.SIZEOF_INT;
+
+import java.nio.ByteBuffer;
+import org.jouvieje.fmodex.*;
+import org.jouvieje.fmodex.System;
+import org.jouvieje.fmodex.enumerations.*;
+import org.jouvieje.fmodex.structures.*;
+
+import static java.lang.System.out;
 
 /**
  * Fichier : Son.java
@@ -41,12 +53,6 @@ import javax.media.format.*;
  * @since jdk1.6.0_16
  */
 public class Son {
-   // Le player de son.
-   private static Player player;
-   private static Format input1;
-   private static Format input2;
-   private static Format output;
-   private static ControllerListener ControleurEcoute;
 
    // Le nombre de fois qu'on veut repeter le son.
    private int nombreRepetitions = 1;
@@ -56,6 +62,14 @@ public class Son {
    private boolean arret = false;
    // Ecouteur de son
    private ArrayList<EcouteurDeSon> ecouteursDeSon = new ArrayList<EcouteurDeSon>();
+   
+   private System system;
+   private Sound sound;
+   private ByteBuffer soundBuffer;
+   private FMOD_CREATESOUNDEXINFO exinfo;
+   private Channel channel;
+   private FMOD_RESULT result;
+   private ByteBuffer buffer;
 
    /**
     * Ce constructeur permet de creer un objet Son en fonction d'un fichier
@@ -69,19 +83,25 @@ public class Son {
     */
    public Son(File fichier) {
       this.fichier = fichier;
-      input1 = new AudioFormat(AudioFormat.MPEGLAYER3);
-      input2 = new AudioFormat(AudioFormat.MPEG);
-      output = new AudioFormat(AudioFormat.LINEAR);
-      PlugInManager.addPlugIn("com.sun.media.codec.audio.mp3.JavaDecoder",
-            new Format[] { input1, input2 }, new Format[] { output },
-            PlugInManager.CODEC);
+      try {
+         init();
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
    }
 
    /**
     * Cette methode permet de lire le son une fois.
     */
    public void lire() {
-      jouer();
+      try {
+         play();
+      }
+      catch (Exception e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -98,7 +118,13 @@ public class Son {
    public void lire(int nombreRepetitions) {
       this.nombreRepetitions = nombreRepetitions == 0 ? Integer.MAX_VALUE
             : nombreRepetitions;
-      jouer();
+      try {
+         play();
+      }
+      catch (Exception e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -109,12 +135,8 @@ public class Son {
    public void arreter() {
       // On passe en mode arret.
       arret = true;
-      // On ferme le lecteur de son.
-      if (player != null) {
-         player.removeControllerListener(ControleurEcoute);
-         player.stop();
-         player.close();
-      }
+      
+      channel.stop();
 
       // informe les ecouteurs que le son est termine
       for (EcouteurDeSon ecouteurDeSon : ecouteursDeSon) {
@@ -150,35 +172,72 @@ public class Son {
    public File getFichier() {
       return fichier;
    }
-
-   private void jouer() {
+   
+   /**
+    * Play a sound for the example
+    */
+   private void play() throws Exception {
+      system = new System();
+      sound = new Sound();
+      soundBuffer = Medias.loadMediaIntoMemory(fichier.toString());
+      exinfo = FMOD_CREATESOUNDEXINFO.allocate();
+      channel = new Channel();
+      result = FmodEx.System_Create(system);
+      buffer = newByteBuffer(SIZEOF_INT);
+      
       arret = false;
-      try {
-         if (player != null) {
-            player.stop();
-            player.close();
-         }
+      result = system.getVersion(buffer.asIntBuffer());
+      result = system.init(32, FMOD_INIT_NORMAL, null);
+      exinfo.setLength(soundBuffer.capacity());
+      result = system.createSound(soundBuffer, FMOD_HARDWARE | FMOD_OPENMEMORY, exinfo, sound);
+      soundBuffer = null;
+      exinfo.release();
+      
+      // Infinite loop mode
+      sound.setMode(FMOD_LOOP_NORMAL);
+      sound.setLoopCount(nombreRepetitions - 1);
+      // Play sound
+      result = system.playSound(FMOD_CHANNEL_FREE, sound, false, channel);
+      // To change the volume
+      channel.setVolume(1.0f);
 
-         player = Manager.createPlayer(new MediaLocator(fichier.toURI().toURL()));
-         ControleurEcoute = new ControllerListener() {
-            int times = nombreRepetitions;
-   
-            @Override
-            public void controllerUpdate(ControllerEvent arg0) {
-               if (arg0 instanceof javax.media.EndOfMediaEvent) {
-                  if (--times != 0 && !arret) {
-                     jouer();
-                     player.removeControllerListener(this);
-                  }
-               }
-   
+      // Loop that checks if an error occurs
+      /*
+      do {
+         try {
+            system.update();
+            if (errorCheck(result)) {
+               out.printf("FMOD error! (%d) %s\n", result.asInt(),
+                     FmodEx.FMOD_ErrorString(result));
             }
-         };
-         player.addControllerListener(ControleurEcoute);
-         player.start();
-      }
-      catch(Exception e) {
-         e.printStackTrace();
+            Thread.sleep(1000);
+         }
+         catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      } while (true);
+      */
+   }
+
+   /**
+    * Checks if any error occurs
+    * @param result
+    * @return
+    */
+   private static boolean errorCheck(FMOD_RESULT result) {
+      return result != FMOD_RESULT.FMOD_OK;
+   }
+
+   /**
+    * 
+    * @throws Exception
+    */
+   private static void init() throws Exception {
+      // NativeFmodEx libraries initialization
+      Init.loadLibraries();
+      // Checking NativeFmodEx version
+      if (NATIVEFMODEX_LIBRARY_VERSION != NATIVEFMODEX_JAR_VERSION) {
+         throw new Exception("Error! NativeFmodEx library version is different to jar version!\n");
       }
    }
 
