@@ -44,7 +44,7 @@ public class Fenetre_MenuPrincipal extends JFrame
     public static final int HAUTEUR_FENETRE = 600;
     
     public static final File FICHIER_MUSIQUE_MENU 
-    = new File("snd/ambient/Oursvince - Perdue.mp3");
+    = new File("snd/ambient/Jazzduphoodlum - Medieval In vestri Ass.mp3");
     
     /**
      * Constructeur de la fenetre du menu principal
